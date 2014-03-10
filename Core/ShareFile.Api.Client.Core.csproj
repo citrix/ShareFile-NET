@@ -1,0 +1,244 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8BAE1E9D-38A2-47CE-87C5-47D84DEE4EDF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ShareFile.Api.Client</RootNamespace>
+    <AssemblyName>ShareFile.Api.Client.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile136</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;ShareFile</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;ShareFile</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Configuration.cs" />
+    <Compile Include="Converters\ODataConverter.cs" />
+    <Compile Include="Converters\ODataFactory.cs" />
+    <Compile Include="Credentials\CredentialCache.cs" />
+    <Compile Include="Credentials\CredentialCacheFactory.cs" />
+    <Compile Include="Credentials\ICredentialCache.cs" />
+    <Compile Include="Credentials\OAuth2Credential.cs" />
+    <Compile Include="Entities\EntityBase.cs" />
+    <Compile Include="Exceptions\ApplicationException.cs" />
+    <Compile Include="Exceptions\AuthenticationException.cs" />
+    <Compile Include="Exceptions\EntityNotFoundException.cs" />
+    <Compile Include="Exceptions\InvalidApiResponseException.cs" />
+    <Compile Include="Exceptions\ODataRequestException.cs" />
+    <Compile Include="Exceptions\UploadException.cs" />
+    <Compile Include="Extensions\BoolExtensions.cs" />
+    <Compile Include="Extensions\ODataObjectExtensions.cs" />
+    <Compile Include="Extensions\UriExtensions.cs" />
+    <Compile Include="FileSystem\IPlatformFile.cs" />
+    <Compile Include="FileSystem\PlatformFileStream.cs" />
+    <Compile Include="GeneratedEntities\AccessControlsEntity.cs" />
+    <Compile Include="GeneratedEntities\AccountsEntity.cs" />
+    <Compile Include="GeneratedEntities\AsyncOperationsEntity.cs" />
+    <Compile Include="GeneratedEntities\CapabilitiesEntity.cs" />
+    <Compile Include="GeneratedEntities\ConfigsEntity.cs" />
+    <Compile Include="GeneratedEntities\FavoriteFoldersEntity.cs" />
+    <Compile Include="GeneratedEntities\GroupsEntity.cs" />
+    <Compile Include="GeneratedEntities\ItemsEntity.cs" />
+    <Compile Include="GeneratedEntities\MetadataEntity.cs" />
+    <Compile Include="GeneratedEntities\Private\AccountsEntityInternal.cs" />
+    <Compile Include="GeneratedEntities\Private\DevicesEntityInternal.cs" />
+    <Compile Include="GeneratedEntities\Private\ItemsEntityInternal.cs" />
+    <Compile Include="GeneratedEntities\Private\StorageCentersEntityInternal.cs" />
+    <Compile Include="GeneratedEntities\Private\UsersEntityInternal.cs" />
+    <Compile Include="GeneratedEntities\Private\ZonesEntityInternal.cs" />
+    <Compile Include="GeneratedEntities\SessionsEntity.cs" />
+    <Compile Include="GeneratedEntities\SharesEntity.cs" />
+    <Compile Include="GeneratedEntities\UsersEntity.cs" />
+    <Compile Include="GeneratedModels\AccessControl.cs" />
+    <Compile Include="GeneratedModels\AccessControlDomains.cs" />
+    <Compile Include="GeneratedModels\AccessControlFilter.cs" />
+    <Compile Include="GeneratedModels\Account.cs" />
+    <Compile Include="GeneratedModels\AccountPreferences.cs" />
+    <Compile Include="GeneratedModels\AccountUser.cs" />
+    <Compile Include="GeneratedModels\AdvancedSearchResults.cs" />
+    <Compile Include="GeneratedModels\AsyncOperation.cs" />
+    <Compile Include="GeneratedModels\AsyncOperationState.cs" />
+    <Compile Include="GeneratedModels\AsyncOperationType.cs" />
+    <Compile Include="GeneratedModels\Capability.cs" />
+    <Compile Include="GeneratedModels\CapabilityName.cs" />
+    <Compile Include="GeneratedModels\Contact.cs" />
+    <Compile Include="GeneratedModels\Device.cs" />
+    <Compile Include="GeneratedModels\DeviceActionInitiatorRole.cs" />
+    <Compile Include="GeneratedModels\DeviceLogEntry.cs" />
+    <Compile Include="GeneratedModels\DeviceLogEntryAction.cs" />
+    <Compile Include="GeneratedModels\DeviceStatus.cs" />
+    <Compile Include="GeneratedModels\DeviceUser.cs" />
+    <Compile Include="GeneratedModels\DeviceUserWipe.cs" />
+    <Compile Include="GeneratedModels\DeviceWipeReport.cs" />
+    <Compile Include="GeneratedModels\DownloadSpecification.cs" />
+    <Compile Include="GeneratedModels\EntityTypeMap.cs" />
+    <Compile Include="GeneratedModels\FavoriteFolder.cs" />
+    <Compile Include="GeneratedModels\File.cs" />
+    <Compile Include="GeneratedModels\FileVirusStatus.cs" />
+    <Compile Include="GeneratedModels\FindSubdomainParams.cs" />
+    <Compile Include="GeneratedModels\FindSubdomainResult.cs" />
+    <Compile Include="GeneratedModels\Folder.cs" />
+    <Compile Include="GeneratedModels\GenericConfig.cs" />
+    <Compile Include="GeneratedModels\Group.cs" />
+    <Compile Include="GeneratedModels\Item.cs" />
+    <Compile Include="GeneratedModels\ItemInfo.cs" />
+    <Compile Include="GeneratedModels\ItemProtocolLink.cs" />
+    <Compile Include="GeneratedModels\Link.cs" />
+    <Compile Include="Helpers\TypeHelpers.cs" />
+    <Compile Include="Logging\ActionStopwatch.cs" />
+    <Compile Include="Logging\DefaultLoggingProvider.cs" />
+    <Compile Include="Logging\LoggingProvider.cs" />
+    <Compile Include="Logging\LogLevel.cs" />
+    <Compile Include="GeneratedModels\Metadata.cs" />
+    <Compile Include="GeneratedModels\MobileSecuritySettings.cs" />
+    <Compile Include="GeneratedModels\Note.cs" />
+    <Compile Include="GeneratedModels\Notification.cs" />
+    <Compile Include="GeneratedModels\ODataFeed.cs" />
+    <Compile Include="GeneratedModels\ODataObject.cs" />
+    <Compile Include="GeneratedModels\ODataObjectType.cs" />
+    <Compile Include="GeneratedModels\PinLockType.cs" />
+    <Compile Include="GeneratedModels\PlanFeatures.cs" />
+    <Compile Include="GeneratedModels\PreviewStatus.cs" />
+    <Compile Include="GeneratedModels\Principal.cs" />
+    <Compile Include="GeneratedModels\Private\OutlookInformation.cs" />
+    <Compile Include="GeneratedModels\Private\OutlookInformationOptionBool.cs" />
+    <Compile Include="GeneratedModels\Private\OutlookInformationOptionInt.cs" />
+    <Compile Include="GeneratedModels\Private\OutlookInformationOptionString.cs" />
+    <Compile Include="GeneratedModels\ProductDefaults.cs" />
+    <Compile Include="GeneratedModels\Query.cs" />
+    <Compile Include="GeneratedModels\QueryPaging.cs" />
+    <Compile Include="GeneratedModels\QuerySorting.cs" />
+    <Compile Include="GeneratedModels\QueueStatus.cs" />
+    <Compile Include="GeneratedModels\RequireSubdomainResult.cs" />
+    <Compile Include="GeneratedModels\RequireWebPopResult.cs" />
+    <Compile Include="GeneratedModels\SearchQuery.cs" />
+    <Compile Include="GeneratedModels\SearchResult.cs" />
+    <Compile Include="GeneratedModels\SearchResults.cs" />
+    <Compile Include="GeneratedModels\Session.cs" />
+    <Compile Include="GeneratedModels\SFTool.cs" />
+    <Compile Include="GeneratedModels\Share.cs" />
+    <Compile Include="GeneratedModels\ShareAlias.cs" />
+    <Compile Include="GeneratedModels\ShareRequestParams.cs" />
+    <Compile Include="GeneratedModels\ShareSendParams.cs" />
+    <Compile Include="GeneratedModels\ShareType.cs" />
+    <Compile Include="GeneratedModels\SimpleQuery.cs" />
+    <Compile Include="GeneratedModels\SimpleSearchQuery.cs" />
+    <Compile Include="GeneratedModels\SSOAccountProvider.cs" />
+    <Compile Include="GeneratedModels\SSOInfo.cs" />
+    <Compile Include="GeneratedModels\SSOInfoEntry.cs" />
+    <Compile Include="GeneratedModels\StorageCenter.cs" />
+    <Compile Include="GeneratedModels\SymbolicLink.cs" />
+    <Compile Include="GeneratedModels\TreeMode.cs" />
+    <Compile Include="GeneratedModels\UploadMethod.cs" />
+    <Compile Include="GeneratedModels\UploadSpecification.cs" />
+    <Compile Include="GeneratedModels\User.cs" />
+    <Compile Include="GeneratedModels\UserConfirmationSettings.cs" />
+    <Compile Include="GeneratedModels\UserInfo.cs" />
+    <Compile Include="GeneratedModels\UserPreferences.cs" />
+    <Compile Include="GeneratedModels\UserRole.cs" />
+    <Compile Include="GeneratedModels\UserSecurity.cs" />
+    <Compile Include="GeneratedModels\UXMode.cs" />
+    <Compile Include="GeneratedModels\VRootType.cs" />
+    <Compile Include="GeneratedModels\Zone.cs" />
+    <Compile Include="GeneratedModels\ZoneService.cs" />
+    <Compile Include="GeneratedModels\ZoneType.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Requests\Filters\EndsWithFilter.cs" />
+    <Compile Include="Requests\Filters\EqualToFilter.cs" />
+    <Compile Include="Requests\Filters\Filter.cs" />
+    <Compile Include="Requests\Filters\StartsWithFilter.cs" />
+    <Compile Include="Requests\Filters\SubstringFilter.cs" />
+    <Compile Include="Requests\Filters\TypeFilter.cs" />
+    <Compile Include="Requests\IQuery.cs" />
+    <Compile Include="Requests\ODataParameter.cs" />
+    <Compile Include="Requests\ODataParameterCollection.cs" />
+    <Compile Include="Requests\Providers\IAsyncRequestProvider.cs" />
+    <Compile Include="Requests\Providers\ISyncRequestProvider.cs" />
+    <Compile Include="Requests\Providers\RequestProviderFactory.cs" />
+    <Compile Include="Requests\Query.cs" />
+    <Compile Include="Security\Cryptography\IMD5HashProvider.cs" />
+    <Compile Include="Security\Cryptography\MD5HashProviderFactory.cs" />
+    <Compile Include="Security\Cryptography\PortableMD5HashProvider.cs" />
+    <Compile Include="Security\ZoneAuthentication.cs" />
+    <Compile Include="ShareFileClient.cs" />
+    <Compile Include="Transfers\ShareFileApiResponse.cs" />
+    <Compile Include="Transfers\TransferEventArgs.cs" />
+    <Compile Include="Transfers\TransferProgress.cs" />
+    <Compile Include="Transfers\Uploaders\AsyncSemaphone.cs" />
+    <Compile Include="Transfers\Uploaders\AsyncThreadedFileUploader.cs" />
+    <Compile Include="Transfers\Uploaders\FilePart.cs" />
+    <Compile Include="Transfers\Uploaders\FileUploaderConfig.cs" />
+    <Compile Include="Transfers\Uploaders\ThreadedFileUploader.cs" />
+    <Compile Include="Transfers\UploadResponse.cs" />
+    <Compile Include="Transfers\UploadSpecificationRequest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Threading.Tasks">
+      <HintPath>packages\Microsoft.Bcl.Async.1.0.165\lib\portable-net40+sl4+win8+wp71\Microsoft.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions">
+      <HintPath>packages\Microsoft.Bcl.Async.1.0.165\lib\portable-net40+sl4+win8+wp71\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>packages\Newtonsoft.Json.6.0.1\lib\portable-net40+sl5+wp80+win8+monotouch+monoandroid\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO">
+      <HintPath>packages\Microsoft.Bcl.1.1.6\lib\portable-net40+sl5+win8+wp8\System.IO.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <HintPath>packages\Microsoft.Net.Http.2.2.18\lib\portable-net40+sl4+win8+wp71\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Extensions">
+      <HintPath>packages\Microsoft.Net.Http.2.2.18\lib\portable-net40+sl4+win8+wp71\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives">
+      <HintPath>packages\Microsoft.Net.Http.2.2.18\lib\portable-net40+sl4+win8+wp71\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime">
+      <HintPath>packages\Microsoft.Bcl.1.1.6\lib\portable-net40+sl5+win8+wp8\System.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks">
+      <HintPath>packages\Microsoft.Bcl.1.1.6\lib\portable-net40+sl5+win8+wp8\System.Threading.Tasks.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <Import Project="packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets" Condition="Exists('packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

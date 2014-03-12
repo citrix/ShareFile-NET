@@ -23,6 +23,7 @@
     <DefineConstants>TRACE;DEBUG;ShareFile</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -174,6 +175,7 @@
     <Compile Include="Requests\IQuery.cs" />
     <Compile Include="Requests\ODataParameter.cs" />
     <Compile Include="Requests\ODataParameterCollection.cs" />
+    <Compile Include="Requests\Providers\DefaultRequestProvider.cs" />
     <Compile Include="Requests\Providers\IAsyncRequestProvider.cs" />
     <Compile Include="Requests\Providers\ISyncRequestProvider.cs" />
     <Compile Include="Requests\Providers\RequestProviderFactory.cs" />

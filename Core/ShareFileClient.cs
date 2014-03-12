@@ -87,14 +87,11 @@ namespace ShareFile.Api.Client
         internal LoggingProvider Logging { get; set; }
         internal ICredentialCache CredentialCache { get; set; }
         internal CookieContainer CookieContainer { get; set; }
-        internal readonly JsonSerializer Serializer;
+        internal JsonSerializer Serializer;
 
         internal void RegisterRequestProviders()
         {
-            var provider = new DefaultRequestProvider
-            {
-                Client = this
-            };
+            var provider = new DefaultRequestProvider(this);
 
             RequestProviderFactory.RegisterAsyncRequestProvider(() => provider);
             RequestProviderFactory.RegisterSyncRequestProvider(() => provider);

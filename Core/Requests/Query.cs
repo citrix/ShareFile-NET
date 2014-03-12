@@ -585,5 +585,27 @@ namespace ShareFile.Api.Client.Requests
 
             return apiRequest;
         }
+
+        protected string GetQueryStringForUri()
+        {
+            if (QueryStringCollection.Count > 0)
+            {
+                var sb = new StringBuilder();
+                foreach (var kvp in QueryStringCollection)
+                {
+                    sb.AppendFormat("{0}={1}&", Uri.EscapeDataString(kvp.Key), Uri.EscapeDataString(kvp.Value ?? string.Empty));
+                }
+                return sb.ToString().TrimEnd('&');
+            }
+            return null;
+        }
+
+        public Uri GetComposedUri()
+        {
+            var queryString = GetQueryStringForUri();
+            return string.IsNullOrEmpty(queryString)
+                ? Uri
+                : new Uri(string.Format("{0}?{1}", Uri, queryString));
+        }
     }
 }

@@ -305,11 +305,13 @@ namespace ShareFile.Api.Client
         }
 
         public Task<T> ExecuteAsync<T>(IQuery<T> query, CancellationToken? token = null)
+            where T : class
         {
             return RequestProviderFactory.GetAsyncRequestProvider().ExecuteAsync(query, token);
         }
 
         public T Execute<T>(IQuery<T> query)
+            where T : class
         {
             return RequestProviderFactory.GetSyncRequestProvider().Execute(query);
         }

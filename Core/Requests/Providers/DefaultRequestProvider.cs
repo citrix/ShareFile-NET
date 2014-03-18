@@ -9,8 +9,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using ShareFile.Api.Client.Credentials;
+using ShareFile.Api.Client.Events;
 using ShareFile.Api.Client.Exceptions;
+using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Logging;
+using ShareFile.Api.Client.Models;
+using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Requests.Providers
 {
@@ -157,22 +161,42 @@ namespace ShareFile.Api.Client.Requests.Providers
 
         protected void WriteRequestBody(HttpRequestMessage httpRequestMessage, object body, MediaTypeHeaderValue contentType)
         {
-            using (var stringWriter = new StringWriter())
-            using (var textWriter = new JsonTextWriter(stringWriter))
+            if (body is string)
             {
-                var serializationWatch = new ActionStopwatch("SerializeRequest", ShareFileClient.Logging);
-                ShareFileClient.Serializer.Serialize(textWriter, body);
-                ShareFileClient.Logging.Trace(serializationWatch);
-
-                if (ShareFileClient.Logging.IsDebugEnabled)
+                using (var stringWriter = new StringWriter())
                 {
-                    ShareFileClient.Logging.Debug(stringWriter.ToString(), null);
+                    stringWriter.Write(body as string);
+
+                    if (ShareFileClient.Logging.IsDebugEnabled)
+                    {
+                        ShareFileClient.Logging.Debug(stringWriter.ToString(), null);
+                    }
+
+                    httpRequestMessage.Content = new StringContent(stringWriter.ToString());
+
+                    if (httpRequestMessage.Content.Headers.ContentLength > 0)
+                        httpRequestMessage.Content.Headers.ContentType = contentType;
                 }
+            }
+            else
+            {
+                using (var stringWriter = new StringWriter())
+                using (var textWriter = new JsonTextWriter(stringWriter))
+                {
+                    var serializationWatch = new ActionStopwatch("SerializeRequest", ShareFileClient.Logging);
+                    ShareFileClient.Serializer.Serialize(textWriter, body);
+                    ShareFileClient.Logging.Trace(serializationWatch);
 
-                httpRequestMessage.Content = new StringContent(stringWriter.ToString());
+                    if (ShareFileClient.Logging.IsDebugEnabled)
+                    {
+                        ShareFileClient.Logging.Debug(stringWriter.ToString(), null);
+                    }
 
-                if (httpRequestMessage.Content.Headers.ContentLength > 0)
-                    httpRequestMessage.Content.Headers.ContentType = contentType;
+                    httpRequestMessage.Content = new StringContent(stringWriter.ToString());
+
+                    if (httpRequestMessage.Content.Headers.ContentLength > 0)
+                        httpRequestMessage.Content.Headers.ContentType = contentType;
+                }
             }
         }
 
@@ -219,7 +243,7 @@ namespace ShareFile.Api.Client.Requests.Providers
         {
             var handler = new HttpClientHandler
             {
-                AllowAutoRedirect = true,
+                AllowAutoRedirect = false,
                 Credentials = shareFileClient.CredentialCache,
                 AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip,
                 UseCookies = true
@@ -238,56 +262,137 @@ namespace ShareFile.Api.Client.Requests.Providers
 
         public async Task ExecuteAsync(IQuery query, CancellationToken? token = null)
         {
-            var requestRoundtripWatch = new ActionStopwatch("RequestRoundTrip", ShareFileClient.Logging);
+            EventHandlerResponse action = null;
+            int retryCount = 0;
 
-            var apiRequest = ApiRequest.FromQuery(query as QueryBase);
-            var httpRequestMessage = BuildRequest(apiRequest);
-            var responseMessage = await ExecuteRequestAsync(httpRequestMessage, token);
+            do
+            {
+                var requestRoundtripWatch = new ActionStopwatch("RequestRoundTrip", ShareFileClient.Logging);
 
-            try
-            {
-                await HandleResponse(responseMessage, apiRequest);
-            }
-            finally
-            {
-                requestRoundtripWatch.Stop();
-            }
+                var apiRequest = ApiRequest.FromQuery(query as QueryBase);
+
+                if (action != null && action.Redirection != null && action.Redirection.Body != null)
+                {
+                    apiRequest.IsComposed = true;
+                    apiRequest.Uri = action.Redirection.Uri;
+                    apiRequest.Body = action.Redirection.Body;
+                    apiRequest.HttpMethod = action.Redirection.Method ?? "GET";
+                }
+
+                var httpRequestMessage = BuildRequest(apiRequest);
+                var responseMessage = await ExecuteRequestAsync(httpRequestMessage, token);
+
+                action = null;
+
+                try
+                {
+                    var response = await HandleResponse(responseMessage, apiRequest, retryCount++);
+                    if (response.Action != null)
+                    {
+                        action = response.Action;
+                    }
+                }
+                finally
+                {
+                    requestRoundtripWatch.Stop();
+                }
+            } while (action != null && (action.Action == EventHandlerResponseAction.Retry || action.Action == EventHandlerResponseAction.Redirect));
         }
         //var watch = new ActionStopwatch("ExecuteRequest", ShareFileClient.Logging);
         public async Task<T> ExecuteAsync<T>(IQuery<T> query, CancellationToken? token = null)
+            where T : class
         {
-            var requestRoundtripWatch = new ActionStopwatch("RequestRoundTrip", ShareFileClient.Logging);
+            EventHandlerResponse action = null;
+            int retryCount = 0;
 
-            var apiRequest = ApiRequest.FromQuery(query as QueryBase);
-            var httpRequestMessage = BuildRequest(apiRequest);
-            var responseMessage = await ExecuteRequestAsync(httpRequestMessage, token);
+            do
+            {
+                var requestRoundtripWatch = new ActionStopwatch("RequestRoundTrip", ShareFileClient.Logging);
 
-            try
-            {
-                return await HandleTypedResponse<T>(responseMessage, apiRequest);
-            }
-            finally
-            {
-                requestRoundtripWatch.Stop();
-            }
+                var apiRequest = ApiRequest.FromQuery(query as QueryBase);
+
+                if (action != null && action.Redirection != null && action.Redirection.Body != null)
+                {
+                    apiRequest.IsComposed = true;
+                    apiRequest.Uri = action.Redirection.Uri;
+                    apiRequest.Body = action.Redirection.Body;
+                    apiRequest.HttpMethod = action.Redirection.Method ?? "GET";
+                }
+
+                var httpRequestMessage = BuildRequest(apiRequest);
+                var responseMessage = await ExecuteRequestAsync(httpRequestMessage, token);
+
+                action = null;
+
+                try
+                {
+                    var response = await HandleTypedResponse<ODataObject>(responseMessage, apiRequest, retryCount++);
+
+                    if (response.Value != null)
+                    {
+                        if (response.Value is Redirection)
+                        {
+                            var redirection = response.Value as Redirection;
+                            if (httpRequestMessage.RequestUri.GetAuthority() != redirection.Uri.GetAuthority())
+                            {
+                                ShareFileClient.OnChangeDomain(httpRequestMessage, redirection);
+                            }
+                            action = EventHandlerResponse.Redirect(redirection);
+                        }
+                        else
+                        {
+                            return response.Value as T;
+                        }
+                    }
+                    else action = response.Action;
+                }
+                finally
+                {
+                    requestRoundtripWatch.Stop();
+                }
+
+            } while (action != null && (action.Action == EventHandlerResponseAction.Retry || action.Action == EventHandlerResponseAction.Redirect));
+
+            return default(T);
         }
 
         public async Task<Stream> ExecuteAsync(IStreamQuery query, CancellationToken? token = null)
         {
-            var requestRoundtripWatch = new ActionStopwatch("RequestRoundTrip", ShareFileClient.Logging);
+            EventHandlerResponse action = null;
+            int retryCount = 0;
 
-            var apiRequest = ApiRequest.FromQuery(query as QueryBase);
-            var httpRequestMessage = BuildRequest(apiRequest);
-            var responseMessage = await ExecuteRequestAsync(httpRequestMessage, token);
+            do
+            {
+                var requestRoundtripWatch = new ActionStopwatch("RequestRoundTrip", ShareFileClient.Logging);
 
-            try
-            {
-                return await HandleStreamResponse(responseMessage, apiRequest);
-            }
-            finally
-            {
-                requestRoundtripWatch.Stop();
-            }
+                var apiRequest = ApiRequest.FromQuery(query as QueryBase);
+                if (action != null && action.Redirection != null && action.Redirection.Body != null)
+                {
+                    apiRequest.IsComposed = true;
+                    apiRequest.Uri = action.Redirection.Uri;
+                    apiRequest.Body = action.Redirection.Body;
+                    apiRequest.HttpMethod = action.Redirection.Method ?? "GET";
+                }
+
+                action = null;
+
+                var httpRequestMessage = BuildRequest(apiRequest);
+                var responseMessage = await ExecuteRequestAsync(httpRequestMessage, token);
+
+                try
+                {
+                    var response = await HandleStreamResponse(responseMessage, apiRequest, retryCount++);
+                    if (response.Value != null) return response.Value;
+                    else action = response.Action;
+                }
+                finally
+                {
+                    requestRoundtripWatch.Stop();
+                }
+
+            } while (action != null && (action.Action == EventHandlerResponseAction.Retry || action.Action == EventHandlerResponseAction.Redirect));
+
+            return default(Stream);
         }
 
         public void Execute(IQuery query)
@@ -297,6 +402,7 @@ namespace ShareFile.Api.Client.Requests.Providers
         }
 
         public T Execute<T>(IQuery<T> query)
+            where T : class
         {
             var executeTask = ExecuteAsync(query);
             executeTask.Wait();
@@ -312,13 +418,16 @@ namespace ShareFile.Api.Client.Requests.Providers
             return executeTask.Result;
         }
 
-        public HttpRequestMessage BuildRequest(ApiRequest request)
+        protected HttpRequestMessage BuildRequest(ApiRequest request)
         {
             HttpRequestMessage requestMessage;
             var watch = new ActionStopwatch("BuildRequest", ShareFileClient.Logging);
             var uri = request.GetComposedUri();
 
-            //if (ShareFileClient.ZoneAuthentication != null) uri = ShareFileClient.ZoneAuthentication.Sign(uri);
+#if ShareFile
+            if (ShareFileClient.ZoneAuthentication != null) uri = ShareFileClient.ZoneAuthentication.Sign(uri);
+#endif
+            
             if (ShareFileClient.Configuration.UseHttpMethodOverride)
             {
                 requestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
@@ -353,7 +462,7 @@ namespace ShareFile.Api.Client.Requests.Providers
             return requestMessage;
         }
 
-        protected async Task<T> HandleTypedResponse<T>(HttpResponseMessage httpResponseMessage, ApiRequest request, bool tryResolveUnauthorizedChallenge = true)
+        protected async Task<Response<T>> HandleTypedResponse<T>(HttpResponseMessage httpResponseMessage, ApiRequest request, int retryCount, bool tryResolveUnauthorizedChallenge = true)
         {
             if (httpResponseMessage.IsSuccessStatusCode)
             {
@@ -372,7 +481,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                     LogResponse(result, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode);
 
                     ShareFileClient.Logging.Trace(watch);
-                    return result;
+                    return Response.CreateSuccess(result);
                 }
 
                 ShareFileClient.Logging.Trace(watch);
@@ -399,60 +508,22 @@ namespace ShareFile.Api.Client.Requests.Providers
                     {
                         if (authenticatedResponse.IsSuccessStatusCode)
                         {
-                            return await HandleTypedResponse<T>(authenticatedResponse, request, false);
+                            return await HandleTypedResponse<T>(authenticatedResponse, request, retryCount, false);
                         }
-                        
-                        await HandleNonSuccess(authenticatedResponse);
-                        return default(T);
+
+                        Response.CreateAction<T>(await HandleNonSuccess(authenticatedResponse, retryCount));
                     }
                 }
             }
 
-            await HandleNonSuccess(httpResponseMessage);
-
-            return default(T);
+            return Response.CreateAction<T>(await HandleNonSuccess(httpResponseMessage, retryCount));
         }
 
-        protected async Task HandleResponse(HttpResponseMessage httpResponseMessage, ApiRequest request, bool tryResolveUnauthorizedChallenge = true)
-        {
-            if (httpResponseMessage.IsSuccessStatusCode) return;
-
-            if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                LogResponse(httpResponseMessage, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode);
-
-                var authorizationHeaderValue = GetAuthorizationHeaderValue(httpResponseMessage.RequestMessage.RequestUri,
-                                                                        httpResponseMessage.Headers.WwwAuthenticate);
-                httpResponseMessage.Dispose();
-                if (authorizationHeaderValue != null)
-                {
-                    var authenticatedHttpRequestMessage = BuildRequest(request);
-                    authenticatedHttpRequestMessage.Headers.Authorization = authorizationHeaderValue;
-
-                    LogRequest(request, authenticatedHttpRequestMessage.Headers.ToString());
-
-                    var requestTask = HttpClient.SendAsync(authenticatedHttpRequestMessage, HttpCompletionOption.ResponseContentRead);
-                    using (var authenticatedResponse = await requestTask)
-                    {
-                        if (authenticatedResponse.IsSuccessStatusCode)
-                        {
-                            await HandleResponse(authenticatedResponse, request, false);
-                        }
-
-                        await HandleNonSuccess(authenticatedResponse);
-                        return;
-                    }
-                }
-            }
-
-            await HandleNonSuccess(httpResponseMessage);
-        }
-
-        protected async Task<Stream> HandleStreamResponse(HttpResponseMessage httpResponseMessage, ApiRequest request, bool tryResolveUnauthorizedChallenge = true)
+        protected async Task<Response> HandleResponse(HttpResponseMessage httpResponseMessage, ApiRequest request, int retryCount, bool tryResolveUnauthorizedChallenge = true)
         {
             if (httpResponseMessage.IsSuccessStatusCode)
             {
-                return await httpResponseMessage.Content.ReadAsStreamAsync();
+                return Response.Success;
             }
 
             if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized)
@@ -474,87 +545,151 @@ namespace ShareFile.Api.Client.Requests.Providers
                     {
                         if (authenticatedResponse.IsSuccessStatusCode)
                         {
-                            return await HandleStreamResponse(authenticatedResponse, request, false);
+                            await HandleResponse(authenticatedResponse, request, retryCount, false);
                         }
 
-                        await HandleNonSuccess(authenticatedResponse);
-                        return null;
+                        return Response.CreateAction(await HandleNonSuccess(authenticatedResponse, retryCount));
                     }
                 }
             }
 
-            await HandleNonSuccess(httpResponseMessage);
-
-            return null;
+            return Response.CreateAction(await HandleNonSuccess(httpResponseMessage, retryCount));
         }
 
-        async Task HandleNonSuccess(HttpResponseMessage responseMessage)
+        protected async Task<Response<Stream>> HandleStreamResponse(HttpResponseMessage httpResponseMessage, ApiRequest request, int retryCount, bool tryResolveUnauthorizedChallenge = true)
         {
-            if (responseMessage.StatusCode == HttpStatusCode.RequestTimeout ||
-                responseMessage.StatusCode == HttpStatusCode.GatewayTimeout)
+            if (httpResponseMessage.IsSuccessStatusCode)
             {
-                var exception = new HttpRequestException(string.Format("{0}\r\n{1}: Request timeout", responseMessage.RequestMessage.RequestUri, responseMessage.StatusCode));
-                ShareFileClient.Logging.Error(exception, "", null);
-            }
-
-            if (responseMessage.Content.Headers.ContentLength == 0)
-            {
-                var exception = new NullReferenceException("Unable to retrieve HttpResponseMessage.Content");
-                ShareFileClient.Logging.Error(exception, "", null);
-                throw exception;
-            }
-
-            if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                var supportedSchemes = responseMessage.Headers.WwwAuthenticate.Select(x => x.Scheme).ToList();
-
-                var exception = new WebAuthenticationException("Authentication failed with status code: " + (int)responseMessage.StatusCode, supportedSchemes);
-                exception.RequestUri = responseMessage.RequestMessage.RequestUri;
-                ShareFileClient.Logging.Error(exception, "", null);
-                throw exception;
-            }
-
-            if (responseMessage.StatusCode == HttpStatusCode.ProxyAuthenticationRequired)
-            {
-                var exception = new ProxyAuthenticationException("ProxyAuthentication failed with status code: " + (int)responseMessage.StatusCode);
-                ShareFileClient.Logging.Error(exception, "", null);
-                throw exception;
-            }
-
-            using (var responseStream = await responseMessage.Content.ReadAsStreamAsync())
-            {
-                if (responseStream != null)
+                return new Response<Stream>()
                 {
-                    var exception = new StreamReader(responseStream).ReadToEnd();
-                    Exception exceptionToThrow;
-                    try
-                    {
-                        var requestException = JsonConvert.DeserializeObject<ODataRequestException>(exception);
-                        if (requestException.Error != null)
-                        {
-                            ShareFileClient.Logging.Error(requestException.Error, "", null);
-                            exceptionToThrow = requestException.Error;
-                        }
-                        else
-                        {
-                            var odataException = JsonConvert.DeserializeObject<ODataException>(exception);
-                            ShareFileClient.Logging.Error(odataException, "", null);
-                            exceptionToThrow = odataException;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        var invalidResponseException = new InvalidApiResponseException(responseMessage.StatusCode, exception, ex);
-                        ShareFileClient.Logging.Error(invalidResponseException, "", null);
-                        exceptionToThrow = invalidResponseException;
-                    }
+                    Value = await httpResponseMessage.Content.ReadAsStreamAsync()
+                };
+            }
 
-                    if (exceptionToThrow != null)
+            if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                LogResponse(httpResponseMessage, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode);
+
+                var authorizationHeaderValue = GetAuthorizationHeaderValue(httpResponseMessage.RequestMessage.RequestUri,
+                                                                        httpResponseMessage.Headers.WwwAuthenticate);
+                httpResponseMessage.Dispose();
+                if (authorizationHeaderValue != null)
+                {
+                    var authenticatedHttpRequestMessage = BuildRequest(request);
+                    authenticatedHttpRequestMessage.Headers.Authorization = authorizationHeaderValue;
+
+                    LogRequest(request, authenticatedHttpRequestMessage.Headers.ToString());
+
+                    var requestTask = HttpClient.SendAsync(authenticatedHttpRequestMessage, HttpCompletionOption.ResponseContentRead);
+                    using (var authenticatedResponse = await requestTask)
                     {
-                        throw exceptionToThrow;
+                        if (authenticatedResponse.IsSuccessStatusCode)
+                        {
+                            return await HandleStreamResponse(authenticatedResponse, request, retryCount, false);
+                        }
+
+                        return new Response<Stream>
+                        {
+                            Action = await HandleNonSuccess(authenticatedResponse, retryCount)
+                        };
                     }
                 }
             }
+
+            return new Response<Stream>
+            {
+                Action = await HandleNonSuccess(httpResponseMessage, retryCount)
+            };
+        }
+
+        async Task<EventHandlerResponse> HandleNonSuccess(HttpResponseMessage responseMessage, int retryCount)
+        {
+            var action = ShareFileClient.OnException(responseMessage, retryCount);
+
+            if (action != null && action.Action == EventHandlerResponseAction.Throw)
+            {
+                if (responseMessage.StatusCode == HttpStatusCode.RequestTimeout ||
+                    responseMessage.StatusCode == HttpStatusCode.GatewayTimeout)
+                {
+                    var exception =
+                        new HttpRequestException(string.Format("{0}\r\n{1}: Request timeout",
+                            responseMessage.RequestMessage.RequestUri, responseMessage.StatusCode));
+                    ShareFileClient.Logging.Error(exception, "", null);
+                }
+
+                if (responseMessage.Content.Headers.ContentLength == 0)
+                {
+                    var exception = new NullReferenceException("Unable to retrieve HttpResponseMessage.Content");
+                    ShareFileClient.Logging.Error(exception, "", null);
+                    throw exception;
+                }
+
+                if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    var supportedSchemes = responseMessage.Headers.WwwAuthenticate.Select(x => x.Scheme).ToList();
+
+                    var exception =
+                        new WebAuthenticationException(
+                            "Authentication failed with status code: " + (int) responseMessage.StatusCode,
+                            supportedSchemes);
+                    exception.RequestUri = responseMessage.RequestMessage.RequestUri;
+                    ShareFileClient.Logging.Error(exception, "", null);
+                    throw exception;
+                }
+
+                if (responseMessage.StatusCode == HttpStatusCode.ProxyAuthenticationRequired)
+                {
+                    var exception =
+                        new ProxyAuthenticationException("ProxyAuthentication failed with status code: " +
+                                                         (int) responseMessage.StatusCode);
+                    ShareFileClient.Logging.Error(exception, "", null);
+                    throw exception;
+                }
+
+                using (var responseStream = await responseMessage.Content.ReadAsStreamAsync())
+                {
+                    if (responseStream != null)
+                    {
+                        var exception = new StreamReader(responseStream).ReadToEnd();
+                        Exception exceptionToThrow;
+                        try
+                        {
+                            var requestException = JsonConvert.DeserializeObject<ODataRequestException>(exception);
+                            if (requestException.Error != null)
+                            {
+                                ShareFileClient.Logging.Error(requestException.Error, "", null);
+                                exceptionToThrow = requestException.Error;
+                            }
+                            else
+                            {
+                                var altRequestException =
+                                    JsonConvert.DeserializeObject<ODataRequestExceptionAlt>(exception);
+                                var odataException = new ODataException
+                                {
+                                    ODataExceptionMessage = altRequestException.Message,
+                                    Code = altRequestException.Code
+                                };
+                                ShareFileClient.Logging.Error(odataException, "", null);
+                                exceptionToThrow = odataException;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            var invalidResponseException = new InvalidApiResponseException(responseMessage.StatusCode,
+                                exception, ex);
+                            ShareFileClient.Logging.Error(invalidResponseException, "", null);
+                            exceptionToThrow = invalidResponseException;
+                        }
+
+                        if (exceptionToThrow != null)
+                        {
+                            throw exceptionToThrow;
+                        }
+                    }
+                }
+            }
+
+            return action;
         }
 
         protected Task<HttpResponseMessage> ExecuteRequestAsync(HttpRequestMessage requestMessage, CancellationToken? token = null)
@@ -566,5 +701,40 @@ namespace ShareFile.Api.Client.Requests.Providers
             
             return HttpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, token.Value);
         }
+    }
+
+    public class Response<T> : Response
+    {
+        public T Value { get; set; }
+    }
+
+    public class Response
+    {
+        public EventHandlerResponse Action { get; set; }
+        public static Response<TSuccess> CreateSuccess<TSuccess>(TSuccess value)
+        {
+            return new Response<TSuccess>
+            {
+                Value = value
+            };
+        }
+
+        public static Response<TSuccess> CreateAction<TSuccess>(EventHandlerResponse response)
+        {
+            return new Response<TSuccess>
+            {
+                Action = response
+            };
+        }
+
+        public static Response CreateAction(EventHandlerResponse response)
+        {
+            return new Response
+            {
+                Action = response
+            };
+        }
+
+        public static Response Success = new Response();
     }
 }

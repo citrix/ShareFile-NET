@@ -42,6 +42,7 @@
     <Compile Include="Credentials\ICredentialCache.cs" />
     <Compile Include="Credentials\OAuth2Credential.cs" />
     <Compile Include="Entities\EntityBase.cs" />
+    <Compile Include="Events\EventHandlerResponse.cs" />
     <Compile Include="Exceptions\ApplicationException.cs" />
     <Compile Include="Exceptions\AuthenticationException.cs" />
     <Compile Include="Exceptions\EntityNotFoundException.cs" />
@@ -180,6 +181,8 @@
     <Compile Include="Requests\Providers\ISyncRequestProvider.cs" />
     <Compile Include="Requests\Providers\RequestProviderFactory.cs" />
     <Compile Include="Requests\Query.cs" />
+    <Compile Include="Security\Cryptography\HmacSha256ProviderFactory.cs" />
+    <Compile Include="Security\Cryptography\IHmacSha256Provider.cs" />
     <Compile Include="Security\Cryptography\IMD5HashProvider.cs" />
     <Compile Include="Security\Cryptography\MD5HashProviderFactory.cs" />
     <Compile Include="Security\Cryptography\PortableMD5HashProvider.cs" />

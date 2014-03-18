@@ -253,6 +253,7 @@ namespace ShareFile.Api.Client.Requests
     }
 
     public class Query<T> : QueryBase, IQuery<T>, IReadOnlyODataQuery
+        where T : class
     {
 
 // ReSharper disable InconsistentNaming
@@ -470,6 +471,7 @@ namespace ShareFile.Api.Client.Requests
         public object Body { get; set; }
         public ODataParameterCollection QueryStringCollection { get; set; }
         protected QueryBase QueryBase { get; set; }
+        public bool IsComposed { get; set; }
 
         public static bool IsUri(string id)
         {
@@ -602,6 +604,8 @@ namespace ShareFile.Api.Client.Requests
 
         public Uri GetComposedUri()
         {
+            if (IsComposed) return Uri;
+
             var queryString = GetQueryStringForUri();
             return string.IsNullOrEmpty(queryString)
                 ? Uri

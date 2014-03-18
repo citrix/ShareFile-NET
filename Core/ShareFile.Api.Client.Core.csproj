@@ -42,7 +42,9 @@
     <Compile Include="Credentials\ICredentialCache.cs" />
     <Compile Include="Credentials\OAuth2Credential.cs" />
     <Compile Include="Entities\EntityBase.cs" />
+    <Compile Include="Events\ChangeDomainCallback.cs" />
     <Compile Include="Events\EventHandlerResponse.cs" />
+    <Compile Include="Events\ExceptionCallback.cs" />
     <Compile Include="Exceptions\ApplicationException.cs" />
     <Compile Include="Exceptions\AuthenticationException.cs" />
     <Compile Include="Exceptions\EntityNotFoundException.cs" />
@@ -107,6 +109,7 @@
     <Compile Include="GeneratedModels\ItemInfo.cs" />
     <Compile Include="GeneratedModels\ItemProtocolLink.cs" />
     <Compile Include="GeneratedModels\Link.cs" />
+    <Compile Include="GeneratedModels\Redirection.cs" />
     <Compile Include="Helpers\TypeHelpers.cs" />
     <Compile Include="Logging\ActionStopwatch.cs" />
     <Compile Include="Logging\DefaultLoggingProvider.cs" />

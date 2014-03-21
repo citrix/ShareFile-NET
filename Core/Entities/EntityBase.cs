@@ -2,11 +2,13 @@
 {
     public abstract class EntityBase
     {
-        protected EntityBase(ShareFileClient client)
+        protected EntityBase(IShareFileClient client, string entity)
         {
             Client = client;
+            Entity = entity;
         }
 
-        public ShareFileClient Client { get; set; }
+        public IShareFileClient Client { get; set; }
+        public string Entity { get; set; }
     }
 }

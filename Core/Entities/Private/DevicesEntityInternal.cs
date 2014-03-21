@@ -22,7 +22,7 @@ namespace ShareFile.Api.Client.Entities
 	public class DevicesEntityInternal : EntityBase
 	{
 		public DevicesEntityInternal(IShareFileClient client)
-			: base (client)
+			: base (client, "Devices")
 			
 		{
 

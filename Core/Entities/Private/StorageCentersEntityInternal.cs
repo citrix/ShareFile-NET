@@ -22,7 +22,7 @@ namespace ShareFile.Api.Client.Entities
 	public class StorageCentersEntityInternal : EntityBase
 	{
 		public StorageCentersEntityInternal(IShareFileClient client)
-			: base (client)
+			: base (client, "StorageCenters")
 			
 		{
 

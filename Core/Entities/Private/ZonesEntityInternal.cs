@@ -22,7 +22,7 @@ namespace ShareFile.Api.Client.Entities
 	public class ZonesEntityInternal : EntityBase
 	{
 		public ZonesEntityInternal(IShareFileClient client)
-			: base (client)
+			: base (client, "Zones")
 			
 		{
 

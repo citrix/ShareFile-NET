@@ -42,6 +42,9 @@
     <Compile Include="Credentials\ICredentialCache.cs" />
     <Compile Include="Credentials\OAuth2Credential.cs" />
     <Compile Include="Entities\EntityBase.cs" />
+    <Compile Include="Events\ChangeDomainCallback.cs" />
+    <Compile Include="Events\EventHandlerResponse.cs" />
+    <Compile Include="Events\ExceptionCallback.cs" />
     <Compile Include="Exceptions\ApplicationException.cs" />
     <Compile Include="Exceptions\AuthenticationException.cs" />
     <Compile Include="Exceptions\EntityNotFoundException.cs" />
@@ -74,6 +77,8 @@
     <Compile Include="GeneratedModels\AccessControl.cs" />
     <Compile Include="GeneratedModels\AccessControlDomains.cs" />
     <Compile Include="GeneratedModels\AccessControlFilter.cs" />
+    <Compile Include="GeneratedModels\AccessControlParam.cs" />
+    <Compile Include="GeneratedModels\AccessControlsBulkParams.cs" />
     <Compile Include="GeneratedModels\Account.cs" />
     <Compile Include="GeneratedModels\AccountPreferences.cs" />
     <Compile Include="GeneratedModels\AccountUser.cs" />
@@ -93,6 +98,10 @@
     <Compile Include="GeneratedModels\DeviceUserWipe.cs" />
     <Compile Include="GeneratedModels\DeviceWipeReport.cs" />
     <Compile Include="GeneratedModels\DownloadSpecification.cs" />
+    <Compile Include="GeneratedModels\EnsEventType.cs" />
+    <Compile Include="GeneratedModels\EnsSubscriberConfiguration.cs" />
+    <Compile Include="GeneratedModels\EnsSubscriptionRequest.cs" />
+    <Compile Include="GeneratedModels\EnsSubscriptionToken.cs" />
     <Compile Include="GeneratedModels\EntityTypeMap.cs" />
     <Compile Include="GeneratedModels\FavoriteFolder.cs" />
     <Compile Include="GeneratedModels\File.cs" />
@@ -106,6 +115,7 @@
     <Compile Include="GeneratedModels\ItemInfo.cs" />
     <Compile Include="GeneratedModels\ItemProtocolLink.cs" />
     <Compile Include="GeneratedModels\Link.cs" />
+    <Compile Include="GeneratedModels\Redirection.cs" />
     <Compile Include="Helpers\TypeHelpers.cs" />
     <Compile Include="Logging\ActionStopwatch.cs" />
     <Compile Include="Logging\DefaultLoggingProvider.cs" />
@@ -180,6 +190,8 @@
     <Compile Include="Requests\Providers\ISyncRequestProvider.cs" />
     <Compile Include="Requests\Providers\RequestProviderFactory.cs" />
     <Compile Include="Requests\Query.cs" />
+    <Compile Include="Security\Cryptography\HmacSha256ProviderFactory.cs" />
+    <Compile Include="Security\Cryptography\IHmacSha256Provider.cs" />
     <Compile Include="Security\Cryptography\IMD5HashProvider.cs" />
     <Compile Include="Security\Cryptography\MD5HashProviderFactory.cs" />
     <Compile Include="Security\Cryptography\PortableMD5HashProvider.cs" />

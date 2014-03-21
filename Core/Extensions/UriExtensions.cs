@@ -36,5 +36,10 @@ namespace ShareFile.Api.Client.Extensions
             }
             return segments;
         }
+
+        public static string GetAuthority(this Uri uri)
+        {
+            return string.Format("{0}://{1}", uri.GetComponents(UriComponents.Scheme, UriFormat.Unescaped), uri.GetComponents(UriComponents.Host, UriFormat.Unescaped));
+        }
     }
 }

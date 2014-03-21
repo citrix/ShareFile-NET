@@ -15,11 +15,11 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 {
     public class AsyncThreadedFileUploader : IDisposable
     {
-        public AsyncThreadedFileUploader(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null)
+        private AsyncThreadedFileUploader(ShareFileClient client, IPlatformFile file, FileUploaderConfig config = null)
         {
             _itemsToUpload = new Queue<FilePart>();
             _itemsToFill = new Queue<FilePart>();
-            
+
             Config = config ?? new FileUploaderConfig();
 
             _effectivePartSize = Config.PartSize;
@@ -27,14 +27,31 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             Progress = new TransferProgress
             {
                 TransferId = Guid.NewGuid().ToString(),
-                BytesTransferred = 0,
-                BytesRemaining = uploadSpecificationRequest.FileSize,
-                TotalBytes = uploadSpecificationRequest.FileSize
+                BytesTransferred = 0
             };
 
             Client = client;
             File = file;
+        }
+
+        public AsyncThreadedFileUploader(ShareFileClient client, UploadSpecification uploadSpecification,
+            IPlatformFile file, FileUploaderConfig config = null)
+            : this (client, file, config)
+        {
+            UploadSpecification = uploadSpecification;
+            Progress.TotalBytes = uploadSpecification.IsResume
+                ? (file.Length - uploadSpecification.ResumeOffset)
+                : file.Length;
+
+            Progress.BytesRemaining = Progress.TotalBytes;
+        }
+
+        public AsyncThreadedFileUploader(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null)
+            : this(client, file, config)
+        {   
             UploadSpecificationRequest = uploadSpecificationRequest;
+
+            Progress.BytesRemaining = Progress.TotalBytes = uploadSpecificationRequest.FileSize;
         }
 
         public FileUploaderConfig Config { get; private set; }
@@ -65,7 +82,10 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         {
             if (!Prepared)
             {
-                UploadSpecification = await CreateUpload(UploadSpecificationRequest);
+                if (UploadSpecification == null)
+                {
+                    UploadSpecification = await CreateUpload(UploadSpecificationRequest);
+                }
 
                 await CheckResumeAsync();
                 BuildFileParts();
@@ -76,7 +96,17 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         public async Task<UploadSpecification> CreateUpload(UploadSpecificationRequest uploadSpecificationRequest)
         {
-            return new UploadSpecification();
+            var query = Client.Items.Upload(uploadSpecificationRequest.ParentId, uploadSpecificationRequest.Method,
+                uploadSpecificationRequest.Raw, uploadSpecificationRequest.FileName, uploadSpecificationRequest.FileSize,
+                uploadSpecificationRequest.BatchId,
+                uploadSpecificationRequest.BatchLast, uploadSpecificationRequest.CanResume,
+                uploadSpecificationRequest.StartOver, uploadSpecificationRequest.Unzip, uploadSpecificationRequest.Tool,
+                uploadSpecificationRequest.Overwrite, uploadSpecificationRequest.Title,
+                uploadSpecificationRequest.Details, uploadSpecificationRequest.IsSend,
+                uploadSpecificationRequest.SendGuid, null, uploadSpecificationRequest.ThreadCount,
+                uploadSpecificationRequest.ResponseFormat, uploadSpecificationRequest.Notify);
+
+            return await query.ExecuteAsync(_cancellationToken);
         }
 
         private void BuildFileParts()

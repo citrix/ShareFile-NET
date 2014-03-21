@@ -1,12 +1,12 @@
 ﻿using System;
+using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Security.Cryptography;
 using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Security
 {
-
     public class ZoneAuthentication
     {
-#if !ShareFile
         public Zone Zone { get; set; }
 
         public string OpId { get; set; }
@@ -28,10 +28,11 @@ namespace ShareFile.Api.Client.Security
                 Secret = zoneSecret
             };
         }
+        
 
         public Uri Sign(Uri request)
         {
-            string uriToHash = request.PathAndQuery;
+            string uriToHash = request.AbsolutePath + request.Query;
             string uriCheck = uriToHash.ToLower();
             // strip anything after an existing &h parameter
             int hParamPos = uriCheck.IndexOf("&h=");
@@ -51,10 +52,9 @@ namespace ShareFile.Api.Client.Security
             if (!string.IsNullOrEmpty(UserId) && uriCheck.IndexOf("zuid") < 0) uriToHash += "&zuid=" + UserId;
 
             byte[] secret = Convert.FromBase64String(Zone.Secret);
-            System.Security.Cryptography.HMACSHA256 hmac = new System.Security.Cryptography.HMACSHA256(secret);
+            var hmac = HmacSha256ProviderFactory.GetProvider(secret);
             byte[] hash = hmac.ComputeHash(new System.Text.UTF8Encoding().GetBytes(uriToHash));
-            return new Uri(request.GetLeftPart(UriPartial.Authority) + uriToHash + "&h=" + Uri.EscapeDataString(Convert.ToBase64String(hash)));
+            return new Uri(request.GetAuthority() + uriToHash + "&h=" + Uri.EscapeDataString(Convert.ToBase64String(hash)));
         }
-#endif
     }
 }

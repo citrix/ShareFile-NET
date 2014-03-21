@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -9,9 +10,16 @@ using Newtonsoft.Json.Converters;
 using ShareFile.Api.Client.Converters;
 using ShareFile.Api.Client.Credentials;
 using ShareFile.Api.Client.Entities;
+using ShareFile.Api.Client.Events;
+using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Logging;
 using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Requests.Providers;
+using ShareFile.Api.Client.Security;
+using ShareFile.Api.Client.Security.Cryptography;
+using ShareFile.Api.Client.Transfers;
+using ShareFile.Api.Client.Transfers.Uploaders;
+using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client
 {
@@ -87,7 +95,23 @@ namespace ShareFile.Api.Client
         internal LoggingProvider Logging { get; set; }
         internal ICredentialCache CredentialCache { get; set; }
         internal CookieContainer CookieContainer { get; set; }
-        internal JsonSerializer Serializer;
+        internal JsonSerializer Serializer { get; set; }
+
+#if ShareFile
+        private ZoneAuthentication _zoneAuthentication;
+        public ZoneAuthentication ZoneAuthentication
+        {
+            get { return _zoneAuthentication; }
+            set
+            {
+                if (!HmacSha256ProviderFactory.HasProvider())
+                {
+                    throw new Exception("A IHmacSha256Provider has not been registered, this is required for ZoneAuthentication to sign requests.");
+                }
+                _zoneAuthentication = value;
+            }
+        }
+#endif
 
         internal void RegisterRequestProviders()
         {
@@ -106,6 +130,13 @@ namespace ShareFile.Api.Client
                 NullValueHandling = NullValueHandling.Ignore,
                 Converters = { new ODataConverter(), new StringEnumConverter() }
             };
+        }
+
+        public AsyncThreadedFileUploader GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null)
+        {
+            uploadSpecificationRequest.Method = UploadMethod.Threaded;
+
+            return new AsyncThreadedFileUploader(this, uploadSpecificationRequest, file, config);
         }
 
         /// <summary>
@@ -158,6 +189,66 @@ namespace ShareFile.Api.Client
             CookieContainer.Add(host, new Cookie(cookieName, authenticationId, path));
         }
 #endif
+
+        protected List<ChangeDomainCallback> ChangeDomainHandlers { get; set; }
+        protected List<ExceptionCallback> ExceptionHandlers { get; set; }
+
+        public void AddChangeDomainHandler(ChangeDomainCallback handler)
+        {
+            if (ChangeDomainHandlers == null)
+            {
+                ChangeDomainHandlers = new List<ChangeDomainCallback>();
+            }
+
+            ChangeDomainHandlers.Add(handler);
+        }
+
+        public void AddExceptionHandler(ExceptionCallback handler)
+        {
+            if (ExceptionHandlers == null)
+            {
+                ExceptionHandlers = new List<ExceptionCallback>();
+            }
+
+            ExceptionHandlers.Add(handler);
+        }
+
+        public EventHandlerResponse OnException(HttpResponseMessage responseMessage, int retryCount)
+        {
+            foreach (var handler in ExceptionHandlers)
+            {
+                var action = handler(responseMessage, retryCount);
+                if (action.Action != EventHandlerResponseAction.Ignore) return action;
+            }
+            return EventHandlerResponse.Throw;
+        }
+
+        public EventHandlerResponse OnChangeDomain(HttpRequestMessage requestMessage, Redirection redirection)
+        {
+            foreach (var handler in ChangeDomainHandlers)
+            {
+                var action = handler(requestMessage, redirection);
+                if (action.Action != EventHandlerResponseAction.Ignore) return action;
+            }
+            return EventHandlerResponse.Ignore;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <param name="authenticationType"></param>
+        /// <param name="networkCredential"></param>
+        public void AddCredentials(Uri uri, string authenticationType, ICredentials networkCredential)
+        {
+            var existingCredential = CredentialCache.GetCredential(uri, authenticationType);
+
+            if (existingCredential != null)
+            {
+                CredentialCache.Remove(uri, authenticationType);
+            }
+            CredentialCache.Add(uri, authenticationType, networkCredential);
+        }
 
         /// <summary>
         /// </summary>
@@ -213,11 +304,13 @@ namespace ShareFile.Api.Client
         }
 
         public Task<T> ExecuteAsync<T>(IQuery<T> query, CancellationToken? token = null)
+            where T : class
         {
             return RequestProviderFactory.GetAsyncRequestProvider().ExecuteAsync(query, token);
         }
 
         public T Execute<T>(IQuery<T> query)
+            where T : class
         {
             return RequestProviderFactory.GetSyncRequestProvider().Execute(query);
         }

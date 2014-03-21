@@ -14,6 +14,7 @@ namespace ShareFile.Api.Client.Requests
     }
 
     public interface IQuery<T>
+        where T : class
     {
         T Execute();
         Task<T> ExecuteAsync(CancellationToken? token = null);

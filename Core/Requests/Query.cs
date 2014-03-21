@@ -470,7 +470,7 @@ namespace ShareFile.Api.Client.Requests
         public string HttpMethod { get; set; }
         public object Body { get; set; }
         public ODataParameterCollection QueryStringCollection { get; set; }
-        protected QueryBase QueryBase { get; set; }
+        public QueryBase QueryBase { get; protected set; }
         public bool IsComposed { get; set; }
 
         public static bool IsUri(string id)

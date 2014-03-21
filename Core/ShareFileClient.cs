@@ -23,7 +23,95 @@ using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client
 {
-    public class ShareFileClient
+    public interface IShareFileClient
+    {
+#if ShareFile
+        AccountsEntityInternal Accounts { get; }
+        DevicesEntityInternal Devices { get; }
+        ItemsEntityInternal Items { get; }
+        StorageCentersEntityInternal StorageCenters { get; }
+        ZonesEntityInternal Zones { get; }
+#else
+        AccountsEntity Accounts { get; }
+        ItemsEntity Items { get; }
+#endif
+
+        AccessControlsEntity AccessControls { get; }
+        AsyncOperationsEntity AsyncOperations { get; }
+        CapabilitiesEntity Capabilities { get; }
+        ConfigsEntity Configs { get; }
+        FavoriteFoldersEntity FavoriteFolders { get; }
+        GroupsEntity Groups { get; }
+        MetadataEntity Metadata { get; }
+        SessionsEntity Sessions { get; }
+        SharesEntity Shares { get; }
+        UsersEntity Users { get; }
+        Uri NextRequestBaseUri { get; }
+        Uri BaseUri { get; set; }
+        Configuration Configuration { get; set; }
+
+#if ShareFile
+        ZoneAuthentication ZoneAuthentication { get; set; }
+#endif
+        AsyncThreadedFileUploader GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null);
+
+        /// <summary>
+        /// Get request base Uri for the next request executed by the client.  Will use <value>NextRequestBaseUri</value> if available.
+        /// </summary>
+        /// <returns></returns>
+        Uri GetRequestBaseUri();
+
+        /// <summary>
+        /// Set the next base Uri to be used for the next request executed by the client.  This value will only be used once.
+        /// </summary>
+        /// <param name="tempBaseUri"></param>
+        void SetBaseUriForNextRequest(Uri tempBaseUri);
+
+        void AddCookie(Uri host, Cookie cookie);
+
+        /// <summary>
+        /// Use this method if you've previously acquired an AuthenticationId through other means.
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="authenticationId"></param>
+        /// <param name="path"></param>
+        /// <param name="cookieName"></param>
+        void AddAuthenticationId(Uri host, string authenticationId, string path = "", string cookieName = "SFAPI_AuthId");
+
+        void AddChangeDomainHandler(ChangeDomainCallback handler);
+        void AddExceptionHandler(ExceptionCallback handler);
+        EventHandlerResponse OnException(HttpResponseMessage responseMessage, int retryCount);
+        EventHandlerResponse OnChangeDomain(HttpRequestMessage requestMessage, Redirection redirection);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <param name="authenticationType"></param>
+        /// <param name="networkCredential"></param>
+        void AddCredentials(Uri uri, string authenticationType, ICredentials networkCredential);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="oauthToken"></param>
+        void AddOAuthCredentials(Uri host, string oauthToken);
+
+        T Entities<T>() where T : EntityBase;
+        Task<Stream> ExecuteAsync(IStreamQuery stream, CancellationToken? token = null);
+        Stream Execute(IStreamQuery stream);
+
+        Task<T> ExecuteAsync<T>(IQuery<T> query, CancellationToken? token = null)
+            where T : class;
+
+        T Execute<T>(IQuery<T> query)
+            where T : class;
+
+        Task ExecuteAsync(IQuery query, CancellationToken? token = null);
+        void Execute(IQuery query);
+    }
+
+    public class ShareFileClient : IShareFileClient
     {
         private static readonly Dictionary<string, EntityBase> RegisteredEntities;
         static ShareFileClient()

@@ -1,4 +1,4 @@
-﻿using ShareFile.Api.Client.Models;
+﻿using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Events
 {

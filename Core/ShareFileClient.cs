@@ -381,34 +381,34 @@ namespace ShareFile.Api.Client
 
         #endregion
 
-        public Task<Stream> ExecuteAsync(IStreamQuery stream, CancellationToken? token = null)
+        public virtual Task<Stream> ExecuteAsync(IStreamQuery stream, CancellationToken? token = null)
         {
             return RequestProviderFactory.GetAsyncRequestProvider().ExecuteAsync(stream, token);
         }
 
-        public Stream Execute(IStreamQuery stream)
+        public virtual Stream Execute(IStreamQuery stream)
         {
             return RequestProviderFactory.GetSyncRequestProvider().Execute(stream);
         }
 
-        public Task<T> ExecuteAsync<T>(IQuery<T> query, CancellationToken? token = null)
+        public virtual Task<T> ExecuteAsync<T>(IQuery<T> query, CancellationToken? token = null)
             where T : class
         {
             return RequestProviderFactory.GetAsyncRequestProvider().ExecuteAsync(query, token);
         }
 
-        public T Execute<T>(IQuery<T> query)
+        public virtual T Execute<T>(IQuery<T> query)
             where T : class
         {
             return RequestProviderFactory.GetSyncRequestProvider().Execute(query);
         }
 
-        public Task ExecuteAsync(IQuery query, CancellationToken? token = null)
+        public virtual Task ExecuteAsync(IQuery query, CancellationToken? token = null)
         {
             return RequestProviderFactory.GetAsyncRequestProvider().ExecuteAsync(query, token);
         }
 
-        public void Execute(IQuery query)
+        public virtual void Execute(IQuery query)
         {
             RequestProviderFactory.GetSyncRequestProvider().Execute(query);
         }

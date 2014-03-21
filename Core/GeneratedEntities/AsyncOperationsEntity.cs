@@ -157,7 +157,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The modified Async Operation
 		/// </returns>
-		public IQuery<AsyncOperation> Update(string id, AsyncOperation newAsyncOp)
+		public IQuery<AsyncOperation> Patch(string id, AsyncOperation newAsyncOp)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AsyncOperation>(Client);
 			sfApiQuery.From("AsyncOperations");

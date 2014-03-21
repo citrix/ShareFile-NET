@@ -57,7 +57,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// Modified Storage Center
 		/// </returns>
-		public IQuery<StorageCenter> Patch(string id, StorageCenter sc)
+		public IQuery<StorageCenter> Update(string id, StorageCenter sc)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<StorageCenter>(Client);
 			sfApiQuery.From("StorageCenters");
@@ -148,7 +148,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the modified storage center
 		/// </returns>
-		public IQuery<StorageCenter> PatchByZone(string zid, string scid, StorageCenter storageCenter)
+		public IQuery<StorageCenter> UpdateByZone(string zid, string scid, StorageCenter storageCenter)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<StorageCenter>(Client);
 			sfApiQuery.From("Zones");

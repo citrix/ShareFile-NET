@@ -15,28 +15,15 @@ using Newtonsoft.Json;
 
 namespace ShareFile.Api.Models 
 {
-	public class Principal : ODataObject 
+	public class EnsSubscriptionToken : ODataObject 
 	{
-		/// <summary>
-		/// User name
-		/// </summary>
-		public string Name { get; set; }
+		public string SubscriptionId { get; set; }
 
-		/// <summary>
-		/// Email address
-		/// </summary>
-		public string Email { get; set; }
+		public string EntityId { get; set; }
 
-		/// <summary>
-		/// Username for the account - the value used for login. This is the same as Email for ShareFile accounts, but
-		/// may be different on Connectors
-		/// </summary>
-		public string Username { get; set; }
+		public EnsEventType EventTypes { get; set; }
 
-		/// <summary>
-		/// Account domain
-		/// </summary>
-		public string Domain { get; set; }
+		public bool IncludeProgeny { get; set; }
 
 	}
 }

@@ -148,12 +148,13 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// Redirects the caller (302) to the download address for the share contents.
 		/// </returns>
-		public IQuery<Stream> Download(string id, string Name = null, string Email = null, string Company = null)
+		public IQuery<Stream> Download(string id, string grandparentid, string Name = null, string Email = null, string Company = null)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
 			sfApiQuery.From("Shares");
 			sfApiQuery.Action("Download");
 			sfApiQuery.Ids(id);
+			sfApiQuery.QueryString("grandparentid", grandparentid);
 			sfApiQuery.QueryString("Name", Name);
 			sfApiQuery.QueryString("Email", Email);
 			sfApiQuery.QueryString("Company", Company);

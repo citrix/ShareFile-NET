@@ -65,6 +65,16 @@ namespace ShareFile.Api.Models
 		public DateTime? ProgenyEditDate { get; set; }
 
 		/// <summary>
+		/// Client device filesystem Created Date of this Item.
+		/// </summary>
+		public DateTime? ClientCreatedDate { get; set; }
+
+		/// <summary>
+		/// Client device filesystem last Modified Date of this Item.
+		/// </summary>
+		public DateTime? ClientModifiedDate { get; set; }
+
+		/// <summary>
 		/// Defines the Retention Policy for this Item. After this date, the item is automatically moved
 		/// to recycle bin.
 		/// </summary>

@@ -22,7 +22,7 @@ namespace ShareFile.Api.Client.Requests
         protected IDictionary<string, string> _headerCollection;
 // ReSharper restore InconsistentNaming
 
-        protected QueryBase(ShareFileClient client)
+        protected QueryBase(IShareFileClient client)
         {
             Client = client;
 
@@ -34,7 +34,7 @@ namespace ShareFile.Api.Client.Requests
             HttpMethod = "GET";
         }
 
-        public ShareFileClient Client { get; internal set; }
+        public IShareFileClient Client { get; internal set; }
         public string HttpMethod { get; set; }
         public object Body { get; set; }
 
@@ -164,7 +164,7 @@ namespace ShareFile.Api.Client.Requests
 
     public class Query : QueryBase, IQuery
     {
-        public Query(ShareFileClient client)
+        public Query(IShareFileClient client)
             : base (client)
         {
             
@@ -265,7 +265,7 @@ namespace ShareFile.Api.Client.Requests
         protected string _orderBy;
 // ReSharper restore InconsistentNaming
 
-        public Query(ShareFileClient client)
+        public Query(IShareFileClient client)
             : base (client)
         {
             _selectProperties = new List<string>();
@@ -447,7 +447,7 @@ namespace ShareFile.Api.Client.Requests
 
     public class StreamQuery : Query<Stream>, IStreamQuery
     {
-        public StreamQuery(ShareFileClient client) : base(client)
+        public StreamQuery(IShareFileClient client) : base(client)
         {
 
         }

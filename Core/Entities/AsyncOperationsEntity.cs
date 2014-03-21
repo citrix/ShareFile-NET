@@ -22,6 +22,7 @@ namespace ShareFile.Api.Client.Entities
 	{
 		public AsyncOperationsEntity(IShareFileClient client)
 			: base (client, "AsyncOperations")
+			
 		{
 
 		}

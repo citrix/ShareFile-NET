@@ -22,7 +22,8 @@ namespace ShareFile.Api.Client.Entities
 	public class AccountsEntityInternal : AccountsEntity
 	{
 		public AccountsEntityInternal(IShareFileClient client)
-			: base (client, "Accounts")
+			: base (client)
+			
 		{
 
 		}

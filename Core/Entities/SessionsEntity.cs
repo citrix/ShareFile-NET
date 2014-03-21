@@ -22,6 +22,7 @@ namespace ShareFile.Api.Client.Entities
 	{
 		public SessionsEntity(IShareFileClient client)
 			: base (client, "Sessions")
+			
 		{
 
 		}

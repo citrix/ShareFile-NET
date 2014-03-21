@@ -22,6 +22,7 @@ namespace ShareFile.Api.Client.Entities
 	{
 		public GroupsEntity(IShareFileClient client)
 			: base (client, "Groups")
+			
 		{
 
 		}

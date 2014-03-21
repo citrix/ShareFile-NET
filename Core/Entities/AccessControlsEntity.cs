@@ -20,8 +20,8 @@ namespace ShareFile.Api.Client.Entities
 {
 	public class AccessControlsEntity : EntityBase
 	{
-		public AccessControlsEntity(ShareFileClient client)
-			: base (client)
+		public AccessControlsEntity(IShareFileClient client)
+			: base (client, "AccessControls")
 		{
 
 		}

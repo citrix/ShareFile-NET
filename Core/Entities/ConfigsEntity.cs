@@ -20,8 +20,8 @@ namespace ShareFile.Api.Client.Entities
 {
 	public class ConfigsEntity : EntityBase
 	{
-		public ConfigsEntity(ShareFileClient client)
-			: base (client)
+		public ConfigsEntity(IShareFileClient client)
+			: base (client, "Configs")
 		{
 
 		}

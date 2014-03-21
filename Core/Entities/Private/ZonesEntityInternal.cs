@@ -21,8 +21,8 @@ namespace ShareFile.Api.Client.Entities
 #if ShareFile
 	public class ZonesEntityInternal : EntityBase
 	{
-		public ZonesEntityInternal(ShareFileClient client)
-			: base (client)
+		public ZonesEntityInternal(IShareFileClient client)
+			: base (client, "Zones")
 		{
 
 		}

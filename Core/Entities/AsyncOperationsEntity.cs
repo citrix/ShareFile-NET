@@ -20,8 +20,8 @@ namespace ShareFile.Api.Client.Entities
 {
 	public class AsyncOperationsEntity : EntityBase
 	{
-		public AsyncOperationsEntity(ShareFileClient client)
-			: base (client)
+		public AsyncOperationsEntity(IShareFileClient client)
+			: base (client, "AsyncOperations")
 		{
 
 		}

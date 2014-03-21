@@ -20,8 +20,8 @@ namespace ShareFile.Api.Client.Entities
 {
 	public class FavoriteFoldersEntity : EntityBase
 	{
-		public FavoriteFoldersEntity(ShareFileClient client)
-			: base (client)
+		public FavoriteFoldersEntity(IShareFileClient client)
+			: base (client, "FavoriteFolders")
 		{
 
 		}

@@ -20,8 +20,8 @@ namespace ShareFile.Api.Client.Entities
 {
 	public class MetadataEntity : EntityBase
 	{
-		public MetadataEntity(ShareFileClient client)
-			: base (client)
+		public MetadataEntity(IShareFileClient client)
+			: base (client, "Metadata")
 		{
 
 		}

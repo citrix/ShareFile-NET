@@ -21,8 +21,8 @@ namespace ShareFile.Api.Client.Entities
 #if ShareFile
 	public class StorageCentersEntityInternal : EntityBase
 	{
-		public StorageCentersEntityInternal(ShareFileClient client)
-			: base (client)
+		public StorageCentersEntityInternal(IShareFileClient client)
+			: base (client, "StorageCenters")
 		{
 
 		}

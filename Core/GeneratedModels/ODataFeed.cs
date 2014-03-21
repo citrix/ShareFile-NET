@@ -20,7 +20,7 @@ namespace ShareFile.Api.Models
 		[JsonProperty(PropertyName = "odata.count")] 
 		public int count { get; set; }
 
-		[JsonProperty(PropertyName = "Message")] 
+		[JsonProperty(PropertyName = "value")] 
 		public IEnumerable<T> Feed { get; set; }
 
 		[JsonProperty(PropertyName = "odata.nextLink")] 

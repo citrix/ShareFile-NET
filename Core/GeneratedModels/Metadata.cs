@@ -23,7 +23,7 @@ namespace ShareFile.Api.Models
 		public string Name { get; set; }
 
 		/// <summary>
-		/// The Message of a custom metadata entry
+		/// The value of a custom metadata entry
 		/// </summary>
 		public string Value { get; set; }
 

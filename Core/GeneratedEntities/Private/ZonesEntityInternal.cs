@@ -116,7 +116,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The modified zone
 		/// </returns>
-		public IQuery<Zone> Patch(string id, Zone zone)
+		public IQuery<Zone> Update(string id, Zone zone)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Zone>(Client);
 			sfApiQuery.From("Zones");
@@ -148,7 +148,7 @@ namespace ShareFile.Api.Client.Entities
 		/// Reset Zone Secret
 		/// </summary>
 		/// <remarks>
-		/// Resets the current Zone Secret to a new Random Message
+		/// Resets the current Zone Secret to a new Random value
 		/// Caution! This Call will invalidate all Storage Center communications until the Storage Center Zone secret
 		/// is also updated.
 		/// User must be a Zone admin to perform this action

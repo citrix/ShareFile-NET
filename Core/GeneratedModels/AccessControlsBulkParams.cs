@@ -15,28 +15,24 @@ using Newtonsoft.Json;
 
 namespace ShareFile.Api.Models 
 {
-	public class Principal : ODataObject 
+	public class AccessControlsBulkParams : ODataObject 
 	{
 		/// <summary>
-		/// User name
+		/// Defines whether the principal should receieve a notice on the permission grant.
+		/// If an AccessControlParam doesn't specify the property it is inherited from here.
 		/// </summary>
-		public string Name { get; set; }
+		public bool? NotifyUser { get; set; }
 
 		/// <summary>
-		/// Email address
+		/// Custom notification message, if any
+		/// If an AccessControlParam doesn't specify the property it is inherited from here.
 		/// </summary>
-		public string Email { get; set; }
+		public string NotifyMessage { get; set; }
 
 		/// <summary>
-		/// Username for the account - the value used for login. This is the same as Email for ShareFile accounts, but
-		/// may be different on Connectors
+		/// AccessControlParams
 		/// </summary>
-		public string Username { get; set; }
-
-		/// <summary>
-		/// Account domain
-		/// </summary>
-		public string Domain { get; set; }
+		public IEnumerable<AccessControlParam> AccessControlParams { get; set; }
 
 	}
 }

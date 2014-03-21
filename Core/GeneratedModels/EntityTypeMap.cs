@@ -23,6 +23,10 @@ namespace ShareFile.Api.Models
 			{
 				_entityTypeMap = new Dictionary<string, Type>();
 
+				_entityTypeMap.Add("AccessControlsBulkParams", typeof(AccessControlsBulkParams));
+				_entityTypeMap.Add("AccessControlsBulkParamss", typeof(AccessControlsBulkParams));
+				_entityTypeMap.Add("AccessControlParam", typeof(AccessControlParam));
+				_entityTypeMap.Add("AccessControlParams", typeof(AccessControlParam));
 				_entityTypeMap.Add("AccessControl", typeof(AccessControl));
 				_entityTypeMap.Add("AccessControls", typeof(AccessControl));
 				_entityTypeMap.Add("AccessControlDomains", typeof(AccessControlDomains));
@@ -53,6 +57,12 @@ namespace ShareFile.Api.Models
 				_entityTypeMap.Add("DeviceLogEntrys", typeof(DeviceLogEntry));
 				_entityTypeMap.Add("DownloadSpecification", typeof(DownloadSpecification));
 				_entityTypeMap.Add("DownloadSpecifications", typeof(DownloadSpecification));
+				_entityTypeMap.Add("EnsSubscriberConfiguration", typeof(EnsSubscriberConfiguration));
+				_entityTypeMap.Add("EnsSubscriberConfigurations", typeof(EnsSubscriberConfiguration));
+				_entityTypeMap.Add("EnsSubscriptionRequest", typeof(EnsSubscriptionRequest));
+				_entityTypeMap.Add("EnsSubscriptionRequests", typeof(EnsSubscriptionRequest));
+				_entityTypeMap.Add("EnsSubscriptionToken", typeof(EnsSubscriptionToken));
+				_entityTypeMap.Add("EnsSubscriptionTokens", typeof(EnsSubscriptionToken));
 				_entityTypeMap.Add("FindSubdomainParams", typeof(FindSubdomainParams));
 				_entityTypeMap.Add("FindSubdomainResult", typeof(FindSubdomainResult));
 				_entityTypeMap.Add("FindSubdomainResults", typeof(FindSubdomainResult));
@@ -92,6 +102,8 @@ namespace ShareFile.Api.Models
 				_entityTypeMap.Add("OutlookInformationOptionInt", typeof(OutlookInformationOptionInt));
 				_entityTypeMap.Add("OutlookInformationOptionInts", typeof(OutlookInformationOptionInt));
 				_entityTypeMap.Add("ProductDefaults", typeof(ProductDefaults));
+				_entityTypeMap.Add("Redirection", typeof(Redirection));
+				_entityTypeMap.Add("Redirections", typeof(Redirection));
 				_entityTypeMap.Add("RequireSubdomainResult", typeof(RequireSubdomainResult));
 				_entityTypeMap.Add("RequireSubdomainResults", typeof(RequireSubdomainResult));
 				_entityTypeMap.Add("RequireWebPopResult", typeof(RequireWebPopResult));

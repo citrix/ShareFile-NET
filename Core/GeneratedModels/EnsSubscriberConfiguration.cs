@@ -15,15 +15,15 @@ using Newtonsoft.Json;
 
 namespace ShareFile.Api.Models 
 {
-	public class Redirection : ODataObject 
+	public class EnsSubscriberConfiguration : ODataObject 
 	{
-		public string Method { get; set; }
+		public bool IsEnsEnabled { get; set; }
 
-		public Zone Zone { get; set; }
+		public string EnsServerUrl { get; set; }
 
-		public Uri Uri { get; set; }
+		public string Version { get; set; }
 
-		public string Body { get; set; }
+		public object RecommendedSyncInterval { get; set; }
 
 	}
 }

@@ -33,6 +33,7 @@ namespace ShareFile.Api.Models
 		CheckOut = 17,
 		ItemDescription = 18,
 		VersionMax = 19,
-		VersionMin = 20
+		VersionMin = 20,
+		Favorites = 21
 	}
 }

@@ -9,21 +9,14 @@
 // </auto-generated>
 // ------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
 namespace ShareFile.Api.Models 
 {
-	public class Redirection : ODataObject 
+	public enum EnsEventType
 	{
-		public string Method { get; set; }
-
-		public Zone Zone { get; set; }
-
-		public Uri Uri { get; set; }
-
-		public string Body { get; set; }
-
+		None = 0,
+		Create = 1,
+		Update = 2,
+		Delete = 4,
+		All = 7
 	}
 }

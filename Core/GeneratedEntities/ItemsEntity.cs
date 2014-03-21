@@ -416,7 +416,7 @@ namespace ShareFile.Api.Client.Entities
 		/// method will return an Asynchronous operation record instead. Note: the parameters listed in the
 		/// body of the request are the only parameters that can be updated through this call.
 		/// </returns>
-		public IQuery<ODataObject> Patch(string id, Item item)
+		public IQuery<ODataObject> Update(string id, Item item)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataObject>(Client);
 			sfApiQuery.From("Items");
@@ -446,7 +446,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A modified Link object
 		/// </returns>
-		public IQuery<Item> PatchLink(string id, Link link, bool notify = false)
+		public IQuery<Item> UpdateLink(string id, Link link, bool notify = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
 			sfApiQuery.From("Items");
@@ -477,7 +477,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The modified Note object
 		/// </returns>
-		public IQuery<Item> PatchNote(string id, Note note, bool notify = false)
+		public IQuery<Item> UpdateNote(string id, Note note, bool notify = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
 			sfApiQuery.From("Items");
@@ -507,7 +507,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The modified SymbolicLink object
 		/// </returns>
-		public IQuery<SymbolicLink> PatchSymbolicLink(string id, SymbolicLink symlink)
+		public IQuery<SymbolicLink> UpdateSymbolicLink(string id, SymbolicLink symlink)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<SymbolicLink>(Client);
 			sfApiQuery.From("Items");
@@ -552,24 +552,14 @@ namespace ShareFile.Api.Client.Entities
 			return sfApiQuery;
 		}
 
-		/// <summary>
-		/// Get Thumbnail
-		/// </summary>
-		/// <remarks>
-		/// Retrieve a thumbnail link from the specified Item.
-		/// </remarks>
-		/// <param name="id"></param>
-		/// <param name="size"></param>
-		/// <returns>
-		/// A 302 redirection to the Thumbnail link
-		/// </returns>
-		public IQuery<Stream> GetThumbnail(string id, int size = 75)
+		public IQuery<Stream> GetThumbnail(string parentid, int size = 75, bool redirect = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
 			sfApiQuery.From("Items");
 			sfApiQuery.Action("Thumbnail");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Ids(parentid);
 			sfApiQuery.QueryString("size", size);
+			sfApiQuery.QueryString("redirect", redirect);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -688,12 +678,14 @@ namespace ShareFile.Api.Client.Entities
 		/// <param name="threadCount"></param>
 		/// <param name="responseFormat"></param>
 		/// <param name="notify"></param>
+		/// <param name="clientCreatedDateUTC"></param>
+		/// <param name="clientModifiedDateUTC"></param>
 		/// <returns>
 		/// an Upload Specification element, containing the links for uploading, and the parameters for resume.
 		/// The caller must know the protocol for sending the prepare, chunk and finish URLs returned in the spec; as well as
 		/// negotiate the resume upload.
 		/// </returns>
-		public IQuery<UploadSpecification> Upload(string id, UploadMethod method = UploadMethod.Standard, bool raw = false, string fileName = null, long fileSize = 0, string batchId = null, bool batchLast = false, bool canResume = false, bool startOver = false, bool unzip = false, string tool = "apiv3", bool overwrite = false, string title = null, string details = null, bool isSend = false, string sendGuid = null, string opid = null, int threadCount = 4, string responseFormat = "json", bool notify = false, int? expirationDays = null)
+		public IQuery<UploadSpecification> Upload(string id, UploadMethod method = UploadMethod.Standard, bool raw = false, string fileName = null, long fileSize = 0, string batchId = null, bool batchLast = false, bool canResume = false, bool startOver = false, bool unzip = false, string tool = "apiv3", bool overwrite = false, string title = null, string details = null, bool isSend = false, string sendGuid = null, string opid = null, int threadCount = 4, string responseFormat = "json", bool notify = false, DateTime? clientCreatedDateUTC = null, DateTime? clientModifiedDateUTC = null, int? expirationDays = null)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<UploadSpecification>(Client);
 			sfApiQuery.From("Items");
@@ -718,6 +710,8 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.QueryString("threadCount", threadCount);
 			sfApiQuery.QueryString("responseFormat", responseFormat);
 			sfApiQuery.QueryString("notify", notify);
+			sfApiQuery.QueryString("clientCreatedDateUTC", clientCreatedDateUTC);
+			sfApiQuery.QueryString("clientModifiedDateUTC", clientModifiedDateUTC);
 			sfApiQuery.QueryString("expirationDays", expirationDays);
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;

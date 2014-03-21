@@ -149,6 +149,12 @@ namespace ShareFile.Api.Models
 
 		public string AllowedSpecialCharacters { get; set; }
 
+		public bool? EnableWebDAV { get; set; }
+
+		public bool? EnableFTP { get; set; }
+
+		public bool? EnableSFTP { get; set; }
+
 		public string AccountID { get; set; }
 
 	}

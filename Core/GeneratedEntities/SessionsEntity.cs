@@ -63,9 +63,8 @@ namespace ShareFile.Api.Client.Entities
 		/// Login
 		/// </summary>
 		/// <remarks>
-		/// API clients can provide ShareFile Authentication directly to any API operation - using OAuth (Bearer) or
-		/// ShareFile credentials (Basic) authentication headers. However, the client must know that the provided
-		/// authentication type is supported on the API endpoint; and that SAML is not configured.
+		/// API clients can provide ShareFile Authentication directly to any API operation using OAuth (Bearer).
+		/// However, the client must know that the provided authentication type is supported on the API endpoint; and that SAML is not configured.
 		/// 
 		/// This API provides a generic authentication routine for clients. It will challenge for ShareFile credentials
 		/// passing all supported authentication methods; redirect to the SAML IDP if configured to do so; and handle

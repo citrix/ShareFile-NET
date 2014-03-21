@@ -198,7 +198,7 @@ namespace ShareFile.Api.Client.Entities
 		/// </remarks>
 		/// <param name="sso"></param>
 		/// <param name="provider"></param>
-		public IQuery<SSOAccountProvider> PatchSSO(SSOAccountProvider sso, string provider = "saml")
+		public IQuery<SSOAccountProvider> UpdateSSO(SSOAccountProvider sso, string provider = "saml")
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<SSOAccountProvider>(Client);
 			sfApiQuery.From("Accounts");
@@ -375,7 +375,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The updated Login Access Control List of domains for the Account
 		/// </returns>
-		public IQuery<AccessControlDomains> PatchLoginAccessControlDomains(AccessControlDomains accessControlDomains)
+		public IQuery<AccessControlDomains> UpdateLoginAccessControlDomains(AccessControlDomains accessControlDomains)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AccessControlDomains>(Client);
 			sfApiQuery.From("Accounts");
@@ -403,7 +403,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The updated Folder Access Control List of domains for the Account
 		/// </returns>
-		public IQuery<AccessControlDomains> PatchFolderAccessControlDomains(AccessControlDomains accessControlDomains)
+		public IQuery<AccessControlDomains> UpdateFolderAccessControlDomains(AccessControlDomains accessControlDomains)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AccessControlDomains>(Client);
 			sfApiQuery.From("Accounts");
@@ -476,7 +476,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// RequireWebPopResult
 		/// </returns>
-		public IQuery<RequireWebPopResult> RequireWebPop(string subdomain, string username, bool singlePlane = false)
+		public IQuery<RequireWebPopResult> RequireWebPop(string subdomain, string username = null, bool singlePlane = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<RequireWebPopResult>(Client);
 			sfApiQuery.From("Accounts");

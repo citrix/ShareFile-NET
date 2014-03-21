@@ -77,7 +77,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <example>
 		/// {
 		/// "Name":"metadata name",
-		/// "Value":"metadata Message"
+		/// "Value":"metadata value"
 		/// }
 		/// </example>
 		/// <remarks>
@@ -103,7 +103,7 @@ namespace ShareFile.Api.Client.Entities
 		/// </summary>
 		/// <example>
 		/// {
-		/// "Value":"metadata Message"
+		/// "Value":"metadata value"
 		/// }
 		/// </example>
 		/// <remarks>
@@ -114,7 +114,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The updated Metadata object
 		/// </returns>
-		public IQuery<Metadata> PatchByItem(string id, string metadataId, Metadata metadata)
+		public IQuery<Metadata> UpdateByItem(string id, string metadataId, Metadata metadata)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Metadata>(Client);
 			sfApiQuery.From("Items");
@@ -131,7 +131,7 @@ namespace ShareFile.Api.Client.Entities
 		/// </summary>
 		/// <example>
 		/// {
-		/// "Value":"metadata Message"
+		/// "Value":"metadata value"
 		/// }
 		/// </example>
 		/// <remarks>

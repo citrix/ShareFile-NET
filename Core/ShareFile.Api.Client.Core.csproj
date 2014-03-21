@@ -77,6 +77,8 @@
     <Compile Include="GeneratedModels\AccessControl.cs" />
     <Compile Include="GeneratedModels\AccessControlDomains.cs" />
     <Compile Include="GeneratedModels\AccessControlFilter.cs" />
+    <Compile Include="GeneratedModels\AccessControlParam.cs" />
+    <Compile Include="GeneratedModels\AccessControlsBulkParams.cs" />
     <Compile Include="GeneratedModels\Account.cs" />
     <Compile Include="GeneratedModels\AccountPreferences.cs" />
     <Compile Include="GeneratedModels\AccountUser.cs" />
@@ -96,6 +98,10 @@
     <Compile Include="GeneratedModels\DeviceUserWipe.cs" />
     <Compile Include="GeneratedModels\DeviceWipeReport.cs" />
     <Compile Include="GeneratedModels\DownloadSpecification.cs" />
+    <Compile Include="GeneratedModels\EnsEventType.cs" />
+    <Compile Include="GeneratedModels\EnsSubscriberConfiguration.cs" />
+    <Compile Include="GeneratedModels\EnsSubscriptionRequest.cs" />
+    <Compile Include="GeneratedModels\EnsSubscriptionToken.cs" />
     <Compile Include="GeneratedModels\EntityTypeMap.cs" />
     <Compile Include="GeneratedModels\FavoriteFolder.cs" />
     <Compile Include="GeneratedModels\File.cs" />

@@ -131,6 +131,18 @@ namespace ShareFile.Api.Models
 
 		public string Country { get; set; }
 
+		public string CreditCardType { get; set; }
+
+		public string CreditCardNumber { get; set; }
+
+		public string CreditCardExpirationMonth { get; set; }
+
+		public int? CreditCardExpirationYear { get; set; }
+
+		public string CreditCardFirstName { get; set; }
+
+		public string CreditCardLastName { get; set; }
+
 		public string Phone { get; set; }
 
 		public DateTime? LastBillingDate { get; set; }

@@ -13,7 +13,6 @@ using ShareFile.Api.Client.Entities;
 using ShareFile.Api.Client.Events;
 using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Logging;
-using ShareFile.Api.Client.Models;
 using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Requests.Providers;
 using ShareFile.Api.Client.Security;

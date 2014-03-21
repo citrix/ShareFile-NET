@@ -124,7 +124,7 @@ namespace ShareFile.Api.Client.Entities
 		/// The following parameters from the input object are used: Email, FirstName, LastName, Company,
 		/// DefaultZone, Password, IsEmployee, IsAdministrator, CanCreateFolders, CanUseFileBox, CanManageUsers,
 		/// Preferences.CanResetPassword and Preferences.CanViewMySettings.
-		/// Other parameters are ignoredStorageQuotaLimitGB parameter is optional. If not specified or equal to -1 the account default storage quota Message will be set for the user.
+		/// Other parameters are ignoredStorageQuotaLimitGB parameter is optional. If not specified or equal to -1 the account default storage quota value will be set for the user.
 		/// </remarks>
 		/// <param name="user"></param>
 		/// <param name="pushCreatorDefaultSettings"></param>
@@ -177,7 +177,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// a modified user record
 		/// </returns>
-		public IQuery<User> Patch(string id, User user)
+		public IQuery<User> Update(string id, User user)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<User>(Client);
 			sfApiQuery.From("Users");
@@ -211,7 +211,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// a modified user record
 		/// </returns>
-		public IQuery<User> PatchRoles(string parentid, User user)
+		public IQuery<User> UpdateRoles(string parentid, User user)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<User>(Client);
 			sfApiQuery.From("Users");
@@ -246,7 +246,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// a modified user record
 		/// </returns>
-		public IQuery<User> UpdateRoles(string parentid, User user)
+		public IQuery<User> PatchRoles(string parentid, User user)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<User>(Client);
 			sfApiQuery.From("Users");
@@ -281,14 +281,14 @@ namespace ShareFile.Api.Client.Entities
 		/// Modifies an existing user object
 		/// The following parameters can be modified through this call: FirstName, LastName, Company,
 		/// Email, IsEmployee, IsDisabled, DefaultZone Id, StorageQuotaLimitGB.During a promotion (the user id points to Customer), the following parameters can be
-		/// modified: CanCreateFolders, CanUseFileBox, CanManageUsers. StorageQuotaLimitGB equal to -1 sets the user quota to the account default storage quota Message.
+		/// modified: CanCreateFolders, CanUseFileBox, CanManageUsers. StorageQuotaLimitGB equal to -1 sets the user quota to the account default storage quota value.
 		/// </remarks>
 		/// <param name="id"></param>
 		/// <param name="user"></param>
 		/// <returns>
 		/// a modified user record
 		/// </returns>
-		public IQuery<User> PatchAccountUser(string id, AccountUser user)
+		public IQuery<User> UpdateAccountUser(string id, AccountUser user)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<User>(Client);
 			sfApiQuery.From("Users");

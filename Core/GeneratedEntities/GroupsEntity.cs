@@ -123,7 +123,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the modified group object
 		/// </returns>
-		public IQuery<Group> Patch(string id, Group group)
+		public IQuery<Group> Update(string id, Group group)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Group>(Client);
 			sfApiQuery.From("Groups");

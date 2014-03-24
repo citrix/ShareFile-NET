@@ -95,7 +95,7 @@ namespace ShareFile.Api.Client.Entities
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Zone>(Client);
 			sfApiQuery.From("Zones");
 			sfApiQuery.Body = zone;
-			sfApiQuery.HttpMethod = "GET";
+			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}
 

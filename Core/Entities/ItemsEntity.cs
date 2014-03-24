@@ -203,9 +203,9 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the list of children under the given object ID
 		/// </returns>
-		public IQuery<ODataFeed<Item>> GetChildren(string id)
+		public IQuery<Item> GetChildren(string id)
 		{
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
 			sfApiQuery.From("Items");
 			sfApiQuery.Action("Children");
 			sfApiQuery.Ids(id);
@@ -291,7 +291,7 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.QueryString("overwrite", overwrite);
 			sfApiQuery.QueryString("passthrough", passthrough);
 			sfApiQuery.Body = folder;
-			sfApiQuery.HttpMethod = "GET";
+			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}
 
@@ -319,7 +319,7 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.Action("Note");
 			sfApiQuery.Ids(parentid);
 			sfApiQuery.Body = note;
-			sfApiQuery.HttpMethod = "GET";
+			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}
 
@@ -348,7 +348,7 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.Action("Link");
 			sfApiQuery.Ids(parentid);
 			sfApiQuery.Body = link;
-			sfApiQuery.HttpMethod = "GET";
+			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}
 
@@ -390,7 +390,7 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.Ids(parentid);
 			sfApiQuery.QueryString("overwrite", overwrite);
 			sfApiQuery.Body = symlink;
-			sfApiQuery.HttpMethod = "GET";
+			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}
 

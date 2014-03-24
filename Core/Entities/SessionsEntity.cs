@@ -42,7 +42,7 @@ namespace ShareFile.Api.Client.Entities
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Session>(Client);
 			sfApiQuery.From("Sessions");
-			sfApiQuery.HttpMethod = "DELETE";
+			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
 

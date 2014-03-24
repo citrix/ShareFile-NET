@@ -526,7 +526,7 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.Ids(id);
 			sfApiQuery.QueryString("singleversion", singleversion);
 			sfApiQuery.QueryString("forceSync", forceSync);
-			sfApiQuery.HttpMethod = "PATCH";
+			sfApiQuery.HttpMethod = "DELETE";
 			return sfApiQuery;
 		}
 

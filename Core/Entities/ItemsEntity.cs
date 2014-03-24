@@ -203,9 +203,9 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the list of children under the given object ID
 		/// </returns>
-		public IQuery<ODataFeed<Item>> GetChildren(string id)
+		public IQuery<Item> GetChildren(string id)
 		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
 			sfApiQuery.From("Items");
 			sfApiQuery.Action("Children");
 			sfApiQuery.Ids(id);

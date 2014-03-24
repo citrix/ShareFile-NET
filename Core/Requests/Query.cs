@@ -148,7 +148,7 @@ namespace ShareFile.Api.Client.Requests
 
         public ODataAction GetAction()
         {
-            return _action;
+            return _action ?? new ODataAction();
         }
 
         public IEnumerable<ODataAction> GetSubActions()
@@ -440,6 +440,20 @@ namespace ShareFile.Api.Client.Requests
         }
     }
 
+    public interface IFormQuery<T> : IQuery<T>
+        where T : class
+    {
+        
+    }
+
+    public class FormQuery<T> : Query<T>, IFormQuery<T>
+        where T : class
+    {
+        public FormQuery(IShareFileClient client) : base(client)
+        {
+        }
+    }
+
     public interface IStreamQuery : IQuery<Stream>
     {
         
@@ -472,6 +486,12 @@ namespace ShareFile.Api.Client.Requests
         public ODataParameterCollection QueryStringCollection { get; set; }
         public QueryBase QueryBase { get; protected set; }
         public bool IsComposed { get; set; }
+
+        public ApiRequest()
+        {
+            QueryStringCollection = new ODataParameterCollection();
+            HeaderCollection = new Dictionary<string, string>();
+        }
 
         public static bool IsUri(string id)
         {
@@ -550,7 +570,7 @@ namespace ShareFile.Api.Client.Requests
             {
                 var skip = readOnlyODataQuery.GetSkip();
                 var top = readOnlyODataQuery.GetTop();
-                var filters = readOnlyODataQuery.GetFilter().ToString();
+                var filters = readOnlyODataQuery.GetFilter();
                 var select = string.Join(",", readOnlyODataQuery.GetSelectProperties());
                 var expand = string.Join(",", readOnlyODataQuery.GetExpandProperties());
 
@@ -572,11 +592,14 @@ namespace ShareFile.Api.Client.Requests
                     apiRequest.QueryStringCollection.Add(new ODataParameter("$skip",
                         skip.ToString(CultureInfo.InvariantCulture)));
                 }
-                if (!string.IsNullOrEmpty(filters))
+                if (filters != null)
                 {
-                    apiRequest.QueryStringCollection.Add(new ODataParameter("$filter", filters));
+                    apiRequest.QueryStringCollection.Add(new ODataParameter("$filter", filters.ToString()));
                 }
+            }
 
+            if(queryString != null)
+            {
                 foreach (var kvp in queryString)
                 {
                     apiRequest.QueryStringCollection.Add(new ODataParameter(kvp.Key, kvp.Value));

@@ -10,6 +10,11 @@ namespace ShareFile.Api.Client.Requests
         public string ActionName { get; set; }
 
         public ODataParameterCollection Parameters { get; set; }
+
+        public ODataAction()
+        {
+            Parameters = new ODataParameterCollection();
+        }
     }
 
     public class ODataParameterCollection : HashSet<ODataParameter>

@@ -24,7 +24,7 @@ namespace ShareFile.Api.Client.Converters
             ODataFields.Add("odata.nextLink", "NextLink");
             ODataFieldsForFeeds = new Dictionary<string, string>();
             foreach (string key in ODataFields.Keys) ODataFieldsForFeeds.Add(key, ODataFields[key]);
-            ODataFieldsForFeeds.Add("Message", "Feed");
+            ODataFieldsForFeeds.Add("value", "Feed");
         }
 
         public override ODataObject Create(Type objectType)
@@ -78,6 +78,11 @@ namespace ShareFile.Api.Client.Converters
             // Create target object based on JObject
             ODataObject target = Create(objectType, jObject);
 
+            if (target.Properties == null)
+            {
+                target.Properties = new Dictionary<string, string>();
+            }
+            
             var targetType = target.GetType();
 
             // Special handling for known odata fields
@@ -147,10 +152,14 @@ namespace ShareFile.Api.Client.Converters
 
         private Dictionary<string, string> GetODataFields(Type targetType)
         {
-            if (TypeHelpers.IsAssignableFrom(typeof(ODataFeed<>), targetType))
-                return ODataFieldsForFeeds;
-            else
-                return ODataFields;
+            if (targetType.IsGenericType)
+            {
+                if (TypeHelpers.IsAssignableFrom(typeof (ODataFeed<>), targetType.GetGenericTypeDefinition()))
+                {
+                    return ODataFieldsForFeeds;
+                }
+            }
+            return ODataFields;
         }
 
         private static Type[] GetEmptyTypes()

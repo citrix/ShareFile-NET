@@ -130,7 +130,7 @@ namespace ShareFile.Api.Client.Converters
             // Normalize cast, remove namespaces
             if (cast != null)
             {
-                string namesp = typeof(ODataFactory).Namespace;
+                string namesp = typeof(ODataObject).Namespace;
                 if (cast.StartsWith(namesp)) cast = cast.Substring(namesp.Length + 1);
             }
             // If knownType is unknown, type to infer from the Cast string
@@ -245,7 +245,7 @@ namespace ShareFile.Api.Client.Converters
             @"(?<url>[^#\$]+)\$metadata#(?<entity>\w+)(?<element>@Element)",
             @"(?<url>[^#\$]+)\$metadata#(?<entity>\w+)/(?<cast>[^@]+)(?<element>@Element)",
             @"(?<url>[^#\$]+)\$metadata#(?<entity>\w+)/(?<cast>.+)",
-            string.Format(@"(?<url>[^#\$]+)\$metadata#{0}.(?<cast>.+)", typeof(ODataFactory).Namespace),
+            string.Format(@"(?<url>[^#\$]+)\$metadata#{0}.(?<cast>.+)", typeof(ODataObject).Namespace),
             @"(?<url>[^#\$]+)\$metadata#(?<feedentity>.+)"
         };
 

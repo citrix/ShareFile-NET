@@ -12,5 +12,10 @@ namespace ShareFile.Api.Client.Extensions
             //oDataObject.TypeCast = typeCast;
             //oDataObject.Type = type.GetValueOrDefault(ODataObjectType.Entity);
         }
+
+        public static Uri GetObjectUri(this ODataObject oDataObject, bool useStreamId = false)
+        {
+            return oDataObject.url;
+        }
     }
 }

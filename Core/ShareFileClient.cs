@@ -11,6 +11,7 @@ using ShareFile.Api.Client.Converters;
 using ShareFile.Api.Client.Credentials;
 using ShareFile.Api.Client.Entities;
 using ShareFile.Api.Client.Events;
+using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Logging;
 using ShareFile.Api.Client.Requests;
@@ -18,6 +19,7 @@ using ShareFile.Api.Client.Requests.Providers;
 using ShareFile.Api.Client.Security;
 using ShareFile.Api.Client.Security.Cryptography;
 using ShareFile.Api.Client.Transfers;
+using ShareFile.Api.Client.Transfers.Downloaders;
 using ShareFile.Api.Client.Transfers.Uploaders;
 using ShareFile.Api.Models;
 
@@ -54,6 +56,7 @@ namespace ShareFile.Api.Client
         ZoneAuthentication ZoneAuthentication { get; set; }
 #endif
         AsyncThreadedFileUploader GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null);
+        Downloader GetFileDownloader(Item itemToDownload, DownloaderConfig config = null);
 
         /// <summary>
         /// Get request base Uri for the next request executed by the client.  Will use <value>NextRequestBaseUri</value> if available.
@@ -97,6 +100,17 @@ namespace ShareFile.Api.Client
         /// <param name="oauthToken"></param>
         void AddOAuthCredentials(Uri host, string oauthToken);
 
+        void ClearCredentialsAndCookies();
+
+        /// <summary>
+        /// Substitute TNew for TReplace when instantiating TReplace for responses.
+        /// </summary>
+        /// <typeparam name="TNew"></typeparam>
+        /// <typeparam name="TReplace"></typeparam>
+        void RegisterType<TNew, TReplace>()
+            where TNew : TReplace
+            where TReplace : ODataObject;
+
         T Entities<T>() where T : EntityBase;
         Task<Stream> ExecuteAsync(IStreamQuery stream, CancellationToken? token = null);
         Stream Execute(IStreamQuery stream);
@@ -125,6 +139,7 @@ namespace ShareFile.Api.Client
 
             Configuration = configuration ?? Configuration.Default();
             CookieContainer = new CookieContainer();
+            Logging = new LoggingProvider(Configuration.Logger);
 
             CredentialCache = CredentialCacheFactory.GetCredentialCache();
             Serializer = GetSerializer();
@@ -227,6 +242,11 @@ namespace ShareFile.Api.Client
             return new AsyncThreadedFileUploader(this, uploadSpecificationRequest, file, config);
         }
 
+        public Downloader GetFileDownloader(Item itemToDownload, DownloaderConfig config = null)
+        {
+            return new Downloader(itemToDownload, this, config);
+        }
+
         /// <summary>
         /// Get request base Uri for the next request executed by the client.  Will use <value>NextRequestBaseUri</value> if available.
         /// </summary>
@@ -250,7 +270,7 @@ namespace ShareFile.Api.Client
         /// <param name="tempBaseUri"></param>
         public void SetBaseUriForNextRequest(Uri tempBaseUri)
         {
-            NextRequestBaseUri = tempBaseUri;
+            NextRequestBaseUri = new Uri(string.Format("{0}/sf/v3", tempBaseUri.GetAuthority()), UriKind.RelativeOrAbsolute);
         }
 
         public void AddCookie(Uri host, Cookie cookie)
@@ -277,6 +297,24 @@ namespace ShareFile.Api.Client
             CookieContainer.Add(host, new Cookie(cookieName, authenticationId, path));
         }
 #endif
+
+        public void ClearCredentialsAndCookies()
+        {
+            CredentialCache = new CredentialCache();
+            CookieContainer = new CookieContainer();
+        }
+
+        /// <summary>
+        /// Substitute TNew for TReplace when instantiating TReplace for responses.
+        /// </summary>
+        /// <typeparam name="TNew"></typeparam>
+        /// <typeparam name="TReplace"></typeparam>
+        public virtual void RegisterType<TNew, TReplace>()
+            where TNew : TReplace
+            where TReplace : ODataObject
+        {
+            ODataFactory.GetInstance().RegisterType<TNew, TReplace>();
+        }
 
         protected List<ChangeDomainCallback> ChangeDomainHandlers { get; set; }
         protected List<ExceptionCallback> ExceptionHandlers { get; set; }
@@ -411,6 +449,14 @@ namespace ShareFile.Api.Client
         public virtual void Execute(IQuery query)
         {
             RequestProviderFactory.GetSyncRequestProvider().Execute(query);
+        }
+
+        public static string GetProvider(Uri uri)
+        {
+            var path = uri.AbsolutePath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            if (path.Length > 0)
+                return path[0];
+            return "sf";
         }
     }
 }

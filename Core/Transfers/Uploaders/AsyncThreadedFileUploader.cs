@@ -141,7 +141,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             }
         }
 
-        public async Task<UploadResponse> UploadAsync(Dictionary<string, object> transferMetadata, CancellationToken? cancellationToken = null)
+        public async Task<UploadResponse> UploadAsync(Dictionary<string, object> transferMetadata = null, CancellationToken? cancellationToken = null)
         {
             TransferMetadata = transferMetadata ?? new Dictionary<string, object>();
             Progress.TransferMetadata = TransferMetadata;

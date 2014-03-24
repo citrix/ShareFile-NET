@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -55,33 +56,41 @@ namespace ShareFile.Api.Client.Requests.Providers
             return responseValue;
         }
 
-        protected T DeserializeStreamAsync<T>(Stream stream)
+        protected Task<T> DeserializeStreamAsync<T>(Stream stream)
         {
+            var tcs = new TaskCompletionSource<T>();
+            var task = tcs.Task;
             var watch = new ActionStopwatch("DeserializeStreamAsync", ShareFileClient.Logging);
 
-            T responseValue;
-
-            using (var responseStreamReader = new StreamReader(stream))
+            Task.Factory.StartNew(() =>
             {
-                JsonTextReader reader;
-                if (ShareFileClient.Logging.IsDebugEnabled)
+                T responseValue;
+
+                using (var responseStreamReader = new StreamReader(stream))
                 {
-                    var stringResponse = responseStreamReader.ReadToEnd();
+                    JsonTextReader reader;
+                    if (ShareFileClient.Logging.IsDebugEnabled)
+                    {
+                        var stringResponse = responseStreamReader.ReadToEnd();
 
-                    reader = new JsonTextReader(new StringReader(stringResponse));
-                    ShareFileClient.Logging.Debug(stringResponse, null);
+                        reader = new JsonTextReader(new StringReader(stringResponse));
+                        ShareFileClient.Logging.Debug(stringResponse, null);
+                    }
+                    else
+                    {
+                        reader = new JsonTextReader(responseStreamReader);
+                    }
+
+                    responseValue = ShareFileClient.Serializer.Deserialize<T>(reader);
                 }
-                else
-                {
-                    reader = new JsonTextReader(responseStreamReader);
-                }
 
-                responseValue = ShareFileClient.Serializer.Deserialize<T>(reader);
-            }
 
-            ShareFileClient.Logging.Trace(watch);
+                ShareFileClient.Logging.Trace(watch);
+                tcs.SetResult(responseValue);
 
-            return responseValue;
+            }).ConfigureAwait(false);
+
+            return task;
         }
 
         protected string SerializeObject(object obj)
@@ -121,7 +130,7 @@ namespace ShareFile.Api.Client.Requests.Providers
             }
         }
 
-        protected void LogResponse<T>(T response, Uri requestUri, string headers, HttpStatusCode statusCode)
+        protected void LogResponse<T>(T response, Uri requestUri, string headers, HttpStatusCode statusCode, MediaTypeHeaderValue mediaType = null)
         {
             if (ShareFileClient.Logging.IsDebugEnabled)
             {
@@ -130,7 +139,11 @@ namespace ShareFile.Api.Client.Requests.Providers
                 LogCookies(requestUri);
                 if (response != null)
                 {
-                    ShareFileClient.Logging.Debug("Content:{0}{1}", Environment.NewLine, SerializeObject(response));
+                    if (mediaType == null || mediaType.MediaType == "application/json")
+                    {
+                        ShareFileClient.Logging.Debug("Content:{0}{1}", Environment.NewLine, SerializeObject(response));
+                    }
+                    else ShareFileClient.Logging.Debug("Content {0}", response.ToString());
                 }
             }
             else if (ShareFileClient.Logging.IsTraceEnabled)
@@ -176,6 +189,19 @@ namespace ShareFile.Api.Client.Requests.Providers
                     if (httpRequestMessage.Content.Headers.ContentLength > 0)
                         httpRequestMessage.Content.Headers.ContentType = contentType;
                 }
+            }
+            else if (body is IDictionary<string,string>)
+            {
+                var formContent = new FormUrlEncodedContent(body as IDictionary<string, string>);
+
+                if (ShareFileClient.Logging.IsDebugEnabled)
+                {
+                    var contentAsString = formContent.ReadAsStringAsync();
+
+                    ShareFileClient.Logging.Debug(contentAsString.Result, null);
+                }
+                
+                httpRequestMessage.Content = formContent;
             }
             else
             {
@@ -235,6 +261,16 @@ namespace ShareFile.Api.Client.Requests.Providers
 
     public class DefaultRequestProvider : BaseRequestProvider, IAsyncRequestProvider, ISyncRequestProvider
     {
+        /// <summary>
+        /// Set this flag True if running as a Portable Class Library
+        /// </summary>
+#if Portable
+        public static bool RuntimeRequiresCustomCookieHandling = true;
+#else
+        public static bool RuntimeRequiresCustomCookieHandling = false;
+#endif
+
+
         public HttpClient HttpClient { get; set; }
 
         public DefaultRequestProvider(ShareFileClient shareFileClient)
@@ -244,9 +280,18 @@ namespace ShareFile.Api.Client.Requests.Providers
             {
                 AllowAutoRedirect = false,
                 Credentials = shareFileClient.CredentialCache,
-                AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip,
-                UseCookies = true
+                AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip
             };
+
+            if (!RuntimeRequiresCustomCookieHandling)
+            {
+                handler.UseCookies = true;
+                handler.CookieContainer = shareFileClient.CookieContainer;
+            }
+            else
+            {
+                handler.UseCookies = false;
+            }
 
             if (shareFileClient.Configuration.ProxyConfiguration != null && handler.SupportsProxy)
             {
@@ -297,7 +342,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 }
             } while (action != null && (action.Action == EventHandlerResponseAction.Retry || action.Action == EventHandlerResponseAction.Redirect));
         }
-        //var watch = new ActionStopwatch("ExecuteRequest", ShareFileClient.Logging);
+        
         public async Task<T> ExecuteAsync<T>(IQuery<T> query, CancellationToken? token = null)
             where T : class
         {
@@ -325,25 +370,37 @@ namespace ShareFile.Api.Client.Requests.Providers
 
                 try
                 {
-                    var response = await HandleTypedResponse<ODataObject>(responseMessage, apiRequest, retryCount++);
-
-                    if (response.Value != null)
+                    if (typeof (T).IsSubclassOf(typeof (ODataObject)))
                     {
-                        if (response.Value is Redirection)
+                        var response = await HandleTypedResponse<ODataObject>(responseMessage, apiRequest, retryCount++);
+
+                        if (response.Value != null)
                         {
-                            var redirection = response.Value as Redirection;
-                            if (httpRequestMessage.RequestUri.GetAuthority() != redirection.Uri.GetAuthority())
+                            if (response.Value is Redirection)
                             {
-                                ShareFileClient.OnChangeDomain(httpRequestMessage, redirection);
+                                var redirection = response.Value as Redirection;
+                                if (httpRequestMessage.RequestUri.GetAuthority() != redirection.Uri.GetAuthority())
+                                {
+                                    ShareFileClient.OnChangeDomain(httpRequestMessage, redirection);
+                                }
+                                action = EventHandlerResponse.Redirect(redirection);
                             }
-                            action = EventHandlerResponse.Redirect(redirection);
+                            else
+                            {
+                                return response.Value as T;
+                            }
                         }
-                        else
-                        {
-                            return response.Value as T;
-                        }
+                        else action = response.Action;
                     }
-                    else action = response.Action;
+                    else
+                    {
+                        var response = await HandleTypedResponse<T>(responseMessage, apiRequest, retryCount++);
+                        if (response.Value != null)
+                        {
+                            return response.Value;
+                        }
+                        else action = response.Action;
+                    }
                 }
                 finally
                 {
@@ -353,6 +410,12 @@ namespace ShareFile.Api.Client.Requests.Providers
             } while (action != null && (action.Action == EventHandlerResponseAction.Retry || action.Action == EventHandlerResponseAction.Redirect));
 
             return default(T);
+        }
+
+        public async Task<T> ExecuteAsync<T>(IFormQuery<T> query, CancellationToken? token = null)
+            where T : class
+        {
+            return await ExecuteAsync(query as IQuery<T>, token);
         }
 
         public async Task<Stream> ExecuteAsync(IStreamQuery query, CancellationToken? token = null)
@@ -409,6 +472,15 @@ namespace ShareFile.Api.Client.Requests.Providers
             return executeTask.Result;
         }
 
+        public T Execute<T>(IFormQuery<T> query)
+            where T : class
+        {
+            var executeTask = ExecuteAsync(query);
+            executeTask.Wait();
+
+            return executeTask.Result;
+        }
+
         public Stream Execute(IStreamQuery query)
         {
             var executeTask = ExecuteAsync(query);
@@ -434,6 +506,11 @@ namespace ShareFile.Api.Client.Requests.Providers
             }
             else
             {
+                if (request.HttpMethod == "GET" && request.Body != null)
+                {
+                    request.HttpMethod = "POST";
+                }
+
                 requestMessage = new HttpRequestMessage(new HttpMethod(request.HttpMethod), uri);
             }
 
@@ -456,6 +533,17 @@ namespace ShareFile.Api.Client.Requests.Providers
                 }
             }
 
+            if (RuntimeRequiresCustomCookieHandling)
+            {
+                var cookieHeader = ShareFileClient.CookieContainer.GetCookieHeader(
+                    new Uri("https://www." + requestMessage.RequestUri.Host + requestMessage.RequestUri.AbsolutePath));
+
+                if (!string.IsNullOrWhiteSpace(cookieHeader))
+                {
+                    requestMessage.Headers.Add("Cookie", cookieHeader);
+                }
+            }
+
             ShareFileClient.Logging.Trace(watch);
 
             return requestMessage;
@@ -466,13 +554,11 @@ namespace ShareFile.Api.Client.Requests.Providers
             if (httpResponseMessage.IsSuccessStatusCode)
             {
                 var watch = new ActionStopwatch("ProcessResponse", ShareFileClient.Logging);
-#if PORTABLE
-            ProcessHeaders(response);
-#endif
+
                 var responseStream = await httpResponseMessage.Content.ReadAsStreamAsync();
                 if (responseStream != null)
                 {
-                    var result = DeserializeStreamAsync<T>(responseStream);
+                    var result = await DeserializeStreamAsync<T>(responseStream);
                     //ComposeResult(result);
 
                     //result.SetRequestUri(httpResponseMessage.RequestMessage);
@@ -502,7 +588,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 
                     LogRequest(request, authenticatedHttpRequestMessage.Headers.ToString());
 
-                    var requestTask = HttpClient.SendAsync(authenticatedHttpRequestMessage, HttpCompletionOption.ResponseContentRead);
+                    var requestTask = ExecuteRequestAsync(authenticatedHttpRequestMessage);
                     using (var authenticatedResponse = await requestTask)
                     {
                         if (authenticatedResponse.IsSuccessStatusCode)
@@ -691,14 +777,28 @@ namespace ShareFile.Api.Client.Requests.Providers
             return action;
         }
 
-        protected Task<HttpResponseMessage> ExecuteRequestAsync(HttpRequestMessage requestMessage, CancellationToken? token = null)
+        protected async Task<HttpResponseMessage> ExecuteRequestAsync(HttpRequestMessage requestMessage, CancellationToken? token = null)
         {
+            HttpResponseMessage responseMessage;
             if (token == null)
             {
-                return HttpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
+                responseMessage = await HttpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
             }
-            
-            return HttpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, token.Value);
+            else responseMessage = await HttpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, token.Value);
+
+            if (RuntimeRequiresCustomCookieHandling)
+            {
+                IEnumerable<string> newCookies;
+                if (responseMessage.Headers.TryGetValues("Set-Cookie", out newCookies))
+                {
+                    foreach (var newCookie in newCookies)
+                    {
+                        ShareFileClient.CookieContainer.SetCookies(responseMessage.RequestMessage.RequestUri, newCookie);
+                    }
+                }
+            }
+
+            return responseMessage;
         }
     }
 

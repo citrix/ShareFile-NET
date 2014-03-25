@@ -38,6 +38,11 @@ namespace ShareFile.Api.Client.Requests
         public string HttpMethod { get; set; }
         public object Body { get; set; }
 
+        protected void _Id(string id)
+        {
+            _Ids(null, id);
+        }
+
         protected void _Ids(string id)
         {
             _Ids(null, id);
@@ -170,6 +175,12 @@ namespace ShareFile.Api.Client.Requests
             
         }
 
+        public Query Id(string id)
+        {
+            _Id(id);
+            return this;
+        }
+
         public Query Ids(string id)
         {
             _Ids(id);
@@ -273,6 +284,12 @@ namespace ShareFile.Api.Client.Requests
             _filterCriteria = new List<IFilter>();
             _skip = 0;
             _top = -1;
+        }
+
+        public Query<T> Id(string id)
+        {
+            _Id(id);
+            return this;
         }
 
         public Query<T> Ids(string id)

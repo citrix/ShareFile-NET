@@ -95,6 +95,10 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
                 {
                     return await oauthTokenQuery.ExecuteAsync().ConfigureAwait(false);
                 }
+                catch (OAuthErrorException)
+                {
+                    throw;
+                }
                 catch (Exception)
                 {
                     if (i >= 1)

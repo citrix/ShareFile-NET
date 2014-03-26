@@ -83,6 +83,9 @@ namespace ShareFile.Api.Client
 
         void AddChangeDomainHandler(ChangeDomainCallback handler);
         void AddExceptionHandler(ExceptionCallback handler);
+        bool RemoveChangeDomainHandler(ChangeDomainCallback handler);
+        bool RemoveExceptionHandler(ExceptionCallback handler);
+
         EventHandlerResponse OnException(HttpResponseMessage responseMessage, int retryCount);
         EventHandlerResponse OnChangeDomain(HttpRequestMessage requestMessage, Redirection redirection);
 
@@ -339,22 +342,42 @@ namespace ShareFile.Api.Client
             ExceptionHandlers.Add(handler);
         }
 
+        public bool RemoveChangeDomainHandler(ChangeDomainCallback handler)
+        {
+            if (ChangeDomainHandlers == null) return false;
+
+            return ChangeDomainHandlers.Remove(handler);
+        }
+
+        public bool RemoveExceptionHandler(ExceptionCallback handler)
+        {
+            if (ExceptionHandlers == null) return false;
+
+            return ExceptionHandlers.Remove(handler);
+        }
+
         public EventHandlerResponse OnException(HttpResponseMessage responseMessage, int retryCount)
         {
-            foreach (var handler in ExceptionHandlers)
+            if(ExceptionHandlers != null)
             {
-                var action = handler(responseMessage, retryCount);
-                if (action.Action != EventHandlerResponseAction.Ignore) return action;
+                foreach (var handler in ExceptionHandlers)
+                {
+                    var action = handler(responseMessage, retryCount);
+                    if (action.Action != EventHandlerResponseAction.Ignore) return action;
+                }
             }
             return EventHandlerResponse.Throw;
         }
 
         public EventHandlerResponse OnChangeDomain(HttpRequestMessage requestMessage, Redirection redirection)
         {
-            foreach (var handler in ChangeDomainHandlers)
+            if (ChangeDomainHandlers != null)
             {
-                var action = handler(requestMessage, redirection);
-                if (action.Action != EventHandlerResponseAction.Ignore) return action;
+                foreach (var handler in ChangeDomainHandlers)
+                {
+                    var action = handler(requestMessage, redirection);
+                    if (action.Action != EventHandlerResponseAction.Ignore) return action;
+                }
             }
             return EventHandlerResponse.Ignore;
         }

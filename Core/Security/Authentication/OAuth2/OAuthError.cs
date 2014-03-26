@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace ShareFile.Api.Client.Security.Authentication.OAuth2
 {
     public class OAuthError : IOAuthResponse
     {
+        [JsonProperty("error")]
         public string Error { get; set; }
 
         [JsonProperty("error_description")]
@@ -25,5 +27,10 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
         {
 
         }
+    }
+
+    public class OAuthErrorException : Exception
+    {
+        public OAuthError Error { get; set; }
     }
 }

@@ -14,6 +14,7 @@ using ShareFile.Api.Client.Events;
 using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Logging;
+using ShareFile.Api.Client.Security.Authentication.OAuth2;
 using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Requests.Providers
@@ -256,6 +257,23 @@ namespace ShareFile.Api.Client.Requests.Providers
             }
 
             return null;
+        }
+
+        protected bool TryDeserialize<T>(string rawException, out T exception)
+        {
+            try
+            {
+                using (var textReader = new JsonTextReader(new StringReader(rawException)))
+                {
+                    exception = ShareFileClient.Serializer.Deserialize<T>(textReader);
+                }
+            }
+            catch
+            {
+                exception = default(T);
+            }
+            
+            return exception != null;
         }
     }
 
@@ -596,12 +614,12 @@ namespace ShareFile.Api.Client.Requests.Providers
                             return await HandleTypedResponse<T>(authenticatedResponse, request, retryCount, false);
                         }
 
-                        Response.CreateAction<T>(await HandleNonSuccess(authenticatedResponse, retryCount));
+                        Response.CreateAction<T>(await HandleNonSuccess(authenticatedResponse, retryCount, typeof(T)));
                     }
                 }
             }
 
-            return Response.CreateAction<T>(await HandleNonSuccess(httpResponseMessage, retryCount));
+            return Response.CreateAction<T>(await HandleNonSuccess(httpResponseMessage, retryCount, typeof(T)));
         }
 
         protected async Task<Response> HandleResponse(HttpResponseMessage httpResponseMessage, ApiRequest request, int retryCount, bool tryResolveUnauthorizedChallenge = true)
@@ -645,7 +663,7 @@ namespace ShareFile.Api.Client.Requests.Providers
         {
             if (httpResponseMessage.IsSuccessStatusCode)
             {
-                return new Response<Stream>()
+                return new Response<Stream>
                 {
                     Value = await httpResponseMessage.Content.ReadAsStreamAsync()
                 };
@@ -675,7 +693,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 
                         return new Response<Stream>
                         {
-                            Action = await HandleNonSuccess(authenticatedResponse, retryCount)
+                            Action = await HandleNonSuccess(authenticatedResponse, retryCount, typeof(Stream))
                         };
                     }
                 }
@@ -683,11 +701,11 @@ namespace ShareFile.Api.Client.Requests.Providers
 
             return new Response<Stream>
             {
-                Action = await HandleNonSuccess(httpResponseMessage, retryCount)
+                Action = await HandleNonSuccess(httpResponseMessage, retryCount, typeof(Stream))
             };
         }
 
-        async Task<EventHandlerResponse> HandleNonSuccess(HttpResponseMessage responseMessage, int retryCount)
+        async Task<EventHandlerResponse> HandleNonSuccess(HttpResponseMessage responseMessage, int retryCount, Type expectedType = null)
         {
             var action = ShareFileClient.OnException(responseMessage, retryCount);
 
@@ -731,46 +749,45 @@ namespace ShareFile.Api.Client.Requests.Providers
                     throw exception;
                 }
 
-                using (var responseStream = await responseMessage.Content.ReadAsStreamAsync())
+                var rawError = await responseMessage.Content.ReadAsStringAsync();
+                
+                Exception exceptionToThrow = null;
+                        
+                if (expectedType == null || expectedType.IsSubclassOf(typeof (ODataObject)))
                 {
-                    if (responseStream != null)
+                    ODataRequestException requestException;
+                    if (TryDeserialize(rawError, out requestException))
                     {
-                        var exception = new StreamReader(responseStream).ReadToEnd();
-                        Exception exceptionToThrow;
-                        try
+                        exceptionToThrow = new ODataException
                         {
-                            var requestException = JsonConvert.DeserializeObject<ODataRequestException>(exception);
-                            if (requestException.Error != null)
-                            {
-                                ShareFileClient.Logging.Error(requestException.Error, "", null);
-                                exceptionToThrow = requestException.Error;
-                            }
-                            else
-                            {
-                                var altRequestException =
-                                    JsonConvert.DeserializeObject<ODataRequestExceptionAlt>(exception);
-                                var odataException = new ODataException
-                                {
-                                    ODataExceptionMessage = altRequestException.Message,
-                                    Code = altRequestException.Code
-                                };
-                                ShareFileClient.Logging.Error(odataException, "", null);
-                                exceptionToThrow = odataException;
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            var invalidResponseException = new InvalidApiResponseException(responseMessage.StatusCode,
-                                exception, ex);
-                            ShareFileClient.Logging.Error(invalidResponseException, "", null);
-                            exceptionToThrow = invalidResponseException;
-                        }
-
-                        if (exceptionToThrow != null)
-                        {
-                            throw exceptionToThrow;
-                        }
+                            Code = requestException.Code,
+                            ODataExceptionMessage = requestException.Message
+                        };
                     }
+                }
+                else if (expectedType == typeof (OAuthToken))
+                {
+                    OAuthError oauthError;
+
+                    if (TryDeserialize(rawError, out oauthError))
+                    {
+                        exceptionToThrow = new OAuthErrorException
+                        {
+                            Error = oauthError
+                        };
+                    }
+                }
+                else
+                {
+                    var invalidResponseException = new InvalidApiResponseException(responseMessage.StatusCode,
+                        rawError);
+                    ShareFileClient.Logging.Error(invalidResponseException, "", null);
+                    exceptionToThrow = invalidResponseException;
+                }
+
+                if (exceptionToThrow != null)
+                {
+                    throw exceptionToThrow;
                 }
             }
 

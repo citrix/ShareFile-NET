@@ -65,28 +65,7 @@ namespace ShareFile.Api.Client.Entities
 			return sfApiQuery;
 		}
 
-		/// <summary>
-		/// Get TreeView
-		/// </summary>
-		/// <remarks>
-		/// Retrieves a folder list structure tailored for TreeView navigation - used by clients
-		/// to create folder trees for specific operations.
-		/// This operation will enforce a specific $select and $expand operators. You can provide
-		/// additional $expand, for example Children, which is not added by default. The $select
-		/// operator will apply to the expanded objects as well. You can also specify additional
-		/// $select elements.
-		/// </remarks>
-		/// <param name="id"></param>
-		/// <param name="treeMode"></param>
-		/// <param name="sourceId"></param>
-		/// <param name="rootId"></param>
-		/// <param name="rootType"></param>
-		/// <param name="canCreateRootFolder"></param>
-		/// <param name="fileBox"></param>
-		/// <returns>
-		/// A tree root element.
-		/// </returns>
-		public IQuery<Item> Get(string id, TreeMode treeMode, string sourceId, string rootId = null, VRootType rootType = VRootType.Account, bool canCreateRootFolder = false, bool fileBox = false)
+		public IQuery<Item> Get(string id, TreeMode treeMode, string sourceId, string rootId = null, bool canCreateRootFolder = false, bool fileBox = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
 			sfApiQuery.From("Items");
@@ -94,7 +73,6 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.QueryString("treeMode", treeMode);
 			sfApiQuery.QueryString("sourceId", sourceId);
 			sfApiQuery.QueryString("rootId", rootId);
-			sfApiQuery.QueryString("rootType", rootType);
 			sfApiQuery.QueryString("canCreateRootFolder", canCreateRootFolder);
 			sfApiQuery.QueryString("fileBox", fileBox);
 			sfApiQuery.HttpMethod = "GET";
@@ -205,7 +183,7 @@ namespace ShareFile.Api.Client.Entities
 		/// </returns>
 		public IQuery<ODataFeed<Item>> GetChildren(string id)
 		{
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
 			sfApiQuery.From("Items");
 			sfApiQuery.Action("Children");
 			sfApiQuery.Ids(id);
@@ -282,9 +260,9 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the new Folder
 		/// </returns>
-		public IQuery<Item> CreateFolder(string parentid, Folder folder, bool overwrite = false, bool passthrough = false)
+		public IQuery<Folder> CreateFolder(string parentid, Folder folder, bool overwrite = false, bool passthrough = false)
 		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Folder>(Client);
 			sfApiQuery.From("Items");
 			sfApiQuery.Action("Folder");
 			sfApiQuery.Ids(parentid);
@@ -312,9 +290,9 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the new Note
 		/// </returns>
-		public IQuery<Item> CreateNote(string parentid, Note note)
+		public IQuery<Note> CreateNote(string parentid, Note note)
 		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Note>(Client);
 			sfApiQuery.From("Items");
 			sfApiQuery.Action("Note");
 			sfApiQuery.Ids(parentid);
@@ -341,9 +319,9 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the new Link
 		/// </returns>
-		public IQuery<Item> CreateLink(string parentid, Link link)
+		public IQuery<Link> CreateLink(string parentid, Link link)
 		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Link>(Client);
 			sfApiQuery.From("Items");
 			sfApiQuery.Action("Link");
 			sfApiQuery.Ids(parentid);
@@ -417,9 +395,9 @@ namespace ShareFile.Api.Client.Entities
 		/// method will return an Asynchronous operation record instead. Note: the parameters listed in the
 		/// body of the request are the only parameters that can be updated through this call.
 		/// </returns>
-		public IQuery<ODataObject> Update(string id, Item item)
+		public IQuery<Item> Update(string id, Item item)
 		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataObject>(Client);
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
 			sfApiQuery.From("Items");
 			sfApiQuery.Ids(id);
 			sfApiQuery.Body = item;
@@ -526,7 +504,7 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.Ids(id);
 			sfApiQuery.QueryString("singleversion", singleversion);
 			sfApiQuery.QueryString("forceSync", forceSync);
-			sfApiQuery.HttpMethod = "DELETE";
+			sfApiQuery.HttpMethod = "PATCH";
 			return sfApiQuery;
 		}
 

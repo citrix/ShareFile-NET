@@ -94,7 +94,8 @@ namespace ShareFile.Api.Client.Entities
 		/// </summary>
 		/// <example>
 		/// {
-		/// "Folder": { "Id":"fo96aec5-d637-4124-bcc9-c86fd7301e4d" }
+		/// "Folder": { "Id":"fo96aec5-d637-4124-bcc9-c86fd7301e4d" },
+		/// "FolderAlias" : "alias"
 		/// }
 		/// </example>
 		/// <remarks>
@@ -102,17 +103,15 @@ namespace ShareFile.Api.Client.Entities
 		/// </remarks>
 		/// <param name="id"></param>
 		/// <param name="folder"></param>
-		/// <param name="alias"></param>
 		/// <returns>
 		/// A new FavoriteFolder record
 		/// </returns>
-		public IQuery<FavoriteFolder> CreateByUser(string id, FavoriteFolder folder, string alias = "")
+		public IQuery<FavoriteFolder> CreateByUser(string id, FavoriteFolder folder)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<FavoriteFolder>(Client);
 			sfApiQuery.From("User");
 			sfApiQuery.Action("FavoriteFolders");
 			sfApiQuery.Ids(id);
-			sfApiQuery.QueryString("alias", alias);
 			sfApiQuery.Body = folder;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;

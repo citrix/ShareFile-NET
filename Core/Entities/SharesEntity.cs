@@ -142,23 +142,25 @@ namespace ShareFile.Api.Client.Entities
 		/// item ID must be a top-level item in the Share - i.e., you cannot download or address files contained inside
 		/// a shared folder.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="shareId"></param>
 		/// <param name="Name"></param>
 		/// <param name="Email"></param>
 		/// <param name="Company"></param>
+		/// <param name="redirect"></param>
 		/// <returns>
 		/// Redirects the caller (302) to the download address for the share contents.
 		/// </returns>
-		public IQuery<Stream> Download(string id, string grandparentid, string Name = null, string Email = null, string Company = null)
+		public IQuery<Stream> Download(string shareId, string id, string Name = null, string Email = null, string Company = null, bool redirect = true)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
 			sfApiQuery.From("Shares");
 			sfApiQuery.Action("Download");
-			sfApiQuery.Ids(id);
-			sfApiQuery.QueryString("grandparentid", grandparentid);
+			sfApiQuery.Ids(shareId);
+			sfApiQuery.QueryString("id", id);
 			sfApiQuery.QueryString("Name", Name);
 			sfApiQuery.QueryString("Email", Email);
 			sfApiQuery.QueryString("Company", Company);
+			sfApiQuery.QueryString("redirect", redirect);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}

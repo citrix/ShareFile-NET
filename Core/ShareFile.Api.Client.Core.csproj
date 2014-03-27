@@ -118,8 +118,10 @@
     <Compile Include="Models\FindSubdomainParams.cs" />
     <Compile Include="Models\FindSubdomainResult.cs" />
     <Compile Include="Models\Folder.cs" />
+    <Compile Include="Models\FreeTrialAccount.cs" />
     <Compile Include="Models\GenericConfig.cs" />
     <Compile Include="Models\Group.cs" />
+    <Compile Include="Models\Industry.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\ItemInfo.cs" />
     <Compile Include="Models\ItemProtocolLink.cs" />

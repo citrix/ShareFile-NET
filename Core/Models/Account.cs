@@ -21,9 +21,17 @@ namespace ShareFile.Api.Models
 
 		public User BillingContact { get; set; }
 
+		public string BillingContactId { get; set; }
+
 		public User TechnicalContact { get; set; }
 
+		public string TechnicalContactId { get; set; }
+
 		public User AccountManager { get; set; }
+
+		public string AccountManagerId { get; set; }
+
+		public string AccountType { get; set; }
 
 		/// <summary>
 		/// Basic, Professional, Enterprise
@@ -137,7 +145,7 @@ namespace ShareFile.Api.Models
 
 		public string CreditCardExpirationMonth { get; set; }
 
-		public int? CreditCardExpirationYear { get; set; }
+		public string CreditCardExpirationYear { get; set; }
 
 		public string CreditCardFirstName { get; set; }
 
@@ -159,6 +167,8 @@ namespace ShareFile.Api.Models
 
 		public Item RootItem { get; set; }
 
+		public string RootItemId { get; set; }
+
 		public DateTime? CreationDate { get; set; }
 
 		public bool? IsFreeTrial { get; set; }
@@ -175,6 +185,8 @@ namespace ShareFile.Api.Models
 
 		public string Subdomain { get; set; }
 
+		public IEnumerable<string> Subdomains { get; set; }
+
 		public MobileSecuritySettings MobileSecuritySettings { get; set; }
 
 		public AccessControlDomains LoginAccessControlDomains { get; set; }
@@ -182,6 +194,18 @@ namespace ShareFile.Api.Models
 		public AccessControlDomains FolderAccessControlDomains { get; set; }
 
 		public int? StorageQuotaPerUser { get; set; }
+
+		public string FreeTrialId { get; set; }
+
+		public string Source { get; set; }
+
+		public string AttributedSource { get; set; }
+
+		public string CompanyURL { get; set; }
+
+		public bool? MarketingOptIn { get; set; }
+
+		public string CreditCardSecurityCode { get; set; }
 
 	}
 }

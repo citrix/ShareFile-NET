@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Extensions
@@ -7,6 +8,11 @@ namespace ShareFile.Api.Client.Extensions
     {
         public static void SetMetadata(this ODataObject oDataObject, Uri baseUri, string entitySet, string typeCast = null, ODataObjectType? type = null)
         {
+            if (oDataObject.Properties == null)
+            {
+                oDataObject.Properties = new Dictionary<string, string>();
+            }
+
             oDataObject.Properties.Add("MetadataBaseUri", baseUri.ToString());
             oDataObject.Properties.Add("EntitySet", entitySet);
             oDataObject.Properties.Add("TypeCast", typeCast);
@@ -22,7 +28,7 @@ namespace ShareFile.Api.Client.Extensions
         {
             string metadata;
 
-            if (oDataObject.Properties.TryGetValue("MetadataBaseUri", out metadata))
+            if (oDataObject.Properties != null && oDataObject.Properties.TryGetValue("MetadataBaseUri", out metadata))
             {
                 return new Uri(metadata, UriKind.RelativeOrAbsolute);
             }
@@ -33,7 +39,7 @@ namespace ShareFile.Api.Client.Extensions
         {
             string entitySet;
 
-            if (oDataObject.Properties.TryGetValue("EntitySet", out entitySet))
+            if (oDataObject.Properties != null && oDataObject.Properties.TryGetValue("EntitySet", out entitySet))
             {
                 return entitySet;
             }
@@ -44,7 +50,7 @@ namespace ShareFile.Api.Client.Extensions
         {
             string typeCast;
 
-            if (oDataObject.Properties.TryGetValue("TypeCast", out typeCast))
+            if (oDataObject.Properties != null && oDataObject.Properties.TryGetValue("TypeCast", out typeCast))
             {
                 return typeCast;
             }
@@ -55,7 +61,7 @@ namespace ShareFile.Api.Client.Extensions
         {
             string type;
 
-            if (oDataObject.Properties.TryGetValue("TypeCast", out type))
+            if (oDataObject.Properties != null && oDataObject.Properties.TryGetValue("TypeCast", out type))
             {
                 ODataObjectType @enum;
                 if (Enum.TryParse(type, out @enum))

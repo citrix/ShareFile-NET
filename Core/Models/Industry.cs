@@ -15,25 +15,9 @@ using Newtonsoft.Json;
 
 namespace ShareFile.Api.Models 
 {
-	public class Zone : Principal 
+	public class Industry : ODataObject 
 	{
-		public string Secret { get; set; }
-
-		public ZoneType? ZoneType { get; set; }
-
-		public Account Account { get; set; }
-
-		public int? HeartBeatTolerance { get; set; }
-
-		public int? PingBackInterval { get; set; }
-
-		public string Version { get; set; }
-
-		public ZoneService? ZoneServices { get; set; }
-
-		public IEnumerable<StorageCenter> StorageCenters { get; set; }
-
-		public IEnumerable<Metadata> Metadata { get; set; }
+		public string Name { get; set; }
 
 	}
 }

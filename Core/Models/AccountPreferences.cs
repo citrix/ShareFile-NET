@@ -133,6 +133,8 @@ namespace ShareFile.Api.Models
 
 		public UXMode UXMode { get; set; }
 
+		public int? IndustryCode { get; set; }
+
 		public int PasswordMaxAgeDays { get; set; }
 
 		public int PasswordHistoryCount { get; set; }

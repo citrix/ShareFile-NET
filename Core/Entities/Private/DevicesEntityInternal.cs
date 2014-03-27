@@ -95,13 +95,12 @@ namespace ShareFile.Api.Client.Entities
 			return sfApiQuery;
 		}
 
-		public IQuery<DeviceUser> CreateByUser(string userId, string deviceId, DeviceUser du)
+		public IQuery<DeviceUser> CreateByUser(string userId, DeviceUser du)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<DeviceUser>(Client);
 			sfApiQuery.From("User");
 			sfApiQuery.Action("Devices");
 			sfApiQuery.Ids(userId);
-			sfApiQuery.ActionIds(deviceId);
 			sfApiQuery.Body = du;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;

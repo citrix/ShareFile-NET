@@ -477,34 +477,27 @@ namespace ShareFile.Api.Client.Requests.Providers
 
         public void Execute(IQuery query)
         {
-            var executeTask = ExecuteAsync(query);
-            executeTask.Wait();
+            ExecuteAsync(query).Wait();
         }
 
         public T Execute<T>(IQuery<T> query)
             where T : class
         {
-            var executeTask = ExecuteAsync(query);
-            executeTask.Wait();
-
-            return executeTask.Result;
+            var task = ExecuteAsync(query);
+            return task.Result;
         }
 
         public T Execute<T>(IFormQuery<T> query)
             where T : class
         {
-            var executeTask = ExecuteAsync(query);
-            executeTask.Wait();
-
-            return executeTask.Result;
+            var task = ExecuteAsync(query);
+            return task.Result;
         }
 
         public Stream Execute(IStreamQuery query)
         {
-            var executeTask = ExecuteAsync(query);
-            executeTask.Wait();
-
-            return executeTask.Result;
+            var task = ExecuteAsync(query);
+            return task.Result;
         }
 
         protected HttpRequestMessage BuildRequest(ApiRequest request)
@@ -577,10 +570,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 if (responseStream != null)
                 {
                     var result = await DeserializeStreamAsync<T>(responseStream);
-                    //ComposeResult(result);
-
-                    //result.SetRequestUri(httpResponseMessage.RequestMessage);
-
+                    
                     LogResponse(result, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode);
 
                     ShareFileClient.Logging.Trace(watch);
@@ -598,7 +588,6 @@ namespace ShareFile.Api.Client.Requests.Providers
 
                 var authorizationHeaderValue = GetAuthorizationHeaderValue(httpResponseMessage.RequestMessage.RequestUri,
                                                                         httpResponseMessage.Headers.WwwAuthenticate);
-                httpResponseMessage.Dispose();
                 if (authorizationHeaderValue != null)
                 {
                     var authenticatedHttpRequestMessage = BuildRequest(request);
@@ -643,16 +632,14 @@ namespace ShareFile.Api.Client.Requests.Providers
 
                     LogRequest(request, authenticatedHttpRequestMessage.Headers.ToString());
 
-                    var requestTask = HttpClient.SendAsync(authenticatedHttpRequestMessage, HttpCompletionOption.ResponseContentRead);
-                    using (var authenticatedResponse = await requestTask)
+                    var authenticatedResponse = await HttpClient.SendAsync(authenticatedHttpRequestMessage, HttpCompletionOption.ResponseContentRead);
+                    
+                    if (authenticatedResponse.IsSuccessStatusCode)
                     {
-                        if (authenticatedResponse.IsSuccessStatusCode)
-                        {
-                            await HandleResponse(authenticatedResponse, request, retryCount, false);
-                        }
-
-                        return Response.CreateAction(await HandleNonSuccess(authenticatedResponse, retryCount));
+                        await HandleResponse(authenticatedResponse, request, retryCount, false);
                     }
+
+                    return Response.CreateAction(await HandleNonSuccess(authenticatedResponse, retryCount));
                 }
             }
 
@@ -723,7 +710,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 if (responseMessage.Content.Headers.ContentLength == 0)
                 {
                     var exception = new NullReferenceException("Unable to retrieve HttpResponseMessage.Content");
-                    ShareFileClient.Logging.Error(exception, "", null);
+                    ShareFileClient.Logging.Error(exception, string.Empty, null);
                     throw exception;
                 }
 
@@ -736,7 +723,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                             "Authentication failed with status code: " + (int) responseMessage.StatusCode,
                             supportedSchemes);
                     exception.RequestUri = responseMessage.RequestMessage.RequestUri;
-                    ShareFileClient.Logging.Error(exception, "", null);
+                    ShareFileClient.Logging.Error(exception, string.Empty, null);
                     throw exception;
                 }
 
@@ -745,7 +732,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                     var exception =
                         new ProxyAuthenticationException("ProxyAuthentication failed with status code: " +
                                                          (int) responseMessage.StatusCode);
-                    ShareFileClient.Logging.Error(exception, "", null);
+                    ShareFileClient.Logging.Error(exception, string.Empty, null);
                     throw exception;
                 }
 

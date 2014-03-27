@@ -118,13 +118,6 @@ namespace ShareFile.Api.Models
 		public int? FileSizeInKB { get; set; }
 
 		/// <summary>
-		/// Defines a Virtual Parent for an Item. In certain conditions, a virtual parent is set to create
-		/// virtual tree structures different from the strict file system structure - for example, top-level
-		/// folders may be added under an user's home folder, even though both are defined under the Account.
-		/// </summary>
-		public Item VirtualParent { get; set; }
-
-		/// <summary>
 		/// Contains a ItemID path, separated by /, from the virtual root to this given file. Example
 		/// /accountID/folderID/folderID/itemID
 		/// </summary>

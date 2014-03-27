@@ -66,6 +66,8 @@ namespace ShareFile.Api.Models
 				_entityTypeMap.Add("FindSubdomainParams", typeof(FindSubdomainParams));
 				_entityTypeMap.Add("FindSubdomainResult", typeof(FindSubdomainResult));
 				_entityTypeMap.Add("FindSubdomainResults", typeof(FindSubdomainResult));
+				_entityTypeMap.Add("FreeTrialAccount", typeof(FreeTrialAccount));
+				_entityTypeMap.Add("FreeTrialAccounts", typeof(FreeTrialAccount));
 				_entityTypeMap.Add("GenericConfig", typeof(GenericConfig));
 				_entityTypeMap.Add("GenericConfigs", typeof(GenericConfig));
 				_entityTypeMap.Add("Contact", typeof(Contact));
@@ -80,6 +82,8 @@ namespace ShareFile.Api.Models
 				_entityTypeMap.Add("Folders", typeof(Folder));
 				_entityTypeMap.Add("Group", typeof(Group));
 				_entityTypeMap.Add("Groups", typeof(Group));
+				_entityTypeMap.Add("Industry", typeof(Industry));
+				_entityTypeMap.Add("Industrys", typeof(Industry));
 				_entityTypeMap.Add("ItemInfo", typeof(ItemInfo));
 				_entityTypeMap.Add("ItemInfos", typeof(ItemInfo));
 				_entityTypeMap.Add("ItemProtocolLink", typeof(ItemProtocolLink));

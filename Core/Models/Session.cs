@@ -21,9 +21,13 @@ namespace ShareFile.Api.Models
 
 		public string AuthenticationType { get; set; }
 
+		public string OAuth2ClientName { get; set; }
+
 		public string Tool { get; set; }
 
 		public string Version { get; set; }
+
+		public string ClientIPAddress { get; set; }
 
 		public bool IsAuthenticated { get; set; }
 

@@ -228,18 +228,17 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             {
                 await _pendingPartSemaphore.WaitAsync();
                 part = _itemsToUpload.Dequeue();
-                //Console.WriteLine("Uploading " + part.Index + " islast? " + part.IsLastPart);
-                UploadPart(part).ContinueWith((task) =>
+                UploadPartAsync(part).ContinueWith((task) =>
                 {
                     _maxConsumersSemaphore.Release();
-                    //Console.WriteLine("Finished uploading");
                 });
+
             } while (part != null && !part.IsLastPart && !IsCancellationRequested());
             // some uploaders are still going at this point; wait until all finish
             await _maxConsumersSemaphore.WaitIdleAsync();
         }
 
-        private async Task UploadPart(FilePart part)
+        private async Task UploadPartAsync(FilePart part)
         {
             var retryCount = 4;
             ShareFileApiResponse<string> result;

@@ -477,27 +477,55 @@ namespace ShareFile.Api.Client.Requests.Providers
 
         public void Execute(IQuery query)
         {
-            ExecuteAsync(query).Wait();
+            try
+            {
+                ExecuteAsync(query).Wait();
+            }
+            catch (AggregateException aggregateException)
+            {
+                throw aggregateException.GetBaseException();
+            }
         }
 
         public T Execute<T>(IQuery<T> query)
             where T : class
         {
-            var task = ExecuteAsync(query);
-            return task.Result;
+            try
+            {
+                var task = ExecuteAsync(query);
+                return task.Result;
+            }
+            catch (AggregateException aggregateException)
+            {
+                throw aggregateException.GetBaseException();
+            }
         }
 
         public T Execute<T>(IFormQuery<T> query)
             where T : class
         {
-            var task = ExecuteAsync(query);
-            return task.Result;
+            try
+            {
+                var task = ExecuteAsync(query);
+                return task.Result;
+            }
+            catch (AggregateException aggregateException)
+            {
+                throw aggregateException.GetBaseException();
+            }
         }
 
         public Stream Execute(IStreamQuery query)
         {
-            var task = ExecuteAsync(query);
-            return task.Result;
+            try
+            {
+                var task = ExecuteAsync(query);
+                return task.Result;
+            }
+            catch (AggregateException aggregateException)
+            {
+                throw aggregateException.GetBaseException();
+            }
         }
 
         protected HttpRequestMessage BuildRequest(ApiRequest request)

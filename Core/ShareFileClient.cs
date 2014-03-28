@@ -95,7 +95,7 @@ namespace ShareFile.Api.Client
         /// <param name="uri"></param>
         /// <param name="authenticationType"></param>
         /// <param name="networkCredential"></param>
-        void AddCredentials(Uri uri, string authenticationType, ICredentials networkCredential);
+        void AddCredentials(Uri uri, string authenticationType, NetworkCredential networkCredential);
 
         /// <summary>
         /// </summary>
@@ -388,7 +388,7 @@ namespace ShareFile.Api.Client
         /// <param name="uri"></param>
         /// <param name="authenticationType"></param>
         /// <param name="networkCredential"></param>
-        public void AddCredentials(Uri uri, string authenticationType, ICredentials networkCredential)
+        public void AddCredentials(Uri uri, string authenticationType, NetworkCredential networkCredential)
         {
             var existingCredential = CredentialCache.GetCredential(uri, authenticationType);
 

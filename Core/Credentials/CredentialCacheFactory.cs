@@ -1,6 +1,6 @@
 using System;
 
-namespace ShareFile.Api.Client
+namespace ShareFile.Api.Client.Credentials
 {
     public static class CredentialCacheFactory
     {
@@ -8,7 +8,7 @@ namespace ShareFile.Api.Client
 
         public static void RegisterCredentialCache(Func<ICredentialCache> credentialCacheFunc)
         {
-            
+            _credentialCacheFunc = credentialCacheFunc;
         }
 
         public static ICredentialCache GetCredentialCache()

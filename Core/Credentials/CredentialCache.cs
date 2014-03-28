@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Net;
 
-namespace ShareFile.Api.Client
+namespace ShareFile.Api.Client.Credentials
 {
     public class CredentialCache : ICredentialCache
     {
-        private readonly Dictionary<string, ICredentials> _credentials = new Dictionary<string, ICredentials>();
+        private readonly Dictionary<string, NetworkCredential> _credentials = new Dictionary<string, NetworkCredential>();
         private readonly object _credentialLock = new object();
 
-        public void Add(Uri uri, string authType, ICredentials credentials)
+        public void Add(Uri uri, string authType, NetworkCredential credentials)
         {
             lock (_credentialLock)
             {
@@ -29,10 +29,10 @@ namespace ShareFile.Api.Client
         {
             lock (_credentialLock)
             {
-                ICredentials credential = null;
+                NetworkCredential credential = null;
                 if (_credentials.TryGetValue(GetKey(uri, authType), out credential))
                 {
-                    return credential as NetworkCredential;
+                    return credential;
                 }
             }
             return new NetworkCredential();

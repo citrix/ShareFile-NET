@@ -25,5 +25,13 @@ namespace ShareFile.Api.Models
 
 		public object RecommendedSyncInterval { get; set; }
 
+		public object RecommendedPollingSyncInterval { get; set; }
+
+		public object RecommendedNotificationSyncInterval { get; set; }
+
+		public int NotificationConfigurationCount { get; set; }
+
+		public int FailSafePollingCount { get; set; }
+
 	}
 }

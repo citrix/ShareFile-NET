@@ -40,7 +40,8 @@ namespace ShareFile.Api.Client.Entities
 		public IQuery<ODataFeed<FavoriteFolder>> GetByUser(string id)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<FavoriteFolder>>(Client);
-			sfApiQuery.From("User");
+			sfApiQuery.From("Users");
+			sfApiQuery.Action("FavoriteFolders");
 			sfApiQuery.Ids(id);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
@@ -60,7 +61,7 @@ namespace ShareFile.Api.Client.Entities
 		public IQuery<FavoriteFolder> GetByUser(string itemid, string userid)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<FavoriteFolder>(Client);
-			sfApiQuery.From("User");
+			sfApiQuery.From("Users");
 			sfApiQuery.Action("FavoriteFolders");
 			sfApiQuery.Ids(itemid);
 			sfApiQuery.ActionIds(userid);
@@ -109,7 +110,7 @@ namespace ShareFile.Api.Client.Entities
 		public IQuery<FavoriteFolder> CreateByUser(string id, FavoriteFolder folder)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<FavoriteFolder>(Client);
-			sfApiQuery.From("User");
+			sfApiQuery.From("Users");
 			sfApiQuery.Action("FavoriteFolders");
 			sfApiQuery.Ids(id);
 			sfApiQuery.Body = folder;
@@ -128,7 +129,7 @@ namespace ShareFile.Api.Client.Entities
 		public IQuery Delete(string id, string itemid)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.From("User");
+			sfApiQuery.From("Users");
 			sfApiQuery.Action("FavoriteFolders");
 			sfApiQuery.Ids(id);
 			sfApiQuery.ActionIds(itemid);
@@ -139,7 +140,7 @@ namespace ShareFile.Api.Client.Entities
 		public IQuery DeleteByUser(string userId, string itemId)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.From("User");
+			sfApiQuery.From("Users");
 			sfApiQuery.Action("FavoriteFolders");
 			sfApiQuery.Ids(userId);
 			sfApiQuery.ActionIds(itemId);

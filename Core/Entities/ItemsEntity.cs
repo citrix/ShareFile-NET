@@ -425,9 +425,9 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A modified Link object
 		/// </returns>
-		public IQuery<Item> UpdateLink(string id, Link link, bool notify = false)
+		public IQuery<Link> UpdateLink(string id, Link link, bool notify = false)
 		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Link>(Client);
 			sfApiQuery.From("Items");
 			sfApiQuery.Action("Link");
 			sfApiQuery.Ids(id);
@@ -456,9 +456,9 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The modified Note object
 		/// </returns>
-		public IQuery<Item> UpdateNote(string id, Note note, bool notify = false)
+		public IQuery<Note> UpdateNote(string id, Note note, bool notify = false)
 		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Note>(Client);
 			sfApiQuery.From("Items");
 			sfApiQuery.Action("Note");
 			sfApiQuery.Ids(id);

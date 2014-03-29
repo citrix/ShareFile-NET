@@ -2,27 +2,27 @@
 
 namespace ShareFile.Api.Client.Requests.Providers
 {
-    public class RequestProviderFactory
+    internal class RequestProviderFactory
     {
-        private static ISyncRequestProvider _syncRequestProvider;
-        private static IAsyncRequestProvider _asyncRequestProvider;
+        private ISyncRequestProvider _syncRequestProvider;
+        private IAsyncRequestProvider _asyncRequestProvider;
 
-        public static void RegisterSyncRequestProvider(Func<ISyncRequestProvider> syncRequestProviderFunc)
+        internal void RegisterSyncRequestProvider(ISyncRequestProvider syncRequestProvider)
         {
-            _syncRequestProvider = syncRequestProviderFunc();
+            _syncRequestProvider = syncRequestProvider;
         }
 
-        public static void RegisterAsyncRequestProvider(Func<IAsyncRequestProvider> asyncRequestProviderFunc)
+        public void RegisterAsyncRequestProvider(IAsyncRequestProvider asyncRequestProvider)
         {
-            _asyncRequestProvider = asyncRequestProviderFunc();
+            _asyncRequestProvider = asyncRequestProvider;
         }
 
-        public static ISyncRequestProvider GetSyncRequestProvider()
+        public ISyncRequestProvider GetSyncRequestProvider()
         {
             return _syncRequestProvider;
         }
 
-        public static IAsyncRequestProvider GetAsyncRequestProvider()
+        public IAsyncRequestProvider GetAsyncRequestProvider()
         {
             return _asyncRequestProvider;
         }

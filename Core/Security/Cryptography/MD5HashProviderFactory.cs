@@ -17,7 +17,7 @@ namespace ShareFile.Api.Client.Security.Cryptography
         {
             if (_hashProviderFunc == null)
             {
-                throw new Exception("You must provide a hash provider.");
+                return new PortableMD5HashProvider();
             }
 
             return _hashProviderFunc();

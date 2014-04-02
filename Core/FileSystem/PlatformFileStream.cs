@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace ShareFile.Api.Client.FileSystem
 {
-    public class PlatformFileStream : IPlatformFile
+    public sealed class PlatformFileStream : IPlatformFile
     {
         public PlatformFileStream(Stream stream, long length, string name, string fullName = null)
         {
@@ -16,10 +16,16 @@ namespace ShareFile.Api.Client.FileSystem
 
         public void Dispose()
         {
+            Dispose(true);
+        }
+
+        public void Dispose(bool disposeAllResources)
+        {
             if (Stream != null)
             {
                 Stream.Dispose();
             }
+            GC.SuppressFinalize(this);
         }
 
         private Stream Stream { get; set; }

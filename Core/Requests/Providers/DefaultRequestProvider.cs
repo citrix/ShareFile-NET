@@ -98,7 +98,7 @@ namespace ShareFile.Api.Client.Requests.Providers
         {
             try
             {
-                using (var stringWriter = new StringWriter())
+                var stringWriter = new StringWriter();
                 using (var textWriter = new JsonTextWriter(stringWriter))
                 {
                     ShareFileClient.Serializer.Serialize(textWriter, obj);
@@ -206,7 +206,7 @@ namespace ShareFile.Api.Client.Requests.Providers
             }
             else
             {
-                using (var stringWriter = new StringWriter())
+                var stringWriter = new StringWriter();
                 using (var textWriter = new JsonTextWriter(stringWriter))
                 {
                     var serializationWatch = new ActionStopwatch("SerializeRequest", ShareFileClient.Logging);
@@ -768,7 +768,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 
                 Exception exceptionToThrow = null;
                         
-                if (expectedType == null || expectedType.IsSubclassOf(typeof (ODataObject)))
+                if (expectedType == null || expectedType.IsAssignableFrom(typeof (ODataObject)))
                 {
                     ODataRequestException requestException;
                     if (TryDeserialize(rawError, out requestException))

@@ -14,14 +14,11 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
             State = values.ContainsKey("state") ? values["state"] : "";
         }
 
-        public OAuthAuthorizationCode(IDictionary<string, string> values)
+        public static OAuthAuthorizationCode CreateFromDictionary(IDictionary<string, string> values)
         {
-            this.Fill(values);
-        }
-
-        public OAuthAuthorizationCode()
-        {
-
+            var authorizationCode = new OAuthAuthorizationCode();
+            authorizationCode.Fill(values);
+            return authorizationCode;
         }
     }
 }

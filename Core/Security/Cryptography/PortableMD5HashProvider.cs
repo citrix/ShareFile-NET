@@ -16,6 +16,7 @@ namespace ShareFile.Api.Client.Security.Cryptography
         public IMD5HashProvider CreateHash()
         {
             _md5Digest = new MD5Digest();
+            _md5Digest.Reset();
             _computedHash = new byte[_md5Digest.GetDigestSize()];
             return this;
         }
@@ -253,7 +254,7 @@ namespace ShareFile.Api.Client.Security.Cryptography
 
         public MD5Digest()
         {
-            Reset();
+            
         }
 
         /**

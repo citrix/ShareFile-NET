@@ -13,7 +13,7 @@ using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Transfers.Uploaders
 {
-    public class AsyncThreadedFileUploader : IDisposable
+    public class AsyncThreadedFileUploader
     {
         private AsyncThreadedFileUploader(ShareFileClient client, IPlatformFile file, FileUploaderConfig config = null)
         {
@@ -398,11 +398,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             return localHash.GetComputedHashAsString();
         }
 
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
-
         private async Task<FilePart> FillFilePartAsync(FilePart filePart)
         {
             var buffer = new byte[filePart.Length];
@@ -417,16 +412,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             var partHashProvider = MD5HashProviderFactory.GetHashProvider().CreateHash();
             filePart.Hash = partHashProvider.ComputeHash(filePart.Bytes);
             return filePart;
-        }
-
-        public void FilePartException()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Shutdown()
-        {
-            
         }
 
         internal void OnProgress(int bytesTransferred)

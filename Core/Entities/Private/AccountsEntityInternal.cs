@@ -19,7 +19,19 @@ using ShareFile.Api.Client.Requests;
 namespace ShareFile.Api.Client.Entities
 {
 #if ShareFile
-	public class AccountsEntityInternal : AccountsEntity
+
+	public interface IAccountsEntityInternal : IAccountsEntity
+	{
+		/// <summary>
+		/// Get Outlook Information
+		/// </summary>
+		/// <returns>
+		/// OutlookInformation
+		/// </returns>
+		IQuery<OutlookInformation> GetOutlookInformation();
+	}
+
+	public class AccountsEntityInternal : AccountsEntity, IAccountsEntityInternal
 	{
 		public AccountsEntityInternal(IShareFileClient client)
 			: base (client)

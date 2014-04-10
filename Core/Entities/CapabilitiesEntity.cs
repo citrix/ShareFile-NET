@@ -18,7 +18,27 @@ using ShareFile.Api.Client.Requests;
 
 namespace ShareFile.Api.Client.Entities
 {
-	public class CapabilitiesEntity : EntityBase
+
+	public interface ICapabilitiesEntity : IEntityBase
+	{
+		/// <summary>
+		/// Get List of Capabilities
+		/// </summary>
+		/// <remarks>
+		/// Retrieves the capability list of a given provider.
+		/// The URL for ShareFile API is of the form Domain/Provider/Version/EntityThe Domain is the server presenting the provider - typically sharefile.com,
+		/// but can be any other when using Storage Zones. The Provider represent the kind of data storage connected by the API. Examples
+		/// are 'sf' for ShareFile; 'cifs' for CIFS; and 'sp' for SharePoint. Other providers
+		/// may be created, clients must not assume any particular string.Version specifies the API version - currently at V3. Any backward incompatible
+		/// changes will be performed on a different version identifier, to avoid breaking
+		/// existing clients.The Capability document is used to indicate to clients that certain features
+		/// are not available on a given provider - allowing the client to suppress UX controls
+		/// and avoid "Not Implemented" exceptions to the end-user.
+		/// </remarks>
+		IQuery<ODataFeed<Capability>> Get();
+	}
+
+	public class CapabilitiesEntity : EntityBase, ICapabilitiesEntity
 	{
 		public CapabilitiesEntity(IShareFileClient client)
 			: base (client, "Capabilities")

@@ -131,7 +131,7 @@ namespace ShareFile.Api.Models
 
 		public bool? EnableQandATextInNotifications { get; set; }
 
-		public UXMode UXMode { get; set; }
+		public SafeEnum<UXMode> UXMode { get; set; }
 
 		public int? IndustryCode { get; set; }
 

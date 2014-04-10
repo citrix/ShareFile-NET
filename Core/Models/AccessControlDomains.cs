@@ -20,7 +20,7 @@ namespace ShareFile.Api.Models
 		/// <summary>
 		/// Specifies that the list is interpreted as a list of allowed or disallowed domains
 		/// </summary>
-		public AccessControlFilter? AccessControlType { get; set; }
+		public SafeEnum<AccessControlFilter> AccessControlType { get; set; }
 
 		/// <summary>
 		/// A list of domain names

@@ -27,7 +27,7 @@ namespace ShareFile.Api.Models
 
 		public bool? RestrictModifiedDevices { get; set; }
 
-		public PinLockType? PinLockType { get; set; }
+		public SafeEnum<PinLockType> PinLockType { get; set; }
 
 	}
 }

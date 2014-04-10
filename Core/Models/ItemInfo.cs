@@ -67,7 +67,7 @@ namespace ShareFile.Api.Models
 
 		public bool? ShowFolderPayBuyButton { get; set; }
 
-		public TreeMode? TreeMode { get; set; }
+		public SafeEnum<TreeMode> TreeMode { get; set; }
 
 		public bool? TreeModeOperationAllowed { get; set; }
 

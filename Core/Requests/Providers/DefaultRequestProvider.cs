@@ -382,6 +382,19 @@ namespace ShareFile.Api.Client.Requests.Providers
                 }
 
                 var httpRequestMessage = BuildRequest(apiRequest);
+
+                if (httpRequestMessage.RequestUri.AbsolutePath.Contains("Sessions/Login"))
+                {
+                    var authorizationHeader = GetAuthorizationHeaderValue(httpRequestMessage.RequestUri, "Bearer");
+
+                    if (authorizationHeader != null)
+                    {
+                        httpRequestMessage.Headers.Authorization = authorizationHeader;
+                        httpRequestMessage.Headers.Add("X-SFAPI-Tool", ShareFileClient.Configuration.ToolName);
+                        httpRequestMessage.Headers.Add("X-SFAPI-ToolVersion", ShareFileClient.Configuration.ToolVersion);
+                    }
+                }
+
                 var responseMessage = await ExecuteRequestAsync(httpRequestMessage, token);
 
                 action = null;

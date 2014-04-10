@@ -29,6 +29,8 @@ namespace ShareFile.Api.Models
 
 		public string HostName { get; set; }
 
+		public SafeEnum<ZoneService> Services { get; set; }
+
 		public string Version { get; set; }
 
 		public bool? Enabled { get; set; }

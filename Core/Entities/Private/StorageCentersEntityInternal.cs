@@ -19,7 +19,144 @@ using ShareFile.Api.Client.Requests;
 namespace ShareFile.Api.Client.Entities
 {
 #if ShareFile
-	public class StorageCentersEntityInternal : EntityBase
+
+	public interface IStorageCentersEntityInternal : IEntityBase
+	{
+		/// <summary>
+		/// Get Storage Center
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns>
+		/// A single Storage Center
+		/// </returns>
+		IQuery<StorageCenter> Get(string id);
+		/// <summary>
+		/// Patch Storage Center
+		/// </summary>
+		/// <example>
+		/// {
+		/// "ExternalAddress":"https://server/",
+		/// "Version":"4.12.20",
+		/// "HostName":"hostname" }
+		/// </example>
+		/// <param name="id"></param>
+		/// <param name="sc"></param>
+		/// <returns>
+		/// Modified Storage Center
+		/// </returns>
+		IQuery<StorageCenter> Update(string id, StorageCenter sc);
+		/// <summary>
+		/// Delete Storage Center
+		/// </summary>
+		/// <param name="id"></param>
+		IQuery Delete(string id);
+		/// <summary>
+		/// Get List of StorageCenters from Zone
+		/// </summary>
+		/// <remarks>
+		/// Lists Storage Centers of a given Zone
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <returns>
+		/// A list of Storage Centers associated with the provided zone
+		/// </returns>
+		IQuery<ODataFeed<StorageCenter>> GetByZone(string id);
+		/// <summary>
+		/// Create StorageCenter
+		/// </summary>
+		/// <example>
+		/// {
+		/// "ExternalAddress":"https://server/",
+		/// "Version":"4.12.20",
+		/// "HostName":"hostname"
+		/// }
+		/// </example>
+		/// <remarks>
+		/// Creates a new Storage Center associated with a specific zone
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <param name="storageCenter"></param>
+		/// <returns>
+		/// The new storage center
+		/// </returns>
+		IQuery<StorageCenter> CreateByZone(string id, StorageCenter storageCenter);
+		/// <summary>
+		/// Update StorageCenter
+		/// </summary>
+		/// <example>
+		/// {
+		/// "ExternalAddress":"https://server/",
+		/// "Version":"4.12.20",
+		/// "HostName":"hostname"
+		/// }
+		/// </example>
+		/// <remarks>
+		/// Updates an existing Storage Center
+		/// </remarks>
+		/// <param name="zid"></param>
+		/// <param name="scid"></param>
+		/// <param name="storageCenter"></param>
+		/// <returns>
+		/// the modified storage center
+		/// </returns>
+		IQuery<StorageCenter> UpdateByZone(string zid, string scid, StorageCenter storageCenter);
+		/// <summary>
+		/// Delete StorageCenter
+		/// </summary>
+		/// <remarks>
+		/// Removes an existing storage center
+		/// </remarks>
+		/// <param name="zid"></param>
+		/// <param name="scid"></param>
+		IQuery DeleteByZone(string zid, string scid);
+		/// <summary>
+		/// Get StorageCenter Metadata
+		/// </summary>
+		/// <remarks>
+		/// Gets metadata associated with the specified storage center
+		/// </remarks>
+		/// <param name="zid"></param>
+		/// <param name="scid"></param>
+		/// <returns>
+		/// the storage center metadata feed
+		/// </returns>
+		IQuery<ODataFeed<Metadata>> GetMetadata(string zid, string scid);
+		/// <summary>
+		/// Create or update StorageCenter Metadata
+		/// </summary>
+		/// <example>
+		/// [
+		/// {"Name":"metadataName1", "Value":"metadataValue1", "IsPublic":"true"},
+		/// {"Name":"metadataName2", "Value":"metadataValue2", "IsPublic":"false"},
+		/// ...
+		/// ]
+		/// </example>
+		/// <remarks>
+		/// Creates or updates Metadata entries associated with the specified storage center
+		/// </remarks>
+		/// <param name="zid"></param>
+		/// <param name="scid"></param>
+		/// <param name="metadata"></param>
+		/// <returns>
+		/// the storage center metadata feed
+		/// </returns>
+		IQuery<ODataFeed<Metadata>> CreateMetadata(string zid, string scid, IEnumerable<Metadata> metadata);
+		/// <summary>
+		/// Delete StorageCenter Metadata
+		/// </summary>
+		/// <remarks>
+		/// Delete the Metadata entry associated with the specified storage center
+		/// </remarks>
+		/// <param name="zid"></param>
+		/// <param name="scid"></param>
+		/// <param name="name"></param>
+		/// <returns>
+		/// no data on success
+		/// </returns>
+		IQuery DeleteMetadata(string zid, string scid, string name);
+	}
+
+	public class StorageCentersEntityInternal : EntityBase, IStorageCentersEntityInternal
 	{
 		public StorageCentersEntityInternal(IShareFileClient client)
 			: base (client, "StorageCenters")

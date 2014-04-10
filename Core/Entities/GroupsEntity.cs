@@ -18,7 +18,126 @@ using ShareFile.Api.Client.Requests;
 
 namespace ShareFile.Api.Client.Entities
 {
-	public class GroupsEntity : EntityBase
+
+	public interface IGroupsEntity : IEntityBase
+	{
+		/// <summary>
+		/// Get Group List
+		/// </summary>
+		/// <remarks>
+		/// Retrieves all Distribution Groups this user has permissions to View in this account
+		/// </remarks>
+		/// <returns>
+		/// a list of Groups this user has access to
+		/// </returns>
+		IQuery<ODataFeed<Group>> Get();
+		/// <summary>
+		/// Get Group By ID
+		/// </summary>
+		/// <remarks>
+		/// Retrives a single Group by id
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <returns>
+		/// A single Group object
+		/// </returns>
+		IQuery<Group> Get(string id);
+		/// <summary>
+		/// Delete Group
+		/// </summary>
+		/// <remarks>
+		/// Removes a single Group by id
+		/// </remarks>
+		/// <param name="id"></param>
+		IQuery Delete(string id);
+		/// <summary>
+		/// Create Group
+		/// </summary>
+		/// <example>
+		/// {
+		/// "Name":"Name",
+		/// "IsShared":true,
+		/// "Contacts":[{"Email":"user.one@domain.com"},{"Email":"user.two@domain.com"}]
+		/// }
+		/// </example>
+		/// <remarks>
+		/// Creates a new group. The Post body must include the specification of the group.
+		/// </remarks>
+		/// <param name="group"></param>
+		/// <returns>
+		/// the new group instance
+		/// </returns>
+		IQuery<Group> Create(Group group);
+		/// <summary>
+		/// Update Group
+		/// </summary>
+		/// <example>
+		/// {
+		/// "Name":"Name",
+		/// "IsShared":true,
+		/// }
+		/// </example>
+		/// <remarks>
+		/// Updates an existing group.
+		/// This operation will ignore the provided clients list. Use the \Contacts navigation link to
+		/// add/remove elements from a group
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <param name="group"></param>
+		/// <returns>
+		/// the modified group object
+		/// </returns>
+		IQuery<Group> Update(string id, Group group);
+		/// <summary>
+		/// Get Group Contacts
+		/// </summary>
+		/// <remarks>
+		/// Retrieves the Contacts navigation property of a Group
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <returns>
+		/// A feed of Contacts representing the members of the Group
+		/// </returns>
+		IQuery<ODataFeed<Contact>> GetContacts(string id);
+		/// <summary>
+		/// Add Contacts to Group
+		/// </summary>
+		/// <example>
+		/// [{"Email":"user.one@domain.com"},{"Id":"abcd"}]
+		/// </example>
+		/// <remarks>
+		/// Adds a list of contacts to a group
+		/// The contact list may contain either contact ID (same as User ID) or Email.
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <param name="contacts"></param>
+		/// <returns>
+		/// The updated list of contacts for this group
+		/// </returns>
+		IQuery<ODataFeed<Contact>> CreateContacts(string id, IEnumerable<Contact> contacts);
+		/// <summary>
+		/// Remove Contacts from Group
+		/// </summary>
+		/// <example>
+		/// [{"Email":"user.one@domain.com"},{"Id":"abcd"}]
+		/// </example>
+		/// <remarks>
+		/// Removes contacts from a group
+		/// The contact list may contain either contact ID (same as User ID) or Email.
+		/// This method will ignore missing references in the provided list - i.e., if an email in the contacts
+		/// list is not present in the group, it will be ignored.
+		/// The method will not enforce that ID and Email match inside a single Contact instance: Id will be
+		/// looked up first, then Email.
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <param name="contacts"></param>
+		/// <returns>
+		/// The updated list of contacts for this group
+		/// </returns>
+		IQuery<ODataFeed<Contact>> DeleteContacts(string id, IEnumerable<Contact> contacts);
+	}
+
+	public class GroupsEntity : EntityBase, IGroupsEntity
 	{
 		public GroupsEntity(IShareFileClient client)
 			: base (client, "Groups")

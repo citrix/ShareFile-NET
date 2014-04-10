@@ -29,7 +29,7 @@ namespace ShareFile.Api.Models
 		/// Either "Send" or "Request". Send Shares are used to Send files and folders to the specified users. Request
 		/// shares are used to allow users to upload files to the share owner chosen location.
 		/// </summary>
-		public ShareType? ShareType { get; set; }
+		public SafeEnum<ShareType> ShareType { get; set; }
 
 		/// <summary>
 		/// Share title
@@ -136,6 +136,16 @@ namespace ShareFile.Api.Models
 		/// List of users that have access to this share.
 		/// </summary>
 		public IEnumerable<ShareAlias> Recipients { get; set; }
+
+		/// <summary>
+		/// The Storage Zone that contains this Share.
+		/// </summary>
+		public Zone Zone { get; set; }
+
+		/// <summary>
+		/// HMAC Signature for the Share data
+		/// </summary>
+		public string Signature { get; set; }
 
 	}
 }

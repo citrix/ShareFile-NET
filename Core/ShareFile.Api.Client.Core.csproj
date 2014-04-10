@@ -47,6 +47,7 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="Converters\ODataConverter.cs" />
     <Compile Include="Converters\ODataFactory.cs" />
+    <Compile Include="Converters\SafeEnumConverter.cs" />
     <Compile Include="Credentials\CredentialCache.cs" />
     <Compile Include="Credentials\CredentialCacheFactory.cs" />
     <Compile Include="Credentials\ICredentialCache.cs" />
@@ -159,6 +160,7 @@
     <Compile Include="Models\Redirection.cs" />
     <Compile Include="Models\RequireSubdomainResult.cs" />
     <Compile Include="Models\RequireWebPopResult.cs" />
+    <Compile Include="Models\SafeEnum.cs" />
     <Compile Include="Models\SearchQuery.cs" />
     <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Models\SearchResults.cs" />

@@ -19,7 +19,7 @@ namespace ShareFile.Api.Models
 	{
 		public string Secret { get; set; }
 
-		public ZoneType? ZoneType { get; set; }
+		public SafeEnum<ZoneType> ZoneType { get; set; }
 
 		public Account Account { get; set; }
 
@@ -29,7 +29,7 @@ namespace ShareFile.Api.Models
 
 		public string Version { get; set; }
 
-		public ZoneService? ZoneServices { get; set; }
+		public SafeEnum<ZoneService> ZoneServices { get; set; }
 
 		public IEnumerable<StorageCenter> StorageCenters { get; set; }
 

@@ -23,7 +23,7 @@ namespace ShareFile.Api.Models
 
 		public ODataObject Entity { get; set; }
 
-		public EnsEventType EventTypes { get; set; }
+		public SafeEnum<EnsEventType> EventTypes { get; set; }
 
 		public bool IncludeProgeny { get; set; }
 

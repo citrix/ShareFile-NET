@@ -17,7 +17,7 @@ namespace ShareFile.Api.Models
 {
 	public class Device : ODataObject 
 	{
-		public SFTool? Tool { get; set; }
+		public SafeEnum<SFTool> Tool { get; set; }
 
 		public string ToolRaw { get; set; }
 

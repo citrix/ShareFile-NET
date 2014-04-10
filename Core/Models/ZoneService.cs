@@ -16,6 +16,14 @@ namespace ShareFile.Api.Models
 		None = 0,
 		StorageZone = 1,
 		NetworkShareConnector = 2,
-		SharepointConnector = 4
+		SharepointConnector = 4,
+		AzureStorageZone = 8,
+		SharePointOnlineConnector = 16,
+		BoxConnector = 32,
+		DropboxConnector = 64,
+		OneDriveConnector = 128,
+		GoogleDriveConnector = 256,
+		ExchangeConnector = 512,
+		GenericConnector = 1024
 	}
 }

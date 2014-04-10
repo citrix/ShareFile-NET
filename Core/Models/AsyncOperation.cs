@@ -20,7 +20,7 @@ namespace ShareFile.Api.Models
 		/// <summary>
 		/// Operation type
 		/// </summary>
-		public AsyncOperationType? Operation { get; set; }
+		public SafeEnum<AsyncOperationType> Operation { get; set; }
 
 		/// <summary>
 		/// ShareFile Account
@@ -52,7 +52,7 @@ namespace ShareFile.Api.Models
 		/// Operation state. States 'Created' and 'Scheduled' indicate the operation is
 		/// in progress; States 'Success' and 'Failure' indicate the operatoin is finalized
 		/// </summary>
-		public AsyncOperationState? State { get; set; }
+		public SafeEnum<AsyncOperationState> State { get; set; }
 
 		/// <summary>
 		/// Last time the operation state was modified

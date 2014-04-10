@@ -28,26 +28,26 @@ namespace ShareFile.Api.Client
     public interface IShareFileClient
     {
 #if ShareFile
-        AccountsEntityInternal Accounts { get; }
-        DevicesEntityInternal Devices { get; }
-        ItemsEntityInternal Items { get; }
-        StorageCentersEntityInternal StorageCenters { get; }
-        ZonesEntityInternal Zones { get; }
+        IAccountsEntityInternal Accounts { get; }
+        IDevicesEntityInternal Devices { get; }
+        IItemsEntityInternal Items { get; }
+        IStorageCentersEntityInternal StorageCenters { get; }
+        IZonesEntityInternal Zones { get; }
 #else
-        AccountsEntity Accounts { get; }
-        ItemsEntity Items { get; }
+        IAccountsEntity Accounts { get; }
+        IItemsEntity Items { get; }
 #endif
 
-        AccessControlsEntity AccessControls { get; }
-        AsyncOperationsEntity AsyncOperations { get; }
-        CapabilitiesEntity Capabilities { get; }
-        ConfigsEntity Configs { get; }
-        FavoriteFoldersEntity FavoriteFolders { get; }
-        GroupsEntity Groups { get; }
-        MetadataEntity Metadata { get; }
-        SessionsEntity Sessions { get; }
-        SharesEntity Shares { get; }
-        UsersEntity Users { get; }
+        IAccessControlsEntity AccessControls { get; }
+        IAsyncOperationsEntity AsyncOperations { get; }
+        ICapabilitiesEntity Capabilities { get; }
+        IConfigsEntity Configs { get; }
+        IFavoriteFoldersEntity FavoriteFolders { get; }
+        IGroupsEntity Groups { get; }
+        IMetadataEntity Metadata { get; }
+        ISessionsEntity Sessions { get; }
+        ISharesEntity Shares { get; }
+        IUsersEntity Users { get; }
         Uri NextRequestBaseUri { get; }
         Uri BaseUri { get; set; }
         Configuration Configuration { get; set; }
@@ -176,25 +176,25 @@ namespace ShareFile.Api.Client
         }
 
 #if ShareFile
-        public AccountsEntityInternal Accounts { get; private set; }
-        public DevicesEntityInternal Devices { get; private set; }
-        public ItemsEntityInternal Items { get; private set; }
-        public StorageCentersEntityInternal StorageCenters { get; private set; }
-        public ZonesEntityInternal Zones { get; private set; }
+        public IAccountsEntityInternal Accounts { get; private set; }
+        public IDevicesEntityInternal Devices { get; private set; }
+        public IItemsEntityInternal Items { get; private set; }
+        public IStorageCentersEntityInternal StorageCenters { get; private set; }
+        public IZonesEntityInternal Zones { get; private set; }
 #else
-        public AccountsEntity Accounts { get; private set; }
-        public ItemsEntity Items { get; private set; }
+        public IAccountsEntity Accounts { get; private set; }
+        public IItemsEntity Items { get; private set; }
 #endif
-        public AccessControlsEntity AccessControls { get; private set; }
-        public AsyncOperationsEntity AsyncOperations { get; private set; }
-        public CapabilitiesEntity Capabilities { get; private set; }
-        public ConfigsEntity Configs { get; private set; }
-        public FavoriteFoldersEntity FavoriteFolders { get; private set; }
-        public GroupsEntity Groups { get; private set; }
-        public MetadataEntity Metadata { get; private set; }
-        public SessionsEntity Sessions { get; private set; }
-        public SharesEntity Shares { get; private set; }
-        public UsersEntity Users { get; private set; }
+        public IAccessControlsEntity AccessControls { get; private set; }
+        public IAsyncOperationsEntity AsyncOperations { get; private set; }
+        public ICapabilitiesEntity Capabilities { get; private set; }
+        public IConfigsEntity Configs { get; private set; }
+        public IFavoriteFoldersEntity FavoriteFolders { get; private set; }
+        public IGroupsEntity Groups { get; private set; }
+        public IMetadataEntity Metadata { get; private set; }
+        public ISessionsEntity Sessions { get; private set; }
+        public ISharesEntity Shares { get; private set; }
+        public IUsersEntity Users { get; private set; }
 
         public Uri NextRequestBaseUri { get; private set; }
         public Uri BaseUri { get; set; }
@@ -240,7 +240,7 @@ namespace ShareFile.Api.Client
                 ObjectCreationHandling = ObjectCreationHandling.Replace,
                 MissingMemberHandling = MissingMemberHandling.Ignore,
                 NullValueHandling = NullValueHandling.Ignore,
-                Converters = { new ODataConverter(), new StringEnumConverter() }
+                Converters = { new ODataConverter(), new StringEnumConverter(), new SafeEnumConverter() }
             };
         }
 

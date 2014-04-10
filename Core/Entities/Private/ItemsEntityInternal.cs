@@ -19,7 +19,84 @@ using ShareFile.Api.Client.Requests;
 namespace ShareFile.Api.Client.Entities
 {
 #if ShareFile
-	public class ItemsEntityInternal : ItemsEntity
+
+	public interface IItemsEntityInternal : IItemsEntity
+	{
+		/// <summary>
+		/// Advanced Simple Search
+		/// </summary>
+		/// <example>
+		/// {
+		/// "Query":{
+		/// "AuthID":"",
+		/// "ItemType":"",
+		/// "ParentID":"",
+		/// "CreatorID":"",
+		/// "LuceneQuery":"",
+		/// "SearchQuery":"",
+		/// "CreateStartDate":"",
+		/// "CreateEndDate":"",
+		/// "ItemNameOnly":"",
+		/// },
+		/// "Paging":{
+		/// "Key":"",
+		/// "PageNumber":1,
+		/// "PageSize":10,
+		/// },
+		/// "Sort":{
+		/// "SortBy":"",
+		/// "Ascending":false,
+		/// },
+		/// "TimeoutInSeconds":10
+		/// }
+		/// </example>
+		/// <remarks>
+		/// Search for Items matching the criteria of the query parameter
+		/// </remarks>
+		/// <param name="simpleSearchQuery"></param>
+		/// <returns>
+		/// AdvancedSearchResults
+		/// </returns>
+		IQuery<AdvancedSearchResults> AdvancedSimpleSearch(SimpleSearchQuery simpleSearchQuery);
+		/// <summary>
+		/// Advanced Search
+		/// </summary>
+		/// <example>
+		/// {
+		/// "Query":{
+		/// "AuthIDs":["id1", "id2", ...],
+		/// "ItemTypes":["type1", "type2", ...],
+		/// "ParentID":["id1", "id2", ...],
+		/// "CreatorID":["id1", "id2", ...],
+		/// "LuceneQuery":"",
+		/// "SearchQuery":"",
+		/// "CreateStartDate":"",
+		/// "CreateEndDate":"",
+		/// "ItemNameOnly":"",
+		/// },
+		/// "Paging":{
+		/// "Key":"",
+		/// "PageNumber":1,
+		/// "PageSize":10,
+		/// },
+		/// "Sort":{
+		/// "SortBy":"",
+		/// "Ascending":false,
+		/// },
+		/// "TimeoutInSeconds":10
+		/// }
+		/// </example>
+		/// <remarks>
+		/// Search for Items matching the criteria of the query parameter
+		/// </remarks>
+		/// <param name="searchQuery"></param>
+		/// <returns>
+		/// AdvancedSearchResults
+		/// </returns>
+		IQuery<AdvancedSearchResults> AdvancedSearch(SearchQuery searchQuery);
+	}
+
+	public class ItemsEntityInternal : ItemsEntity, IItemsEntityInternal
 	{
 		public ItemsEntityInternal(IShareFileClient client)
 			: base (client)

@@ -18,7 +18,13 @@ using ShareFile.Api.Client.Requests;
 
 namespace ShareFile.Api.Client.Entities
 {
-	public class ConfigsEntity : EntityBase
+
+	public interface IConfigsEntity : IEntityBase
+	{
+		IQuery<ODataFeed<GenericConfig>> Get();
+	}
+
+	public class ConfigsEntity : EntityBase, IConfigsEntity
 	{
 		public ConfigsEntity(IShareFileClient client)
 			: base (client, "Configs")

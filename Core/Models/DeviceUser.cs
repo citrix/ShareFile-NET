@@ -43,13 +43,13 @@ namespace ShareFile.Api.Models
 
 		public string WipeInitiator { get; set; }
 
-		public DeviceActionInitiatorRole? WipeInitiatorRole { get; set; }
+		public SafeEnum<DeviceActionInitiatorRole> WipeInitiatorRole { get; set; }
 
 		public string LockInitiator { get; set; }
 
-		public DeviceActionInitiatorRole? LockInitiatorRole { get; set; }
+		public SafeEnum<DeviceActionInitiatorRole> LockInitiatorRole { get; set; }
 
-		public SFTool? DeviceType { get; set; }
+		public SafeEnum<SFTool> DeviceType { get; set; }
 
 		public string LastErrorMessage { get; set; }
 

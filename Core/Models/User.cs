@@ -60,7 +60,7 @@ namespace ShareFile.Api.Models
 
 		public Folder VirtualRoot { get; set; }
 
-		public IEnumerable<UserRole> Roles { get; set; }
+		public IEnumerable<SafeEnum<UserRole>> Roles { get; set; }
 
 		public UserInfo Info { get; set; }
 

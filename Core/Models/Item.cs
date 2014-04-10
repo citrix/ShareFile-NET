@@ -152,7 +152,7 @@ namespace ShareFile.Api.Models
 		/// 
 		/// Previews are not created for unknown file types
 		/// </summary>
-		public PreviewStatus? PreviewStatus { get; set; }
+		public SafeEnum<PreviewStatus> PreviewStatus { get; set; }
 
 		public int? MaxPreviewSize { get; set; }
 

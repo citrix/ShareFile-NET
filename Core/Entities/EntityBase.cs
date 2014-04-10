@@ -1,5 +1,11 @@
 ﻿namespace ShareFile.Api.Client.Entities
 {
+    public interface IEntityBase
+    {
+        IShareFileClient Client { get; set; }
+        string Entity { get; set; }
+    }
+
     public abstract class EntityBase
     {
         protected EntityBase(IShareFileClient client, string entity)

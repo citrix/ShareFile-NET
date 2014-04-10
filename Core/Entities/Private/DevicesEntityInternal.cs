@@ -19,7 +19,90 @@ using ShareFile.Api.Client.Requests;
 namespace ShareFile.Api.Client.Entities
 {
 #if ShareFile
-	public class DevicesEntityInternal : EntityBase
+
+	public interface IDevicesEntityInternal : IEntityBase
+	{
+		/// <summary>
+		/// Get Device Users for Current User
+		/// </summary>
+		/// <returns>
+		/// A feed of DeviceUser objects
+		/// </returns>
+		IQuery<ODataFeed<DeviceUser>> Get();
+		/// <summary>
+		/// Get Device by ID
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns>
+		/// Device
+		/// </returns>
+		IQuery<Device> Get(string id);
+		IQuery<ODataFeed<DeviceUser>> GetByUser(string userId);
+		/// <summary>
+		/// Delete Device
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns>
+		/// no data on success
+		/// </returns>
+		IQuery Delete(string id);
+		IQuery DeleteByUser(string userId, string deviceId);
+		IQuery<DeviceUser> CreateByUser(string userId, DeviceUser du);
+		/// <summary>
+		/// Wipe Device
+		/// </summary>
+		/// <param name="deviceID"></param>
+		/// <param name="userid"></param>
+		/// <returns>
+		/// no data on success
+		/// </returns>
+		IQuery Wipe(string deviceID, string userid = null);
+		/// <summary>
+		/// Signal Wipe Done
+		/// </summary>
+		/// <example>
+		/// {
+		/// "Logs" :
+		/// [
+		/// { "FileName":"fileA",
+		/// "FileID":"id",
+		/// "Timestamp":0,
+		/// "AccountID":"id",
+		/// "UserID":"userId1",
+		/// "Action":"OpenGeneric",
+		/// "AdditionalInfo":""
+		/// },
+		/// ...
+		/// ],
+		/// "WipeResults" :
+		/// [
+		/// {"id":"userId1", "WipeToken":"token1", "Success":"true", "ErrorMessage":"" },
+		/// {"id":"userId1", "WipeToken":"token2", "Success":"false", "ErrorMessage":"some error" },
+		/// ...
+		/// ]
+		/// }
+		/// </example>
+		/// <remarks>
+		/// Signal that a device wipe has been completed
+		/// </remarks>
+		/// <param name="deviceID"></param>
+		/// <param name="deviceWipeReport"></param>
+		/// <param name="singlePlane"></param>
+		/// <returns>
+		/// no data on success
+		/// </returns>
+		IQuery WipeDone(string deviceID, DeviceWipeReport deviceWipeReport, bool singlePlane = false);
+		/// <summary>
+		/// Check Device Status
+		/// </summary>
+		/// <param name="deviceID"></param>
+		/// <returns>
+		/// DeviceStatus
+		/// </returns>
+		IQuery<DeviceStatus> Status(string deviceID);
+	}
+
+	public class DevicesEntityInternal : EntityBase, IDevicesEntityInternal
 	{
 		public DevicesEntityInternal(IShareFileClient client)
 			: base (client, "Devices")

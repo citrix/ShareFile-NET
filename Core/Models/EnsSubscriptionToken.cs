@@ -21,7 +21,7 @@ namespace ShareFile.Api.Models
 
 		public string EntityId { get; set; }
 
-		public EnsEventType EventTypes { get; set; }
+		public SafeEnum<EnsEventType> EventTypes { get; set; }
 
 		public bool IncludeProgeny { get; set; }
 

@@ -19,7 +19,24 @@ using ShareFile.Api.Client.Requests;
 namespace ShareFile.Api.Client.Entities
 {
 #if ShareFile
-	public class UsersEntityInternal : UsersEntity
+
+	public interface IUsersEntityInternal : IUsersEntity
+	{
+		/// <summary>
+		/// Get User Security
+		/// </summary>
+		/// <remarks>
+		/// Retrieve the user security record - current state of the user regarding
+		/// security and password settings.
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <returns>
+		/// the user security status
+		/// </returns>
+		IQuery<UserSecurity> GetSecurity(string id);
+	}
+
+	public class UsersEntityInternal : UsersEntity, IUsersEntityInternal
 	{
 		public UsersEntityInternal(IShareFileClient client)
 			: base (client)

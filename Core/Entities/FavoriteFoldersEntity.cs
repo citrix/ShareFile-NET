@@ -18,7 +18,75 @@ using ShareFile.Api.Client.Requests;
 
 namespace ShareFile.Api.Client.Entities
 {
-	public class FavoriteFoldersEntity : EntityBase
+
+	public interface IFavoriteFoldersEntity : IEntityBase
+	{
+		/// <summary>
+		/// Get List of FavoriteFolders
+		/// </summary>
+		/// <remarks>
+		/// Retrieves the list of Favorite folders for a given user.
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <returns>
+		/// A list of Favorite Folders specified by this user
+		/// </returns>
+		IQuery<ODataFeed<FavoriteFolder>> GetByUser(string id);
+		/// <summary>
+		/// Get FavoriteFolder
+		/// </summary>
+		/// <remarks>
+		/// Retrieves a single Favorite Folder
+		/// </remarks>
+		/// <param name="userid"></param>
+		/// <param name="itemid"></param>
+		/// <returns>
+		/// A list of Favorite Folders specified by this user
+		/// </returns>
+		IQuery<FavoriteFolder> GetByUser(string itemid, string userid);
+		/// <summary>
+		/// Get FavoriteFolder
+		/// </summary>
+		/// <remarks>
+		/// Retrieve a single Favorite Folder from a give user
+		/// </remarks>
+		/// <param name="userid"></param>
+		/// <param name="itemid"></param>
+		/// <returns>
+		/// The selected Favorite Folder
+		/// </returns>
+		IQuery<FavoriteFolder> Get(string userid, string itemid);
+		/// <summary>
+		/// Create FavoriteFolder
+		/// </summary>
+		/// <example>
+		/// {
+		/// "Folder": { "Id":"fo96aec5-d637-4124-bcc9-c86fd7301e4d" },
+		/// "FolderAlias" : "alias"
+		/// }
+		/// </example>
+		/// <remarks>
+		/// Adds an existing folder to the list of favorites of a given user.
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <param name="folder"></param>
+		/// <returns>
+		/// A new FavoriteFolder record
+		/// </returns>
+		IQuery<FavoriteFolder> CreateByUser(string id, FavoriteFolder folder);
+		/// <summary>
+		/// Delete FavoriteFolder
+		/// </summary>
+		/// <remarks>
+		/// Removes a favorite folder from a user's list.
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <param name="itemid"></param>
+		IQuery Delete(string id, string itemid);
+		IQuery DeleteByUser(string userId, string itemId);
+	}
+
+	public class FavoriteFoldersEntity : EntityBase, IFavoriteFoldersEntity
 	{
 		public FavoriteFoldersEntity(IShareFileClient client)
 			: base (client, "FavoriteFolders")

@@ -17,7 +17,7 @@ namespace ShareFile.Api.Models
 {
 	public class Capability : ODataObject 
 	{
-		public CapabilityName Name { get; set; }
+		public SafeEnum<CapabilityName> Name { get; set; }
 
 		public string Version { get; set; }
 

@@ -18,7 +18,92 @@ using ShareFile.Api.Client.Requests;
 
 namespace ShareFile.Api.Client.Entities
 {
-	public class AsyncOperationsEntity : EntityBase
+
+	public interface IAsyncOperationsEntity : IEntityBase
+	{
+		/// <summary>
+		/// Get AsyncOperation by ID
+		/// </summary>
+		/// <remarks>
+		/// Retrieve a single Async Op record by ID
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <returns>
+		/// A single Async Operation record
+		/// </returns>
+		IQuery<AsyncOperation> Get(string id);
+		/// <summary>
+		/// Get List of AsyncOperations by Operation Batch ID
+		/// </summary>
+		/// <remarks>
+		/// Retrieves all AsyncOperations on the specified batch
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <returns>
+		/// A Feed of AsyncOperation objects, containing all items in the specified batch
+		/// </returns>
+		IQuery<ODataFeed<AsyncOperation>> GetByBatch(string id);
+		/// <summary>
+		/// Get List of AsyncOperations by Folder
+		/// </summary>
+		/// <remarks>
+		/// Retrieves all AsyncOperations associated with the calling user and the Item ID
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <returns>
+		/// A Feed of AsyncOperation objects, containing all pending operations in the specific folder,
+		/// for the authenticated SDK user
+		/// </returns>
+		IQuery<ODataFeed<AsyncOperation>> GetByFolder(string id);
+		/// <summary>
+		/// Cancel AsyncOperation
+		/// </summary>
+		/// <remarks>
+		/// Cancels a single Async operation record
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <returns>
+		/// The modified Async Operation record
+		/// </returns>
+		IQuery<AsyncOperation> Cancel(string id);
+		/// <summary>
+		/// Delete AsyncOperation
+		/// </summary>
+		/// <remarks>
+		/// Cancels a single Async operation record (same as /Cancel)
+		/// </remarks>
+		/// <param name="id"></param>
+		IQuery Delete(string id);
+		/// <summary>
+		/// Cancel an Operation Batch
+		/// </summary>
+		/// <remarks>
+		/// Cancel an Async Operation batch - all unfinished Async Operation records in that batch
+		/// will be moved to Cancelled state.
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <returns>
+		/// A list of the modified Async Operations in the batch
+		/// </returns>
+		IQuery<ODataFeed<AsyncOperation>> CancelBatch(string id);
+		/// <summary>
+		/// Changes the state of an AsyncOperation
+		/// </summary>
+		/// <example>
+		/// { "State": "..." }
+		/// </example>
+		/// <remarks>
+		/// Only the State parameter is updated, other fields are ignored
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <param name="newAsyncOp"></param>
+		/// <returns>
+		/// The modified Async Operation
+		/// </returns>
+		IQuery<AsyncOperation> Patch(string id, AsyncOperation newAsyncOp);
+	}
+
+	public class AsyncOperationsEntity : EntityBase, IAsyncOperationsEntity
 	{
 		public AsyncOperationsEntity(IShareFileClient client)
 			: base (client, "AsyncOperations")

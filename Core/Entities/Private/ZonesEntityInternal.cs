@@ -19,7 +19,141 @@ using ShareFile.Api.Client.Requests;
 namespace ShareFile.Api.Client.Entities
 {
 #if ShareFile
-	public class ZonesEntityInternal : EntityBase
+
+	public interface IZonesEntityInternal : IEntityBase
+	{
+		/// <summary>
+		/// Get List of Zones
+		/// </summary>
+		/// <remarks>
+		/// Retrieve the list of Zones accessible to the authenticated user
+		/// This method will concatenate the list of private zones in the user's account and the
+		/// list of public zones accessible to this account. Any user can see the list of zones.
+		/// </remarks>
+		/// <param name="services"></param>
+		/// <param name="includeDisabled"></param>
+		/// <returns>
+		/// The list of public and private zones accessible to this user
+		/// </returns>
+		IQuery<ODataFeed<Zone>> Get(ZoneService services = ZoneService.StorageZone, bool includeDisabled = false);
+		/// <summary>
+		/// Get List of Zones
+		/// </summary>
+		/// <remarks>
+		/// Retrieve the list of Zones accessible to the authenticated user
+		/// This method will concatenate the list of private zones in the user's account and the
+		/// list of public zones accessible to this account. Any user can see the list of zones.
+		/// </remarks>
+		/// <param name="services"></param>
+		/// <param name="includeDisabled"></param>
+		/// <returns>
+		/// The list of public and private zones accessible to this user
+		/// </returns>
+		IQuery<Zone> Get(string id, bool secret = false);
+		/// <summary>
+		/// Create Zone
+		/// </summary>
+		/// <example>
+		/// {
+		/// "Name":"Name",
+		/// "HeartbeatTolerance":10,
+		/// "ZoneServices":"StorageZone, SharepointConnector, NetworkShareConnector"
+		/// }
+		/// </example>
+		/// <remarks>
+		/// Creates a new Zone.
+		/// </remarks>
+		/// <returns>
+		/// the created zone
+		/// </returns>
+		IQuery<Zone> Create(Zone zone);
+		/// <summary>
+		/// Update Zone
+		/// </summary>
+		/// <example>
+		/// {
+		/// "Name":"Name",
+		/// "HeartbeatTolerance":10,
+		/// "ZoneServices":"StorageZone, SharepointConnector, NetworkShareConnector"
+		/// }
+		/// </example>
+		/// <remarks>
+		/// Updates an existing zone
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <param name="zone"></param>
+		/// <returns>
+		/// The modified zone
+		/// </returns>
+		IQuery<Zone> Update(string id, Zone zone);
+		/// <summary>
+		/// Delete Zone
+		/// </summary>
+		/// <remarks>
+		/// Removes an existing zone
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <param name="force"></param>
+		IQuery Delete(string id, bool force = false);
+		/// <summary>
+		/// Reset Zone Secret
+		/// </summary>
+		/// <remarks>
+		/// Resets the current Zone Secret to a new Random value
+		/// Caution! This Call will invalidate all Storage Center communications until the Storage Center Zone secret
+		/// is also updated.
+		/// User must be a Zone admin to perform this action
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <returns>
+		/// The modified Zone object
+		/// </returns>
+		IQuery<Zone> ResetSecret(string id);
+		/// <summary>
+		/// Get Zone Metadata
+		/// </summary>
+		/// <remarks>
+		/// Gets metadata associated with the specified zone
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <returns>
+		/// the zone metadata feed
+		/// </returns>
+		IQuery<ODataFeed<Metadata>> GetMetadata(string id);
+		/// <summary>
+		/// Create or update Zone Metadata
+		/// </summary>
+		/// <example>
+		/// [
+		/// {"Name":"metadataName1", "Value":"metadataValue1", "IsPublic":"true"},
+		/// {"Name":"metadataName2", "Value":"metadataValue2", "IsPublic":"false"},
+		/// ...
+		/// ]
+		/// </example>
+		/// <remarks>
+		/// Creates or updates Metadata entries associated with the specified zone
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <param name="metadata"></param>
+		/// <returns>
+		/// the zone metadata feed
+		/// </returns>
+		IQuery<ODataFeed<Metadata>> CreateMetadata(string id, IEnumerable<Metadata> metadata);
+		/// <summary>
+		/// Delete Zone Metadata
+		/// </summary>
+		/// <remarks>
+		/// Delete the Metadata entry associated with the specified zone
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <param name="name"></param>
+		/// <returns>
+		/// no data on success
+		/// </returns>
+		IQuery DeleteMetadata(string id, string name);
+	}
+
+	public class ZonesEntityInternal : EntityBase, IZonesEntityInternal
 	{
 		public ZonesEntityInternal(IShareFileClient client)
 			: base (client, "Zones")

@@ -30,7 +30,7 @@ namespace ShareFile.Api.Models
 
 		public string UserID { get; set; }
 
-		public DeviceLogEntryAction Action { get; set; }
+		public SafeEnum<DeviceLogEntryAction> Action { get; set; }
 
 		public string AdditionalInfo { get; set; }
 

@@ -38,7 +38,7 @@ namespace ShareFile.Api.Models
 		/// <summary>
 		/// Current Anti-Virus scanning status for this file
 		/// </summary>
-		public FileVirusStatus VirusStatus { get; set; }
+		public SafeEnum<FileVirusStatus> VirusStatus { get; set; }
 
 		/// <summary>
 		/// Indicates the user that has locked the file

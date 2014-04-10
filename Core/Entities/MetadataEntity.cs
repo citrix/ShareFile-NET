@@ -18,7 +18,114 @@ using ShareFile.Api.Client.Requests;
 
 namespace ShareFile.Api.Client.Entities
 {
-	public class MetadataEntity : EntityBase
+
+	public interface IMetadataEntity : IEntityBase
+	{
+		/// <summary>
+		/// Get Metadata by ID
+		/// </summary>
+		/// <remarks>
+		/// Retrieves a single Metadata entry that has a given Name for a given Item.
+		/// Note:
+		/// 'GET https://account.sf-api.com/sf/v3/Items(parentid)/Metadata(id)' is unsupported.
+		/// Current routing doesn't support the URI to retrieve a single Metadata enntry since it is aliased with the GetByItem feed.
+		/// So for now we support only the same syntax as for AccessControls, i.e. .../Metadata(name=name,itemid=itemid)
+		/// </remarks>
+		/// <param name="name"></param>
+		/// <param name="itemid"></param>
+		/// <returns>
+		/// A single Metadata object matching the query
+		/// </returns>
+		IQuery<Metadata> Get(string name, string itemid);
+		/// <summary>
+		/// Get Metadata List By Item
+		/// </summary>
+		/// <remarks>
+		/// Retrieves the Metadata List for a given Item.
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <returns>
+		/// The Metadata list of the given object ID.
+		/// </returns>
+		IQuery<ODataFeed<Metadata>> GetByItem(string id);
+		/// <summary>
+		/// Create Metadata
+		/// </summary>
+		/// <example>
+		/// {
+		/// "Name":"metadata name",
+		/// "Value":"metadata value"
+		/// }
+		/// </example>
+		/// <remarks>
+		/// Creates a single Metadata entry that has a specified Name for a given Item. Fails if an entry with the given name already exists for this Item.
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <returns>
+		/// The created Metadata object
+		/// </returns>
+		IQuery<Metadata> CreateByItem(string id, Metadata metadata);
+		/// <summary>
+		/// Update Metadata
+		/// </summary>
+		/// <example>
+		/// {
+		/// "Value":"metadata value"
+		/// }
+		/// </example>
+		/// <remarks>
+		/// Updates a single Metadata entry that has a specified Name for a given Item. Fails if an entry with the given name doesn't exist for this Item.
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <param name="metadataId"></param>
+		/// <returns>
+		/// The updated Metadata object
+		/// </returns>
+		IQuery<Metadata> UpdateByItem(string id, string metadataId, Metadata metadata);
+		/// <summary>
+		/// Update Metadata
+		/// </summary>
+		/// <example>
+		/// {
+		/// "Value":"metadata value"
+		/// }
+		/// </example>
+		/// <remarks>
+		/// Updates a single Metadata entry that has a specified Name for a given Item. Fails if an entry with the given name doesn't exist for this Item.
+		/// </remarks>
+		/// <param name="name"></param>
+		/// <param name="itemid"></param>
+		/// <returns>
+		/// The updated Metadata object
+		/// </returns>
+		IQuery<Metadata> Update(string name, string itemid, Metadata metadata);
+		/// <summary>
+		/// Delete Metadata
+		/// </summary>
+		/// <remarks>
+		/// Deletes a single Metadata entry that has a specified Name for a given Item. Fails if an entry with the given name doesn't exist for this Item.
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <param name="metadataId"></param>
+		/// <returns>
+		/// (no data)
+		/// </returns>
+		IQuery DeleteByItem(string id, string metadataId);
+		/// <summary>
+		/// Delete Metadata
+		/// </summary>
+		/// <remarks>
+		/// Deletes a single Metadata entry that has a specified Name for a given Item. Fails if an entry with the given name doesn't exist for this Item.
+		/// </remarks>
+		/// <param name="name"></param>
+		/// <param name="itemid"></param>
+		/// <returns>
+		/// (no data)
+		/// </returns>
+		IQuery Delete(string name, string itemid);
+	}
+
+	public class MetadataEntity : EntityBase, IMetadataEntity
 	{
 		public MetadataEntity(IShareFileClient client)
 			: base (client, "Metadata")

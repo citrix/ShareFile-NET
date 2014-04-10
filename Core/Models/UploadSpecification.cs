@@ -20,7 +20,7 @@ namespace ShareFile.Api.Models
 		/// <summary>
 		/// The Upload method that must be used for this upload
 		/// </summary>
-		public UploadMethod Method { get; set; }
+		public SafeEnum<UploadMethod> Method { get; set; }
 
 		/// <summary>
 		/// If provided, clients must issue a request to this Uri before uploading any data.

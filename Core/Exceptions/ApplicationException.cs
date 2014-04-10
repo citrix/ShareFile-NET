@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if Portable
+using System;
 
 namespace ShareFile.Api.Client.Exceptions
 {
@@ -11,3 +12,4 @@ namespace ShareFile.Api.Client.Exceptions
         }
     }
 }
+#endif

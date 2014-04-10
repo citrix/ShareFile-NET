@@ -309,7 +309,7 @@ namespace ShareFile.Api.Client
 
         public void ClearCredentialsAndCookies()
         {
-            CredentialCache = new CredentialCache();
+            CredentialCache = new ShareFile.Api.Client.Credentials.CredentialCache();
             CookieContainer = new CookieContainer();
         }
 

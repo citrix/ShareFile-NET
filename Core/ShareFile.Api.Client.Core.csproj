@@ -83,6 +83,7 @@
     <Compile Include="Extensions\BoolExtensions.cs" />
     <Compile Include="Extensions\ContactExtensions.cs" />
     <Compile Include="Extensions\ItemsEntityExtensions.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\ODataObjectExtensions.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="FileSystem\IPlatformFile.cs" />

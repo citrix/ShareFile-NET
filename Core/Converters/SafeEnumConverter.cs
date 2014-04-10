@@ -10,13 +10,21 @@ namespace ShareFile.Api.Client.Converters
         {
             var safeEnum = value as ISafeEnum;
 
-            if (safeEnum == null) return;
+            if (safeEnum == null)
+            {
+                writer.WriteNull();
+                return;
+            }
 
             var jsonValue = safeEnum.Value;
 
-            if (string.IsNullOrWhiteSpace(jsonValue)) return;
+            if (string.IsNullOrWhiteSpace(jsonValue))
+            {
+                writer.WriteNull();
+                return;
+            }
 
-            serializer.Serialize(writer, jsonValue);
+            writer.WriteValue(jsonValue);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -31,11 +39,18 @@ namespace ShareFile.Api.Client.Converters
             if (instance == null) return null;
 
             var enumType = objectType.GetGenericArguments()[0];
-            var value = reader.ReadAsString();
+            var value = reader.Value as string;
 
             try
             {
-                instance.Object = Enum.Parse(enumType, value, true);
+                if (value == null)
+                {
+                    instance.Value = null;
+                }
+                else
+                {
+                    instance.Object = Enum.Parse(enumType, value, true);
+                }
             }
             catch (Exception)
             {

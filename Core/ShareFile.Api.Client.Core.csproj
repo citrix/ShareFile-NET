@@ -181,6 +181,7 @@
     <Compile Include="Models\SSOInfoEntry.cs" />
     <Compile Include="Models\StorageCenter.cs" />
     <Compile Include="Models\SymbolicLink.cs" />
+    <Compile Include="Models\ToolInformation.cs" />
     <Compile Include="Models\TreeMode.cs" />
     <Compile Include="Models\UploadMethod.cs" />
     <Compile Include="Models\UploadSpecification.cs" />
@@ -242,31 +243,40 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Threading.Tasks">
-      <HintPath>$(SolutionDir)packages\Microsoft.Bcl.Async.1.0.166\lib\portable-net40+sl4+win8+wp71+wpa81\Microsoft.Threading.Tasks.dll</HintPath>
+      <HintPath>$(SolutionDir)packages\Microsoft.Bcl.Async.1.0.168\lib\portable-net40+sl4+win8+wp71+wpa81\Microsoft.Threading.Tasks.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Threading.Tasks.Extensions">
-      <HintPath>$(SolutionDir)packages\Microsoft.Bcl.Async.1.0.166\lib\portable-net40+sl4+win8+wp71+wpa81\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+      <HintPath>$(SolutionDir)packages\Microsoft.Bcl.Async.1.0.168\lib\portable-net40+sl4+win8+wp71+wpa81\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>$(SolutionDir)packages\Newtonsoft.Json.6.0.2\lib\portable-net40+sl5+wp80+win8+monotouch+monoandroid\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.IO">
-      <HintPath>$(SolutionDir)packages\Microsoft.Bcl.1.1.7\lib\portable-net40+sl5+win8+wp8+wpa81\System.IO.dll</HintPath>
+      <HintPath>$(SolutionDir)packages\Microsoft.Bcl.1.1.8\lib\portable-net40+sl5+win8+wp8+wpa81\System.IO.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.Http">
-      <HintPath>$(SolutionDir)packages\Microsoft.Net.Http.2.2.19\lib\portable-net40+sl4+win8+wp71+wpa81\System.Net.Http.dll</HintPath>
+      <HintPath>$(SolutionDir)packages\Microsoft.Net.Http.2.2.20\lib\portable-net40+sl4+win8+wp71+wpa81\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.Http.Extensions">
-      <HintPath>$(SolutionDir)packages\Microsoft.Net.Http.2.2.19\lib\portable-net40+sl4+win8+wp71+wpa81\System.Net.Http.Extensions.dll</HintPath>
+      <HintPath>$(SolutionDir)packages\Microsoft.Net.Http.2.2.20\lib\portable-net40+sl4+win8+wp71+wpa81\System.Net.Http.Extensions.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.Http.Primitives">
-      <HintPath>$(SolutionDir)packages\Microsoft.Net.Http.2.2.19\lib\portable-net40+sl4+win8+wp71+wpa81\System.Net.Http.Primitives.dll</HintPath>
+      <HintPath>$(SolutionDir)packages\Microsoft.Net.Http.2.2.20\lib\portable-net40+sl4+win8+wp71+wpa81\System.Net.Http.Primitives.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Runtime">
-      <HintPath>$(SolutionDir)packages\Microsoft.Bcl.1.1.7\lib\portable-net40+sl5+win8+wp8+wpa81\System.Runtime.dll</HintPath>
+      <HintPath>$(SolutionDir)packages\Microsoft.Bcl.1.1.8\lib\portable-net40+sl5+win8+wp8+wpa81\System.Runtime.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Threading.Tasks">
-      <HintPath>$(SolutionDir)packages\Microsoft.Bcl.1.1.7\lib\portable-net40+sl5+win8+wp8+wpa81\System.Threading.Tasks.dll</HintPath>
+      <HintPath>$(SolutionDir)packages\Microsoft.Bcl.1.1.8\lib\portable-net40+sl5+win8+wp8+wpa81\System.Threading.Tasks.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>

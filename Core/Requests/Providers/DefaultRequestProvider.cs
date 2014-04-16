@@ -547,6 +547,8 @@ namespace ShareFile.Api.Client.Requests.Providers
             var watch = new ActionStopwatch("BuildRequest", ShareFileClient.Logging);
             var uri = request.GetComposedUri();
 
+            ShareFileClient.Logging.Debug(uri.ToString());
+
 #if ShareFile
             if (ShareFileClient.ZoneAuthentication != null) uri = ShareFileClient.ZoneAuthentication.Sign(uri);
 #endif

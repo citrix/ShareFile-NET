@@ -21,6 +21,10 @@ namespace ShareFile.Api.Client.Extensions
 
         public static Uri GetObjectUri(this ODataObject oDataObject, bool useStreamId = false)
         {
+            if (useStreamId && oDataObject is Item)
+            {
+                oDataObject.ComposeUri((oDataObject as Item).StreamID);
+            }
             return oDataObject.url;
         }
 
@@ -31,7 +35,7 @@ namespace ShareFile.Api.Client.Extensions
             {
                 oDataObject.url =
                     new Uri(string.Format("{0}/{1}({2})", metadataBaseUri.ToString().TrimEnd('/'),
-                                          oDataObject.GetEntitySet(), oDataObject.Id));
+                                          oDataObject.GetEntitySet(), id ?? oDataObject.Id));
             }
         }
 
@@ -42,7 +46,11 @@ namespace ShareFile.Api.Client.Extensions
 
         public static void ComposeUri(this Item item, bool useStreamId = false)
         {
-            item.ComposeUri(item.StreamID ?? item.Id);
+            if (useStreamId && !string.IsNullOrWhiteSpace(item.StreamID))
+            {
+                item.ComposeUri(item.StreamID);
+            }
+            else item.ComposeUri(item.Id);
         }
 
         public static Uri GetMetadataBaseUri(this ODataObject oDataObject)

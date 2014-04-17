@@ -207,5 +207,7 @@ namespace ShareFile.Api.Models
 
 		public string CreditCardSecurityCode { get; set; }
 
+		public IEnumerable<ToolInformation> ToolInformation { get; set; }
+
 	}
 }

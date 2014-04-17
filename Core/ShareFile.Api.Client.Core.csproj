@@ -59,6 +59,7 @@
     <Compile Include="Entities\AsyncOperationsEntity.cs" />
     <Compile Include="Entities\CapabilitiesEntity.cs" />
     <Compile Include="Entities\ConfigsEntity.cs" />
+    <Compile Include="Entities\ConnectorGroupsEntity.cs" />
     <Compile Include="Entities\EntityBase.cs" />
     <Compile Include="Entities\FavoriteFoldersEntity.cs" />
     <Compile Include="Entities\GroupsEntity.cs" />
@@ -111,6 +112,8 @@
     <Compile Include="Models\AsyncOperationType.cs" />
     <Compile Include="Models\Capability.cs" />
     <Compile Include="Models\CapabilityName.cs" />
+    <Compile Include="Models\ConnectorGroup.cs" />
+    <Compile Include="Models\ConnectorGroupZone.cs" />
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\Device.cs" />
     <Compile Include="Models\DeviceActionInitiatorRole.cs" />

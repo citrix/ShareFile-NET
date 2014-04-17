@@ -41,6 +41,7 @@ namespace ShareFile.Api.Client
         IAccessControlsEntity AccessControls { get; }
         IAsyncOperationsEntity AsyncOperations { get; }
         ICapabilitiesEntity Capabilities { get; }
+        IConnectorGroupsEntity ConnectorGroups { get; }
         IConfigsEntity Configs { get; }
         IFavoriteFoldersEntity FavoriteFolders { get; }
         IGroupsEntity Groups { get; }
@@ -156,6 +157,7 @@ namespace ShareFile.Api.Client
             AccessControls = new AccessControlsEntity(this);
             AsyncOperations = new AsyncOperationsEntity(this);
             Capabilities = new CapabilitiesEntity(this);
+            ConnectorGroups = new ConnectorGroupsEntity(this);
             Configs = new ConfigsEntity(this);
             FavoriteFolders = new FavoriteFoldersEntity(this);
             Groups = new GroupsEntity(this);
@@ -188,6 +190,7 @@ namespace ShareFile.Api.Client
         public IAccessControlsEntity AccessControls { get; private set; }
         public IAsyncOperationsEntity AsyncOperations { get; private set; }
         public ICapabilitiesEntity Capabilities { get; private set; }
+        public IConnectorGroupsEntity ConnectorGroups { get; private set; }
         public IConfigsEntity Configs { get; private set; }
         public IFavoriteFoldersEntity FavoriteFolders { get; private set; }
         public IGroupsEntity Groups { get; private set; }

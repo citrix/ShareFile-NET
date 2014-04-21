@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,9 +26,23 @@ namespace ShareFile.Api.Client.Requests.Providers
     {
         public ShareFileClient ShareFileClient { get; protected set; }
 
+        private Dictionary<string, bool> _piiBlacklist;
+
         protected BaseRequestProvider(ShareFileClient shareFileClient)
         {
             ShareFileClient = shareFileClient;
+            
+            _piiBlacklist = new Dictionary<string, bool>();
+            _piiBlacklist["FullName"] = true;
+            _piiBlacklist["FirstName"] = true;
+            _piiBlacklist["LastName"] = true;
+            _piiBlacklist["Email"] = true;
+            _piiBlacklist["Username"] = true;
+            _piiBlacklist["FullNameShort"] = true;
+            _piiBlacklist["Name"] = true;
+            _piiBlacklist["FileName"] = true;
+            _piiBlacklist["CreatorFirstName"] = true;
+            _piiBlacklist["Company"] = true;
         }
 
         protected T DeserializeStream<T>(Stream stream)
@@ -97,10 +112,19 @@ namespace ShareFile.Api.Client.Requests.Providers
 
                     if (!ShareFileClient.LogPersonalInformation)
                     {
-                        var matches = FindTokens(jObject.Values(), "FullName", "FirstName", "LastName", "Email",
-                            "Username", "FullNameShort", "Name", "FileName", "CreatorFirstName", "Company");
+                        var matches = FindBlacklistedTokens(jObject.Values());
+
+                        var cache = new Dictionary<string, string>();
                         foreach (var match in matches)
-                            match.Value = GetHash((string)match.Value).Substring(0, 6);
+                        {
+                            string hash;
+                            if (!cache.TryGetValue((string) match.Value, out hash))
+                            {
+                                hash = GetHash((string) match.Value);
+                                cache[(string) match.Value] = hash;
+                            }
+                            match.Value = hash;
+                        }
                     }
 
                     tcs.SetResult(jObject.ToString(Formatting.None));
@@ -124,17 +148,21 @@ namespace ShareFile.Api.Client.Requests.Providers
             return result;
         }
 
-        private IEnumerable<JValue> FindTokens(IEnumerable<JToken> o, params string[] tokenNames)
+        private IEnumerable<JValue> FindBlacklistedTokens(IEnumerable<JToken> o)
         {
             foreach (var i in o)
             {
                 if (i.HasValues)
                 {
-                    foreach (var j in FindTokens(i.Values(), tokenNames))
+                    foreach (var j in FindBlacklistedTokens(i.Values()))
                         yield return j;
                 }
-                else if (i is JValue && tokenNames.Any(k => i.Path.EndsWith(k)))
-                    yield return (JValue)i;
+                else if (i is JValue)
+                {
+                    string lastPath = i.Path.Substring(i.Path.LastIndexOf('.') + 1);
+                    if (_piiBlacklist.ContainsKey(lastPath))
+                        yield return (JValue) i;
+                }
             }
         }
 

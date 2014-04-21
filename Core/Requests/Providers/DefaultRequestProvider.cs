@@ -85,27 +85,33 @@ namespace ShareFile.Api.Client.Requests.Providers
             return task;
         }
 
-        protected string SerializeObject(object obj)
+        protected Task<string> SerializeObject(object obj)
         {
-            try
-            {
-                JObject jObject = JObject.FromObject(obj, ShareFileClient.Serializer);
+            var tcs = new TaskCompletionSource<string>();
 
-                if (!ShareFileClient.LogPersonalInformation)
+            Task.Factory.StartNew(() =>
+            {
+                try
                 {
-                    var matches = FindTokens(jObject.Values(), "FullName", "FirstName", "LastName", "Email",
-                        "Username", "FullNameShort", "Name", "FileName", "CreatorFirstName", "Company");
-                    foreach (var match in matches)
-                        match.Value = GetHash((string) match.Value).Substring(0, 6);
+                    JObject jObject = JObject.FromObject(obj, ShareFileClient.Serializer);
+
+                    if (!ShareFileClient.LogPersonalInformation)
+                    {
+                        var matches = FindTokens(jObject.Values(), "FullName", "FirstName", "LastName", "Email",
+                            "Username", "FullNameShort", "Name", "FileName", "CreatorFirstName", "Company");
+                        foreach (var match in matches)
+                            match.Value = GetHash((string)match.Value).Substring(0, 6);
+                    }
+
+                    tcs.SetResult(jObject.ToString(Formatting.None));
                 }
+                catch (Exception)
+                {
+                    tcs.SetResult(null);
+                }
+            }).ConfigureAwait(false);
 
-                return jObject.ToString(Formatting.None);
-            }
-            catch (Exception)
-            {
-            }
-
-            return null;
+            return tcs.Task;
         }
 
         private string GetHash(string value)
@@ -132,7 +138,7 @@ namespace ShareFile.Api.Client.Requests.Providers
             }
         }
 
-        protected void LogRequest(ApiRequest request, string headers)
+        protected async Task LogRequestAsync(ApiRequest request, string headers)
         {
             if (ShareFileClient.Logging.IsDebugEnabled)
             {
@@ -141,7 +147,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 LogCookies(request.GetComposedUri());
                 if (request.Body != null)
                 {
-                    ShareFileClient.Logging.Debug("Content:{0}{1}", Environment.NewLine, SerializeObject(request.Body));
+                    ShareFileClient.Logging.Debug("Content:{0}{1}", Environment.NewLine,  await SerializeObject(request.Body));
                 }
             }
             else if (ShareFileClient.Logging.IsTraceEnabled)
@@ -150,7 +156,7 @@ namespace ShareFile.Api.Client.Requests.Providers
             }
         }
 
-        protected void LogResponse<T>(T response, Uri requestUri, string headers, HttpStatusCode statusCode, MediaTypeHeaderValue mediaType = null)
+        protected async Task LogResponseAsync<T>(T response, Uri requestUri, string headers, HttpStatusCode statusCode, MediaTypeHeaderValue mediaType = null)
         {
             if (ShareFileClient.Logging.IsDebugEnabled)
             {
@@ -161,7 +167,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 {
                     if (mediaType == null || mediaType.MediaType == "application/json")
                     {
-                        ShareFileClient.Logging.Debug("Content:{0}{1}", Environment.NewLine, SerializeObject(response));
+                        ShareFileClient.Logging.Debug("Content:{0}{1}", Environment.NewLine, await SerializeObject(response));
                     }
                     else ShareFileClient.Logging.Debug("Content {0}", response.ToString());
                 }
@@ -633,7 +639,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 {
                     var result = await DeserializeStreamAsync<T>(responseStream);
                     
-                    LogResponse(result, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode);
+                    LogResponseAsync(result, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode).ConfigureAwait(false);
 
                     ShareFileClient.Logging.Trace(watch);
                     return Response.CreateSuccess(result);
@@ -646,7 +652,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 
             if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized)
             {
-                LogResponse(httpResponseMessage, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode);
+                LogResponseAsync(httpResponseMessage, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode).ConfigureAwait(false);
 
                 var authorizationHeaderValue = GetAuthorizationHeaderValue(httpResponseMessage.RequestMessage.RequestUri,
                                                                         httpResponseMessage.Headers.WwwAuthenticate);
@@ -655,7 +661,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                     var authenticatedHttpRequestMessage = BuildRequest(request);
                     authenticatedHttpRequestMessage.Headers.Authorization = authorizationHeaderValue;
 
-                    LogRequest(request, authenticatedHttpRequestMessage.Headers.ToString());
+                    LogRequestAsync(request, authenticatedHttpRequestMessage.Headers.ToString()).ConfigureAwait(false);
 
                     var requestTask = ExecuteRequestAsync(authenticatedHttpRequestMessage);
                     using (var authenticatedResponse = await requestTask)
@@ -682,7 +688,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 
             if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized)
             {
-                LogResponse(httpResponseMessage, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode);
+                LogResponseAsync(httpResponseMessage, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode).ConfigureAwait(false);
 
                 var authorizationHeaderValue = GetAuthorizationHeaderValue(httpResponseMessage.RequestMessage.RequestUri,
                                                                         httpResponseMessage.Headers.WwwAuthenticate);
@@ -692,7 +698,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                     var authenticatedHttpRequestMessage = BuildRequest(request);
                     authenticatedHttpRequestMessage.Headers.Authorization = authorizationHeaderValue;
 
-                    LogRequest(request, authenticatedHttpRequestMessage.Headers.ToString());
+                    LogRequestAsync(request, authenticatedHttpRequestMessage.Headers.ToString()).ConfigureAwait(false);
 
                     var authenticatedResponse = await HttpClient.SendAsync(authenticatedHttpRequestMessage, HttpCompletionOption.ResponseContentRead);
                     
@@ -720,7 +726,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 
             if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized)
             {
-                LogResponse(httpResponseMessage, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode);
+                LogResponseAsync(httpResponseMessage, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode).ConfigureAwait(false);
 
                 var authorizationHeaderValue = GetAuthorizationHeaderValue(httpResponseMessage.RequestMessage.RequestUri,
                                                                         httpResponseMessage.Headers.WwwAuthenticate);
@@ -730,7 +736,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                     var authenticatedHttpRequestMessage = BuildRequest(request);
                     authenticatedHttpRequestMessage.Headers.Authorization = authorizationHeaderValue;
 
-                    LogRequest(request, authenticatedHttpRequestMessage.Headers.ToString());
+                    LogRequestAsync(request, authenticatedHttpRequestMessage.Headers.ToString()).ConfigureAwait(false);
 
                     var requestTask = HttpClient.SendAsync(authenticatedHttpRequestMessage, HttpCompletionOption.ResponseContentRead);
                     using (var authenticatedResponse = await requestTask)

@@ -9,12 +9,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Credentials;
 using ShareFile.Api.Client.Events;
 using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Logging;
 using ShareFile.Api.Client.Security.Authentication.OAuth2;
+using ShareFile.Api.Client.Security.Cryptography;
 using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Requests.Providers
@@ -69,18 +71,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 
                 using (var responseStreamReader = new StreamReader(stream))
                 {
-                    JsonTextReader reader;
-                    if (ShareFileClient.Logging.IsDebugEnabled)
-                    {
-                        var stringResponse = responseStreamReader.ReadToEnd();
-
-                        reader = new JsonTextReader(new StringReader(stringResponse));
-                        ShareFileClient.Logging.Debug(stringResponse, null);
-                    }
-                    else
-                    {
-                        reader = new JsonTextReader(responseStreamReader);
-                    }
+                    JsonTextReader reader = new JsonTextReader(responseStreamReader);
 
                     responseValue = ShareFileClient.Serializer.Deserialize<T>(reader);
                 }
@@ -98,19 +89,47 @@ namespace ShareFile.Api.Client.Requests.Providers
         {
             try
             {
-                var stringWriter = new StringWriter();
-                using (var textWriter = new JsonTextWriter(stringWriter))
-                {
-                    ShareFileClient.Serializer.Serialize(textWriter, obj);
+                JObject jObject = JObject.FromObject(obj, ShareFileClient.Serializer);
 
-                    return stringWriter.ToString();
+                if (!ShareFileClient.LogPersonalInformation)
+                {
+                    var matches = FindTokens(jObject.Values(), "FullName", "FirstName", "LastName", "Email",
+                        "Username", "FullNameShort", "Name", "FileName", "CreatorFirstName", "Company");
+                    foreach (var match in matches)
+                        match.Value = GetHash((string) match.Value).Substring(0, 6);
                 }
+
+                return jObject.ToString(Formatting.None);
             }
             catch (Exception)
             {
             }
 
             return null;
+        }
+
+        private string GetHash(string value)
+        {
+            byte[] buffer = Encoding.UTF8.GetBytes(value);
+            var hash = MD5HashProviderFactory.GetHashProvider().CreateHash();
+            hash.Append(buffer, 0, buffer.Length);
+            hash.Finalize(new byte[1], 0, 0);
+            string result = hash.GetComputedHashAsString();
+            return result;
+        }
+
+        private IEnumerable<JValue> FindTokens(IEnumerable<JToken> o, params string[] tokenNames)
+        {
+            foreach (var i in o)
+            {
+                if (i.HasValues)
+                {
+                    foreach (var j in FindTokens(i.Values(), tokenNames))
+                        yield return j;
+                }
+                else if (i is JValue && tokenNames.Any(k => i.Path.EndsWith(k)))
+                    yield return (JValue)i;
+            }
         }
 
         protected void LogRequest(ApiRequest request, string headers)

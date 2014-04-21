@@ -53,6 +53,8 @@ namespace ShareFile.Api.Client
         Uri BaseUri { get; set; }
         Configuration Configuration { get; set; }
 
+        bool LogPersonalInformation { get; set; }
+
 #if ShareFile
         ZoneAuthentication ZoneAuthentication { get; set; }
 #endif
@@ -203,6 +205,8 @@ namespace ShareFile.Api.Client
         public Uri BaseUri { get; set; }
 
         public Configuration Configuration { get; set; }
+
+        public bool LogPersonalInformation { get; set; }
 
         internal LoggingProvider Logging { get; set; }
         internal ICredentialCache CredentialCache { get; set; }

@@ -54,6 +54,7 @@ namespace ShareFile.Api.Client
         Configuration Configuration { get; set; }
 
         bool LogPersonalInformation { get; set; }
+        bool LogFullResponse { get; set; }
 
 #if ShareFile
         ZoneAuthentication ZoneAuthentication { get; set; }
@@ -152,6 +153,7 @@ namespace ShareFile.Api.Client
 
             CredentialCache = CredentialCacheFactory.GetCredentialCache();
             Serializer = GetSerializer();
+            LoggingSerializer = GetLoggingSerializer(this);
 
             RegisterRequestProviders();
 
@@ -207,11 +209,13 @@ namespace ShareFile.Api.Client
         public Configuration Configuration { get; set; }
 
         public bool LogPersonalInformation { get; set; }
+        public bool LogFullResponse { get; set; }
 
         internal LoggingProvider Logging { get; set; }
         internal ICredentialCache CredentialCache { get; set; }
         internal CookieContainer CookieContainer { get; set; }
         internal JsonSerializer Serializer { get; set; }
+        internal JsonSerializer LoggingSerializer { get; set; }
         internal RequestProviderFactory RequestProviderFactory { get; set; }
 
 #if ShareFile
@@ -248,6 +252,17 @@ namespace ShareFile.Api.Client
                 MissingMemberHandling = MissingMemberHandling.Ignore,
                 NullValueHandling = NullValueHandling.Ignore,
                 Converters = { new ODataConverter(), new StringEnumConverter(), new SafeEnumConverter() }
+            };
+        }
+
+        private static JsonSerializer GetLoggingSerializer(ShareFileClient client)
+        {
+            return new JsonSerializer
+            {
+                ObjectCreationHandling = ObjectCreationHandling.Replace,
+                MissingMemberHandling = MissingMemberHandling.Ignore,
+                NullValueHandling = NullValueHandling.Ignore,
+                Converters = {new LoggingConverter(client), new StringEnumConverter(), new SafeEnumConverter()}
             };
         }
 

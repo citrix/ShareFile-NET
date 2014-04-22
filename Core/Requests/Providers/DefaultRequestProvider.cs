@@ -26,23 +26,10 @@ namespace ShareFile.Api.Client.Requests.Providers
     {
         public ShareFileClient ShareFileClient { get; protected set; }
 
-        private Dictionary<string, bool> _piiBlacklist;
 
         protected BaseRequestProvider(ShareFileClient shareFileClient)
         {
             ShareFileClient = shareFileClient;
-            
-            _piiBlacklist = new Dictionary<string, bool>();
-            _piiBlacklist["FullName"] = true;
-            _piiBlacklist["FirstName"] = true;
-            _piiBlacklist["LastName"] = true;
-            _piiBlacklist["Email"] = true;
-            _piiBlacklist["Username"] = true;
-            _piiBlacklist["FullNameShort"] = true;
-            _piiBlacklist["Name"] = true;
-            _piiBlacklist["FileName"] = true;
-            _piiBlacklist["CreatorFirstName"] = true;
-            _piiBlacklist["Company"] = true;
         }
 
         protected T DeserializeStream<T>(Stream stream)
@@ -108,26 +95,14 @@ namespace ShareFile.Api.Client.Requests.Providers
             {
                 try
                 {
-                    JObject jObject = JObject.FromObject(obj, ShareFileClient.Serializer);
-
-                    if (!ShareFileClient.LogPersonalInformation)
+                    var stringWriter = new StringWriter();
+                    using (var textWriter = new JsonTextWriter(stringWriter))
                     {
-                        var matches = FindBlacklistedTokens(jObject.Values());
+                        ShareFileClient.LoggingSerializer.Serialize(textWriter, obj);
 
-                        var cache = new Dictionary<string, string>();
-                        foreach (var match in matches)
-                        {
-                            string hash;
-                            if (!cache.TryGetValue((string) match.Value, out hash))
-                            {
-                                hash = GetHash((string) match.Value);
-                                cache[(string) match.Value] = hash;
-                            }
-                            match.Value = hash;
-                        }
+                        tcs.SetResult(stringWriter.ToString());
                     }
 
-                    tcs.SetResult(jObject.ToString(Formatting.None));
                 }
                 catch (Exception)
                 {
@@ -136,34 +111,6 @@ namespace ShareFile.Api.Client.Requests.Providers
             }).ConfigureAwait(false);
 
             return tcs.Task;
-        }
-
-        private string GetHash(string value)
-        {
-            byte[] buffer = Encoding.UTF8.GetBytes(value);
-            var hash = MD5HashProviderFactory.GetHashProvider().CreateHash();
-            hash.Append(buffer, 0, buffer.Length);
-            hash.Finalize(new byte[1], 0, 0);
-            string result = hash.GetComputedHashAsString();
-            return result;
-        }
-
-        private IEnumerable<JValue> FindBlacklistedTokens(IEnumerable<JToken> o)
-        {
-            foreach (var i in o)
-            {
-                if (i.HasValues)
-                {
-                    foreach (var j in FindBlacklistedTokens(i.Values()))
-                        yield return j;
-                }
-                else if (i is JValue)
-                {
-                    string lastPath = i.Path.Substring(i.Path.LastIndexOf('.') + 1);
-                    if (_piiBlacklist.ContainsKey(lastPath))
-                        yield return (JValue) i;
-                }
-            }
         }
 
         protected async Task LogRequestAsync(ApiRequest request, string headers)
@@ -175,7 +122,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 LogCookies(request.GetComposedUri());
                 if (request.Body != null)
                 {
-                    ShareFileClient.Logging.Debug("Content:{0}{1}", Environment.NewLine,  await SerializeObject(request.Body));
+                    ShareFileClient.Logging.Debug("Content:{0}{1}", Environment.NewLine, await SerializeObject(request.Body));
                 }
             }
             else if (ShareFileClient.Logging.IsTraceEnabled)

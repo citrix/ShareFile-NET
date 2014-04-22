@@ -48,7 +48,7 @@ namespace ShareFile.Api.Client.Logging
         }
     }
 
-    internal interface IStopwatch
+    public interface IStopwatch
     {
         void Start();
         void Stop();
@@ -60,13 +60,20 @@ namespace ShareFile.Api.Client.Logging
     /// Portable implementation of System.Diagnostics.Stopwatch.  If you're platform provides a higher precision implementation, 
     /// most will, just register with the StopwatchFactory.
     /// </summary>
-    internal class Stopwatch : IStopwatch
+    public class Stopwatch : IStopwatch
     {
         private const long TicksPerMillisecond = 10000;
         private bool _isRunning;
         private long _startTicks;
         private long _elapsedTicks;
         private TimeSpan _timeSpan;
+
+        public static IStopwatch StartNew()
+        {
+            var stopwatch = StopwatchFactory.GetStopwatch();
+            stopwatch.Start();
+            return stopwatch;
+        }
 
         public void Start()
         {
@@ -103,7 +110,7 @@ namespace ShareFile.Api.Client.Logging
         }
     }
 
-    internal class StopwatchFactory
+    public class StopwatchFactory
     {
         private static Type _stopwatchType;
 

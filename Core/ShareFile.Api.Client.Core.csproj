@@ -47,6 +47,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Configuration.cs" />
+    <Compile Include="Converters\LoggingConverter.cs" />
     <Compile Include="Converters\ODataConverter.cs" />
     <Compile Include="Converters\ODataFactory.cs" />
     <Compile Include="Converters\SafeEnumConverter.cs" />

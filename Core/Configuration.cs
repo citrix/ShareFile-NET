@@ -27,6 +27,19 @@ namespace ShareFile.Api.Client
 
         public ILogger Logger { get; set; }
 
+        /// <summary>
+        /// If true, then personal information (e.g. name and email) will be logged.
+        /// <para>This should probably only be changed to true in a development environment.</para>
+        /// </summary>
+        public bool LogPersonalInformation { get; set; }
+
+        /// <summary>
+        /// If true, then the full json object will be logged doing API calls. Otherwise, collections on the json object
+        /// will not be logged. Metadata about the collection will be logged instead.
+        /// </summary>
+        public bool LogFullResponse { get; set; }
+
+
         #region DeviceId properties
         public string ToolName { get; set; }
         public string ToolVersion { get; set; }
@@ -44,7 +57,9 @@ namespace ShareFile.Api.Client
                 ToolName = "SF Client SDK",
                 ToolVersion = "3.0",
                 HttpTimeout = 100000,
-                Logger = new DefaultLoggingProvider { LogLevel = LogLevel.Error }
+                Logger = new DefaultLoggingProvider { LogLevel = LogLevel.Error },
+                LogPersonalInformation = false,
+                LogFullResponse = false
             };
         }
     }

@@ -81,11 +81,14 @@ namespace ShareFile.Api.Client.Converters
             }
             else if (IsSimpleType(valueType))
             {
+                // Only re-write values if the flag is switched, and they have an obvious string representation
                 if (!_client.Configuration.LogPersonalInformation && 
-                    value is string &&
-                    (_piiBlacklist.Contains(name) || GuidRegex.IsMatch((string)value)))
+                    (value is string || value is Uri))
                 {
-                    writer.WriteValue(GetHash((string) value));
+                    if (_piiBlacklist.Contains(name))
+                        writer.WriteValue(GetHash(value.ToString()));
+                    else
+                        writer.WriteValue(GuidRegex.Replace(value.ToString(), GetHash));
                 }
                 else
                 {
@@ -134,6 +137,11 @@ namespace ShareFile.Api.Client.Converters
             // Check list of converters (but skip this converter since it works on all types)
             converter = serializer.Converters.FirstOrDefault(i => i.GetType() != this.GetType() && i.CanConvert(objectType));
             return converter != null;
+        }
+
+        private string GetHash(Match match)
+        {
+            return GetHash(match.Value);
         }
 
         private string GetHash(string value)

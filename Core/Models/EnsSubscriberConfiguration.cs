@@ -23,8 +23,6 @@ namespace ShareFile.Api.Models
 
 		public string Version { get; set; }
 
-		public object RecommendedSyncInterval { get; set; }
-
 		public object RecommendedPollingSyncInterval { get; set; }
 
 		public object RecommendedNotificationSyncInterval { get; set; }
@@ -32,6 +30,8 @@ namespace ShareFile.Api.Models
 		public int NotificationConfigurationCount { get; set; }
 
 		public int FailSafePollingCount { get; set; }
+
+		public int MaxNotificationSyncWaitCount { get; set; }
 
 	}
 }

@@ -90,7 +90,15 @@ namespace ShareFile.Api.Client.Entities
 		/// "IsAdministrator": false,
 		/// "CanCreateFolders": false,
 		/// "CanUseFileBox": true,
-		/// "CanManageUsers": false
+		/// "CanManageUsers": false,
+		/// "Roles": [
+		/// "CanChangePassword", "CanManageMySettings",
+		/// "CanUseFileBox, "CanManageUsers, "CanCreateFolders, "CanUseDropBox, "CanSelectFolderZone,
+		/// "AdminAccountPolicies", "AdminBilling", "AdminBranding", "AdminChangePlan", "AdminFileBoxAccess",
+		/// "AdminManageEmployees", "AdminRemoteUploadForms", "AdminReporting", "AdminSharedDistGroups",
+		/// "AdminSharedAddressBook", "AdminViewReceipts", "AdminDelegate", "AdminManageFolderTemplates",
+		/// "AdminEmailMessages", "AdminSSO", "AdminSuperGroup", "AdminZones", "AdminCreateSharedGroups", "AdminConnectors"
+		/// ]
 		/// }
 		/// </example>
 		/// <remarks>
@@ -458,7 +466,15 @@ namespace ShareFile.Api.Client.Entities
 		/// "IsAdministrator": false,
 		/// "CanCreateFolders": false,
 		/// "CanUseFileBox": true,
-		/// "CanManageUsers": false
+		/// "CanManageUsers": false,
+		/// "Roles": [
+		/// "CanChangePassword", "CanManageMySettings",
+		/// "CanUseFileBox, "CanManageUsers, "CanCreateFolders, "CanUseDropBox, "CanSelectFolderZone,
+		/// "AdminAccountPolicies", "AdminBilling", "AdminBranding", "AdminChangePlan", "AdminFileBoxAccess",
+		/// "AdminManageEmployees", "AdminRemoteUploadForms", "AdminReporting", "AdminSharedDistGroups",
+		/// "AdminSharedAddressBook", "AdminViewReceipts", "AdminDelegate", "AdminManageFolderTemplates",
+		/// "AdminEmailMessages", "AdminSSO", "AdminSuperGroup", "AdminZones", "AdminCreateSharedGroups", "AdminConnectors"
+		/// ]
 		/// }
 		/// </example>
 		/// <remarks>

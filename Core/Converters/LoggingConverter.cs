@@ -71,12 +71,15 @@ namespace ShareFile.Api.Client.Converters
             {
                 if (serializer.NullValueHandling == NullValueHandling.Include)
                     writer.WriteNull();
+                return;
             }
-            else if (HasConverter(serializer, value.GetType(), out converter))
+
+            Type valueType = value.GetType();
+            if (HasConverter(serializer, valueType, out converter))
             {
                 converter.WriteJson(writer, value, serializer);
             }
-            else if (IsSimpleType(value.GetType()))
+            else if (IsSimpleType(valueType))
             {
                 if (!_client.Configuration.LogPersonalInformation && 
                     value is string &&
@@ -102,7 +105,7 @@ namespace ShareFile.Api.Client.Converters
                 {
                     writer.WriteStartObject();
                     writer.WritePropertyName("Type");
-                    writer.WriteValue(value.GetType().ToString());
+                    writer.WriteValue(valueType.ToString());
                     writer.WritePropertyName("Count");
                     writer.WriteValue(((IEnumerable) value).Cast<object>().Count());
                     writer.WriteEndObject();
@@ -110,7 +113,7 @@ namespace ShareFile.Api.Client.Converters
             }
             else
             {
-                var properties = value.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                var properties = valueType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
                 writer.WriteStartObject();
                 foreach (var prop in properties)

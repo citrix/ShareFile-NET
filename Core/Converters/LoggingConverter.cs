@@ -78,7 +78,7 @@ namespace ShareFile.Api.Client.Converters
             }
             else if (IsSimpleType(value.GetType()))
             {
-                if (!_client.LogPersonalInformation && 
+                if (!_client.Configuration.LogPersonalInformation && 
                     value is string &&
                     (_piiBlacklist.Contains(name) || GuidRegex.IsMatch((string)value)))
                 {
@@ -91,7 +91,7 @@ namespace ShareFile.Api.Client.Converters
             }
             else if (value is IEnumerable)
             {
-                if (_client.LogFullResponse)
+                if (_client.Configuration.LogFullResponse)
                 {
                     writer.WriteStartArray();
                     foreach (var o in (IEnumerable) value)

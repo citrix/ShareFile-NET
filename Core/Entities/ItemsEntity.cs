@@ -40,10 +40,11 @@ namespace ShareFile.Api.Client.Entities
 		/// Returns a single Item
 		/// </remarks>
 		/// <param name="id"></param>
+		/// <param name="includeDeleted"></param>
 		/// <returns>
 		/// a single Item
 		/// </returns>
-		IQuery<Item> Get(string id);
+		IQuery<Item> Get(string id, bool includeDeleted = false);
 		/// <summary>
 		/// Get TreeView
 		/// </summary>
@@ -533,14 +534,16 @@ namespace ShareFile.Api.Client.Entities
 		/// Returns a single Item
 		/// </remarks>
 		/// <param name="id"></param>
+		/// <param name="includeDeleted"></param>
 		/// <returns>
 		/// a single Item
 		/// </returns>
-		public IQuery<Item> Get(string id)
+		public IQuery<Item> Get(string id, bool includeDeleted = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
 			sfApiQuery.From("Items");
 			sfApiQuery.Ids(id);
+			sfApiQuery.QueryString("includeDeleted", includeDeleted);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}

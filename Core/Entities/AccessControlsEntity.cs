@@ -55,7 +55,6 @@ namespace ShareFile.Api.Client.Entities
 		/// "CanView":true,
 		/// "CanDelete":true,
 		/// "CanManagePermissions":true,
-		/// 
 		/// "Message":"Message"
 		/// }
 		/// </example>
@@ -171,7 +170,6 @@ namespace ShareFile.Api.Client.Entities
 		/// "CanView":true,
 		/// "CanDelete":true,
 		/// "CanManagePermissions":true,
-		/// 
 		/// "Message":"Message"
 		/// }
 		/// </example>

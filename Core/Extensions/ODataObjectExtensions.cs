@@ -23,20 +23,24 @@ namespace ShareFile.Api.Client.Extensions
         {
             if (useStreamId && oDataObject is Item)
             {
-                oDataObject.ComposeUri((oDataObject as Item).StreamID);
+                return oDataObject.ComposeUri((oDataObject as Item).StreamID);
+            }
+            if (oDataObject.url == null)
+            {
+                oDataObject.url = oDataObject.ComposeUri((oDataObject).Id);
             }
             return oDataObject.url;
         }
 
-        private static void ComposeUri(this ODataObject oDataObject, string id)
+        private static Uri ComposeUri(this ODataObject oDataObject, string id)
         {
             var metadataBaseUri = oDataObject.GetMetadataBaseUri();
             if (!(oDataObject is UploadSpecification) && metadataBaseUri != null)
             {
-                oDataObject.url =
-                    new Uri(string.Format("{0}/{1}({2})", metadataBaseUri.ToString().TrimEnd('/'),
+                return new Uri(string.Format("{0}/{1}({2})", metadataBaseUri.ToString().TrimEnd('/'),
                                           oDataObject.GetEntitySet(), id ?? oDataObject.Id));
             }
+            return null;
         }
 
         public static void ComposeUri(this ODataObject oDataObject)

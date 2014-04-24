@@ -159,6 +159,8 @@ namespace ShareFile.Api.Models
 
 		public bool? EnableSFTP { get; set; }
 
+		public bool? DisableMarketing { get; set; }
+
 		public string VDRDocViewerURL { get; set; }
 
 		public bool? EnableSMBConnectorForAccount { get; set; }

@@ -49,6 +49,8 @@ namespace ShareFile.Api.Models
 
 		public bool? EnableSync { get; set; }
 
+		public bool? EnableSyncAutoUpdate { get; set; }
+
 		public string SystemName { get; set; }
 
 		public string HomeScreenName { get; set; }

@@ -7,10 +7,10 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ShareFile.Api.Client.Core")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("ShareFile API Client for .NET")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Citrix ShareFile")]
-[assembly: AssemblyProduct("ShareFile.Api.Client.Core")]
+[assembly: AssemblyProduct("ShareFile Client SDK")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

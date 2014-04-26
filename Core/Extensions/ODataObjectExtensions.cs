@@ -23,6 +23,11 @@ namespace ShareFile.Api.Client.Extensions
         {
             if (useStreamId && oDataObject is Item)
             {
+                var item = oDataObject as Item;
+                if (oDataObject.url != null)
+                {
+                    return new Uri(oDataObject.url.ToString().Replace(item.Id, item.StreamID));
+                }
                 return oDataObject.ComposeUri((oDataObject as Item).StreamID);
             }
             if (oDataObject.url == null)
@@ -103,6 +108,16 @@ namespace ShareFile.Api.Client.Extensions
                 }
             }
             return ODataObjectType.Entity;
+        }
+
+        public static void AddProperty(this ODataObject oDataObject, string key, string value)
+        {
+            if (oDataObject.Properties == null)
+            {
+                oDataObject.Properties = new Dictionary<string, string>();
+            }
+
+            oDataObject.Properties[key] = value;
         }
     }
 }

@@ -15,6 +15,8 @@ using System.IO;
 using ShareFile.Api.Models;
 using ShareFile.Api.Client;
 using ShareFile.Api.Client.Requests;
+using ShareFile.Api.Client.Extensions;
+
 
 namespace ShareFile.Api.Client.Entities
 {
@@ -192,9 +194,18 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.From("Items");
 			sfApiQuery.Action("AccessControls");
 			sfApiQuery.Ids(id);
-			sfApiQuery.QueryString("recursive", recursive);
-			sfApiQuery.QueryString("sendDefaultNotification", sendDefaultNotification);
-			accessControl.Properties["message"] = message;
+			if (recursive != false)
+			{
+				sfApiQuery.QueryString("recursive", recursive);
+			}
+			if (sendDefaultNotification != false)
+			{
+				sfApiQuery.QueryString("sendDefaultNotification", sendDefaultNotification);
+			}
+			if (message != null)
+			{
+				accessControl.AddProperty("message", message);
+			}
 			sfApiQuery.Body = accessControl;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
@@ -230,7 +241,10 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.From("Items");
 			sfApiQuery.Action("AccessControls");
 			sfApiQuery.Ids(id);
-			sfApiQuery.QueryString("recursive", recursive);
+			if (recursive != false)
+			{
+				sfApiQuery.QueryString("recursive", recursive);
+			}
 			sfApiQuery.Body = accessControl;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;

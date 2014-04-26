@@ -15,6 +15,8 @@ using System.IO;
 using ShareFile.Api.Models;
 using ShareFile.Api.Client;
 using ShareFile.Api.Client.Requests;
+using ShareFile.Api.Client.Extensions;
+
 
 namespace ShareFile.Api.Client.Entities
 {
@@ -145,8 +147,14 @@ namespace ShareFile.Api.Client.Entities
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Session>(Client);
 			sfApiQuery.From("Sessions");
 			sfApiQuery.Action("Login");
-			sfApiQuery.QueryString("authmethod", authmethod);
-			sfApiQuery.QueryString("authcomparison", authcomparison);
+			if (authmethod != null)
+			{
+				sfApiQuery.QueryString("authmethod", authmethod);
+			}
+			if (authcomparison != null)
+			{
+				sfApiQuery.QueryString("authcomparison", authcomparison);
+			}
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}

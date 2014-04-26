@@ -15,6 +15,8 @@ using System.IO;
 using ShareFile.Api.Models;
 using ShareFile.Api.Client;
 using ShareFile.Api.Client.Requests;
+using ShareFile.Api.Client.Extensions;
+
 
 namespace ShareFile.Api.Client.Entities
 {
@@ -203,7 +205,10 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.From("Devices");
 			sfApiQuery.Action("Wipe");
 			sfApiQuery.Ids(deviceID);
-			sfApiQuery.QueryString("userid", userid);
+			if (userid != null)
+			{
+				sfApiQuery.QueryString("userid", userid);
+			}
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}
@@ -248,7 +253,10 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.From("Devices");
 			sfApiQuery.Action("WipeDone");
 			sfApiQuery.Ids(deviceID);
-			sfApiQuery.QueryString("singlePlane", singlePlane);
+			if (singlePlane != false)
+			{
+				sfApiQuery.QueryString("singlePlane", singlePlane);
+			}
 			sfApiQuery.Body = deviceWipeReport;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;

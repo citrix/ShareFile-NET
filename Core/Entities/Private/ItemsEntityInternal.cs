@@ -15,6 +15,8 @@ using System.IO;
 using ShareFile.Api.Models;
 using ShareFile.Api.Client;
 using ShareFile.Api.Client.Requests;
+using ShareFile.Api.Client.Extensions;
+
 
 namespace ShareFile.Api.Client.Entities
 {

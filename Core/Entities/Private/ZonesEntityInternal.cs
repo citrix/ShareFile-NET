@@ -15,6 +15,8 @@ using System.IO;
 using ShareFile.Api.Models;
 using ShareFile.Api.Client;
 using ShareFile.Api.Client.Requests;
+using ShareFile.Api.Client.Extensions;
+
 
 namespace ShareFile.Api.Client.Entities
 {
@@ -179,8 +181,14 @@ namespace ShareFile.Api.Client.Entities
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Zone>>(Client);
 			sfApiQuery.From("Zones");
-			sfApiQuery.QueryString("services", services);
-			sfApiQuery.QueryString("includeDisabled", includeDisabled);
+			if (services != ZoneService.StorageZone)
+			{
+				sfApiQuery.QueryString("services", services);
+			}
+			if (includeDisabled != false)
+			{
+				sfApiQuery.QueryString("includeDisabled", includeDisabled);
+			}
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -203,7 +211,10 @@ namespace ShareFile.Api.Client.Entities
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Zone>(Client);
 			sfApiQuery.From("Zones");
 			sfApiQuery.Ids(id);
-			sfApiQuery.QueryString("secret", secret);
+			if (secret != false)
+			{
+				sfApiQuery.QueryString("secret", secret);
+			}
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -274,7 +285,10 @@ namespace ShareFile.Api.Client.Entities
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 			sfApiQuery.From("Zones");
 			sfApiQuery.Ids(id);
-			sfApiQuery.QueryString("force", force);
+			if (force != false)
+			{
+				sfApiQuery.QueryString("force", force);
+			}
 			sfApiQuery.HttpMethod = "DELETE";
 			return sfApiQuery;
 		}

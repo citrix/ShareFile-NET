@@ -15,6 +15,8 @@ using System.IO;
 using ShareFile.Api.Models;
 using ShareFile.Api.Client;
 using ShareFile.Api.Client.Requests;
+using ShareFile.Api.Client.Extensions;
+
 
 namespace ShareFile.Api.Client.Entities
 {
@@ -415,10 +417,22 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.Action("Download");
 			sfApiQuery.Ids(shareId);
 			sfApiQuery.QueryString("id", id);
-			sfApiQuery.QueryString("Name", Name);
-			sfApiQuery.QueryString("Email", Email);
-			sfApiQuery.QueryString("Company", Company);
-			sfApiQuery.QueryString("redirect", redirect);
+			if (Name != null)
+			{
+				sfApiQuery.QueryString("Name", Name);
+			}
+			if (Email != null)
+			{
+				sfApiQuery.QueryString("Email", Email);
+			}
+			if (Company != null)
+			{
+				sfApiQuery.QueryString("Company", Company);
+			}
+			if (redirect != true)
+			{
+				sfApiQuery.QueryString("redirect", redirect);
+			}
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -468,7 +482,10 @@ namespace ShareFile.Api.Client.Entities
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Share>(Client);
 			sfApiQuery.From("Shares");
-			sfApiQuery.QueryString("notify", notify);
+			if (notify != false)
+			{
+				sfApiQuery.QueryString("notify", notify);
+			}
 			sfApiQuery.Body = share;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
@@ -541,7 +558,10 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.Action("Alias");
 			sfApiQuery.Ids(id);
 			sfApiQuery.QueryString("email", email);
-			sfApiQuery.QueryString("notify", notify);
+			if (notify != false)
+			{
+				sfApiQuery.QueryString("notify", notify);
+			}
 			sfApiQuery.HttpMethod = "DELETE";
 			return sfApiQuery;
 		}
@@ -655,28 +675,94 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.From("Shares");
 			sfApiQuery.Action("Upload");
 			sfApiQuery.Ids(id);
-			sfApiQuery.QueryString("method", method);
-			sfApiQuery.QueryString("raw", raw);
-			sfApiQuery.QueryString("fileName", fileName);
-			sfApiQuery.QueryString("fileSize", fileSize);
-			sfApiQuery.QueryString("batchId", batchId);
-			sfApiQuery.QueryString("batchLast", batchLast);
-			sfApiQuery.QueryString("canResume", canResume);
-			sfApiQuery.QueryString("startOver", startOver);
-			sfApiQuery.QueryString("unzip", unzip);
-			sfApiQuery.QueryString("tool", tool);
-			sfApiQuery.QueryString("overwrite", overwrite);
-			sfApiQuery.QueryString("title", title);
-			sfApiQuery.QueryString("details", details);
-			sfApiQuery.QueryString("isSend", isSend);
-			sfApiQuery.QueryString("sendGuid", sendGuid);
-			sfApiQuery.QueryString("opid", opid);
-			sfApiQuery.QueryString("threadCount", threadCount);
-			sfApiQuery.QueryString("responseFormat", responseFormat);
-			sfApiQuery.QueryString("notify", notify);
-			sfApiQuery.QueryString("clientCreatedDateUTC", clientCreatedDateUTC);
-			sfApiQuery.QueryString("clientModifiedDateUTC", clientModifiedDateUTC);
-			sfApiQuery.QueryString("expirationDays", expirationDays);
+			if (method != UploadMethod.Standard)
+			{
+				sfApiQuery.QueryString("method", method);
+			}
+			if (raw != false)
+			{
+				sfApiQuery.QueryString("raw", raw);
+			}
+			if (fileName != null)
+			{
+				sfApiQuery.QueryString("fileName", fileName);
+			}
+			if (fileSize != 0)
+			{
+				sfApiQuery.QueryString("fileSize", fileSize);
+			}
+			if (batchId != null)
+			{
+				sfApiQuery.QueryString("batchId", batchId);
+			}
+			if (batchLast != false)
+			{
+				sfApiQuery.QueryString("batchLast", batchLast);
+			}
+			if (canResume != false)
+			{
+				sfApiQuery.QueryString("canResume", canResume);
+			}
+			if (startOver != false)
+			{
+				sfApiQuery.QueryString("startOver", startOver);
+			}
+			if (unzip != false)
+			{
+				sfApiQuery.QueryString("unzip", unzip);
+			}
+			if (tool != "apiv3")
+			{
+				sfApiQuery.QueryString("tool", tool);
+			}
+			if (overwrite != false)
+			{
+				sfApiQuery.QueryString("overwrite", overwrite);
+			}
+			if (title != null)
+			{
+				sfApiQuery.QueryString("title", title);
+			}
+			if (details != null)
+			{
+				sfApiQuery.QueryString("details", details);
+			}
+			if (isSend != false)
+			{
+				sfApiQuery.QueryString("isSend", isSend);
+			}
+			if (sendGuid != null)
+			{
+				sfApiQuery.QueryString("sendGuid", sendGuid);
+			}
+			if (opid != null)
+			{
+				sfApiQuery.QueryString("opid", opid);
+			}
+			if (threadCount != 4)
+			{
+				sfApiQuery.QueryString("threadCount", threadCount);
+			}
+			if (responseFormat != "json")
+			{
+				sfApiQuery.QueryString("responseFormat", responseFormat);
+			}
+			if (notify != false)
+			{
+				sfApiQuery.QueryString("notify", notify);
+			}
+			if (clientCreatedDateUTC != null)
+			{
+				sfApiQuery.QueryString("clientCreatedDateUTC", clientCreatedDateUTC);
+			}
+			if (clientModifiedDateUTC != null)
+			{
+				sfApiQuery.QueryString("clientModifiedDateUTC", clientModifiedDateUTC);
+			}
+			if (expirationDays != null)
+			{
+				sfApiQuery.QueryString("expirationDays", expirationDays);
+			}
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}

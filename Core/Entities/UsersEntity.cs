@@ -15,8 +15,6 @@ using System.IO;
 using ShareFile.Api.Models;
 using ShareFile.Api.Client;
 using ShareFile.Api.Client.Requests;
-using ShareFile.Api.Client.Extensions;
-
 
 namespace ShareFile.Api.Client.Entities
 {
@@ -393,14 +391,8 @@ namespace ShareFile.Api.Client.Entities
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<User>(Client);
 			sfApiQuery.From("Users");
-			if (id != null)
-			{
-				sfApiQuery.QueryString("id", id);
-			}
-			if (emailAddress != null)
-			{
-				sfApiQuery.QueryString("emailAddress", emailAddress);
-			}
+			sfApiQuery.QueryString("id", id);
+			sfApiQuery.QueryString("emailAddress", emailAddress);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -442,22 +434,10 @@ namespace ShareFile.Api.Client.Entities
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<User>(Client);
 			sfApiQuery.From("Users");
-			if (pushCreatorDefaultSettings != false)
-			{
-				sfApiQuery.QueryString("pushCreatorDefaultSettings", pushCreatorDefaultSettings);
-			}
-			if (addshared != false)
-			{
-				sfApiQuery.QueryString("addshared", addshared);
-			}
-			if (notify != false)
-			{
-				sfApiQuery.QueryString("notify", notify);
-			}
-			if (ifNecessary != false)
-			{
-				sfApiQuery.QueryString("ifNecessary", ifNecessary);
-			}
+			sfApiQuery.QueryString("pushCreatorDefaultSettings", pushCreatorDefaultSettings);
+			sfApiQuery.QueryString("addshared", addshared);
+			sfApiQuery.QueryString("notify", notify);
+			sfApiQuery.QueryString("ifNecessary", ifNecessary);
 			sfApiQuery.Body = user;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
@@ -517,22 +497,10 @@ namespace ShareFile.Api.Client.Entities
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<User>(Client);
 			sfApiQuery.From("Users");
 			sfApiQuery.Action("AccountUser");
-			if (pushCreatorDefaultSettings != false)
-			{
-				sfApiQuery.QueryString("pushCreatorDefaultSettings", pushCreatorDefaultSettings);
-			}
-			if (addshared != false)
-			{
-				sfApiQuery.QueryString("addshared", addshared);
-			}
-			if (notify != false)
-			{
-				sfApiQuery.QueryString("notify", notify);
-			}
-			if (ifNecessary != false)
-			{
-				sfApiQuery.QueryString("ifNecessary", ifNecessary);
-			}
+			sfApiQuery.QueryString("pushCreatorDefaultSettings", pushCreatorDefaultSettings);
+			sfApiQuery.QueryString("addshared", addshared);
+			sfApiQuery.QueryString("notify", notify);
+			sfApiQuery.QueryString("ifNecessary", ifNecessary);
 			sfApiQuery.Body = user;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
@@ -779,10 +747,7 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.From("Users");
 			sfApiQuery.Action("ResetPassword");
 			sfApiQuery.Ids(id);
-			if (notify != false)
-			{
-				sfApiQuery.QueryString("notify", notify);
-			}
+			sfApiQuery.QueryString("notify", notify);
 			sfApiQuery.Body = properties;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
@@ -818,10 +783,7 @@ namespace ShareFile.Api.Client.Entities
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 			sfApiQuery.From("Users");
 			sfApiQuery.Ids(id);
-			if (completely != false)
-			{
-				sfApiQuery.QueryString("completely", completely);
-			}
+			sfApiQuery.QueryString("completely", completely);
 			sfApiQuery.HttpMethod = "DELETE";
 			return sfApiQuery;
 		}

@@ -94,6 +94,13 @@ namespace ShareFile.Api.Client
         void RegisterAsyncRequestProvider(IAsyncRequestProvider syncRequestProvider);
 
         /// <summary>
+        /// Will return a composed Uri that will point to Items(aliasOrId) for the BaseUri
+        /// </summary>
+        /// <param name="aliasOrId"></param>
+        /// <returns></returns>
+        Uri GetItemsUri(string aliasOrId);
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="uri"></param>
@@ -270,6 +277,27 @@ namespace ShareFile.Api.Client
         public Downloader GetFileDownloader(Item itemToDownload, DownloaderConfig config = null)
         {
             return new Downloader(itemToDownload, this, config);
+        }
+
+        /// <summary>
+        /// Will return a composed Uri that will point to Items(aliasOrId) for the BaseUri
+        /// </summary>
+        /// <example>
+        /// If the aliasOrId is "top", the result would be:
+        /// https://test.sf-api.com/sf/v3/Items(top)
+        /// </example>
+        /// <param name="aliasOrId"></param>
+        /// <returns></returns>
+        public Uri GetItemsUri(string aliasOrId)
+        {
+            string url;
+            if (NextRequestBaseUri != null)
+            {
+                url = NextRequestBaseUri.ToString();
+            }
+            else url = BaseUri.ToString();
+
+            return new Uri(url.TrimEnd(new [] {'/'}) + "/Items(" + aliasOrId + ")", UriKind.RelativeOrAbsolute);
         }
 
         /// <summary>

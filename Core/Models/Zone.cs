@@ -31,6 +31,8 @@ namespace ShareFile.Api.Models
 
 		public SafeEnum<ZoneService> ZoneServices { get; set; }
 
+		public bool IsHIPAAZone { get; set; }
+
 		public IEnumerable<StorageCenter> StorageCenters { get; set; }
 
 		public IEnumerable<Metadata> Metadata { get; set; }

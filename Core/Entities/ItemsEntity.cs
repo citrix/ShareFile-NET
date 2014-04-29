@@ -267,12 +267,13 @@ namespace ShareFile.Api.Client.Entities
 		/// </remarks>
 		/// <param name="id"></param>
 		/// <param name="item"></param>
+		/// <param name="forceSync"></param>
 		/// <returns>
 		/// A modified Item object. If the item Zone or Parent Zone is modified, then this
 		/// method will return an Asynchronous operation record instead. Note: the parameters listed in the
 		/// body of the request are the only parameters that can be updated through this call.
 		/// </returns>
-		IQuery<Item> Update(string id, Item item);
+		IQuery<Item> Update(string id, Item item, string batchid = null, long batchSizeInBytes = -1, bool forceSync = false, bool scheduleAsync = true);
 		/// <summary>
 		/// Update Link
 		/// </summary>
@@ -891,16 +892,21 @@ namespace ShareFile.Api.Client.Entities
 		/// </remarks>
 		/// <param name="id"></param>
 		/// <param name="item"></param>
+		/// <param name="forceSync"></param>
 		/// <returns>
 		/// A modified Item object. If the item Zone or Parent Zone is modified, then this
 		/// method will return an Asynchronous operation record instead. Note: the parameters listed in the
 		/// body of the request are the only parameters that can be updated through this call.
 		/// </returns>
-		public IQuery<Item> Update(string id, Item item)
+		public IQuery<Item> Update(string id, Item item, string batchid = null, long batchSizeInBytes = -1, bool forceSync = false, bool scheduleAsync = true)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
 			sfApiQuery.From("Items");
 			sfApiQuery.Ids(id);
+			sfApiQuery.QueryString("batchid", batchid);
+			sfApiQuery.QueryString("batchSizeInBytes", batchSizeInBytes);
+			sfApiQuery.QueryString("forceSync", forceSync);
+			sfApiQuery.QueryString("scheduleAsync", scheduleAsync);
 			sfApiQuery.Body = item;
 			sfApiQuery.HttpMethod = "PATCH";
 			return sfApiQuery;

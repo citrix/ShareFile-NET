@@ -10,7 +10,7 @@ RestorePackages()
 let buildDir = "./build/"
 let packagingRoot = "./packaging/"
 let packagingDir = packagingRoot @@ "sharefile"
-let version = "3.0.0-alpha06"
+let version = "3.0.0-alpha07"
 let nugetAccessKey = "nUg3tMyP@cKag3"
 let nugetDestination = "http://sf-source.citrite.net:8081/"
 let title = "ShareFile Client SDK v3"

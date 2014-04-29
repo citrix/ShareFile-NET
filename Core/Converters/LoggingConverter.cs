@@ -144,16 +144,6 @@ namespace ShareFile.Api.Client.Converters
             return GetHash(match.Value);
         }
 
-        private string GetHash(string value)
-        {
-            byte[] buffer = Encoding.UTF8.GetBytes(value);
-            var hash = MD5HashProviderFactory.GetHashProvider().CreateHash();
-            hash.Append(buffer, 0, buffer.Length);
-            hash.Finalize(new byte[1], 0, 0);
-            string result = hash.GetComputedHashAsString();
-            return result;
-        }
-
         private static readonly Type[] _primitives =
         {
             typeof (String),
@@ -164,9 +154,20 @@ namespace ShareFile.Api.Client.Converters
             typeof (Guid),
             typeof (Uri)
         };
+
         private static bool IsSimpleType(Type type)
         {
             return type.IsPrimitive || _primitives.Contains(type);
+        }
+
+        public static string GetHash(string value)
+        {
+            byte[] buffer = Encoding.UTF8.GetBytes(value);
+            var hash = MD5HashProviderFactory.GetHashProvider().CreateHash();
+            hash.Append(buffer, 0, buffer.Length);
+            hash.Finalize(new byte[1], 0, 0);
+            string result = hash.GetComputedHashAsString();
+            return result;
         }
     }
 }

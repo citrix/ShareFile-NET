@@ -9,7 +9,7 @@ using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Transfers.Downloaders
 {
-    public class Downloader
+    public class Downloader : TransfererBase
     {
         private IQuery<DownloadSpecification> Query { get; set; }
         public DownloaderConfig Config { get; set; }
@@ -56,6 +56,7 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
             {
                 if (stream != null)
                 {
+                    SetState(TransfererState.Active);
                     var totalBytesToDownload = Item.FileSizeBytes.GetValueOrDefault();
 
                     var progress = new TransferProgress
@@ -80,6 +81,11 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
                             progress.BytesRemaining -= bytesRead;
 
                             NotifyProgress(progress);
+
+                            while (ShouldPause(cancellationToken))
+                            {
+                                await TaskEx.Delay(1000);
+                            }
                         }
                         else
                         {

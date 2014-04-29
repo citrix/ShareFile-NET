@@ -14,12 +14,9 @@
     <tags>ShareFile API Client</tags>
     <dependencies>
       <group>
-        <dependency id="Microsoft.Net.Http" />
-        <dependency id="Newtonsoft.Json" />
+        <dependency id="Newtonsoft.Json" version="6.0.2" />
+        <dependency id="Microsoft.Net.Http" version="2.2.20" />
       </group>
     </dependencies>
-    <frameworkAssemblies>
-      <frameworkAssembly assemblyName="System.Net.Http" targetFramework="net45" />
-    </frameworkAssemblies>
   </metadata>
 </package>

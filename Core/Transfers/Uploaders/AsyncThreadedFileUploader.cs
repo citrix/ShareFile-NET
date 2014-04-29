@@ -13,7 +13,7 @@ using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Transfers.Uploaders
 {
-    public class AsyncThreadedFileUploader
+    public class AsyncThreadedFileUploader : TransfererBase
     {
         private AsyncThreadedFileUploader(ShareFileClient client, IPlatformFile file, FileUploaderConfig config = null)
         {
@@ -150,6 +150,8 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             _maxConsumersSemaphore = new AsyncSemaphore(Config.NumberOfThreads);
             _pendingPartSemaphore = new AsyncSemaphore(0);
             await PrepareAsync();
+            SetState(TransfererState.Active);
+
             if (_itemsToFill.Count > 0)
             {
                 await WhenAll(StartReaders(), StartUploaders());
@@ -227,6 +229,12 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             do
             {
                 await _pendingPartSemaphore.WaitAsync();
+
+                while (ShouldPause(_cancellationToken))
+                {
+                    await TaskEx.Delay(1000);
+                }
+
                 part = _itemsToUpload.Dequeue();
                 UploadPartAsync(part).ContinueWith((task) =>
                 {

@@ -15,27 +15,13 @@ using Newtonsoft.Json;
 
 namespace ShareFile.Api.Models 
 {
-	public class Zone : Principal 
+	public class PowerTools : ODataObject 
 	{
-		public string Secret { get; set; }
+		public bool EnableDesktopToolsPage { get; set; }
 
-		public SafeEnum<ZoneType> ZoneType { get; set; }
+		public bool EnableMobileApps { get; set; }
 
-		public Account Account { get; set; }
-
-		public int? HeartBeatTolerance { get; set; }
-
-		public int? PingBackInterval { get; set; }
-
-		public string Version { get; set; }
-
-		public SafeEnum<ZoneService> ZoneServices { get; set; }
-
-		public bool IsHIPAAZone { get; set; }
-
-		public IEnumerable<StorageCenter> StorageCenters { get; set; }
-
-		public IEnumerable<Metadata> Metadata { get; set; }
+		public bool ShowMobileTools { get; set; }
 
 	}
 }

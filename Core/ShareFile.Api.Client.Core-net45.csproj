@@ -148,6 +148,7 @@
     <Compile Include="Models\ODataObjectType.cs" />
     <Compile Include="Models\PinLockType.cs" />
     <Compile Include="Models\PlanFeatures.cs" />
+    <Compile Include="Models\PowerTools.cs" />
     <Compile Include="Models\PreviewStatus.cs" />
     <Compile Include="Models\Principal.cs" />
     <Compile Include="Models\Private\OutlookInformation.cs" />

@@ -10,13 +10,22 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>@description@</description>
     <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
-    <copyright>Copyright 2014</copyright>
+    <copyright>Copyright © Citrix ShareFile 2014</copyright>
     <tags>ShareFile API Client</tags>
     <dependencies>
       <group>
-        <dependency id="Newtonsoft.Json" version="6.0.2" />
+        <dependency id="Newtonsoft.Json" version="6.0.3" />
         <dependency id="Microsoft.Net.Http" version="2.2.20" />
       </group>
+      <group targetFramework="net45">
+        <dependency id="Newtonsoft.Json" version="6.0.3" />
+      </group>
+      <group targetFramework="netcore45">
+        <dependency id="Newtonsoft.Json" version="6.0.3" />
+      </group>
     </dependencies>
+    <frameworkAssemblies>
+        <frameworkAssembly assemblyName="System.Net.Http" targetFramework="net45, netcore45"/>
+    </frameworkAssemblies>
   </metadata>
 </package>

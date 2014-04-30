@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Net40\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;ShareFile</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;ShareFile;Net40</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>

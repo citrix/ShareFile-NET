@@ -184,7 +184,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                         else if (task.IsCanceled)
                             canceled = true;
                     }
-                    if (exceptions != null && exceptions.Count > 0)
+                    if (exceptions.Count > 0)
                         tcs.TrySetException(exceptions);
                     else if (canceled)
                         tcs.TrySetCanceled();
@@ -230,16 +230,16 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             {
                 await _pendingPartSemaphore.WaitAsync();
 
-                while (ShouldPause(_cancellationToken))
-                {
-                    await TaskEx.Delay(1000);
-                }
+                await TryPause(_cancellationToken);
 
                 part = _itemsToUpload.Dequeue();
+#pragma warning disable 4014
+                // This is required to allow for concurrent threads to upload file parts.
                 UploadPartAsync(part).ContinueWith((task) =>
                 {
                     _maxConsumersSemaphore.Release();
                 });
+#pragma warning restore 4014
 
             } while (part != null && !part.IsLastPart && !IsCancellationRequested());
             // some uploaders are still going at this point; wait until all finish
@@ -383,16 +383,16 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             }
         }
 
-        private static int maxBufferLength = 65536;
+        private const int MaxBufferLength = 65536;
         private async Task<string> CalculateHashAsync(long count)
         {
             var localHash = MD5HashProviderFactory.GetHashProvider().CreateHash();
             using (var fileStream = await File.OpenReadAsync())
             {
-                var buffer = new byte[maxBufferLength];
+                var buffer = new byte[MaxBufferLength];
                 do
                 {
-                    var bytesToRead = count < maxBufferLength ? (int)count : maxBufferLength;
+                    var bytesToRead = count < MaxBufferLength ? (int)count : MaxBufferLength;
                     var bytesRead = fileStream.Read(buffer, 0, bytesToRead);
                     if (bytesRead > 0)
                     {

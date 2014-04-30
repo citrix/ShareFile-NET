@@ -10,7 +10,9 @@ RestorePackages()
 let buildDir = "./build/"
 let packagingRoot = "./packaging/"
 let packagingDir = packagingRoot @@ "sharefile"
-let version = "3.0.0-alpha07"
+let nugetVersion = "3.0.0-alpha08"
+let assemblyVersion = "3.0.0"
+let assemblyFileVersion = "3.0.0"
 let nugetAccessKey = "nUg3tMyP@cKag3"
 let nugetDestination = "http://sf-source.citrite.net:8081/"
 let title = "ShareFile Client SDK v3"
@@ -26,6 +28,7 @@ let projectSummary = projectDescription
 let buildMode = getBuildParamOrDefault "buildMode" "Release"
 let signKeyPath = getBuildParamOrDefault "signKeyPath" Environment.CurrentDirectory @@ "ShareFile.Api.Client.snk"
 let signRequested = getBuildParamOrDefault "sign" "false"
+let buildType = getBuildParamOrDefault "for" "internal"
 
 // *** Define Targets ***
 Target "Clean" (fun () ->
@@ -33,23 +36,34 @@ Target "Clean" (fun () ->
 )
 
 Target "AssemblyInfo" (fun () ->
-    CreateCSharpAssemblyInfo "SolutionInfo.cs"
+    CreateCSharpAssemblyInfo "./Core/Properties/AssemblyInfo.cs"
         [  Attribute.Product projectName
            Attribute.Title title
-           Attribute.Version "3.0.0"
-           Attribute.FileVersion "3.0.0"
-           Attribute.ComVisible false ] 
+           Attribute.Version assemblyVersion
+           Attribute.FileVersion assemblyFileVersion
+           Attribute.Copyright "Copyright © Citrix ShareFile 2014" ]
+
+    CreateCSharpAssemblyInfo "./Net45/Properties/AssemblyInfo.cs"
+        [  Attribute.Product projectName
+           Attribute.Title title
+           Attribute.Version assemblyVersion
+           Attribute.FileVersion assemblyFileVersion
+           Attribute.Copyright "Copyright © Citrix ShareFile 2014" ] 
 )
 
 Target "Build" (fun () ->
-    let defaultConstants = "CODE_ANALYSIS;ShareFile"
+    let defaultConstants = "CODE_ANALYSIS"
     let signParameter =
         if signRequested = "true" then "True"
         else "False"
-    
+
     let constants =
         if signRequested = "true" then defaultConstants + ";SIGNED"
         else defaultConstants
+
+    let constants =
+        if buildType = "internal" then constants + ";ShareFile"
+        else constants
     
     let baseBuildParams = 
         [
@@ -61,11 +75,12 @@ Target "Build" (fun () ->
         ]
 
     let buildParams = List.append baseBuildParams ["DefineConstants", constants + ";Portable"]
-    let net40PBuildParams = List.append baseBuildParams ["DefineConstants", constants]
+    let net40PBuildParams = List.append baseBuildParams ["DefineConstants", constants + ";Net40"]
+    let net45BuildParams = List.append baseBuildParams ["DefineConstants", constants]
 
     MSBuild (buildDir @@ "Portable") "Build" buildParams ["./ShareFile.Api.Client.Core.sln"]
     |> Log "AppBuild-Output: "
-    MSBuild (buildDir @@ "Net45") "Build" buildParams ["./ShareFile.Api.Client.Net45.sln"]
+    MSBuild (buildDir @@ "Net45") "Build" net45BuildParams ["./ShareFile.Api.Client.Net45.sln"]
     |> Log "AppBuild-Output: "
     MSBuild (buildDir @@ "Net40") "Build" net40PBuildParams ["./ShareFile.Api.Client.Net40.sln"]
     |> Log "AppBuild-Output: "
@@ -98,7 +113,7 @@ Target "CreateNuGetPackage" (fun () ->
             OutputPath = packagingRoot
             Summary = projectSummary
             WorkingDir = packagingDir
-            Version = version
+            Version = nugetVersion
             PublishUrl = nugetDestination
             AccessKey = nugetAccessKey
             Publish = true
@@ -110,6 +125,7 @@ Target "Default" DoNothing
 
 // *** Define Dependencies ***
 "Clean"
+  ==> "AssemblyInfo"
   ==> "Build"
   ==> "CreateNuGetPackage"
   ==> "Default"

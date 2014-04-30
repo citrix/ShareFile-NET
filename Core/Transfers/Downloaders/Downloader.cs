@@ -82,10 +82,7 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
 
                             NotifyProgress(progress);
 
-                            while (ShouldPause(cancellationToken))
-                            {
-                                await TaskEx.Delay(1000);
-                            }
+                            await TryPause(cancellationToken);
                         }
                         else
                         {

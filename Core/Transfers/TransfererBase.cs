@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace ShareFile.Api.Client.Transfers
 {
@@ -37,6 +38,18 @@ namespace ShareFile.Api.Client.Transfers
             if (cancellationToken == null)
                 return GetState() == TransfererState.Paused;
             return GetState() == TransfererState.Paused && !cancellationToken.Value.IsCancellationRequested;
+        }
+
+        protected async Task TryPause(CancellationToken? cancellationToken)
+        {
+            while (ShouldPause(cancellationToken))
+            {
+#if Portable || Net40
+                await TaskEx.Delay(1000);
+#else
+                await Task.Delay(1000);
+#endif
+            }
         }
     }
 

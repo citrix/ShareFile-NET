@@ -73,6 +73,7 @@ namespace ShareFile.Api.Client
 
         void AddCookie(Uri host, Cookie cookie);
 
+#if ShareFile
         /// <summary>
         /// Use this method if you've previously acquired an AuthenticationId through other means.
         /// </summary>
@@ -81,6 +82,7 @@ namespace ShareFile.Api.Client
         /// <param name="path"></param>
         /// <param name="cookieName"></param>
         void AddAuthenticationId(Uri host, string authenticationId, string path = "", string cookieName = "SFAPI_AuthId");
+#endif
 
         void AddChangeDomainHandler(ChangeDomainCallback handler);
         void AddExceptionHandler(ExceptionCallback handler);

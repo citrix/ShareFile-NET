@@ -111,6 +111,7 @@
     <Compile Include="Entities\SessionsEntity.cs" />
     <Compile Include="Entities\SharesEntity.cs" />
     <Compile Include="Entities\UsersEntity.cs" />
+    <Compile Include="Enums\ItemAlias.cs" />
     <Compile Include="Events\ChangeDomainCallback.cs" />
     <Compile Include="Events\EventHandlerResponse.cs" />
     <Compile Include="Events\ExceptionCallback.cs" />

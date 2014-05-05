@@ -48,7 +48,7 @@ namespace ShareFile.Api.Client.Helpers
             return
                 type.GetProperty(propertyName);
 #else
-            return type.GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+            return type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
 #endif
         }
 

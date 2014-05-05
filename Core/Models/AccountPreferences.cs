@@ -167,5 +167,7 @@ namespace ShareFile.Api.Models
 
 		public string AccountID { get; set; }
 
+		public bool? EnableGetApp { get; set; }
+
 	}
 }

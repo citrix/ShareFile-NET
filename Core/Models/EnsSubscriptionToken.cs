@@ -25,5 +25,7 @@ namespace ShareFile.Api.Models
 
 		public bool IncludeProgeny { get; set; }
 
+		public long LastEventCount { get; set; }
+
 	}
 }

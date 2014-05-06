@@ -16,6 +16,16 @@ namespace ShareFile.Api.Client.Exceptions
     {
         public HttpStatusCode Code { get; set; }
         public ODataExceptionMessage ODataExceptionMessage { get; set; }
+
+        public override string Message
+        {
+            get
+            {
+                if (ODataExceptionMessage == null)
+                    return base.Message;
+                return string.Format("{0} (HttpStatusCode: {1})", ODataExceptionMessage.Message, Code);
+            }
+        }
     }
 
     public class ODataExceptionMessage

@@ -16,8 +16,9 @@ namespace ShareFile.Api.Models
 		Copy = 0,
 		Move = 1,
 		ChangeZone = 2,
-		Recovery = 3,
-		Delete = 4,
-		DeletePermanent = 5
+		ScheduleChangeZone = 3,
+		Recovery = 4,
+		Delete = 5,
+		DeletePermanent = 6
 	}
 }

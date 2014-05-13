@@ -29,7 +29,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A single Storage Center
 		/// </returns>
-		IQuery<StorageCenter> Get(string id);
+		IQuery<StorageCenter> Get(Uri url);
 		/// <summary>
 		/// Patch Storage Center
 		/// </summary>
@@ -44,12 +44,12 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// Modified Storage Center
 		/// </returns>
-		IQuery<StorageCenter> Update(string id, StorageCenter sc);
+		IQuery<StorageCenter> Update(Uri url, StorageCenter sc);
 		/// <summary>
 		/// Delete Storage Center
 		/// </summary>
 		/// <param name="id"></param>
-		IQuery Delete(string id);
+		IQuery Delete(Uri url);
 		/// <summary>
 		/// Get List of StorageCenters from Zone
 		/// </summary>
@@ -60,7 +60,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A list of Storage Centers associated with the provided zone
 		/// </returns>
-		IQuery<ODataFeed<StorageCenter>> GetByZone(string id);
+		IQuery<ODataFeed<StorageCenter>> GetByZone(Uri url);
 		/// <summary>
 		/// Create StorageCenter
 		/// </summary>
@@ -79,7 +79,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The new storage center
 		/// </returns>
-		IQuery<StorageCenter> CreateByZone(string id, StorageCenter storageCenter);
+		IQuery<StorageCenter> CreateByZone(Uri url, StorageCenter storageCenter);
 		/// <summary>
 		/// Update StorageCenter
 		/// </summary>
@@ -99,7 +99,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the modified storage center
 		/// </returns>
-		IQuery<StorageCenter> UpdateByZone(string zid, string scid, StorageCenter storageCenter);
+		IQuery<StorageCenter> UpdateByZone(Uri url, string scid, StorageCenter storageCenter);
 		/// <summary>
 		/// Delete StorageCenter
 		/// </summary>
@@ -108,7 +108,7 @@ namespace ShareFile.Api.Client.Entities
 		/// </remarks>
 		/// <param name="zid"></param>
 		/// <param name="scid"></param>
-		IQuery DeleteByZone(string zid, string scid);
+		IQuery DeleteByZone(Uri url, string scid);
 		/// <summary>
 		/// Get StorageCenter Metadata
 		/// </summary>
@@ -120,7 +120,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the storage center metadata feed
 		/// </returns>
-		IQuery<ODataFeed<Metadata>> GetMetadata(string zid, string scid);
+		IQuery<ODataFeed<Metadata>> GetMetadata(Uri url, string scid);
 		/// <summary>
 		/// Create or update StorageCenter Metadata
 		/// </summary>
@@ -140,7 +140,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the storage center metadata feed
 		/// </returns>
-		IQuery<ODataFeed<Metadata>> CreateMetadata(string zid, string scid, IEnumerable<Metadata> metadata);
+		IQuery<ODataFeed<Metadata>> CreateMetadata(Uri url, string scid, IEnumerable<Metadata> metadata);
 		/// <summary>
 		/// Delete StorageCenter Metadata
 		/// </summary>
@@ -153,7 +153,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// no data on success
 		/// </returns>
-		IQuery DeleteMetadata(string zid, string scid, string name);
+		IQuery DeleteMetadata(Uri url, string scid, string name);
 	}
 
 	public class StorageCentersEntityInternal : EntityBase, IStorageCentersEntityInternal
@@ -172,11 +172,10 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A single Storage Center
 		/// </returns>
-		public IQuery<StorageCenter> Get(string id)
+		public IQuery<StorageCenter> Get(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<StorageCenter>(Client);
-			sfApiQuery.From("StorageCenters");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -195,11 +194,10 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// Modified Storage Center
 		/// </returns>
-		public IQuery<StorageCenter> Update(string id, StorageCenter sc)
+		public IQuery<StorageCenter> Update(Uri url, StorageCenter sc)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<StorageCenter>(Client);
-			sfApiQuery.From("StorageCenters");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.Body = sc;
 			sfApiQuery.HttpMethod = "PATCH";
 			return sfApiQuery;
@@ -209,11 +207,10 @@ namespace ShareFile.Api.Client.Entities
 		/// Delete Storage Center
 		/// </summary>
 		/// <param name="id"></param>
-		public IQuery Delete(string id)
+		public IQuery Delete(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.From("StorageCenters");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "DELETE";
 			return sfApiQuery;
 		}
@@ -228,12 +225,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A list of Storage Centers associated with the provided zone
 		/// </returns>
-		public IQuery<ODataFeed<StorageCenter>> GetByZone(string id)
+		public IQuery<ODataFeed<StorageCenter>> GetByZone(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<StorageCenter>>(Client);
-			sfApiQuery.From("Zones");
 			sfApiQuery.Action("StorageCenters");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -256,12 +252,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The new storage center
 		/// </returns>
-		public IQuery<StorageCenter> CreateByZone(string id, StorageCenter storageCenter)
+		public IQuery<StorageCenter> CreateByZone(Uri url, StorageCenter storageCenter)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<StorageCenter>(Client);
-			sfApiQuery.From("Zones");
 			sfApiQuery.Action("StorageCenters");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.Body = storageCenter;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
@@ -286,12 +281,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the modified storage center
 		/// </returns>
-		public IQuery<StorageCenter> UpdateByZone(string zid, string scid, StorageCenter storageCenter)
+		public IQuery<StorageCenter> UpdateByZone(Uri url, string scid, StorageCenter storageCenter)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<StorageCenter>(Client);
-			sfApiQuery.From("Zones");
 			sfApiQuery.Action("StorageCenters");
-			sfApiQuery.Ids(zid);
+			sfApiQuery.Uri(url);
 			sfApiQuery.ActionIds(scid);
 			sfApiQuery.Body = storageCenter;
 			sfApiQuery.HttpMethod = "PATCH";
@@ -306,12 +300,11 @@ namespace ShareFile.Api.Client.Entities
 		/// </remarks>
 		/// <param name="zid"></param>
 		/// <param name="scid"></param>
-		public IQuery DeleteByZone(string zid, string scid)
+		public IQuery DeleteByZone(Uri url, string scid)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.From("Zones");
 			sfApiQuery.Action("StorageCenters");
-			sfApiQuery.Ids(zid);
+			sfApiQuery.Uri(url);
 			sfApiQuery.ActionIds(scid);
 			sfApiQuery.HttpMethod = "DELETE";
 			return sfApiQuery;
@@ -328,12 +321,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the storage center metadata feed
 		/// </returns>
-		public IQuery<ODataFeed<Metadata>> GetMetadata(string zid, string scid)
+		public IQuery<ODataFeed<Metadata>> GetMetadata(Uri url, string scid)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Metadata>>(Client);
-			sfApiQuery.From("Zones");
 			sfApiQuery.Action("StorageCenters");
-			sfApiQuery.Ids(zid);
+			sfApiQuery.Uri(url);
 			sfApiQuery.ActionIds(scid);
 			sfApiQuery.SubAction("Metadata");
 			sfApiQuery.HttpMethod = "GET";
@@ -359,12 +351,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the storage center metadata feed
 		/// </returns>
-		public IQuery<ODataFeed<Metadata>> CreateMetadata(string zid, string scid, IEnumerable<Metadata> metadata)
+		public IQuery<ODataFeed<Metadata>> CreateMetadata(Uri url, string scid, IEnumerable<Metadata> metadata)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Metadata>>(Client);
-			sfApiQuery.From("Zones");
 			sfApiQuery.Action("StorageCenters");
-			sfApiQuery.Ids(zid);
+			sfApiQuery.Uri(url);
 			sfApiQuery.ActionIds(scid);
 			sfApiQuery.SubAction("Metadata");
 			sfApiQuery.Body = metadata;
@@ -384,12 +375,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// no data on success
 		/// </returns>
-		public IQuery DeleteMetadata(string zid, string scid, string name)
+		public IQuery DeleteMetadata(Uri url, string scid, string name)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.From("Zones");
 			sfApiQuery.Action("StorageCenters");
-			sfApiQuery.Ids(zid);
+			sfApiQuery.Uri(url);
 			sfApiQuery.ActionIds(scid);
 			sfApiQuery.SubAction("Metadata");
 			sfApiQuery.QueryString("name", name);

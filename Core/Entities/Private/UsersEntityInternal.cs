@@ -33,7 +33,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the user security status
 		/// </returns>
-		IQuery<UserSecurity> GetSecurity(string id);
+		IQuery<UserSecurity> GetSecurity(Uri url);
 	}
 
 	public class UsersEntityInternal : UsersEntity, IUsersEntityInternal
@@ -56,12 +56,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the user security status
 		/// </returns>
-		public IQuery<UserSecurity> GetSecurity(string id)
+		public IQuery<UserSecurity> GetSecurity(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<UserSecurity>(Client);
-			sfApiQuery.From("Users");
 			sfApiQuery.Action("Security");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}

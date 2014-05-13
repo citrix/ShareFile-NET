@@ -42,7 +42,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A single Share
 		/// </returns>
-		IQuery<Share> Get(string id);
+		IQuery<Share> Get(Uri url);
 		/// <summary>
 		/// Get Recipients of a Share
 		/// </summary>
@@ -56,7 +56,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A feed of Share Aliases representing recipients of the Share
 		/// </returns>
-		IQuery<ODataFeed<ShareAlias>> GetRecipients(string id);
+		IQuery<ODataFeed<ShareAlias>> GetRecipients(Uri url);
 		/// <summary>
 		/// Get Items of a Share
 		/// </summary>
@@ -67,7 +67,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A feed of Items of the Share
 		/// </returns>
-		IQuery<ODataFeed<Item>> GetItems(string id);
+		IQuery<ODataFeed<Item>> GetItems(Uri url);
 		/// <summary>
 		/// Get Recipients of a Share
 		/// </summary>
@@ -79,7 +79,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// An item in the Share
 		/// </returns>
-		IQuery<Item> GetItems(string shareid, string itemid);
+		IQuery<Item> GetItems(Uri url, string itemid);
 		/// <summary>
 		/// Downloads Share Items
 		/// </summary>
@@ -101,7 +101,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// Redirects the caller (302) to the download address for the share contents.
 		/// </returns>
-		IQuery<Stream> Download(string shareId, string id, string Name = null, string Email = null, string Company = null, bool redirect = true);
+		IQuery<Stream> Download(Uri url, string id, string Name = null, string Email = null, string Company = null, bool redirect = true);
 		/// <summary>
 		/// Create Share
 		/// </summary>
@@ -163,7 +163,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The modified Share
 		/// </returns>
-		IQuery<Share> Update(string id, Share share);
+		IQuery<Share> Update(Uri url, Share share);
 		/// <summary>
 		/// Delete Share
 		/// </summary>
@@ -171,7 +171,7 @@ namespace ShareFile.Api.Client.Entities
 		/// Removes an existing Share
 		/// </remarks>
 		/// <param name="id"></param>
-		IQuery Delete(string id);
+		IQuery Delete(Uri url);
 		/// <summary>
 		/// Create Share Alias
 		/// </summary>
@@ -187,7 +187,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// Share with the AliasID property set to the created alias ID
 		/// </returns>
-		IQuery<Share> CreateAlias(string id, string email, bool notify = false);
+		IQuery<Share> CreateAlias(Uri url, string email, bool notify = false);
 		/// <summary>
 		/// Deliver Send a File Email
 		/// </summary>
@@ -273,7 +273,7 @@ namespace ShareFile.Api.Client.Entities
 		/// The caller must know the protocol for sending the prepare, chunk and finish URLs returned in the spec; as well as
 		/// negotiate the resume upload.
 		/// </returns>
-		IQuery<UploadSpecification> Upload(string id, UploadMethod method = UploadMethod.Standard, bool raw = false, string fileName = null, long fileSize = 0, string batchId = null, bool batchLast = false, bool canResume = false, bool startOver = false, bool unzip = false, string tool = "apiv3", bool overwrite = false, string title = null, string details = null, bool isSend = false, string sendGuid = null, string opid = null, int threadCount = 4, string responseFormat = "json", bool notify = false, DateTime? clientCreatedDateUTC = null, DateTime? clientModifiedDateUTC = null, int? expirationDays = null);
+		IQuery<UploadSpecification> Upload(Uri url, UploadMethod method = UploadMethod.Standard, bool raw = false, string fileName = null, long fileSize = 0, string batchId = null, bool batchLast = false, bool canResume = false, bool startOver = false, bool unzip = false, string tool = "apiv3", bool overwrite = false, string title = null, string details = null, bool isSend = false, string sendGuid = null, string opid = null, int threadCount = 4, string responseFormat = "json", bool notify = false, DateTime? clientCreatedDateUTC = null, DateTime? clientModifiedDateUTC = null, int? expirationDays = null);
 	}
 
 	public class SharesEntity : EntityBase, ISharesEntity
@@ -313,11 +313,10 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A single Share
 		/// </returns>
-		public IQuery<Share> Get(string id)
+		public IQuery<Share> Get(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Share>(Client);
-			sfApiQuery.From("Shares");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -335,12 +334,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A feed of Share Aliases representing recipients of the Share
 		/// </returns>
-		public IQuery<ODataFeed<ShareAlias>> GetRecipients(string id)
+		public IQuery<ODataFeed<ShareAlias>> GetRecipients(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<ShareAlias>>(Client);
-			sfApiQuery.From("Shares");
 			sfApiQuery.Action("Recipients");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -355,12 +353,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A feed of Items of the Share
 		/// </returns>
-		public IQuery<ODataFeed<Item>> GetItems(string id)
+		public IQuery<ODataFeed<Item>> GetItems(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
-			sfApiQuery.From("Shares");
 			sfApiQuery.Action("Items");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -376,12 +373,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// An item in the Share
 		/// </returns>
-		public IQuery<Item> GetItems(string shareid, string itemid)
+		public IQuery<Item> GetItems(Uri url, string itemid)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
-			sfApiQuery.From("Shares");
 			sfApiQuery.Action("Items");
-			sfApiQuery.Ids(shareid);
+			sfApiQuery.Uri(url);
 			sfApiQuery.ActionIds(itemid);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
@@ -408,12 +404,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// Redirects the caller (302) to the download address for the share contents.
 		/// </returns>
-		public IQuery<Stream> Download(string shareId, string id, string Name = null, string Email = null, string Company = null, bool redirect = true)
+		public IQuery<Stream> Download(Uri url, string id, string Name = null, string Email = null, string Company = null, bool redirect = true)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
-			sfApiQuery.From("Shares");
 			sfApiQuery.Action("Download");
-			sfApiQuery.Ids(shareId);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("id", id);
 			sfApiQuery.QueryString("Name", Name);
 			sfApiQuery.QueryString("Email", Email);
@@ -493,11 +488,10 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The modified Share
 		/// </returns>
-		public IQuery<Share> Update(string id, Share share)
+		public IQuery<Share> Update(Uri url, Share share)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Share>(Client);
-			sfApiQuery.From("Shares");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.Body = share;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
@@ -510,11 +504,10 @@ namespace ShareFile.Api.Client.Entities
 		/// Removes an existing Share
 		/// </remarks>
 		/// <param name="id"></param>
-		public IQuery Delete(string id)
+		public IQuery Delete(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.From("Shares");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "DELETE";
 			return sfApiQuery;
 		}
@@ -534,12 +527,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// Share with the AliasID property set to the created alias ID
 		/// </returns>
-		public IQuery<Share> CreateAlias(string id, string email, bool notify = false)
+		public IQuery<Share> CreateAlias(Uri url, string email, bool notify = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Share>(Client);
-			sfApiQuery.From("Shares");
 			sfApiQuery.Action("Alias");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("email", email);
 			sfApiQuery.QueryString("notify", notify);
 			sfApiQuery.HttpMethod = "DELETE";
@@ -649,12 +641,11 @@ namespace ShareFile.Api.Client.Entities
 		/// The caller must know the protocol for sending the prepare, chunk and finish URLs returned in the spec; as well as
 		/// negotiate the resume upload.
 		/// </returns>
-		public IQuery<UploadSpecification> Upload(string id, UploadMethod method = UploadMethod.Standard, bool raw = false, string fileName = null, long fileSize = 0, string batchId = null, bool batchLast = false, bool canResume = false, bool startOver = false, bool unzip = false, string tool = "apiv3", bool overwrite = false, string title = null, string details = null, bool isSend = false, string sendGuid = null, string opid = null, int threadCount = 4, string responseFormat = "json", bool notify = false, DateTime? clientCreatedDateUTC = null, DateTime? clientModifiedDateUTC = null, int? expirationDays = null)
+		public IQuery<UploadSpecification> Upload(Uri url, UploadMethod method = UploadMethod.Standard, bool raw = false, string fileName = null, long fileSize = 0, string batchId = null, bool batchLast = false, bool canResume = false, bool startOver = false, bool unzip = false, string tool = "apiv3", bool overwrite = false, string title = null, string details = null, bool isSend = false, string sendGuid = null, string opid = null, int threadCount = 4, string responseFormat = "json", bool notify = false, DateTime? clientCreatedDateUTC = null, DateTime? clientModifiedDateUTC = null, int? expirationDays = null)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<UploadSpecification>(Client);
-			sfApiQuery.From("Shares");
 			sfApiQuery.Action("Upload");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("method", method);
 			sfApiQuery.QueryString("raw", raw);
 			sfApiQuery.QueryString("fileName", fileName);

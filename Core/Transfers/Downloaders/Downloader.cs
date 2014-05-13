@@ -26,7 +26,7 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
 
         protected virtual async Task<DownloadSpecification> PrepareDownloadAsync(CancellationToken? cancellationToken)
         {
-            var downloadSpecificationQuery = Client.Items.Download(Item.GetObjectUri().ToString(), false);
+            var downloadSpecificationQuery = Client.Items.Download(Item.GetObjectUri(), false);
 
             return await downloadSpecificationQuery.ExecuteAsync(cancellationToken).ConfigureAwait(false);
         }

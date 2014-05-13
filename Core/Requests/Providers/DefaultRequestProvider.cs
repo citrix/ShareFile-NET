@@ -122,7 +122,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 LogCookies(request.GetComposedUri());
                 if (request.Body != null)
                 {
-                    ShareFileClient.Logging.Debug("Content:{0}{1}", Environment.NewLine, await SerializeObject(request.Body));
+                    ShareFileClient.Logging.Debug("Content:{0}{1}", Environment.NewLine, await SerializeObject(request.Body).ConfigureAwait(false));
                 }
             }
             else if (ShareFileClient.Logging.IsTraceEnabled)
@@ -142,7 +142,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 {
                     if (mediaType == null || mediaType.MediaType == "application/json")
                     {
-                        ShareFileClient.Logging.Debug("Content:{0}{1}", Environment.NewLine, await SerializeObject(response));
+                        ShareFileClient.Logging.Debug("Content:{0}{1}", Environment.NewLine, await SerializeObject(response).ConfigureAwait(false));
                     }
                     else ShareFileClient.Logging.Debug("Content {0}", response.ToString());
                 }
@@ -342,13 +342,13 @@ namespace ShareFile.Api.Client.Requests.Providers
                 }
 
                 var httpRequestMessage = BuildRequest(apiRequest);
-                var responseMessage = await ExecuteRequestAsync(httpRequestMessage, token);
+                var responseMessage = await ExecuteRequestAsync(httpRequestMessage, token).ConfigureAwait(false);
 
                 action = null;
 
                 try
                 {
-                    var response = await HandleResponse(responseMessage, apiRequest, retryCount++);
+                    var response = await HandleResponse(responseMessage, apiRequest, retryCount++).ConfigureAwait(false);
                     if (response.Action != null)
                     {
                         action = response.Action;
@@ -403,7 +403,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 {
                     if (typeof (T).IsSubclassOf(typeof (ODataObject)))
                     {
-                        var response = await HandleTypedResponse<ODataObject>(responseMessage, apiRequest, retryCount++);
+                        var response = await HandleTypedResponse<ODataObject>(responseMessage, apiRequest, retryCount++).ConfigureAwait(false);
 
                         if (response.Value != null)
                         {
@@ -425,7 +425,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                     }
                     else
                     {
-                        var response = await HandleTypedResponse<T>(responseMessage, apiRequest, retryCount++);
+                        var response = await HandleTypedResponse<T>(responseMessage, apiRequest, retryCount++).ConfigureAwait(false);
                         if (response.Value != null)
                         {
                             return response.Value;
@@ -446,7 +446,7 @@ namespace ShareFile.Api.Client.Requests.Providers
         public async Task<T> ExecuteAsync<T>(IFormQuery<T> query, CancellationToken? token = null)
             where T : class
         {
-            return await ExecuteAsync(query as IQuery<T>, token);
+            return await ExecuteAsync(query as IQuery<T>, token).ConfigureAwait(false);
         }
 
         public async Task<Stream> ExecuteAsync(IStreamQuery query, CancellationToken? token = null)
@@ -470,7 +470,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 action = null;
 
                 var httpRequestMessage = BuildRequest(apiRequest);
-                var responseMessage = await ExecuteRequestAsync(httpRequestMessage, token);
+                var responseMessage = await ExecuteRequestAsync(httpRequestMessage, token).ConfigureAwait(false);
 
                 try
                 {
@@ -612,7 +612,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 var responseStream = await httpResponseMessage.Content.ReadAsStreamAsync();
                 if (responseStream != null)
                 {
-                    var result = await DeserializeStreamAsync<T>(responseStream);
+                    var result = await DeserializeStreamAsync<T>(responseStream).ConfigureAwait(false);
                     
                     LogResponseAsync(result, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode).ConfigureAwait(false);
 
@@ -638,7 +638,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 
                     LogRequestAsync(request, authenticatedHttpRequestMessage.Headers.ToString()).ConfigureAwait(false);
 
-                    var requestTask = ExecuteRequestAsync(authenticatedHttpRequestMessage);
+                    var requestTask = ExecuteRequestAsync(authenticatedHttpRequestMessage).ConfigureAwait(false);
                     using (var authenticatedResponse = await requestTask)
                     {
                         if (authenticatedResponse.IsSuccessStatusCode)
@@ -646,12 +646,12 @@ namespace ShareFile.Api.Client.Requests.Providers
                             return await HandleTypedResponse<T>(authenticatedResponse, request, retryCount, false);
                         }
 
-                        Response.CreateAction<T>(await HandleNonSuccess(authenticatedResponse, retryCount, typeof(T)));
+                        Response.CreateAction<T>(await HandleNonSuccess(authenticatedResponse, retryCount, typeof(T)).ConfigureAwait(false));
                     }
                 }
             }
 
-            return Response.CreateAction<T>(await HandleNonSuccess(httpResponseMessage, retryCount, typeof(T)));
+            return Response.CreateAction<T>(await HandleNonSuccess(httpResponseMessage, retryCount, typeof(T)).ConfigureAwait(false));
         }
 
         protected async Task<Response> HandleResponse(HttpResponseMessage httpResponseMessage, ApiRequest request, int retryCount, bool tryResolveUnauthorizedChallenge = true)
@@ -675,18 +675,18 @@ namespace ShareFile.Api.Client.Requests.Providers
 
                     LogRequestAsync(request, authenticatedHttpRequestMessage.Headers.ToString()).ConfigureAwait(false);
 
-                    var authenticatedResponse = await HttpClient.SendAsync(authenticatedHttpRequestMessage, HttpCompletionOption.ResponseContentRead);
+                    var authenticatedResponse = await HttpClient.SendAsync(authenticatedHttpRequestMessage, HttpCompletionOption.ResponseContentRead).ConfigureAwait(false);
                     
                     if (authenticatedResponse.IsSuccessStatusCode)
                     {
                         await HandleResponse(authenticatedResponse, request, retryCount, false);
                     }
 
-                    return Response.CreateAction(await HandleNonSuccess(authenticatedResponse, retryCount));
+                    return Response.CreateAction(await HandleNonSuccess(authenticatedResponse, retryCount).ConfigureAwait(false));
                 }
             }
 
-            return Response.CreateAction(await HandleNonSuccess(httpResponseMessage, retryCount));
+            return Response.CreateAction(await HandleNonSuccess(httpResponseMessage, retryCount).ConfigureAwait(false));
         }
 
         protected async Task<Response<Stream>> HandleStreamResponse(HttpResponseMessage httpResponseMessage, ApiRequest request, int retryCount, bool tryResolveUnauthorizedChallenge = true)
@@ -718,12 +718,12 @@ namespace ShareFile.Api.Client.Requests.Providers
                     {
                         if (authenticatedResponse.IsSuccessStatusCode)
                         {
-                            return await HandleStreamResponse(authenticatedResponse, request, retryCount, false);
+                            return await HandleStreamResponse(authenticatedResponse, request, retryCount, false).ConfigureAwait(false);
                         }
 
                         return new Response<Stream>
                         {
-                            Action = await HandleNonSuccess(authenticatedResponse, retryCount, typeof(Stream))
+                            Action = await HandleNonSuccess(authenticatedResponse, retryCount, typeof(Stream)).ConfigureAwait(false)
                         };
                     }
                 }

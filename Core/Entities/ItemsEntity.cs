@@ -44,7 +44,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// a single Item
 		/// </returns>
-		IQuery<Item> Get(string id, bool includeDeleted = false);
+		IQuery<Item> Get(Uri url, bool includeDeleted = false);
 		/// <summary>
 		/// Get TreeView
 		/// </summary>
@@ -64,7 +64,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A tree root element.
 		/// </returns>
-		IQuery<Item> Get(string id, TreeMode treeMode, string sourceId, bool canCreateRootFolder = false, bool fileBox = false);
+		IQuery<Item> Get(Uri url, TreeMode treeMode, string sourceId, bool canCreateRootFolder = false, bool fileBox = false);
 		/// <summary>
 		/// Get Stream
 		/// </summary>
@@ -77,7 +77,7 @@ namespace ShareFile.Api.Client.Entities
 		/// </remarks>
 		/// <param name="id"></param>
 		/// <param name="includeDeleted"></param>
-		IQuery<ODataFeed<Item>> Stream(string id, bool includeDeleted = false);
+		IQuery<ODataFeed<Item>> Stream(Uri url, bool includeDeleted = false);
 		/// <summary>
 		/// Get Item by Path
 		/// </summary>
@@ -105,7 +105,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// An item identified by a path
 		/// </returns>
-		IQuery<Item> ByPath(string id, string path);
+		IQuery<Item> ByPath(Uri url, string path);
 		/// <summary>
 		/// Get Parent Item
 		/// </summary>
@@ -116,7 +116,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the Parent Item of the give object ID.
 		/// </returns>
-		IQuery<Item> GetParent(string id);
+		IQuery<Item> GetParent(Uri url);
 		/// <summary>
 		/// Get Children
 		/// </summary>
@@ -129,7 +129,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the list of children under the given object ID
 		/// </returns>
-		IQuery<ODataFeed<Item>> GetChildren(string id);
+		IQuery<ODataFeed<Item>> GetChildren(Uri url);
 		/// <summary>
 		/// Get Folder Access Info
 		/// </summary>
@@ -141,7 +141,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The Folder Access Control Information
 		/// </returns>
-		IQuery<ItemInfo> GetInfo(string id);
+		IQuery<ItemInfo> GetInfo(Uri url);
 		/// <summary>
 		/// Download Item Content
 		/// </summary>
@@ -155,7 +155,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the download link for the provided item content.
 		/// </returns>
-		IQuery<DownloadSpecification> Download(string id, bool redirect = true);
+		IQuery<DownloadSpecification> Download(Uri url, bool redirect = true);
 		/// <summary>
 		/// Create Folder
 		/// </summary>
@@ -180,7 +180,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the new Folder
 		/// </returns>
-		IQuery<Folder> CreateFolder(string parentid, Folder folder, bool overwrite = false, bool passthrough = false);
+		IQuery<Folder> CreateFolder(Uri url, Folder folder, bool overwrite = false, bool passthrough = false);
 		/// <summary>
 		/// Create Note
 		/// </summary>
@@ -198,7 +198,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the new Note
 		/// </returns>
-		IQuery<Note> CreateNote(string parentid, Note note);
+		IQuery<Note> CreateNote(Uri url, Note note);
 		/// <summary>
 		/// Create Link
 		/// </summary>
@@ -217,7 +217,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the new Link
 		/// </returns>
-		IQuery<Link> CreateLink(string parentid, Link link);
+		IQuery<Link> CreateLink(Uri url, Link link);
 		/// <summary>
 		/// Create SymbolicLink
 		/// </summary>
@@ -248,7 +248,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the new SymbolicLink
 		/// </returns>
-		IQuery<SymbolicLink> CreateSymbolicLink(string parentid, SymbolicLink symlink, bool overwrite = false);
+		IQuery<SymbolicLink> CreateSymbolicLink(Uri url, SymbolicLink symlink, bool overwrite = false);
 		/// <summary>
 		/// Update Item
 		/// </summary>
@@ -273,7 +273,7 @@ namespace ShareFile.Api.Client.Entities
 		/// method will return an Asynchronous operation record instead. Note: the parameters listed in the
 		/// body of the request are the only parameters that can be updated through this call.
 		/// </returns>
-		IQuery<Item> Update(string id, Item item, string batchid = null, long batchSizeInBytes = -1, bool forceSync = false, bool scheduleAsync = true);
+		IQuery<Item> Update(Uri url, Item item, string batchid = null, long batchSizeInBytes = -1, bool forceSync = false, bool scheduleAsync = true);
 		/// <summary>
 		/// Update Link
 		/// </summary>
@@ -294,7 +294,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A modified Link object
 		/// </returns>
-		IQuery<Link> UpdateLink(string id, Link link, bool notify = false);
+		IQuery<Link> UpdateLink(Uri url, Link link, bool notify = false);
 		/// <summary>
 		/// Update Note
 		/// </summary>
@@ -314,7 +314,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The modified Note object
 		/// </returns>
-		IQuery<Note> UpdateNote(string id, Note note, bool notify = false);
+		IQuery<Note> UpdateNote(Uri url, Note note, bool notify = false);
 		/// <summary>
 		/// Update SymbolicLink
 		/// </summary>
@@ -333,8 +333,8 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The modified SymbolicLink object
 		/// </returns>
-		IQuery<SymbolicLink> UpdateSymbolicLink(string id, SymbolicLink symlink);
-		IQuery Delete(string id, bool singleversion = false, bool forceSync = false);
+		IQuery<SymbolicLink> UpdateSymbolicLink(Uri url, SymbolicLink symlink);
+		IQuery Delete(Uri url, bool singleversion = false, bool forceSync = false);
 		/// <summary>
 		/// Delete Multiple Items
 		/// </summary>
@@ -346,8 +346,8 @@ namespace ShareFile.Api.Client.Entities
 		/// </remarks>
 		/// <param name="id"></param>
 		/// <param name="body"></param>
-		IQuery BulkDelete(string parentid, IEnumerable<string> ids, bool forceSync = false);
-		IQuery<Stream> GetThumbnail(string parentid, int size = 75, bool redirect = false);
+		IQuery BulkDelete(Uri url, IEnumerable<string> ids, bool forceSync = false);
+		IQuery<Stream> GetThumbnail(Uri url, int size = 75, bool redirect = false);
 		/// <summary>
 		/// Get Breadcrumbs
 		/// </summary>
@@ -361,7 +361,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A feed containing the path of folders from the specified root to the item, in order
 		/// </returns>
-		IQuery<ODataFeed<Item>> GetBreadcrumbs(string id, string path = null);
+		IQuery<ODataFeed<Item>> GetBreadcrumbs(Uri url, string path = null);
 		/// <summary>
 		/// Copy Item
 		/// </summary>
@@ -376,7 +376,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the modified source object
 		/// </returns>
-		IQuery<Item> Copy(string id, string targetid, bool overwrite = false);
+		IQuery<Item> Copy(Uri url, string targetid, bool overwrite = false);
 		/// <summary>
 		/// Upload File
 		/// </summary>
@@ -446,7 +446,7 @@ namespace ShareFile.Api.Client.Entities
 		/// The caller must know the protocol for sending the prepare, chunk and finish URLs returned in the spec; as well as
 		/// negotiate the resume upload.
 		/// </returns>
-		IQuery<UploadSpecification> Upload(string id, UploadMethod method = UploadMethod.Standard, bool raw = false, string fileName = null, long fileSize = 0, string batchId = null, bool batchLast = false, bool canResume = false, bool startOver = false, bool unzip = false, string tool = "apiv3", bool overwrite = false, string title = null, string details = null, bool isSend = false, string sendGuid = null, string opid = null, int threadCount = 4, string responseFormat = "json", bool notify = false, DateTime? clientCreatedDateUTC = null, DateTime? clientModifiedDateUTC = null, int? expirationDays = null);
+		IQuery<UploadSpecification> Upload(Uri url, UploadMethod method = UploadMethod.Standard, bool raw = false, string fileName = null, long fileSize = 0, string batchId = null, bool batchLast = false, bool canResume = false, bool startOver = false, bool unzip = false, string tool = "apiv3", bool overwrite = false, string title = null, string details = null, bool isSend = false, string sendGuid = null, string opid = null, int threadCount = 4, string responseFormat = "json", bool notify = false, DateTime? clientCreatedDateUTC = null, DateTime? clientModifiedDateUTC = null, int? expirationDays = null);
 		/// <summary>
 		/// Unlock File
 		/// </summary>
@@ -456,7 +456,7 @@ namespace ShareFile.Api.Client.Entities
 		/// </remarks>
 		/// <param name="id"></param>
 		/// <param name="message"></param>
-		IQuery CheckIn(string id, string message);
+		IQuery CheckIn(Uri url, string message);
 		/// <summary>
 		/// Lock File
 		/// </summary>
@@ -465,7 +465,7 @@ namespace ShareFile.Api.Client.Entities
 		/// This operation is only implemented in Sharepoint providers (/sp)
 		/// </remarks>
 		/// <param name="id"></param>
-		IQuery CheckOut(string id);
+		IQuery CheckOut(Uri url);
 		/// <summary>
 		/// Search
 		/// </summary>
@@ -488,7 +488,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A Feed containing all protocols links supported by the given item
 		/// </returns>
-		IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(string parentid);
+		IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(Uri url);
 		/// <summary>
 		/// Get an Item Protocol Link
 		/// </summary>
@@ -497,7 +497,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A single protocol link if supported, 404 (Not Found) if not supported by the item
 		/// </returns>
-		IQuery<ItemProtocolLink> GetProtocolLinks(string id, string protocol);
+		IQuery<ItemProtocolLink> GetProtocolLinks(Uri url, string protocol);
 	}
 
 	public class ItemsEntity : EntityBase, IItemsEntity
@@ -539,11 +539,10 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// a single Item
 		/// </returns>
-		public IQuery<Item> Get(string id, bool includeDeleted = false)
+		public IQuery<Item> Get(Uri url, bool includeDeleted = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
-			sfApiQuery.From("Items");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("includeDeleted", includeDeleted);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
@@ -568,11 +567,10 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A tree root element.
 		/// </returns>
-		public IQuery<Item> Get(string id, TreeMode treeMode, string sourceId, bool canCreateRootFolder = false, bool fileBox = false)
+		public IQuery<Item> Get(Uri url, TreeMode treeMode, string sourceId, bool canCreateRootFolder = false, bool fileBox = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
-			sfApiQuery.From("Items");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("treeMode", treeMode);
 			sfApiQuery.QueryString("sourceId", sourceId);
 			sfApiQuery.QueryString("canCreateRootFolder", canCreateRootFolder);
@@ -593,12 +591,11 @@ namespace ShareFile.Api.Client.Entities
 		/// </remarks>
 		/// <param name="id"></param>
 		/// <param name="includeDeleted"></param>
-		public IQuery<ODataFeed<Item>> Stream(string id, bool includeDeleted = false)
+		public IQuery<ODataFeed<Item>> Stream(Uri url, bool includeDeleted = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("Stream");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("includeDeleted", includeDeleted);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
@@ -640,12 +637,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// An item identified by a path
 		/// </returns>
-		public IQuery<Item> ByPath(string id, string path)
+		public IQuery<Item> ByPath(Uri url, string path)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("ByPath");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("path", path);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
@@ -661,12 +657,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the Parent Item of the give object ID.
 		/// </returns>
-		public IQuery<Item> GetParent(string id)
+		public IQuery<Item> GetParent(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("Parent");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -683,12 +678,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the list of children under the given object ID
 		/// </returns>
-		public IQuery<ODataFeed<Item>> GetChildren(string id)
+		public IQuery<ODataFeed<Item>> GetChildren(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("Children");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -704,12 +698,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The Folder Access Control Information
 		/// </returns>
-		public IQuery<ItemInfo> GetInfo(string id)
+		public IQuery<ItemInfo> GetInfo(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ItemInfo>(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("Info");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -727,12 +720,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the download link for the provided item content.
 		/// </returns>
-		public IQuery<DownloadSpecification> Download(string id, bool redirect = true)
+		public IQuery<DownloadSpecification> Download(Uri url, bool redirect = true)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<DownloadSpecification>(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("Download");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("redirect", redirect);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
@@ -762,12 +754,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the new Folder
 		/// </returns>
-		public IQuery<Folder> CreateFolder(string parentid, Folder folder, bool overwrite = false, bool passthrough = false)
+		public IQuery<Folder> CreateFolder(Uri url, Folder folder, bool overwrite = false, bool passthrough = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Folder>(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("Folder");
-			sfApiQuery.Ids(parentid);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("overwrite", overwrite);
 			sfApiQuery.QueryString("passthrough", passthrough);
 			sfApiQuery.Body = folder;
@@ -792,12 +783,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the new Note
 		/// </returns>
-		public IQuery<Note> CreateNote(string parentid, Note note)
+		public IQuery<Note> CreateNote(Uri url, Note note)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Note>(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("Note");
-			sfApiQuery.Ids(parentid);
+			sfApiQuery.Uri(url);
 			sfApiQuery.Body = note;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
@@ -821,12 +811,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the new Link
 		/// </returns>
-		public IQuery<Link> CreateLink(string parentid, Link link)
+		public IQuery<Link> CreateLink(Uri url, Link link)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Link>(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("Link");
-			sfApiQuery.Ids(parentid);
+			sfApiQuery.Uri(url);
 			sfApiQuery.Body = link;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
@@ -862,12 +851,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the new SymbolicLink
 		/// </returns>
-		public IQuery<SymbolicLink> CreateSymbolicLink(string parentid, SymbolicLink symlink, bool overwrite = false)
+		public IQuery<SymbolicLink> CreateSymbolicLink(Uri url, SymbolicLink symlink, bool overwrite = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<SymbolicLink>(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("SymbolicLink");
-			sfApiQuery.Ids(parentid);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("overwrite", overwrite);
 			sfApiQuery.Body = symlink;
 			sfApiQuery.HttpMethod = "POST";
@@ -898,11 +886,10 @@ namespace ShareFile.Api.Client.Entities
 		/// method will return an Asynchronous operation record instead. Note: the parameters listed in the
 		/// body of the request are the only parameters that can be updated through this call.
 		/// </returns>
-		public IQuery<Item> Update(string id, Item item, string batchid = null, long batchSizeInBytes = -1, bool forceSync = false, bool scheduleAsync = true)
+		public IQuery<Item> Update(Uri url, Item item, string batchid = null, long batchSizeInBytes = -1, bool forceSync = false, bool scheduleAsync = true)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
-			sfApiQuery.From("Items");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("batchid", batchid);
 			sfApiQuery.QueryString("batchSizeInBytes", batchSizeInBytes);
 			sfApiQuery.QueryString("forceSync", forceSync);
@@ -932,12 +919,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A modified Link object
 		/// </returns>
-		public IQuery<Link> UpdateLink(string id, Link link, bool notify = false)
+		public IQuery<Link> UpdateLink(Uri url, Link link, bool notify = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Link>(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("Link");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("notify", notify);
 			sfApiQuery.Body = link;
 			sfApiQuery.HttpMethod = "PATCH";
@@ -963,12 +949,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The modified Note object
 		/// </returns>
-		public IQuery<Note> UpdateNote(string id, Note note, bool notify = false)
+		public IQuery<Note> UpdateNote(Uri url, Note note, bool notify = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Note>(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("Note");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("notify", notify);
 			sfApiQuery.Body = note;
 			sfApiQuery.HttpMethod = "PATCH";
@@ -993,22 +978,20 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The modified SymbolicLink object
 		/// </returns>
-		public IQuery<SymbolicLink> UpdateSymbolicLink(string id, SymbolicLink symlink)
+		public IQuery<SymbolicLink> UpdateSymbolicLink(Uri url, SymbolicLink symlink)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<SymbolicLink>(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("SymbolicLink");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.Body = symlink;
 			sfApiQuery.HttpMethod = "PATCH";
 			return sfApiQuery;
 		}
 
-		public IQuery Delete(string id, bool singleversion = false, bool forceSync = false)
+		public IQuery Delete(Uri url, bool singleversion = false, bool forceSync = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.From("Items");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("singleversion", singleversion);
 			sfApiQuery.QueryString("forceSync", forceSync);
 			sfApiQuery.HttpMethod = "DELETE";
@@ -1026,24 +1009,22 @@ namespace ShareFile.Api.Client.Entities
 		/// </remarks>
 		/// <param name="id"></param>
 		/// <param name="body"></param>
-		public IQuery BulkDelete(string parentid, IEnumerable<string> ids, bool forceSync = false)
+		public IQuery BulkDelete(Uri url, IEnumerable<string> ids, bool forceSync = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("BulkDelete");
-			sfApiQuery.Ids(parentid);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("ids", ids);
 			sfApiQuery.QueryString("forceSync", forceSync);
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}
 
-		public IQuery<Stream> GetThumbnail(string parentid, int size = 75, bool redirect = false)
+		public IQuery<Stream> GetThumbnail(Uri url, int size = 75, bool redirect = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("Thumbnail");
-			sfApiQuery.Ids(parentid);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("size", size);
 			sfApiQuery.QueryString("redirect", redirect);
 			sfApiQuery.HttpMethod = "GET";
@@ -1063,12 +1044,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A feed containing the path of folders from the specified root to the item, in order
 		/// </returns>
-		public IQuery<ODataFeed<Item>> GetBreadcrumbs(string id, string path = null)
+		public IQuery<ODataFeed<Item>> GetBreadcrumbs(Uri url, string path = null)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("Breadcrumbs");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("path", path);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
@@ -1088,12 +1068,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the modified source object
 		/// </returns>
-		public IQuery<Item> Copy(string id, string targetid, bool overwrite = false)
+		public IQuery<Item> Copy(Uri url, string targetid, bool overwrite = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("Copy");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("targetid", targetid);
 			sfApiQuery.QueryString("overwrite", overwrite);
 			sfApiQuery.HttpMethod = "GET";
@@ -1169,12 +1148,11 @@ namespace ShareFile.Api.Client.Entities
 		/// The caller must know the protocol for sending the prepare, chunk and finish URLs returned in the spec; as well as
 		/// negotiate the resume upload.
 		/// </returns>
-		public IQuery<UploadSpecification> Upload(string id, UploadMethod method = UploadMethod.Standard, bool raw = false, string fileName = null, long fileSize = 0, string batchId = null, bool batchLast = false, bool canResume = false, bool startOver = false, bool unzip = false, string tool = "apiv3", bool overwrite = false, string title = null, string details = null, bool isSend = false, string sendGuid = null, string opid = null, int threadCount = 4, string responseFormat = "json", bool notify = false, DateTime? clientCreatedDateUTC = null, DateTime? clientModifiedDateUTC = null, int? expirationDays = null)
+		public IQuery<UploadSpecification> Upload(Uri url, UploadMethod method = UploadMethod.Standard, bool raw = false, string fileName = null, long fileSize = 0, string batchId = null, bool batchLast = false, bool canResume = false, bool startOver = false, bool unzip = false, string tool = "apiv3", bool overwrite = false, string title = null, string details = null, bool isSend = false, string sendGuid = null, string opid = null, int threadCount = 4, string responseFormat = "json", bool notify = false, DateTime? clientCreatedDateUTC = null, DateTime? clientModifiedDateUTC = null, int? expirationDays = null)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<UploadSpecification>(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("Upload");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("method", method);
 			sfApiQuery.QueryString("raw", raw);
 			sfApiQuery.QueryString("fileName", fileName);
@@ -1210,12 +1188,11 @@ namespace ShareFile.Api.Client.Entities
 		/// </remarks>
 		/// <param name="id"></param>
 		/// <param name="message"></param>
-		public IQuery CheckIn(string id, string message)
+		public IQuery CheckIn(Uri url, string message)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("CheckIn");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("message", message);
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
@@ -1229,12 +1206,11 @@ namespace ShareFile.Api.Client.Entities
 		/// This operation is only implemented in Sharepoint providers (/sp)
 		/// </remarks>
 		/// <param name="id"></param>
-		public IQuery CheckOut(string id)
+		public IQuery CheckOut(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("CheckOut");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}
@@ -1270,12 +1246,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A Feed containing all protocols links supported by the given item
 		/// </returns>
-		public IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(string parentid)
+		public IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<ItemProtocolLink>>(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("ProtocolLinks");
-			sfApiQuery.Ids(parentid);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -1288,12 +1263,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A single protocol link if supported, 404 (Not Found) if not supported by the item
 		/// </returns>
-		public IQuery<ItemProtocolLink> GetProtocolLinks(string id, string protocol)
+		public IQuery<ItemProtocolLink> GetProtocolLinks(Uri url, string protocol)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ItemProtocolLink>(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("ProtocolLinks");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.ActionIds(protocol);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;

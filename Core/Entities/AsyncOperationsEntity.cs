@@ -31,7 +31,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A single Async Operation record
 		/// </returns>
-		IQuery<AsyncOperation> Get(string id);
+		IQuery<AsyncOperation> Get(Uri url);
 		/// <summary>
 		/// Get List of AsyncOperations by Operation Batch ID
 		/// </summary>
@@ -65,7 +65,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The modified Async Operation record
 		/// </returns>
-		IQuery<AsyncOperation> Cancel(string id);
+		IQuery<AsyncOperation> Cancel(Uri url);
 		/// <summary>
 		/// Delete AsyncOperation
 		/// </summary>
@@ -73,7 +73,7 @@ namespace ShareFile.Api.Client.Entities
 		/// Cancels a single Async operation record (same as /Cancel)
 		/// </remarks>
 		/// <param name="id"></param>
-		IQuery Delete(string id);
+		IQuery Delete(Uri url);
 		/// <summary>
 		/// Cancel an Operation Batch
 		/// </summary>
@@ -100,7 +100,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The modified Async Operation
 		/// </returns>
-		IQuery<AsyncOperation> Patch(string id, AsyncOperation newAsyncOp);
+		IQuery<AsyncOperation> Patch(Uri url, AsyncOperation newAsyncOp);
 	}
 
 	public class AsyncOperationsEntity : EntityBase, IAsyncOperationsEntity
@@ -122,11 +122,10 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A single Async Operation record
 		/// </returns>
-		public IQuery<AsyncOperation> Get(string id)
+		public IQuery<AsyncOperation> Get(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AsyncOperation>(Client);
-			sfApiQuery.From("AsyncOperations");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -182,12 +181,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The modified Async Operation record
 		/// </returns>
-		public IQuery<AsyncOperation> Cancel(string id)
+		public IQuery<AsyncOperation> Cancel(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AsyncOperation>(Client);
-			sfApiQuery.From("AsyncOperations");
 			sfApiQuery.Action("Cancel");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}
@@ -199,11 +197,10 @@ namespace ShareFile.Api.Client.Entities
 		/// Cancels a single Async operation record (same as /Cancel)
 		/// </remarks>
 		/// <param name="id"></param>
-		public IQuery Delete(string id)
+		public IQuery Delete(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.From("AsyncOperations");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "DELETE";
 			return sfApiQuery;
 		}
@@ -243,11 +240,10 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The modified Async Operation
 		/// </returns>
-		public IQuery<AsyncOperation> Patch(string id, AsyncOperation newAsyncOp)
+		public IQuery<AsyncOperation> Patch(Uri url, AsyncOperation newAsyncOp)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AsyncOperation>(Client);
-			sfApiQuery.From("AsyncOperations");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.Body = newAsyncOp;
 			sfApiQuery.HttpMethod = "PUT";
 			return sfApiQuery;

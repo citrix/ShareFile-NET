@@ -181,6 +181,12 @@ namespace ShareFile.Api.Client.Requests
             return this;
         }
 
+        public Query Uri(Uri uri)
+        {
+            _Ids(uri.ToString());
+            return this;
+        }
+
         public Query Ids(string id)
         {
             _Ids(id);
@@ -289,6 +295,12 @@ namespace ShareFile.Api.Client.Requests
         public Query<T> Id(string id)
         {
             _Id(id);
+            return this;
+        }
+
+        public Query<T> Uri(Uri uri)
+        {
+            _Ids(uri.ToString());
             return this;
         }
 

@@ -29,7 +29,7 @@ namespace ShareFile.Api.Client.Entities
 		/// Retrieve the user security record - current state of the user regarding
 		/// security and password settings.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// the user security status
 		/// </returns>
@@ -52,7 +52,7 @@ namespace ShareFile.Api.Client.Entities
 		/// Retrieve the user security record - current state of the user regarding
 		/// security and password settings.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// the user security status
 		/// </returns>

@@ -27,7 +27,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrieves the list of Favorite folders for a given user.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// A list of Favorite Folders specified by this user
 		/// </returns>
@@ -39,23 +39,21 @@ namespace ShareFile.Api.Client.Entities
 		/// Retrieves a single Favorite Folder
 		/// </remarks>
 		/// <param name="userid"></param>
-		/// <param name="itemid"></param>
+		/// <param name="itemUrl"></param>
 		/// <returns>
 		/// A list of Favorite Folders specified by this user
 		/// </returns>
-		IQuery<FavoriteFolder> GetByUser(Uri url, string userid);
+		IQuery<FavoriteFolder> GetByUser(Uri itemUrl, string userid);
 		/// <summary>
 		/// Get FavoriteFolder
 		/// </summary>
 		/// <remarks>
 		/// Retrieve a single Favorite Folder from a give user
 		/// </remarks>
-		/// <param name="userid"></param>
-		/// <param name="itemid"></param>
 		/// <returns>
 		/// The selected Favorite Folder
 		/// </returns>
-		IQuery<FavoriteFolder> Get(Uri url);
+		IQuery<FavoriteFolder> Get(Uri resourceUrl);
 		/// <summary>
 		/// Create FavoriteFolder
 		/// </summary>
@@ -68,7 +66,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Adds an existing folder to the list of favorites of a given user.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="folder"></param>
 		/// <returns>
 		/// A new FavoriteFolder record
@@ -80,10 +78,10 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Removes a favorite folder from a user's list.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="itemid"></param>
 		IQuery Delete(Uri url, string itemid);
-		IQuery DeleteByUser(Uri url, string itemId);
+		IQuery DeleteByUser(Uri resourceUrl, string itemId);
 	}
 
 	public class FavoriteFoldersEntity : EntityBase, IFavoriteFoldersEntity
@@ -101,7 +99,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrieves the list of Favorite folders for a given user.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// A list of Favorite Folders specified by this user
 		/// </returns>
@@ -121,15 +119,15 @@ namespace ShareFile.Api.Client.Entities
 		/// Retrieves a single Favorite Folder
 		/// </remarks>
 		/// <param name="userid"></param>
-		/// <param name="itemid"></param>
+		/// <param name="itemUrl"></param>
 		/// <returns>
 		/// A list of Favorite Folders specified by this user
 		/// </returns>
-		public IQuery<FavoriteFolder> GetByUser(Uri url, string userid)
+		public IQuery<FavoriteFolder> GetByUser(Uri itemUrl, string userid)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<FavoriteFolder>(Client);
 			sfApiQuery.Action("FavoriteFolders");
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(itemUrl);
 			sfApiQuery.ActionIds(userid);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
@@ -141,15 +139,13 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrieve a single Favorite Folder from a give user
 		/// </remarks>
-		/// <param name="userid"></param>
-		/// <param name="itemid"></param>
 		/// <returns>
 		/// The selected Favorite Folder
 		/// </returns>
-		public IQuery<FavoriteFolder> Get(Uri url)
+		public IQuery<FavoriteFolder> Get(Uri resourceUrl)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<FavoriteFolder>(Client);
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(resourceUrl);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -166,7 +162,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Adds an existing folder to the list of favorites of a given user.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="folder"></param>
 		/// <returns>
 		/// A new FavoriteFolder record
@@ -187,7 +183,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Removes a favorite folder from a user's list.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="itemid"></param>
 		public IQuery Delete(Uri url, string itemid)
 		{
@@ -199,11 +195,11 @@ namespace ShareFile.Api.Client.Entities
 			return sfApiQuery;
 		}
 
-		public IQuery DeleteByUser(Uri url, string itemId)
+		public IQuery DeleteByUser(Uri resourceUrl, string itemId)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 			sfApiQuery.Action("FavoriteFolders");
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(resourceUrl);
 			sfApiQuery.ActionIds(itemId);
 			sfApiQuery.HttpMethod = "DELETE";
 			return sfApiQuery;

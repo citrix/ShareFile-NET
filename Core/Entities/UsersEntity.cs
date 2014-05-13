@@ -141,7 +141,7 @@ namespace ShareFile.Api.Client.Entities
 		/// The following parameters can be modified through this call: FirstName, LastName, Company,
 		/// Email, IsDisabled, DefaultZone Id
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="user"></param>
 		/// <returns>
 		/// a modified user record
@@ -166,12 +166,12 @@ namespace ShareFile.Api.Client.Entities
 		/// CanChangePassword,
 		/// CanManageMySettings
 		/// </remarks>
-		/// <param name="parentid"></param>
+		/// <param name="parentUrl"></param>
 		/// <param name="user"></param>
 		/// <returns>
 		/// a modified user record
 		/// </returns>
-		IQuery<User> UpdateRoles(Uri url, User user);
+		IQuery<User> UpdateRoles(Uri parentUrl, User user);
 		/// <summary>
 		/// Set Roles
 		/// </summary>
@@ -191,12 +191,12 @@ namespace ShareFile.Api.Client.Entities
 		/// CanChangePassword,
 		/// CanManageMySettings
 		/// </remarks>
-		/// <param name="parentid"></param>
+		/// <param name="parentUrl"></param>
 		/// <param name="user"></param>
 		/// <returns>
 		/// a modified user record
 		/// </returns>
-		IQuery<User> PatchRoles(Uri url, User user);
+		IQuery<User> PatchRoles(Uri parentUrl, User user);
 		/// <summary>
 		/// Update Employee or Promote Customer
 		/// </summary>
@@ -235,13 +235,13 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Returns a user's home folder
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// A folder record representing the requesting user home folder
 		/// </returns>
 		IQuery<Item> GetHomeFolder(Uri url);
-		IQuery<ODataFeed<Item>> TopFolders(Uri url);
-		IQuery<ODataFeed<Item>> Box(Uri url);
+		IQuery<ODataFeed<Item>> TopFolders(Uri resourceUrl);
+		IQuery<ODataFeed<Item>> Box(Uri resourceUrl);
 		/// <summary>
 		/// Get User Preferences
 		/// </summary>
@@ -249,7 +249,7 @@ namespace ShareFile.Api.Client.Entities
 		/// Retrieves the User preferences record - all user-selected prefernces, such as timezone,
 		/// time format, sort preferences, etc.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// the user selected preferences
 		/// </returns>
@@ -271,7 +271,7 @@ namespace ShareFile.Api.Client.Entities
 		/// Resets a user password. A user can reset his own password providing the old and new
 		/// passwords. Administrators can issue this call without providing the old password.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="properties"></param>
 		/// <param name="notify"></param>
 		/// <returns>
@@ -284,7 +284,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Resends the 'welcome' email to the given user
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		IQuery ResendWelcome(Uri url);
 		/// <summary>
 		/// Delete User
@@ -292,7 +292,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Removes an user
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="completely"></param>
 		IQuery Delete(Uri url, bool completely = false);
 		/// <summary>
@@ -530,7 +530,7 @@ namespace ShareFile.Api.Client.Entities
 		/// The following parameters can be modified through this call: FirstName, LastName, Company,
 		/// Email, IsDisabled, DefaultZone Id
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="user"></param>
 		/// <returns>
 		/// a modified user record
@@ -563,16 +563,16 @@ namespace ShareFile.Api.Client.Entities
 		/// CanChangePassword,
 		/// CanManageMySettings
 		/// </remarks>
-		/// <param name="parentid"></param>
+		/// <param name="parentUrl"></param>
 		/// <param name="user"></param>
 		/// <returns>
 		/// a modified user record
 		/// </returns>
-		public IQuery<User> UpdateRoles(Uri url, User user)
+		public IQuery<User> UpdateRoles(Uri parentUrl, User user)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<User>(Client);
 			sfApiQuery.Action("Roles");
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(parentUrl);
 			sfApiQuery.Body = user;
 			sfApiQuery.HttpMethod = "PATCH";
 			return sfApiQuery;
@@ -597,16 +597,16 @@ namespace ShareFile.Api.Client.Entities
 		/// CanChangePassword,
 		/// CanManageMySettings
 		/// </remarks>
-		/// <param name="parentid"></param>
+		/// <param name="parentUrl"></param>
 		/// <param name="user"></param>
 		/// <returns>
 		/// a modified user record
 		/// </returns>
-		public IQuery<User> PatchRoles(Uri url, User user)
+		public IQuery<User> PatchRoles(Uri parentUrl, User user)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<User>(Client);
 			sfApiQuery.Action("Roles");
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(parentUrl);
 			sfApiQuery.Body = user;
 			sfApiQuery.HttpMethod = "PUT";
 			return sfApiQuery;
@@ -660,7 +660,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Returns a user's home folder
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// A folder record representing the requesting user home folder
 		/// </returns>
@@ -673,20 +673,20 @@ namespace ShareFile.Api.Client.Entities
 			return sfApiQuery;
 		}
 
-		public IQuery<ODataFeed<Item>> TopFolders(Uri url)
+		public IQuery<ODataFeed<Item>> TopFolders(Uri resourceUrl)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
 			sfApiQuery.Action("TopFolders");
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(resourceUrl);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
 
-		public IQuery<ODataFeed<Item>> Box(Uri url)
+		public IQuery<ODataFeed<Item>> Box(Uri resourceUrl)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
 			sfApiQuery.Action("Box");
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(resourceUrl);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -698,7 +698,7 @@ namespace ShareFile.Api.Client.Entities
 		/// Retrieves the User preferences record - all user-selected prefernces, such as timezone,
 		/// time format, sort preferences, etc.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// the user selected preferences
 		/// </returns>
@@ -728,7 +728,7 @@ namespace ShareFile.Api.Client.Entities
 		/// Resets a user password. A user can reset his own password providing the old and new
 		/// passwords. Administrators can issue this call without providing the old password.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="properties"></param>
 		/// <param name="notify"></param>
 		/// <returns>
@@ -751,7 +751,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Resends the 'welcome' email to the given user
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		public IQuery ResendWelcome(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
@@ -767,7 +767,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Removes an user
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="completely"></param>
 		public IQuery Delete(Uri url, bool completely = false)
 		{

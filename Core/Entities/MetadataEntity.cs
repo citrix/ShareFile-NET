@@ -31,19 +31,17 @@ namespace ShareFile.Api.Client.Entities
 		/// Current routing doesn't support the URI to retrieve a single Metadata enntry since it is aliased with the GetByItem feed.
 		/// So for now we support only the same syntax as for AccessControls, i.e. .../Metadata(name=name,itemid=itemid)
 		/// </remarks>
-		/// <param name="name"></param>
-		/// <param name="itemid"></param>
 		/// <returns>
 		/// A single Metadata object matching the query
 		/// </returns>
-		IQuery<Metadata> Get(Uri url);
+		IQuery<Metadata> Get(Uri resourceUrl);
 		/// <summary>
 		/// Get Metadata List By Item
 		/// </summary>
 		/// <remarks>
 		/// Retrieves the Metadata List for a given Item.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// The Metadata list of the given object ID.
 		/// </returns>
@@ -60,7 +58,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Creates a single Metadata entry that has a specified Name for a given Item. Fails if an entry with the given name already exists for this Item.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// The created Metadata object
 		/// </returns>
@@ -76,7 +74,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Updates a single Metadata entry that has a specified Name for a given Item. Fails if an entry with the given name doesn't exist for this Item.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="metadataId"></param>
 		/// <returns>
 		/// The updated Metadata object
@@ -93,19 +91,17 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Updates a single Metadata entry that has a specified Name for a given Item. Fails if an entry with the given name doesn't exist for this Item.
 		/// </remarks>
-		/// <param name="name"></param>
-		/// <param name="itemid"></param>
 		/// <returns>
 		/// The updated Metadata object
 		/// </returns>
-		IQuery<Metadata> Update(Uri url, Metadata metadata);
+		IQuery<Metadata> Update(Uri resourceUrl, Metadata metadata);
 		/// <summary>
 		/// Delete Metadata
 		/// </summary>
 		/// <remarks>
 		/// Deletes a single Metadata entry that has a specified Name for a given Item. Fails if an entry with the given name doesn't exist for this Item.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="metadataId"></param>
 		/// <returns>
 		/// (no data)
@@ -117,12 +113,10 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Deletes a single Metadata entry that has a specified Name for a given Item. Fails if an entry with the given name doesn't exist for this Item.
 		/// </remarks>
-		/// <param name="name"></param>
-		/// <param name="itemid"></param>
 		/// <returns>
 		/// (no data)
 		/// </returns>
-		IQuery Delete(Uri url);
+		IQuery Delete(Uri resourceUrl);
 	}
 
 	public class MetadataEntity : EntityBase, IMetadataEntity
@@ -144,15 +138,13 @@ namespace ShareFile.Api.Client.Entities
 		/// Current routing doesn't support the URI to retrieve a single Metadata enntry since it is aliased with the GetByItem feed.
 		/// So for now we support only the same syntax as for AccessControls, i.e. .../Metadata(name=name,itemid=itemid)
 		/// </remarks>
-		/// <param name="name"></param>
-		/// <param name="itemid"></param>
 		/// <returns>
 		/// A single Metadata object matching the query
 		/// </returns>
-		public IQuery<Metadata> Get(Uri url)
+		public IQuery<Metadata> Get(Uri resourceUrl)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Metadata>(Client);
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(resourceUrl);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -163,7 +155,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrieves the Metadata List for a given Item.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// The Metadata list of the given object ID.
 		/// </returns>
@@ -188,7 +180,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Creates a single Metadata entry that has a specified Name for a given Item. Fails if an entry with the given name already exists for this Item.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// The created Metadata object
 		/// </returns>
@@ -213,7 +205,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Updates a single Metadata entry that has a specified Name for a given Item. Fails if an entry with the given name doesn't exist for this Item.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="metadataId"></param>
 		/// <returns>
 		/// The updated Metadata object
@@ -240,15 +232,13 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Updates a single Metadata entry that has a specified Name for a given Item. Fails if an entry with the given name doesn't exist for this Item.
 		/// </remarks>
-		/// <param name="name"></param>
-		/// <param name="itemid"></param>
 		/// <returns>
 		/// The updated Metadata object
 		/// </returns>
-		public IQuery<Metadata> Update(Uri url, Metadata metadata)
+		public IQuery<Metadata> Update(Uri resourceUrl, Metadata metadata)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Metadata>(Client);
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(resourceUrl);
 			sfApiQuery.Body = metadata;
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
@@ -260,7 +250,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Deletes a single Metadata entry that has a specified Name for a given Item. Fails if an entry with the given name doesn't exist for this Item.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="metadataId"></param>
 		/// <returns>
 		/// (no data)
@@ -281,15 +271,13 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Deletes a single Metadata entry that has a specified Name for a given Item. Fails if an entry with the given name doesn't exist for this Item.
 		/// </remarks>
-		/// <param name="name"></param>
-		/// <param name="itemid"></param>
 		/// <returns>
 		/// (no data)
 		/// </returns>
-		public IQuery Delete(Uri url)
+		public IQuery Delete(Uri resourceUrl)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(resourceUrl);
 			sfApiQuery.HttpMethod = "DELETE";
 			return sfApiQuery;
 		}

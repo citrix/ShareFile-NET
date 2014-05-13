@@ -49,7 +49,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The list of public and private zones accessible to this user
 		/// </returns>
-		IQuery<Zone> Get(Uri url, bool secret = false);
+		IQuery<Zone> Get(Uri resourceUrl, bool secret = false);
 		/// <summary>
 		/// Create Zone
 		/// </summary>
@@ -80,7 +80,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Updates an existing zone
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="zone"></param>
 		/// <returns>
 		/// The modified zone
@@ -92,7 +92,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Removes an existing zone
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="force"></param>
 		IQuery Delete(Uri url, bool force = false);
 		/// <summary>
@@ -104,7 +104,7 @@ namespace ShareFile.Api.Client.Entities
 		/// is also updated.
 		/// User must be a Zone admin to perform this action
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// The modified Zone object
 		/// </returns>
@@ -115,7 +115,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Gets metadata associated with the specified zone
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// the zone metadata feed
 		/// </returns>
@@ -133,7 +133,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Creates or updates Metadata entries associated with the specified zone
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="metadata"></param>
 		/// <returns>
 		/// the zone metadata feed
@@ -145,7 +145,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Delete the Metadata entry associated with the specified zone
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="name"></param>
 		/// <returns>
 		/// no data on success
@@ -198,10 +198,10 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The list of public and private zones accessible to this user
 		/// </returns>
-		public IQuery<Zone> Get(Uri url, bool secret = false)
+		public IQuery<Zone> Get(Uri resourceUrl, bool secret = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Zone>(Client);
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(resourceUrl);
 			sfApiQuery.QueryString("secret", secret);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
@@ -245,7 +245,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Updates an existing zone
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="zone"></param>
 		/// <returns>
 		/// The modified zone
@@ -265,7 +265,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Removes an existing zone
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="force"></param>
 		public IQuery Delete(Uri url, bool force = false)
 		{
@@ -285,7 +285,7 @@ namespace ShareFile.Api.Client.Entities
 		/// is also updated.
 		/// User must be a Zone admin to perform this action
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// The modified Zone object
 		/// </returns>
@@ -304,7 +304,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Gets metadata associated with the specified zone
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// the zone metadata feed
 		/// </returns>
@@ -330,7 +330,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Creates or updates Metadata entries associated with the specified zone
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="metadata"></param>
 		/// <returns>
 		/// the zone metadata feed
@@ -351,7 +351,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Delete the Metadata entry associated with the specified zone
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="name"></param>
 		/// <returns>
 		/// no data on success

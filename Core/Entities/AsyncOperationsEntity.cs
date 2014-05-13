@@ -27,7 +27,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrieve a single Async Op record by ID
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// A single Async Operation record
 		/// </returns>
@@ -61,7 +61,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Cancels a single Async operation record
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// The modified Async Operation record
 		/// </returns>
@@ -72,7 +72,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Cancels a single Async operation record (same as /Cancel)
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		IQuery Delete(Uri url);
 		/// <summary>
 		/// Cancel an Operation Batch
@@ -95,7 +95,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Only the State parameter is updated, other fields are ignored
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="newAsyncOp"></param>
 		/// <returns>
 		/// The modified Async Operation
@@ -118,7 +118,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrieve a single Async Op record by ID
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// A single Async Operation record
 		/// </returns>
@@ -177,7 +177,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Cancels a single Async operation record
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// The modified Async Operation record
 		/// </returns>
@@ -196,7 +196,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Cancels a single Async operation record (same as /Cancel)
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		public IQuery Delete(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
@@ -235,7 +235,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Only the State parameter is updated, other fields are ignored
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="newAsyncOp"></param>
 		/// <returns>
 		/// The modified Async Operation

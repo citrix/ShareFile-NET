@@ -38,7 +38,7 @@ namespace ShareFile.Api.Client.Entities
 		/// Retrieve a single Share entity. If the Share allows anonymous access, then this method will not
 		/// require authentication.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// A single Share
 		/// </returns>
@@ -52,7 +52,7 @@ namespace ShareFile.Api.Client.Entities
 		/// identified by an Alias, which is an unique ID given to each user - allowing tracking of downloads for
 		/// non-authenticated users.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// A feed of Share Aliases representing recipients of the Share
 		/// </returns>
@@ -63,7 +63,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrieve the list of Items (files and folders) in the Share.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// A feed of Items of the Share
 		/// </returns>
@@ -74,12 +74,12 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrieve a single Item in the Share
 		/// </remarks>
-		/// <param name="shareid"></param>
+		/// <param name="shareUrl"></param>
 		/// <param name="itemid"></param>
 		/// <returns>
 		/// An item in the Share
 		/// </returns>
-		IQuery<Item> GetItems(Uri url, string itemid);
+		IQuery<Item> GetItems(Uri shareUrl, string itemid);
 		/// <summary>
 		/// Downloads Share Items
 		/// </summary>
@@ -93,7 +93,7 @@ namespace ShareFile.Api.Client.Entities
 		/// item ID must be a top-level item in the Share - i.e., you cannot download or address files contained inside
 		/// a shared folder.
 		/// </remarks>
-		/// <param name="shareId"></param>
+		/// <param name="shareUrl"></param>
 		/// <param name="Name"></param>
 		/// <param name="Email"></param>
 		/// <param name="Company"></param>
@@ -101,7 +101,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// Redirects the caller (302) to the download address for the share contents.
 		/// </returns>
-		IQuery<Stream> Download(Uri url, string id, string Name = null, string Email = null, string Company = null, bool redirect = true);
+		IQuery<Stream> Download(Uri shareUrl, string id, string Name = null, string Email = null, string Company = null, bool redirect = true);
 		/// <summary>
 		/// Create Share
 		/// </summary>
@@ -158,7 +158,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Modifies an existing Share. If Items are specified they are added to the share.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="share"></param>
 		/// <returns>
 		/// The modified Share
@@ -170,7 +170,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Removes an existing Share
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		IQuery Delete(Uri url);
 		/// <summary>
 		/// Create Share Alias
@@ -181,7 +181,7 @@ namespace ShareFile.Api.Client.Entities
 		/// For shares requiring login an activation email is sent to the created user. If 'notify' is enabled, the user activation is
 		/// included in the share notification email.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="email"></param>
 		/// <param name="notify"></param>
 		/// <returns>
@@ -248,7 +248,7 @@ namespace ShareFile.Api.Client.Entities
 		/// 200 with a Content Body of format 'ERROR:message'. Successful calls will return either a 200
 		/// response with no Body, or with Body of format 'OK'.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="method"></param>
 		/// <param name="raw"></param>
 		/// <param name="fileName"></param>
@@ -309,7 +309,7 @@ namespace ShareFile.Api.Client.Entities
 		/// Retrieve a single Share entity. If the Share allows anonymous access, then this method will not
 		/// require authentication.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// A single Share
 		/// </returns>
@@ -330,7 +330,7 @@ namespace ShareFile.Api.Client.Entities
 		/// identified by an Alias, which is an unique ID given to each user - allowing tracking of downloads for
 		/// non-authenticated users.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// A feed of Share Aliases representing recipients of the Share
 		/// </returns>
@@ -349,7 +349,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrieve the list of Items (files and folders) in the Share.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// A feed of Items of the Share
 		/// </returns>
@@ -368,16 +368,16 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrieve a single Item in the Share
 		/// </remarks>
-		/// <param name="shareid"></param>
+		/// <param name="shareUrl"></param>
 		/// <param name="itemid"></param>
 		/// <returns>
 		/// An item in the Share
 		/// </returns>
-		public IQuery<Item> GetItems(Uri url, string itemid)
+		public IQuery<Item> GetItems(Uri shareUrl, string itemid)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
 			sfApiQuery.Action("Items");
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(shareUrl);
 			sfApiQuery.ActionIds(itemid);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
@@ -396,7 +396,7 @@ namespace ShareFile.Api.Client.Entities
 		/// item ID must be a top-level item in the Share - i.e., you cannot download or address files contained inside
 		/// a shared folder.
 		/// </remarks>
-		/// <param name="shareId"></param>
+		/// <param name="shareUrl"></param>
 		/// <param name="Name"></param>
 		/// <param name="Email"></param>
 		/// <param name="Company"></param>
@@ -404,11 +404,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// Redirects the caller (302) to the download address for the share contents.
 		/// </returns>
-		public IQuery<Stream> Download(Uri url, string id, string Name = null, string Email = null, string Company = null, bool redirect = true)
+		public IQuery<Stream> Download(Uri shareUrl, string id, string Name = null, string Email = null, string Company = null, bool redirect = true)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
 			sfApiQuery.Action("Download");
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(shareUrl);
 			sfApiQuery.QueryString("id", id);
 			sfApiQuery.QueryString("Name", Name);
 			sfApiQuery.QueryString("Email", Email);
@@ -483,7 +483,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Modifies an existing Share. If Items are specified they are added to the share.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="share"></param>
 		/// <returns>
 		/// The modified Share
@@ -503,7 +503,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Removes an existing Share
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		public IQuery Delete(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
@@ -521,7 +521,7 @@ namespace ShareFile.Api.Client.Entities
 		/// For shares requiring login an activation email is sent to the created user. If 'notify' is enabled, the user activation is
 		/// included in the share notification email.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="email"></param>
 		/// <param name="notify"></param>
 		/// <returns>
@@ -616,7 +616,7 @@ namespace ShareFile.Api.Client.Entities
 		/// 200 with a Content Body of format 'ERROR:message'. Successful calls will return either a 200
 		/// response with no Body, or with Body of format 'OK'.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="method"></param>
 		/// <param name="raw"></param>
 		/// <param name="fileName"></param>

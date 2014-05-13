@@ -39,7 +39,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Returns a single Item
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="includeDeleted"></param>
 		/// <returns>
 		/// a single Item
@@ -56,7 +56,7 @@ namespace ShareFile.Api.Client.Entities
 		/// operator will apply to the expanded objects as well. You can also specify additional
 		/// $select elements.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="treeMode"></param>
 		/// <param name="sourceId"></param>
 		/// <param name="canCreateRootFolder"></param>
@@ -75,7 +75,7 @@ namespace ShareFile.Api.Client.Entities
 		/// is created with the same StreamID. All default Item enumerations return only the latest version of a given stream.
 		/// Use this method to retrieve previous versions of a given stream
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="includeDeleted"></param>
 		IQuery<ODataFeed<Item>> Stream(Uri url, bool includeDeleted = false);
 		/// <summary>
@@ -100,7 +100,7 @@ namespace ShareFile.Api.Client.Entities
 		/// This call may redirect the client to another API provider, if the path
 		/// contains a symbolic link.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="path"></param>
 		/// <returns>
 		/// An item identified by a path
@@ -112,7 +112,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrieves the Parent navigation property of a single Item.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// the Parent Item of the give object ID.
 		/// </returns>
@@ -125,7 +125,7 @@ namespace ShareFile.Api.Client.Entities
 		/// A 302 redirection is returned if the folder is a SymbolicLink. The redirection
 		/// will enumerate the children of the remote connector
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// the list of children under the given object ID
 		/// </returns>
@@ -137,7 +137,7 @@ namespace ShareFile.Api.Client.Entities
 		/// Returns the effective Access Controls for the current authenticated user for the
 		/// selected folder - i.e., the resulting set of Access Controls for the Item/User context.This operation applies to Folders only, will return an error for other Item types.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// The Folder Access Control Information
 		/// </returns>
@@ -150,7 +150,7 @@ namespace ShareFile.Api.Client.Entities
 		/// actual download link. For Folders, the download link will retrieve a ZIP archive
 		/// with the contents of the Folder.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="redirect"></param>
 		/// <returns>
 		/// the download link for the provided item content.
@@ -173,14 +173,14 @@ namespace ShareFile.Api.Client.Entities
 		/// The Zone object may only be provided for top-level folders. The Zone object must
 		/// contain a zone ID.
 		/// </remarks>
-		/// <param name="parentid"></param>
+		/// <param name="parentUrl"></param>
 		/// <param name="folder"></param>
 		/// <param name="overwrite"></param>
 		/// <param name="passthrough"></param>
 		/// <returns>
 		/// the new Folder
 		/// </returns>
-		IQuery<Folder> CreateFolder(Uri url, Folder folder, bool overwrite = false, bool passthrough = false);
+		IQuery<Folder> CreateFolder(Uri parentUrl, Folder folder, bool overwrite = false, bool passthrough = false);
 		/// <summary>
 		/// Create Note
 		/// </summary>
@@ -193,12 +193,12 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Creates a new Note.
 		/// </remarks>
-		/// <param name="parentid"></param>
+		/// <param name="parentUrl"></param>
 		/// <param name="note"></param>
 		/// <returns>
 		/// the new Note
 		/// </returns>
-		IQuery<Note> CreateNote(Uri url, Note note);
+		IQuery<Note> CreateNote(Uri parentUrl, Note note);
 		/// <summary>
 		/// Create Link
 		/// </summary>
@@ -212,12 +212,12 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Creates a new Link
 		/// </remarks>
-		/// <param name="parentid"></param>
+		/// <param name="parentUrl"></param>
 		/// <param name="link"></param>
 		/// <returns>
 		/// the new Link
 		/// </returns>
-		IQuery<Link> CreateLink(Uri url, Link link);
+		IQuery<Link> CreateLink(Uri parentUrl, Link link);
 		/// <summary>
 		/// Create SymbolicLink
 		/// </summary>
@@ -242,13 +242,13 @@ namespace ShareFile.Api.Client.Entities
 		/// Items/ByPath=name, retriving the resulting URL, and calling this method with the
 		/// Link parameter.SymbolicLinks must be created as top-level folders
 		/// </remarks>
-		/// <param name="parentid"></param>
+		/// <param name="parentUrl"></param>
 		/// <param name="symlink"></param>
 		/// <param name="overwrite"></param>
 		/// <returns>
 		/// the new SymbolicLink
 		/// </returns>
-		IQuery<SymbolicLink> CreateSymbolicLink(Uri url, SymbolicLink symlink, bool overwrite = false);
+		IQuery<SymbolicLink> CreateSymbolicLink(Uri parentUrl, SymbolicLink symlink, bool overwrite = false);
 		/// <summary>
 		/// Update Item
 		/// </summary>
@@ -265,7 +265,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Updates an Item object
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="item"></param>
 		/// <param name="forceSync"></param>
 		/// <returns>
@@ -288,7 +288,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Updates a Link object
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="link"></param>
 		/// <param name="notify"></param>
 		/// <returns>
@@ -308,7 +308,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Updates a Note object
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="note"></param>
 		/// <param name="notify"></param>
 		/// <returns>
@@ -328,13 +328,13 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Updates a Symbolic Link object
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="symlink"></param>
 		/// <returns>
 		/// The modified SymbolicLink object
 		/// </returns>
 		IQuery<SymbolicLink> UpdateSymbolicLink(Uri url, SymbolicLink symlink);
-		IQuery Delete(Uri url, bool singleversion = false, bool forceSync = false);
+		IQuery Delete(Uri resourceUrl, bool singleversion = false, bool forceSync = false);
 		/// <summary>
 		/// Delete Multiple Items
 		/// </summary>
@@ -346,8 +346,8 @@ namespace ShareFile.Api.Client.Entities
 		/// </remarks>
 		/// <param name="id"></param>
 		/// <param name="body"></param>
-		IQuery BulkDelete(Uri url, IEnumerable<string> ids, bool forceSync = false);
-		IQuery<Stream> GetThumbnail(Uri url, int size = 75, bool redirect = false);
+		IQuery BulkDelete(Uri resourceUrl, IEnumerable<string> ids, bool forceSync = false);
+		IQuery<Stream> GetThumbnail(Uri resourceUrl, int size = 75, bool redirect = false);
 		/// <summary>
 		/// Get Breadcrumbs
 		/// </summary>
@@ -356,7 +356,7 @@ namespace ShareFile.Api.Client.Entities
 		/// folder at the first position. If this item is in a Connection path, the breadcrumbs may contain URL
 		/// reference back to the parent account - and the Item in the feed will contain just the URL reference.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="path"></param>
 		/// <returns>
 		/// A feed containing the path of folders from the specified root to the item, in order
@@ -370,7 +370,7 @@ namespace ShareFile.Api.Client.Entities
 		/// return an AsyncOperation record instead. Clients may query the /AsyncOperation Entity to determine
 		/// operation progress and result.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="targetid"></param>
 		/// <param name="overwrite"></param>
 		/// <returns>
@@ -419,7 +419,7 @@ namespace ShareFile.Api.Client.Entities
 		/// 200 with a Content Body of format 'ERROR:message'. Successful calls will return either a 200
 		/// response with no Body, or with Body of format 'OK'.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="method"></param>
 		/// <param name="raw"></param>
 		/// <param name="fileName"></param>
@@ -454,7 +454,7 @@ namespace ShareFile.Api.Client.Entities
 		/// Unlock a locked file.
 		/// This operation is only implemented in Sharepoint providers (/sp)
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="message"></param>
 		IQuery CheckIn(Uri url, string message);
 		/// <summary>
@@ -464,7 +464,7 @@ namespace ShareFile.Api.Client.Entities
 		/// Locks a file.
 		/// This operation is only implemented in Sharepoint providers (/sp)
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		IQuery CheckOut(Uri url);
 		/// <summary>
 		/// Search
@@ -488,11 +488,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A Feed containing all protocols links supported by the given item
 		/// </returns>
-		IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(Uri url);
+		IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(Uri resourceUrl);
 		/// <summary>
 		/// Get an Item Protocol Link
 		/// </summary>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="protocol"></param>
 		/// <returns>
 		/// A single protocol link if supported, 404 (Not Found) if not supported by the item
@@ -534,7 +534,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Returns a single Item
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="includeDeleted"></param>
 		/// <returns>
 		/// a single Item
@@ -559,7 +559,7 @@ namespace ShareFile.Api.Client.Entities
 		/// operator will apply to the expanded objects as well. You can also specify additional
 		/// $select elements.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="treeMode"></param>
 		/// <param name="sourceId"></param>
 		/// <param name="canCreateRootFolder"></param>
@@ -589,7 +589,7 @@ namespace ShareFile.Api.Client.Entities
 		/// is created with the same StreamID. All default Item enumerations return only the latest version of a given stream.
 		/// Use this method to retrieve previous versions of a given stream
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="includeDeleted"></param>
 		public IQuery<ODataFeed<Item>> Stream(Uri url, bool includeDeleted = false)
 		{
@@ -632,7 +632,7 @@ namespace ShareFile.Api.Client.Entities
 		/// This call may redirect the client to another API provider, if the path
 		/// contains a symbolic link.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="path"></param>
 		/// <returns>
 		/// An item identified by a path
@@ -653,7 +653,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrieves the Parent navigation property of a single Item.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// the Parent Item of the give object ID.
 		/// </returns>
@@ -674,7 +674,7 @@ namespace ShareFile.Api.Client.Entities
 		/// A 302 redirection is returned if the folder is a SymbolicLink. The redirection
 		/// will enumerate the children of the remote connector
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// the list of children under the given object ID
 		/// </returns>
@@ -694,7 +694,7 @@ namespace ShareFile.Api.Client.Entities
 		/// Returns the effective Access Controls for the current authenticated user for the
 		/// selected folder - i.e., the resulting set of Access Controls for the Item/User context.This operation applies to Folders only, will return an error for other Item types.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// The Folder Access Control Information
 		/// </returns>
@@ -715,7 +715,7 @@ namespace ShareFile.Api.Client.Entities
 		/// actual download link. For Folders, the download link will retrieve a ZIP archive
 		/// with the contents of the Folder.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="redirect"></param>
 		/// <returns>
 		/// the download link for the provided item content.
@@ -747,18 +747,18 @@ namespace ShareFile.Api.Client.Entities
 		/// The Zone object may only be provided for top-level folders. The Zone object must
 		/// contain a zone ID.
 		/// </remarks>
-		/// <param name="parentid"></param>
+		/// <param name="parentUrl"></param>
 		/// <param name="folder"></param>
 		/// <param name="overwrite"></param>
 		/// <param name="passthrough"></param>
 		/// <returns>
 		/// the new Folder
 		/// </returns>
-		public IQuery<Folder> CreateFolder(Uri url, Folder folder, bool overwrite = false, bool passthrough = false)
+		public IQuery<Folder> CreateFolder(Uri parentUrl, Folder folder, bool overwrite = false, bool passthrough = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Folder>(Client);
 			sfApiQuery.Action("Folder");
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(parentUrl);
 			sfApiQuery.QueryString("overwrite", overwrite);
 			sfApiQuery.QueryString("passthrough", passthrough);
 			sfApiQuery.Body = folder;
@@ -778,16 +778,16 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Creates a new Note.
 		/// </remarks>
-		/// <param name="parentid"></param>
+		/// <param name="parentUrl"></param>
 		/// <param name="note"></param>
 		/// <returns>
 		/// the new Note
 		/// </returns>
-		public IQuery<Note> CreateNote(Uri url, Note note)
+		public IQuery<Note> CreateNote(Uri parentUrl, Note note)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Note>(Client);
 			sfApiQuery.Action("Note");
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(parentUrl);
 			sfApiQuery.Body = note;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
@@ -806,16 +806,16 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Creates a new Link
 		/// </remarks>
-		/// <param name="parentid"></param>
+		/// <param name="parentUrl"></param>
 		/// <param name="link"></param>
 		/// <returns>
 		/// the new Link
 		/// </returns>
-		public IQuery<Link> CreateLink(Uri url, Link link)
+		public IQuery<Link> CreateLink(Uri parentUrl, Link link)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Link>(Client);
 			sfApiQuery.Action("Link");
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(parentUrl);
 			sfApiQuery.Body = link;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
@@ -845,17 +845,17 @@ namespace ShareFile.Api.Client.Entities
 		/// Items/ByPath=name, retriving the resulting URL, and calling this method with the
 		/// Link parameter.SymbolicLinks must be created as top-level folders
 		/// </remarks>
-		/// <param name="parentid"></param>
+		/// <param name="parentUrl"></param>
 		/// <param name="symlink"></param>
 		/// <param name="overwrite"></param>
 		/// <returns>
 		/// the new SymbolicLink
 		/// </returns>
-		public IQuery<SymbolicLink> CreateSymbolicLink(Uri url, SymbolicLink symlink, bool overwrite = false)
+		public IQuery<SymbolicLink> CreateSymbolicLink(Uri parentUrl, SymbolicLink symlink, bool overwrite = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<SymbolicLink>(Client);
 			sfApiQuery.Action("SymbolicLink");
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(parentUrl);
 			sfApiQuery.QueryString("overwrite", overwrite);
 			sfApiQuery.Body = symlink;
 			sfApiQuery.HttpMethod = "POST";
@@ -878,7 +878,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Updates an Item object
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="item"></param>
 		/// <param name="forceSync"></param>
 		/// <returns>
@@ -913,7 +913,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Updates a Link object
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="link"></param>
 		/// <param name="notify"></param>
 		/// <returns>
@@ -943,7 +943,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Updates a Note object
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="note"></param>
 		/// <param name="notify"></param>
 		/// <returns>
@@ -973,7 +973,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Updates a Symbolic Link object
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="symlink"></param>
 		/// <returns>
 		/// The modified SymbolicLink object
@@ -988,10 +988,10 @@ namespace ShareFile.Api.Client.Entities
 			return sfApiQuery;
 		}
 
-		public IQuery Delete(Uri url, bool singleversion = false, bool forceSync = false)
+		public IQuery Delete(Uri resourceUrl, bool singleversion = false, bool forceSync = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(resourceUrl);
 			sfApiQuery.QueryString("singleversion", singleversion);
 			sfApiQuery.QueryString("forceSync", forceSync);
 			sfApiQuery.HttpMethod = "DELETE";
@@ -1009,22 +1009,22 @@ namespace ShareFile.Api.Client.Entities
 		/// </remarks>
 		/// <param name="id"></param>
 		/// <param name="body"></param>
-		public IQuery BulkDelete(Uri url, IEnumerable<string> ids, bool forceSync = false)
+		public IQuery BulkDelete(Uri resourceUrl, IEnumerable<string> ids, bool forceSync = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 			sfApiQuery.Action("BulkDelete");
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(resourceUrl);
 			sfApiQuery.QueryString("ids", ids);
 			sfApiQuery.QueryString("forceSync", forceSync);
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}
 
-		public IQuery<Stream> GetThumbnail(Uri url, int size = 75, bool redirect = false)
+		public IQuery<Stream> GetThumbnail(Uri resourceUrl, int size = 75, bool redirect = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
 			sfApiQuery.Action("Thumbnail");
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(resourceUrl);
 			sfApiQuery.QueryString("size", size);
 			sfApiQuery.QueryString("redirect", redirect);
 			sfApiQuery.HttpMethod = "GET";
@@ -1039,7 +1039,7 @@ namespace ShareFile.Api.Client.Entities
 		/// folder at the first position. If this item is in a Connection path, the breadcrumbs may contain URL
 		/// reference back to the parent account - and the Item in the feed will contain just the URL reference.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="path"></param>
 		/// <returns>
 		/// A feed containing the path of folders from the specified root to the item, in order
@@ -1062,7 +1062,7 @@ namespace ShareFile.Api.Client.Entities
 		/// return an AsyncOperation record instead. Clients may query the /AsyncOperation Entity to determine
 		/// operation progress and result.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="targetid"></param>
 		/// <param name="overwrite"></param>
 		/// <returns>
@@ -1121,7 +1121,7 @@ namespace ShareFile.Api.Client.Entities
 		/// 200 with a Content Body of format 'ERROR:message'. Successful calls will return either a 200
 		/// response with no Body, or with Body of format 'OK'.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="method"></param>
 		/// <param name="raw"></param>
 		/// <param name="fileName"></param>
@@ -1186,7 +1186,7 @@ namespace ShareFile.Api.Client.Entities
 		/// Unlock a locked file.
 		/// This operation is only implemented in Sharepoint providers (/sp)
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="message"></param>
 		public IQuery CheckIn(Uri url, string message)
 		{
@@ -1205,7 +1205,7 @@ namespace ShareFile.Api.Client.Entities
 		/// Locks a file.
 		/// This operation is only implemented in Sharepoint providers (/sp)
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		public IQuery CheckOut(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
@@ -1246,11 +1246,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A Feed containing all protocols links supported by the given item
 		/// </returns>
-		public IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(Uri url)
+		public IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(Uri resourceUrl)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<ItemProtocolLink>>(Client);
 			sfApiQuery.Action("ProtocolLinks");
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(resourceUrl);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -1258,7 +1258,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <summary>
 		/// Get an Item Protocol Link
 		/// </summary>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="protocol"></param>
 		/// <returns>
 		/// A single protocol link if supported, 404 (Not Found) if not supported by the item

@@ -27,19 +27,17 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrieves a single Access Control entry for a given Item and Principal
 		/// </remarks>
-		/// <param name="principalid"></param>
-		/// <param name="itemid"></param>
 		/// <returns>
 		/// A single AccessControl object matching the query
 		/// </returns>
-		IQuery<AccessControl> Get(Uri url);
+		IQuery<AccessControl> Get(Uri resourceUrl);
 		/// <summary>
 		/// Get AccessControl List By Item
 		/// </summary>
 		/// <remarks>
 		/// Retrieves the Access Control List for a given Item.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// Access Control List of the given object ID.
 		/// </returns>
@@ -63,7 +61,7 @@ namespace ShareFile.Api.Client.Entities
 		/// which can be either a Group or User. The 'Principal' element is specified as an object - you should populate
 		/// either the URL or the ID reference.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="accessControl"></param>
 		/// <param name="recursive"></param>
 		/// <param name="message"></param>
@@ -90,7 +88,7 @@ namespace ShareFile.Api.Client.Entities
 		/// in the Body to identity the AccessControl element to be modified. You can provide an ID, Email or URL on the
 		/// Principal object.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="accessControl"></param>
 		/// <param name="recursive"></param>
 		/// <returns>
@@ -104,9 +102,7 @@ namespace ShareFile.Api.Client.Entities
 		/// Deletes an AccessControl entry by itemID and principalID. This method does not return any object, a 204 (No Content)
 		/// response indicates success.
 		/// </remarks>
-		/// <param name="principalid"></param>
-		/// <param name="itemid"></param>
-		IQuery Delete(Uri url);
+		IQuery Delete(Uri resourceUrl);
 	}
 
 	public class AccessControlsEntity : EntityBase, IAccessControlsEntity
@@ -124,15 +120,13 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrieves a single Access Control entry for a given Item and Principal
 		/// </remarks>
-		/// <param name="principalid"></param>
-		/// <param name="itemid"></param>
 		/// <returns>
 		/// A single AccessControl object matching the query
 		/// </returns>
-		public IQuery<AccessControl> Get(Uri url)
+		public IQuery<AccessControl> Get(Uri resourceUrl)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AccessControl>(Client);
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(resourceUrl);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -143,7 +137,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrieves the Access Control List for a given Item.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// Access Control List of the given object ID.
 		/// </returns>
@@ -175,7 +169,7 @@ namespace ShareFile.Api.Client.Entities
 		/// which can be either a Group or User. The 'Principal' element is specified as an object - you should populate
 		/// either the URL or the ID reference.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="accessControl"></param>
 		/// <param name="recursive"></param>
 		/// <param name="message"></param>
@@ -214,7 +208,7 @@ namespace ShareFile.Api.Client.Entities
 		/// in the Body to identity the AccessControl element to be modified. You can provide an ID, Email or URL on the
 		/// Principal object.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="accessControl"></param>
 		/// <param name="recursive"></param>
 		/// <returns>
@@ -238,12 +232,10 @@ namespace ShareFile.Api.Client.Entities
 		/// Deletes an AccessControl entry by itemID and principalID. This method does not return any object, a 204 (No Content)
 		/// response indicates success.
 		/// </remarks>
-		/// <param name="principalid"></param>
-		/// <param name="itemid"></param>
-		public IQuery Delete(Uri url)
+		public IQuery Delete(Uri resourceUrl)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(resourceUrl);
 			sfApiQuery.HttpMethod = "DELETE";
 			return sfApiQuery;
 		}

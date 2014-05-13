@@ -37,7 +37,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrives a single Group by id
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// A single Group object
 		/// </returns>
@@ -48,7 +48,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Removes a single Group by id
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		IQuery Delete(Uri url);
 		/// <summary>
 		/// Create Group
@@ -82,7 +82,7 @@ namespace ShareFile.Api.Client.Entities
 		/// This operation will ignore the provided clients list. Use the \Contacts navigation link to
 		/// add/remove elements from a group
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="group"></param>
 		/// <returns>
 		/// the modified group object
@@ -94,7 +94,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrieves the Contacts navigation property of a Group
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// A feed of Contacts representing the members of the Group
 		/// </returns>
@@ -109,7 +109,7 @@ namespace ShareFile.Api.Client.Entities
 		/// Adds a list of contacts to a group
 		/// The contact list may contain either contact ID (same as User ID) or Email.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="contacts"></param>
 		/// <returns>
 		/// The updated list of contacts for this group
@@ -129,7 +129,7 @@ namespace ShareFile.Api.Client.Entities
 		/// The method will not enforce that ID and Email match inside a single Contact instance: Id will be
 		/// looked up first, then Email.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="contacts"></param>
 		/// <returns>
 		/// The updated list of contacts for this group
@@ -169,7 +169,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrives a single Group by id
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// A single Group object
 		/// </returns>
@@ -187,7 +187,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Removes a single Group by id
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		public IQuery Delete(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
@@ -236,7 +236,7 @@ namespace ShareFile.Api.Client.Entities
 		/// This operation will ignore the provided clients list. Use the \Contacts navigation link to
 		/// add/remove elements from a group
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="group"></param>
 		/// <returns>
 		/// the modified group object
@@ -256,7 +256,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrieves the Contacts navigation property of a Group
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// A feed of Contacts representing the members of the Group
 		/// </returns>
@@ -279,7 +279,7 @@ namespace ShareFile.Api.Client.Entities
 		/// Adds a list of contacts to a group
 		/// The contact list may contain either contact ID (same as User ID) or Email.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="contacts"></param>
 		/// <returns>
 		/// The updated list of contacts for this group
@@ -308,7 +308,7 @@ namespace ShareFile.Api.Client.Entities
 		/// The method will not enforce that ID and Email match inside a single Contact instance: Id will be
 		/// looked up first, then Email.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="contacts"></param>
 		/// <returns>
 		/// The updated list of contacts for this group

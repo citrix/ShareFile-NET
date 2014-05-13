@@ -29,11 +29,11 @@ namespace ShareFile.Api.Client.Entities
 		/// Retrieve the user security record - current state of the user regarding
 		/// security and password settings.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// the user security status
 		/// </returns>
-		IQuery<UserSecurity> GetSecurity(string id);
+		IQuery<UserSecurity> GetSecurity(Uri url);
 	}
 
 	public class UsersEntityInternal : UsersEntity, IUsersEntityInternal
@@ -52,16 +52,15 @@ namespace ShareFile.Api.Client.Entities
 		/// Retrieve the user security record - current state of the user regarding
 		/// security and password settings.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// the user security status
 		/// </returns>
-		public IQuery<UserSecurity> GetSecurity(string id)
+		public IQuery<UserSecurity> GetSecurity(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<UserSecurity>(Client);
-			sfApiQuery.From("Users");
 			sfApiQuery.Action("Security");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}

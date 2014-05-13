@@ -96,7 +96,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         public async Task<UploadSpecification> CreateUpload(UploadSpecificationRequest uploadSpecificationRequest)
         {
-            var query = Client.Items.Upload(uploadSpecificationRequest.ParentId, uploadSpecificationRequest.Method,
+            var query = Client.Items.Upload(uploadSpecificationRequest.Parent, uploadSpecificationRequest.Method,
                 uploadSpecificationRequest.Raw, uploadSpecificationRequest.FileName, uploadSpecificationRequest.FileSize,
                 uploadSpecificationRequest.BatchId,
                 uploadSpecificationRequest.BatchLast, uploadSpecificationRequest.CanResume,

@@ -32,31 +32,31 @@ namespace ShareFile.Api.Client.Entities
 		/// <summary>
 		/// Get Device by ID
 		/// </summary>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// Device
 		/// </returns>
-		IQuery<Device> Get(string id);
-		IQuery<ODataFeed<DeviceUser>> GetByUser(string userId);
+		IQuery<Device> Get(Uri url);
+		IQuery<ODataFeed<DeviceUser>> GetByUser(Uri url);
 		/// <summary>
 		/// Delete Device
 		/// </summary>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// no data on success
 		/// </returns>
-		IQuery Delete(string id);
-		IQuery DeleteByUser(string userId, string deviceId);
-		IQuery<DeviceUser> CreateByUser(string userId, DeviceUser du);
+		IQuery Delete(Uri url);
+		IQuery DeleteByUser(Uri url, string deviceId);
+		IQuery<DeviceUser> CreateByUser(Uri url, DeviceUser du);
 		/// <summary>
 		/// Wipe Device
 		/// </summary>
-		/// <param name="deviceID"></param>
+		/// <param name="deviceUrl"></param>
 		/// <param name="userid"></param>
 		/// <returns>
 		/// no data on success
 		/// </returns>
-		IQuery Wipe(string deviceID, string userid = null);
+		IQuery Wipe(Uri deviceUrl, string userid = null);
 		/// <summary>
 		/// Signal Wipe Done
 		/// </summary>
@@ -85,21 +85,21 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Signal that a device wipe has been completed
 		/// </remarks>
-		/// <param name="deviceID"></param>
+		/// <param name="deviceUrl"></param>
 		/// <param name="deviceWipeReport"></param>
 		/// <param name="singlePlane"></param>
 		/// <returns>
 		/// no data on success
 		/// </returns>
-		IQuery WipeDone(string deviceID, DeviceWipeReport deviceWipeReport, bool singlePlane = false);
+		IQuery WipeDone(Uri deviceUrl, DeviceWipeReport deviceWipeReport, bool singlePlane = false);
 		/// <summary>
 		/// Check Device Status
 		/// </summary>
-		/// <param name="deviceID"></param>
+		/// <param name="deviceUrl"></param>
 		/// <returns>
 		/// DeviceStatus
 		/// </returns>
-		IQuery<DeviceStatus> Status(string deviceID);
+		IQuery<DeviceStatus> Status(Uri deviceUrl);
 	}
 
 	public class DevicesEntityInternal : EntityBase, IDevicesEntityInternal
@@ -128,25 +128,23 @@ namespace ShareFile.Api.Client.Entities
 		/// <summary>
 		/// Get Device by ID
 		/// </summary>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// Device
 		/// </returns>
-		public IQuery<Device> Get(string id)
+		public IQuery<Device> Get(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Device>(Client);
-			sfApiQuery.From("Devices");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
 
-		public IQuery<ODataFeed<DeviceUser>> GetByUser(string userId)
+		public IQuery<ODataFeed<DeviceUser>> GetByUser(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<DeviceUser>>(Client);
-			sfApiQuery.From("User");
 			sfApiQuery.Action("Devices");
-			sfApiQuery.Ids(userId);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -154,36 +152,33 @@ namespace ShareFile.Api.Client.Entities
 		/// <summary>
 		/// Delete Device
 		/// </summary>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// no data on success
 		/// </returns>
-		public IQuery Delete(string id)
+		public IQuery Delete(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.From("Devices");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "DELETE";
 			return sfApiQuery;
 		}
 
-		public IQuery DeleteByUser(string userId, string deviceId)
+		public IQuery DeleteByUser(Uri url, string deviceId)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.From("User");
 			sfApiQuery.Action("Devices");
-			sfApiQuery.Ids(userId);
+			sfApiQuery.Uri(url);
 			sfApiQuery.ActionIds(deviceId);
 			sfApiQuery.HttpMethod = "DELETE";
 			return sfApiQuery;
 		}
 
-		public IQuery<DeviceUser> CreateByUser(string userId, DeviceUser du)
+		public IQuery<DeviceUser> CreateByUser(Uri url, DeviceUser du)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<DeviceUser>(Client);
-			sfApiQuery.From("User");
 			sfApiQuery.Action("Devices");
-			sfApiQuery.Ids(userId);
+			sfApiQuery.Uri(url);
 			sfApiQuery.Body = du;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
@@ -192,17 +187,16 @@ namespace ShareFile.Api.Client.Entities
 		/// <summary>
 		/// Wipe Device
 		/// </summary>
-		/// <param name="deviceID"></param>
+		/// <param name="deviceUrl"></param>
 		/// <param name="userid"></param>
 		/// <returns>
 		/// no data on success
 		/// </returns>
-		public IQuery Wipe(string deviceID, string userid = null)
+		public IQuery Wipe(Uri deviceUrl, string userid = null)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.From("Devices");
 			sfApiQuery.Action("Wipe");
-			sfApiQuery.Ids(deviceID);
+			sfApiQuery.Uri(deviceUrl);
 			sfApiQuery.QueryString("userid", userid);
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
@@ -236,18 +230,17 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Signal that a device wipe has been completed
 		/// </remarks>
-		/// <param name="deviceID"></param>
+		/// <param name="deviceUrl"></param>
 		/// <param name="deviceWipeReport"></param>
 		/// <param name="singlePlane"></param>
 		/// <returns>
 		/// no data on success
 		/// </returns>
-		public IQuery WipeDone(string deviceID, DeviceWipeReport deviceWipeReport, bool singlePlane = false)
+		public IQuery WipeDone(Uri deviceUrl, DeviceWipeReport deviceWipeReport, bool singlePlane = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.From("Devices");
 			sfApiQuery.Action("WipeDone");
-			sfApiQuery.Ids(deviceID);
+			sfApiQuery.Uri(deviceUrl);
 			sfApiQuery.QueryString("singlePlane", singlePlane);
 			sfApiQuery.Body = deviceWipeReport;
 			sfApiQuery.HttpMethod = "POST";
@@ -257,16 +250,15 @@ namespace ShareFile.Api.Client.Entities
 		/// <summary>
 		/// Check Device Status
 		/// </summary>
-		/// <param name="deviceID"></param>
+		/// <param name="deviceUrl"></param>
 		/// <returns>
 		/// DeviceStatus
 		/// </returns>
-		public IQuery<DeviceStatus> Status(string deviceID)
+		public IQuery<DeviceStatus> Status(Uri deviceUrl)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<DeviceStatus>(Client);
-			sfApiQuery.From("Devices");
 			sfApiQuery.Action("Status");
-			sfApiQuery.Ids(deviceID);
+			sfApiQuery.Uri(deviceUrl);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}

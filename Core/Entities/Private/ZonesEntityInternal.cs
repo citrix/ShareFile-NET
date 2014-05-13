@@ -49,7 +49,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The list of public and private zones accessible to this user
 		/// </returns>
-		IQuery<Zone> Get(string id, bool secret = false);
+		IQuery<Zone> Get(Uri url, bool secret = false);
 		/// <summary>
 		/// Create Zone
 		/// </summary>
@@ -80,21 +80,21 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Updates an existing zone
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="zone"></param>
 		/// <returns>
 		/// The modified zone
 		/// </returns>
-		IQuery<Zone> Update(string id, Zone zone);
+		IQuery<Zone> Update(Uri url, Zone zone);
 		/// <summary>
 		/// Delete Zone
 		/// </summary>
 		/// <remarks>
 		/// Removes an existing zone
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="force"></param>
-		IQuery Delete(string id, bool force = false);
+		IQuery Delete(Uri url, bool force = false);
 		/// <summary>
 		/// Reset Zone Secret
 		/// </summary>
@@ -104,22 +104,22 @@ namespace ShareFile.Api.Client.Entities
 		/// is also updated.
 		/// User must be a Zone admin to perform this action
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// The modified Zone object
 		/// </returns>
-		IQuery<Zone> ResetSecret(string id);
+		IQuery<Zone> ResetSecret(Uri url);
 		/// <summary>
 		/// Get Zone Metadata
 		/// </summary>
 		/// <remarks>
 		/// Gets metadata associated with the specified zone
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// the zone metadata feed
 		/// </returns>
-		IQuery<ODataFeed<Metadata>> GetMetadata(string id);
+		IQuery<ODataFeed<Metadata>> GetMetadata(Uri url);
 		/// <summary>
 		/// Create or update Zone Metadata
 		/// </summary>
@@ -133,24 +133,24 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Creates or updates Metadata entries associated with the specified zone
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="metadata"></param>
 		/// <returns>
 		/// the zone metadata feed
 		/// </returns>
-		IQuery<ODataFeed<Metadata>> CreateMetadata(string id, IEnumerable<Metadata> metadata);
+		IQuery<ODataFeed<Metadata>> CreateMetadata(Uri url, IEnumerable<Metadata> metadata);
 		/// <summary>
 		/// Delete Zone Metadata
 		/// </summary>
 		/// <remarks>
 		/// Delete the Metadata entry associated with the specified zone
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="name"></param>
 		/// <returns>
 		/// no data on success
 		/// </returns>
-		IQuery DeleteMetadata(string id, string name);
+		IQuery DeleteMetadata(Uri url, string name);
 	}
 
 	public class ZonesEntityInternal : EntityBase, IZonesEntityInternal
@@ -198,11 +198,10 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The list of public and private zones accessible to this user
 		/// </returns>
-		public IQuery<Zone> Get(string id, bool secret = false)
+		public IQuery<Zone> Get(Uri url, bool secret = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Zone>(Client);
-			sfApiQuery.From("Zones");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("secret", secret);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
@@ -246,16 +245,15 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Updates an existing zone
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="zone"></param>
 		/// <returns>
 		/// The modified zone
 		/// </returns>
-		public IQuery<Zone> Update(string id, Zone zone)
+		public IQuery<Zone> Update(Uri url, Zone zone)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Zone>(Client);
-			sfApiQuery.From("Zones");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.Body = zone;
 			sfApiQuery.HttpMethod = "PATCH";
 			return sfApiQuery;
@@ -267,13 +265,12 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Removes an existing zone
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="force"></param>
-		public IQuery Delete(string id, bool force = false)
+		public IQuery Delete(Uri url, bool force = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.From("Zones");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("force", force);
 			sfApiQuery.HttpMethod = "DELETE";
 			return sfApiQuery;
@@ -288,16 +285,15 @@ namespace ShareFile.Api.Client.Entities
 		/// is also updated.
 		/// User must be a Zone admin to perform this action
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// The modified Zone object
 		/// </returns>
-		public IQuery<Zone> ResetSecret(string id)
+		public IQuery<Zone> ResetSecret(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Zone>(Client);
-			sfApiQuery.From("Zones");
 			sfApiQuery.Action("ResetSecret");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}
@@ -308,16 +304,15 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Gets metadata associated with the specified zone
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// the zone metadata feed
 		/// </returns>
-		public IQuery<ODataFeed<Metadata>> GetMetadata(string id)
+		public IQuery<ODataFeed<Metadata>> GetMetadata(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Metadata>>(Client);
-			sfApiQuery.From("Zones");
 			sfApiQuery.Action("Metadata");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -335,17 +330,16 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Creates or updates Metadata entries associated with the specified zone
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="metadata"></param>
 		/// <returns>
 		/// the zone metadata feed
 		/// </returns>
-		public IQuery<ODataFeed<Metadata>> CreateMetadata(string id, IEnumerable<Metadata> metadata)
+		public IQuery<ODataFeed<Metadata>> CreateMetadata(Uri url, IEnumerable<Metadata> metadata)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Metadata>>(Client);
-			sfApiQuery.From("Zones");
 			sfApiQuery.Action("Metadata");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.Body = metadata;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
@@ -357,17 +351,16 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Delete the Metadata entry associated with the specified zone
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="name"></param>
 		/// <returns>
 		/// no data on success
 		/// </returns>
-		public IQuery DeleteMetadata(string id, string name)
+		public IQuery DeleteMetadata(Uri url, string name)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.From("Zones");
 			sfApiQuery.Action("Metadata");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("name", name);
 			sfApiQuery.HttpMethod = "DELETE";
 			return sfApiQuery;

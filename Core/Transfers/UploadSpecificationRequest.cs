@@ -8,7 +8,7 @@ namespace ShareFile.Api.Client.Transfers
 {
     public class UploadSpecificationRequest
     {
-        public string ParentId { get; set; }
+        public Uri Parent { get; set; }
         public UploadMethod Method { get; set; }
         public bool Raw { get; set; }
         public string FileName { get; set; }

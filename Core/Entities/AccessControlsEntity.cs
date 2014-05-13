@@ -27,23 +27,21 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrieves a single Access Control entry for a given Item and Principal
 		/// </remarks>
-		/// <param name="principalid"></param>
-		/// <param name="itemid"></param>
 		/// <returns>
 		/// A single AccessControl object matching the query
 		/// </returns>
-		IQuery<AccessControl> Get(string principalid, string itemid);
+		IQuery<AccessControl> Get(Uri url);
 		/// <summary>
 		/// Get AccessControl List By Item
 		/// </summary>
 		/// <remarks>
 		/// Retrieves the Access Control List for a given Item.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// Access Control List of the given object ID.
 		/// </returns>
-		IQuery<ODataFeed<AccessControl>> GetByItem(string id);
+		IQuery<ODataFeed<AccessControl>> GetByItem(Uri url);
 		/// <summary>
 		/// Create AccessControl
 		/// </summary>
@@ -63,7 +61,7 @@ namespace ShareFile.Api.Client.Entities
 		/// which can be either a Group or User. The 'Principal' element is specified as an object - you should populate
 		/// either the URL or the ID reference.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="accessControl"></param>
 		/// <param name="recursive"></param>
 		/// <param name="message"></param>
@@ -71,7 +69,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the created or modified AccessControl instance
 		/// </returns>
-		IQuery<AccessControl> CreateByItem(string id, AccessControl accessControl, bool recursive = false, bool sendDefaultNotification = false, string message = null);
+		IQuery<AccessControl> CreateByItem(Uri url, AccessControl accessControl, bool recursive = false, bool sendDefaultNotification = false, string message = null);
 		/// <summary>
 		/// Update AccessControl
 		/// </summary>
@@ -90,13 +88,13 @@ namespace ShareFile.Api.Client.Entities
 		/// in the Body to identity the AccessControl element to be modified. You can provide an ID, Email or URL on the
 		/// Principal object.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="accessControl"></param>
 		/// <param name="recursive"></param>
 		/// <returns>
 		/// the created or modified AccessControl instance
 		/// </returns>
-		IQuery<AccessControl> UpdateByItem(string id, AccessControl accessControl, bool recursive = false);
+		IQuery<AccessControl> UpdateByItem(Uri url, AccessControl accessControl, bool recursive = false);
 		/// <summary>
 		/// Delete AccessControl
 		/// </summary>
@@ -104,9 +102,7 @@ namespace ShareFile.Api.Client.Entities
 		/// Deletes an AccessControl entry by itemID and principalID. This method does not return any object, a 204 (No Content)
 		/// response indicates success.
 		/// </remarks>
-		/// <param name="principalid"></param>
-		/// <param name="itemid"></param>
-		IQuery Delete(string principalid, string itemid);
+		IQuery Delete(Uri url);
 	}
 
 	public class AccessControlsEntity : EntityBase, IAccessControlsEntity
@@ -124,17 +120,13 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrieves a single Access Control entry for a given Item and Principal
 		/// </remarks>
-		/// <param name="principalid"></param>
-		/// <param name="itemid"></param>
 		/// <returns>
 		/// A single AccessControl object matching the query
 		/// </returns>
-		public IQuery<AccessControl> Get(string principalid, string itemid)
+		public IQuery<AccessControl> Get(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AccessControl>(Client);
-			sfApiQuery.From("AccessControls");
-			sfApiQuery.Ids("principalid", principalid);
-			sfApiQuery.Ids("itemid", itemid);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -145,16 +137,15 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrieves the Access Control List for a given Item.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// Access Control List of the given object ID.
 		/// </returns>
-		public IQuery<ODataFeed<AccessControl>> GetByItem(string id)
+		public IQuery<ODataFeed<AccessControl>> GetByItem(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<AccessControl>>(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("AccessControls");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -178,7 +169,7 @@ namespace ShareFile.Api.Client.Entities
 		/// which can be either a Group or User. The 'Principal' element is specified as an object - you should populate
 		/// either the URL or the ID reference.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="accessControl"></param>
 		/// <param name="recursive"></param>
 		/// <param name="message"></param>
@@ -186,12 +177,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the created or modified AccessControl instance
 		/// </returns>
-		public IQuery<AccessControl> CreateByItem(string id, AccessControl accessControl, bool recursive = false, bool sendDefaultNotification = false, string message = null)
+		public IQuery<AccessControl> CreateByItem(Uri url, AccessControl accessControl, bool recursive = false, bool sendDefaultNotification = false, string message = null)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AccessControl>(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("AccessControls");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("recursive", recursive);
 			sfApiQuery.QueryString("sendDefaultNotification", sendDefaultNotification);
 			accessControl.Properties["message"] = message;
@@ -218,18 +208,17 @@ namespace ShareFile.Api.Client.Entities
 		/// in the Body to identity the AccessControl element to be modified. You can provide an ID, Email or URL on the
 		/// Principal object.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="accessControl"></param>
 		/// <param name="recursive"></param>
 		/// <returns>
 		/// the created or modified AccessControl instance
 		/// </returns>
-		public IQuery<AccessControl> UpdateByItem(string id, AccessControl accessControl, bool recursive = false)
+		public IQuery<AccessControl> UpdateByItem(Uri url, AccessControl accessControl, bool recursive = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AccessControl>(Client);
-			sfApiQuery.From("Items");
 			sfApiQuery.Action("AccessControls");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("recursive", recursive);
 			sfApiQuery.Body = accessControl;
 			sfApiQuery.HttpMethod = "POST";
@@ -243,14 +232,10 @@ namespace ShareFile.Api.Client.Entities
 		/// Deletes an AccessControl entry by itemID and principalID. This method does not return any object, a 204 (No Content)
 		/// response indicates success.
 		/// </remarks>
-		/// <param name="principalid"></param>
-		/// <param name="itemid"></param>
-		public IQuery Delete(string principalid, string itemid)
+		public IQuery Delete(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.From("AccessControls");
-			sfApiQuery.Ids("principalid", principalid);
-			sfApiQuery.Ids("itemid", itemid);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "DELETE";
 			return sfApiQuery;
 		}

@@ -37,19 +37,19 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrives a single Group by id
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// A single Group object
 		/// </returns>
-		IQuery<Group> Get(string id);
+		IQuery<Group> Get(Uri url);
 		/// <summary>
 		/// Delete Group
 		/// </summary>
 		/// <remarks>
 		/// Removes a single Group by id
 		/// </remarks>
-		/// <param name="id"></param>
-		IQuery Delete(string id);
+		/// <param name="url"></param>
+		IQuery Delete(Uri url);
 		/// <summary>
 		/// Create Group
 		/// </summary>
@@ -82,23 +82,23 @@ namespace ShareFile.Api.Client.Entities
 		/// This operation will ignore the provided clients list. Use the \Contacts navigation link to
 		/// add/remove elements from a group
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="group"></param>
 		/// <returns>
 		/// the modified group object
 		/// </returns>
-		IQuery<Group> Update(string id, Group group);
+		IQuery<Group> Update(Uri url, Group group);
 		/// <summary>
 		/// Get Group Contacts
 		/// </summary>
 		/// <remarks>
 		/// Retrieves the Contacts navigation property of a Group
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// A feed of Contacts representing the members of the Group
 		/// </returns>
-		IQuery<ODataFeed<Contact>> GetContacts(string id);
+		IQuery<ODataFeed<Contact>> GetContacts(Uri url);
 		/// <summary>
 		/// Add Contacts to Group
 		/// </summary>
@@ -109,12 +109,12 @@ namespace ShareFile.Api.Client.Entities
 		/// Adds a list of contacts to a group
 		/// The contact list may contain either contact ID (same as User ID) or Email.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="contacts"></param>
 		/// <returns>
 		/// The updated list of contacts for this group
 		/// </returns>
-		IQuery<ODataFeed<Contact>> CreateContacts(string id, IEnumerable<Contact> contacts);
+		IQuery<ODataFeed<Contact>> CreateContacts(Uri url, IEnumerable<Contact> contacts);
 		/// <summary>
 		/// Remove Contacts from Group
 		/// </summary>
@@ -129,12 +129,12 @@ namespace ShareFile.Api.Client.Entities
 		/// The method will not enforce that ID and Email match inside a single Contact instance: Id will be
 		/// looked up first, then Email.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="contacts"></param>
 		/// <returns>
 		/// The updated list of contacts for this group
 		/// </returns>
-		IQuery<ODataFeed<Contact>> DeleteContacts(string id, IEnumerable<Contact> contacts);
+		IQuery<ODataFeed<Contact>> DeleteContacts(Uri url, IEnumerable<Contact> contacts);
 	}
 
 	public class GroupsEntity : EntityBase, IGroupsEntity
@@ -169,15 +169,14 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrives a single Group by id
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// A single Group object
 		/// </returns>
-		public IQuery<Group> Get(string id)
+		public IQuery<Group> Get(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Group>(Client);
-			sfApiQuery.From("Groups");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -188,12 +187,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Removes a single Group by id
 		/// </remarks>
-		/// <param name="id"></param>
-		public IQuery Delete(string id)
+		/// <param name="url"></param>
+		public IQuery Delete(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.From("Groups");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "DELETE";
 			return sfApiQuery;
 		}
@@ -238,16 +236,15 @@ namespace ShareFile.Api.Client.Entities
 		/// This operation will ignore the provided clients list. Use the \Contacts navigation link to
 		/// add/remove elements from a group
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="group"></param>
 		/// <returns>
 		/// the modified group object
 		/// </returns>
-		public IQuery<Group> Update(string id, Group group)
+		public IQuery<Group> Update(Uri url, Group group)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Group>(Client);
-			sfApiQuery.From("Groups");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.Body = group;
 			sfApiQuery.HttpMethod = "PATCH";
 			return sfApiQuery;
@@ -259,16 +256,15 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Retrieves the Contacts navigation property of a Group
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// A feed of Contacts representing the members of the Group
 		/// </returns>
-		public IQuery<ODataFeed<Contact>> GetContacts(string id)
+		public IQuery<ODataFeed<Contact>> GetContacts(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Contact>>(Client);
-			sfApiQuery.From("Groups");
 			sfApiQuery.Action("Contacts");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -283,17 +279,16 @@ namespace ShareFile.Api.Client.Entities
 		/// Adds a list of contacts to a group
 		/// The contact list may contain either contact ID (same as User ID) or Email.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="contacts"></param>
 		/// <returns>
 		/// The updated list of contacts for this group
 		/// </returns>
-		public IQuery<ODataFeed<Contact>> CreateContacts(string id, IEnumerable<Contact> contacts)
+		public IQuery<ODataFeed<Contact>> CreateContacts(Uri url, IEnumerable<Contact> contacts)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Contact>>(Client);
-			sfApiQuery.From("Groups");
 			sfApiQuery.Action("Contacts");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.Body = contacts;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
@@ -313,17 +308,16 @@ namespace ShareFile.Api.Client.Entities
 		/// The method will not enforce that ID and Email match inside a single Contact instance: Id will be
 		/// looked up first, then Email.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <param name="contacts"></param>
 		/// <returns>
 		/// The updated list of contacts for this group
 		/// </returns>
-		public IQuery<ODataFeed<Contact>> DeleteContacts(string id, IEnumerable<Contact> contacts)
+		public IQuery<ODataFeed<Contact>> DeleteContacts(Uri url, IEnumerable<Contact> contacts)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Contact>>(Client);
-			sfApiQuery.From("Groups");
 			sfApiQuery.Action("Contacts");
-			sfApiQuery.Ids(id);
+			sfApiQuery.Uri(url);
 			sfApiQuery.Body = contacts;
 			sfApiQuery.HttpMethod = "DELETE";
 			return sfApiQuery;

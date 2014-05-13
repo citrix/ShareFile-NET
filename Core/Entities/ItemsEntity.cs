@@ -273,7 +273,7 @@ namespace ShareFile.Api.Client.Entities
 		/// method will return an Asynchronous operation record instead. Note: the parameters listed in the
 		/// body of the request are the only parameters that can be updated through this call.
 		/// </returns>
-		IQuery<Item> Update(string id, Item item, string batchid = null, long batchSizeInBytes = -1, bool forceSync = false, bool scheduleAsync = true);
+		IQuery<Item> Update(string id, Item item, string batchid = null, long batchSizeInBytes = 0, bool forceSync = false, bool scheduleAsync = true);
 		/// <summary>
 		/// Update Link
 		/// </summary>
@@ -898,7 +898,7 @@ namespace ShareFile.Api.Client.Entities
 		/// method will return an Asynchronous operation record instead. Note: the parameters listed in the
 		/// body of the request are the only parameters that can be updated through this call.
 		/// </returns>
-		public IQuery<Item> Update(string id, Item item, string batchid = null, long batchSizeInBytes = -1, bool forceSync = false, bool scheduleAsync = true)
+		public IQuery<Item> Update(string id, Item item, string batchid = null, long batchSizeInBytes = 0, bool forceSync = false, bool scheduleAsync = true)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
 			sfApiQuery.From("Items");

@@ -37,7 +37,7 @@ namespace ShareFile.Api.Client.Entities
 		/// Device
 		/// </returns>
 		IQuery<Device> Get(Uri url);
-		IQuery<ODataFeed<DeviceUser>> GetByUser(Uri resourceUrl);
+		IQuery<ODataFeed<DeviceUser>> GetByUser(Uri url);
 		/// <summary>
 		/// Delete Device
 		/// </summary>
@@ -46,8 +46,8 @@ namespace ShareFile.Api.Client.Entities
 		/// no data on success
 		/// </returns>
 		IQuery Delete(Uri url);
-		IQuery DeleteByUser(Uri resourceUrl, string deviceId);
-		IQuery<DeviceUser> CreateByUser(Uri resourceUrl, DeviceUser du);
+		IQuery DeleteByUser(Uri url, string deviceId);
+		IQuery<DeviceUser> CreateByUser(Uri url, DeviceUser du);
 		/// <summary>
 		/// Wipe Device
 		/// </summary>
@@ -140,11 +140,11 @@ namespace ShareFile.Api.Client.Entities
 			return sfApiQuery;
 		}
 
-		public IQuery<ODataFeed<DeviceUser>> GetByUser(Uri resourceUrl)
+		public IQuery<ODataFeed<DeviceUser>> GetByUser(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<DeviceUser>>(Client);
 			sfApiQuery.Action("Devices");
-			sfApiQuery.Uri(resourceUrl);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -164,21 +164,21 @@ namespace ShareFile.Api.Client.Entities
 			return sfApiQuery;
 		}
 
-		public IQuery DeleteByUser(Uri resourceUrl, string deviceId)
+		public IQuery DeleteByUser(Uri url, string deviceId)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 			sfApiQuery.Action("Devices");
-			sfApiQuery.Uri(resourceUrl);
+			sfApiQuery.Uri(url);
 			sfApiQuery.ActionIds(deviceId);
 			sfApiQuery.HttpMethod = "DELETE";
 			return sfApiQuery;
 		}
 
-		public IQuery<DeviceUser> CreateByUser(Uri resourceUrl, DeviceUser du)
+		public IQuery<DeviceUser> CreateByUser(Uri url, DeviceUser du)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<DeviceUser>(Client);
 			sfApiQuery.Action("Devices");
-			sfApiQuery.Uri(resourceUrl);
+			sfApiQuery.Uri(url);
 			sfApiQuery.Body = du;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;

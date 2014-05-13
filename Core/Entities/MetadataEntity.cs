@@ -34,7 +34,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A single Metadata object matching the query
 		/// </returns>
-		IQuery<Metadata> Get(Uri resourceUrl);
+		IQuery<Metadata> Get(Uri url);
 		/// <summary>
 		/// Get Metadata List By Item
 		/// </summary>
@@ -94,7 +94,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The updated Metadata object
 		/// </returns>
-		IQuery<Metadata> Update(Uri resourceUrl, Metadata metadata);
+		IQuery<Metadata> Update(Uri url, Metadata metadata);
 		/// <summary>
 		/// Delete Metadata
 		/// </summary>
@@ -116,7 +116,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// (no data)
 		/// </returns>
-		IQuery Delete(Uri resourceUrl);
+		IQuery Delete(Uri url);
 	}
 
 	public class MetadataEntity : EntityBase, IMetadataEntity
@@ -141,10 +141,10 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A single Metadata object matching the query
 		/// </returns>
-		public IQuery<Metadata> Get(Uri resourceUrl)
+		public IQuery<Metadata> Get(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Metadata>(Client);
-			sfApiQuery.Uri(resourceUrl);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -235,10 +235,10 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The updated Metadata object
 		/// </returns>
-		public IQuery<Metadata> Update(Uri resourceUrl, Metadata metadata)
+		public IQuery<Metadata> Update(Uri url, Metadata metadata)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Metadata>(Client);
-			sfApiQuery.Uri(resourceUrl);
+			sfApiQuery.Uri(url);
 			sfApiQuery.Body = metadata;
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
@@ -274,10 +274,10 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// (no data)
 		/// </returns>
-		public IQuery Delete(Uri resourceUrl)
+		public IQuery Delete(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.Uri(resourceUrl);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "DELETE";
 			return sfApiQuery;
 		}

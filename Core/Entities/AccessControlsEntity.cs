@@ -30,7 +30,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A single AccessControl object matching the query
 		/// </returns>
-		IQuery<AccessControl> Get(Uri resourceUrl);
+		IQuery<AccessControl> Get(Uri url);
 		/// <summary>
 		/// Get AccessControl List By Item
 		/// </summary>
@@ -102,7 +102,7 @@ namespace ShareFile.Api.Client.Entities
 		/// Deletes an AccessControl entry by itemID and principalID. This method does not return any object, a 204 (No Content)
 		/// response indicates success.
 		/// </remarks>
-		IQuery Delete(Uri resourceUrl);
+		IQuery Delete(Uri url);
 	}
 
 	public class AccessControlsEntity : EntityBase, IAccessControlsEntity
@@ -123,10 +123,10 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A single AccessControl object matching the query
 		/// </returns>
-		public IQuery<AccessControl> Get(Uri resourceUrl)
+		public IQuery<AccessControl> Get(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AccessControl>(Client);
-			sfApiQuery.Uri(resourceUrl);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -232,10 +232,10 @@ namespace ShareFile.Api.Client.Entities
 		/// Deletes an AccessControl entry by itemID and principalID. This method does not return any object, a 204 (No Content)
 		/// response indicates success.
 		/// </remarks>
-		public IQuery Delete(Uri resourceUrl)
+		public IQuery Delete(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.Uri(resourceUrl);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "DELETE";
 			return sfApiQuery;
 		}

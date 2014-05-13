@@ -240,8 +240,8 @@ namespace ShareFile.Api.Client.Entities
 		/// A folder record representing the requesting user home folder
 		/// </returns>
 		IQuery<Item> GetHomeFolder(Uri url);
-		IQuery<ODataFeed<Item>> TopFolders(Uri resourceUrl);
-		IQuery<ODataFeed<Item>> Box(Uri resourceUrl);
+		IQuery<ODataFeed<Item>> TopFolders(Uri url);
+		IQuery<ODataFeed<Item>> Box(Uri url);
 		/// <summary>
 		/// Get User Preferences
 		/// </summary>
@@ -673,20 +673,20 @@ namespace ShareFile.Api.Client.Entities
 			return sfApiQuery;
 		}
 
-		public IQuery<ODataFeed<Item>> TopFolders(Uri resourceUrl)
+		public IQuery<ODataFeed<Item>> TopFolders(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
 			sfApiQuery.Action("TopFolders");
-			sfApiQuery.Uri(resourceUrl);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
 
-		public IQuery<ODataFeed<Item>> Box(Uri resourceUrl)
+		public IQuery<ODataFeed<Item>> Box(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
 			sfApiQuery.Action("Box");
-			sfApiQuery.Uri(resourceUrl);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}

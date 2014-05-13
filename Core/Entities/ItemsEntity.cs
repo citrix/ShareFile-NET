@@ -334,7 +334,7 @@ namespace ShareFile.Api.Client.Entities
 		/// The modified SymbolicLink object
 		/// </returns>
 		IQuery<SymbolicLink> UpdateSymbolicLink(Uri url, SymbolicLink symlink);
-		IQuery Delete(Uri resourceUrl, bool singleversion = false, bool forceSync = false);
+		IQuery Delete(Uri url, bool singleversion = false, bool forceSync = false);
 		/// <summary>
 		/// Delete Multiple Items
 		/// </summary>
@@ -346,8 +346,8 @@ namespace ShareFile.Api.Client.Entities
 		/// </remarks>
 		/// <param name="id"></param>
 		/// <param name="body"></param>
-		IQuery BulkDelete(Uri resourceUrl, IEnumerable<string> ids, bool forceSync = false);
-		IQuery<Stream> GetThumbnail(Uri resourceUrl, int size = 75, bool redirect = false);
+		IQuery BulkDelete(Uri url, IEnumerable<string> ids, bool forceSync = false);
+		IQuery<Stream> GetThumbnail(Uri url, int size = 75, bool redirect = false);
 		/// <summary>
 		/// Get Breadcrumbs
 		/// </summary>
@@ -488,7 +488,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A Feed containing all protocols links supported by the given item
 		/// </returns>
-		IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(Uri resourceUrl);
+		IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(Uri url);
 		/// <summary>
 		/// Get an Item Protocol Link
 		/// </summary>
@@ -988,10 +988,10 @@ namespace ShareFile.Api.Client.Entities
 			return sfApiQuery;
 		}
 
-		public IQuery Delete(Uri resourceUrl, bool singleversion = false, bool forceSync = false)
+		public IQuery Delete(Uri url, bool singleversion = false, bool forceSync = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.Uri(resourceUrl);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("singleversion", singleversion);
 			sfApiQuery.QueryString("forceSync", forceSync);
 			sfApiQuery.HttpMethod = "DELETE";
@@ -1009,22 +1009,22 @@ namespace ShareFile.Api.Client.Entities
 		/// </remarks>
 		/// <param name="id"></param>
 		/// <param name="body"></param>
-		public IQuery BulkDelete(Uri resourceUrl, IEnumerable<string> ids, bool forceSync = false)
+		public IQuery BulkDelete(Uri url, IEnumerable<string> ids, bool forceSync = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 			sfApiQuery.Action("BulkDelete");
-			sfApiQuery.Uri(resourceUrl);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("ids", ids);
 			sfApiQuery.QueryString("forceSync", forceSync);
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}
 
-		public IQuery<Stream> GetThumbnail(Uri resourceUrl, int size = 75, bool redirect = false)
+		public IQuery<Stream> GetThumbnail(Uri url, int size = 75, bool redirect = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
 			sfApiQuery.Action("Thumbnail");
-			sfApiQuery.Uri(resourceUrl);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("size", size);
 			sfApiQuery.QueryString("redirect", redirect);
 			sfApiQuery.HttpMethod = "GET";
@@ -1246,11 +1246,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// A Feed containing all protocols links supported by the given item
 		/// </returns>
-		public IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(Uri resourceUrl)
+		public IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<ItemProtocolLink>>(Client);
 			sfApiQuery.Action("ProtocolLinks");
-			sfApiQuery.Uri(resourceUrl);
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}

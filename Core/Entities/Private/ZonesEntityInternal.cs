@@ -49,7 +49,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The list of public and private zones accessible to this user
 		/// </returns>
-		IQuery<Zone> Get(Uri resourceUrl, bool secret = false);
+		IQuery<Zone> Get(Uri url, bool secret = false);
 		/// <summary>
 		/// Create Zone
 		/// </summary>
@@ -198,10 +198,10 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// The list of public and private zones accessible to this user
 		/// </returns>
-		public IQuery<Zone> Get(Uri resourceUrl, bool secret = false)
+		public IQuery<Zone> Get(Uri url, bool secret = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Zone>(Client);
-			sfApiQuery.Uri(resourceUrl);
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("secret", secret);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;

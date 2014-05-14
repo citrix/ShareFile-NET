@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -247,6 +248,7 @@ namespace ShareFile.Api.Client
                 ObjectCreationHandling = ObjectCreationHandling.Replace,
                 MissingMemberHandling = MissingMemberHandling.Ignore,
                 NullValueHandling = NullValueHandling.Ignore,
+                DateTimeZoneHandling = DateTimeZoneHandling.Local,
                 Converters = { new ODataConverter(), new StringEnumConverter(), new SafeEnumConverter() }
             };
         }

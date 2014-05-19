@@ -534,7 +534,7 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("email", email);
 			sfApiQuery.QueryString("notify", notify);
-			sfApiQuery.HttpMethod = "DELETE";
+			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}
 

@@ -169,5 +169,9 @@ namespace ShareFile.Api.Models
 
 		public bool? EnableGetApp { get; set; }
 
+		public bool? EnableStorageZoneConnector { get; set; }
+
+		public bool? HasAnyConnectorZones { get; set; }
+
 	}
 }

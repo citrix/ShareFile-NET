@@ -10,7 +10,7 @@ RestorePackages()
 let buildDir = "./build/"
 let packagingRoot = "./packaging/"
 let packagingDir = packagingRoot @@ "sharefile"
-let nugetVersion = "3.0.0-alpha12"
+let nugetVersion = "3.0.0-alpha15"
 let assemblyVersion = "3.0.0"
 let assemblyFileVersion = "3.0.0"
 let nugetAccessKey = "nUg3tMyP@cKag3"

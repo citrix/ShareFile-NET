@@ -9,7 +9,7 @@
     <summary>@summary@</summary>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>@description@</description>
-    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <releaseNotes></releaseNotes>
     <copyright>Copyright © Citrix ShareFile 2014</copyright>
     <tags>ShareFile API Client</tags>
     <dependencies>

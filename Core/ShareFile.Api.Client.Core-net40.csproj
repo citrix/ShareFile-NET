@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -84,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration.cs" />
+    <Compile Include="Converters\LoggingConverter.cs" />
     <Compile Include="Converters\ODataConverter.cs" />
     <Compile Include="Converters\ODataFactory.cs" />
     <Compile Include="Converters\SafeEnumConverter.cs" />
@@ -123,9 +124,11 @@
     <Compile Include="Exceptions\UploadException.cs" />
     <Compile Include="Extensions\BoolExtensions.cs" />
     <Compile Include="Extensions\ContactExtensions.cs" />
+    <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Extensions\ItemsEntityExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\ODataObjectExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="FileSystem\IPlatformFile.cs" />
     <Compile Include="FileSystem\PlatformFileStream.cs" />
@@ -254,15 +257,14 @@
     <Compile Include="Requests\Providers\ISyncRequestProvider.cs" />
     <Compile Include="Requests\Providers\RequestProviderFactory.cs" />
     <Compile Include="Requests\Query.cs" />
-    <Compile Include="Security\Authentication\IWebAuthentication.cs" />
-    <Compile Include="Security\Authentication\NavigatingEventArgs.cs" />
     <Compile Include="Security\Authentication\OAuth2\IOAuthResponse.cs" />
+    <Compile Include="Security\Authentication\OAuth2\OAuth2AuthenticationHelper.cs" />
     <Compile Include="Security\Authentication\OAuth2\OAuthAuthorizationCode.cs" />
     <Compile Include="Security\Authentication\OAuth2\OAuthError.cs" />
     <Compile Include="Security\Authentication\OAuth2\OAuthResponseBase.cs" />
     <Compile Include="Security\Authentication\OAuth2\OAuthService.cs" />
     <Compile Include="Security\Authentication\OAuth2\OAuthToken.cs" />
-    <Compile Include="Security\Authentication\WebAuthenticationFactory.cs" />
+    <Compile Include="Security\Authentication\WebAuthenticationHelper.cs" />
     <Compile Include="Security\Cryptography\HmacSha256ProviderFactory.cs" />
     <Compile Include="Security\Cryptography\IHmacSha256Provider.cs" />
     <Compile Include="Security\Cryptography\IMD5HashProvider.cs" />
@@ -274,6 +276,7 @@
     <Compile Include="Transfers\Downloaders\DownloaderConfig.cs" />
     <Compile Include="Transfers\DownloadRequest.cs" />
     <Compile Include="Transfers\ShareFileApiResponse.cs" />
+    <Compile Include="Transfers\TransfererBase.cs" />
     <Compile Include="Transfers\TransferEventArgs.cs" />
     <Compile Include="Transfers\TransferProgress.cs" />
     <Compile Include="Transfers\Uploaders\AsyncSemaphone.cs" />

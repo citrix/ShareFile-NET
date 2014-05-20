@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Client.Security.Authentication.OAuth2
 {
@@ -34,10 +35,32 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
 
         public virtual void Fill(IDictionary<string, string> values)
         {
-            ExpiresIn = values.ContainsKey("expires_in") ? Convert.ToInt64(values["expires_in"]) : 0;
-            ApplicationControlPlane = values.ContainsKey("appcp") ? values["appcp"] : "";
-            ApiControlPlane = values.ContainsKey("apicp") ? values["apicp"] : "";
-            Subdomain = values.ContainsKey("subdomain") ? values["subdomain"] : "";
+            string value;
+            if (values.TryRemoveValue("expires_in", out value))
+            {
+                long expiresIn;
+                if (!Int64.TryParse(value, out expiresIn))
+                {
+                    expiresIn = 0;
+                }
+                ExpiresIn = expiresIn;
+            }
+            if (values.TryRemoveValue("appcp", out value))
+            {
+                ApplicationControlPlane = value;
+            }
+            if (values.TryRemoveValue("apicp", out value))
+            {
+                ApiControlPlane = value;
+            }
+            if (values.TryRemoveValue("subdomain", out value))
+            {
+                Subdomain = value;
+            }
+
+            Properties = values;
         }
+
+        public IDictionary<string, string> Properties { get; set; }
     }
 }

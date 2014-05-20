@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Client.Security.Authentication.OAuth2
 {
@@ -17,20 +18,20 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
 
         public override void Fill(IDictionary<string, string> values)
         {
-            base.Fill(values);
             string value;
-            if (values.TryGetValue("access_token", out value))
+            if (values.TryRemoveValue("access_token", out value))
             {
                 AccessToken = value;
             }
-            if (values.TryGetValue("refresh_token", out value))
+            if (values.TryRemoveValue("refresh_token", out value))
             {
                 RefreshToken = value;
             }
-            if (values.TryGetValue("token_type", out value))
+            if (values.TryRemoveValue("token_type", out value))
             {
                 TokenType = value;
             }
+            base.Fill(values);
         }
         
         public Uri GetUri()

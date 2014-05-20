@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Client.Security.Authentication.OAuth2
 {
@@ -9,9 +10,17 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
 
         public override void Fill(IDictionary<string, string> values)
         {
+            string value;
+            if (values.TryRemoveValue("code", out value))
+            {
+                Code = value;
+            }
+            if (values.TryRemoveValue("state", out value))
+            {
+                State = value;
+            }
+
             base.Fill(values);
-            Code = values.ContainsKey("code") ? values["code"] : "";
-            State = values.ContainsKey("state") ? values["state"] : "";
         }
 
         public static OAuthAuthorizationCode CreateFromDictionary(IDictionary<string, string> values)

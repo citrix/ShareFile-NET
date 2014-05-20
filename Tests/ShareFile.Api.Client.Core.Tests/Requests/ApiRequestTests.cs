@@ -7,19 +7,8 @@ using ShareFile.Api.Models;
 namespace ShareFile.Api.Client.Core.Tests.Requests
 {
     [TestFixture]
-    public class ApiRequestTests
+    public class ApiRequestTests : BaseTests
     {
-        protected IShareFileClient GetShareFileClient()
-        {
-            return new ShareFileClient("https://release.sf-api.com/sf/v3/");
-        }
-
-        protected string GetId(int length = 36)
-        {
-            if (length > 36) length = 36;
-            return Guid.NewGuid().ToString().Substring(0, length);
-        }
-
         [Test]
         public void ApiRequest_FromQuery_WithId()
         {

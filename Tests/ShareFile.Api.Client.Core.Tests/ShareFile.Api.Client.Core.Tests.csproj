@@ -59,6 +59,11 @@
   <ItemGroup>
     <Compile Include="Authentication\OAuth2\OAuth2AuthenticationHelperTests.cs" />
     <Compile Include="Authentication\WebAuthenticationHelperTests.cs" />
+    <Compile Include="BaseTests.cs" />
+    <Compile Include="Extensions\BoolExtensionsTests.cs" />
+    <Compile Include="Extensions\ContactExtensionsTests.cs" />
+    <Compile Include="Extensions\ItemsEntityExtensionsTests.cs" />
+    <Compile Include="Extensions\ODataObjectExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Requests\ApiRequestTests.cs" />
   </ItemGroup>

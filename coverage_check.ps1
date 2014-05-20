@@ -1,5 +1,5 @@
-$minSeqCoverage = 16.00
-$minBranchCoverage = 10.00
+$minSeqCoverage = 17.00
+$minBranchCoverage = 11.00
 
 [xml]$results = gc .\coverage\results.xml
 

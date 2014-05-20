@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Client.Security.Authentication.OAuth2
 {
@@ -14,9 +15,22 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
 
         public void Fill(IDictionary<string, string> values)
         {
-            Error = values.ContainsKey("error") ? values["error"] : "";
-            ErrorDescription = values.ContainsKey("error_description") ? values["error_description"] : "";
+            string value;
+            if (values.TryRemoveValue("error", out value))
+            {
+                Error = value;
+            }
+            else Error = string.Empty;
+            if (values.TryRemoveValue("error_description", out value))
+            {
+                ErrorDescription = value;
+            }
+            else ErrorDescription = string.Empty;
+
+            Properties = values;
         }
+
+        public IDictionary<string, string> Properties { get; protected set; }
 
         public OAuthError(IDictionary<string, string> values)
         {

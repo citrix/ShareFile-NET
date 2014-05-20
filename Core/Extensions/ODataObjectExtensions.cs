@@ -24,11 +24,14 @@ namespace ShareFile.Api.Client.Extensions
             if (useStreamId && oDataObject is Item)
             {
                 var item = oDataObject as Item;
-                if (oDataObject.url != null)
+                if (!string.IsNullOrEmpty(item.StreamID))
                 {
-                    return new Uri(oDataObject.url.ToString().Replace(item.Id, item.StreamID));
+                    if (oDataObject.url != null)
+                    {
+                        return new Uri(oDataObject.url.ToString().Replace(item.Id, item.StreamID));
+                    }
+                    return oDataObject.ComposeUri((oDataObject as Item).StreamID);
                 }
-                return oDataObject.ComposeUri((oDataObject as Item).StreamID);
             }
             if (oDataObject.url == null)
             {

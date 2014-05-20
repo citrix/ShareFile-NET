@@ -157,3 +157,7 @@ $RECYCLE.BIN/
 Core/packages/
 packages/
 packaging/*
+
+coverage/
+coverage/*
+TestResult.xml

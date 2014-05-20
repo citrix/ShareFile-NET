@@ -478,6 +478,18 @@ namespace ShareFile.Api.Client.Entities
 		/// </returns>
 		IQuery<SearchResults> Search(string query);
 		/// <summary>
+		/// Get Web Preview Link
+		/// </summary>
+		/// <remarks>
+		/// Redirects the caller to the Web Edit application for the selected item.
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <returns>
+		/// A redirection message to the Web Edit app for this item. It returns 400 (BadRequest)
+		/// if the Web Preview app doesn't support the file type.
+		/// </returns>
+		IQuery<Redirection> WebView(Uri url, string id);
+		/// <summary>
 		/// Get all Item Protocol Link
 		/// </summary>
 		/// <remarks>
@@ -1231,6 +1243,27 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.From("Items");
 			sfApiQuery.Action("Search");
 			sfApiQuery.QueryString("query", query);
+			sfApiQuery.HttpMethod = "GET";
+			return sfApiQuery;
+		}
+
+		/// <summary>
+		/// Get Web Preview Link
+		/// </summary>
+		/// <remarks>
+		/// Redirects the caller to the Web Edit application for the selected item.
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <returns>
+		/// A redirection message to the Web Edit app for this item. It returns 400 (BadRequest)
+		/// if the Web Preview app doesn't support the file type.
+		/// </returns>
+		public IQuery<Redirection> WebView(Uri url, string id)
+		{
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Redirection>(Client);
+			sfApiQuery.Action("WebView");
+			sfApiQuery.Uri(url);
+			sfApiQuery.QueryString("id", id);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}

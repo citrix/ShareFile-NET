@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="C:\Git\V3 SDKs\CSharp\Tests\ShareFile.Api.Client.Core.Tests\bin\Debug\ShareFile.Api.Client.Core.Tests.dll" total="22" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2014-05-20" time="10:24:49">
+  <environment nunit-version="2.6.3.13283" clr-version="2.0.50727.8000" os-version="Microsoft Windows NT 6.2.9200.0" platform="Win32NT" cwd="C:\Git\V3 SDKs\CSharp" machine-name="RDUROBERTMILMAC" user="robertmil" user-domain="CITRITE" />
+  <culture-info current-culture="en-US" current-uiculture="en-US" />
+  <test-suite type="Assembly" name="C:\Git\V3 SDKs\CSharp\Tests\ShareFile.Api.Client.Core.Tests\bin\Debug\ShareFile.Api.Client.Core.Tests.dll" executed="True" result="Success" success="True" time="0.336" asserts="0">
+    <results>
+      <test-suite type="Namespace" name="ShareFile" executed="True" result="Success" success="True" time="0.330" asserts="0">
+        <results>
+          <test-suite type="Namespace" name="Api" executed="True" result="Success" success="True" time="0.330" asserts="0">
+            <results>
+              <test-suite type="Namespace" name="Client" executed="True" result="Success" success="True" time="0.330" asserts="0">
+                <results>
+                  <test-suite type="Namespace" name="Core" executed="True" result="Success" success="True" time="0.329" asserts="0">
+                    <results>
+                      <test-suite type="Namespace" name="Tests" executed="True" result="Success" success="True" time="0.329" asserts="0">
+                        <results>
+                          <test-suite type="Namespace" name="Authentication" executed="True" result="Success" success="True" time="0.113" asserts="0">
+                            <results>
+                              <test-suite type="Namespace" name="OAuth2" executed="True" result="Success" success="True" time="0.106" asserts="0">
+                                <results>
+                                  <test-suite type="TestFixture" name="OAuth2AuthenticationHelperTests" executed="True" result="Success" success="True" time="0.106" asserts="0">
+                                    <results>
+                                      <test-suite type="ParameterizedTest" name="GetOAuthResponse" executed="True" result="Success" success="True" time="0.065" asserts="0">
+                                        <results>
+                                          <test-case name="ShareFile.Api.Client.Core.Tests.Authentication.OAuth2.OAuth2AuthenticationHelperTests.GetOAuthToken_Fail" executed="True" result="Success" success="True" time="0.040" asserts="1" />
+                                          <test-case name="ShareFile.Api.Client.Core.Tests.Authentication.OAuth2.OAuth2AuthenticationHelperTests.OAuthResponseBase_Success" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                                          <test-case name="ShareFile.Api.Client.Core.Tests.Authentication.OAuth2.OAuth2AuthenticationHelperTests.OAuthResponseBase_Fail" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                                          <test-case name="ShareFile.Api.Client.Core.Tests.Authentication.OAuth2.OAuth2AuthenticationHelperTests.GetOAuthError_Success" executed="True" result="Success" success="True" time="0.003" asserts="1" />
+                                          <test-case name="ShareFile.Api.Client.Core.Tests.Authentication.OAuth2.OAuth2AuthenticationHelperTests.GetOAuthError_Fail" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                                          <test-case name="ShareFile.Api.Client.Core.Tests.Authentication.OAuth2.OAuth2AuthenticationHelperTests.GetAuthorizationCode_Success" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+                                          <test-case name="ShareFile.Api.Client.Core.Tests.Authentication.OAuth2.OAuth2AuthenticationHelperTests.GetAuthorizationCode_Fail" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                                          <test-case name="ShareFile.Api.Client.Core.Tests.Authentication.OAuth2.OAuth2AuthenticationHelperTests.GetOAuthToken_Success" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+                                        </results>
+                                      </test-suite>
+                                      <test-case name="ShareFile.Api.Client.Core.Tests.Authentication.OAuth2.OAuth2AuthenticationHelperTests.OAuthResponseBase_PropertiesMapped" executed="True" result="Success" success="True" time="0.027" asserts="0" />
+                                      <test-case name="ShareFile.Api.Client.Core.Tests.Authentication.OAuth2.OAuth2AuthenticationHelperTests.WebAuthenticationHelperTests.GetWebAuthenticationResponse_Fail" executed="True" result="Success" success="True" time="0.003" asserts="0" />
+                                      <test-case name="ShareFile.Api.Client.Core.Tests.Authentication.OAuth2.OAuth2AuthenticationHelperTests.WebAuthenticationHelperTests.GetWebAuthenticationResponse_Success" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+                                    </results>
+                                  </test-suite>
+                                </results>
+                              </test-suite>
+                              <test-suite type="TestFixture" name="WebAuthenticationHelperTests" executed="True" result="Success" success="True" time="0.002" asserts="0">
+                                <results>
+                                  <test-case name="ShareFile.Api.Client.Core.Tests.Authentication.WebAuthenticationHelperTests.GetWebAuthenticationResponse_Fail" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                                  <test-case name="ShareFile.Api.Client.Core.Tests.Authentication.WebAuthenticationHelperTests.GetWebAuthenticationResponse_Success" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                                </results>
+                              </test-suite>
+                            </results>
+                          </test-suite>
+                          <test-suite type="Namespace" name="Requests" executed="True" result="Success" success="True" time="0.207" asserts="0">
+                            <results>
+                              <test-suite type="TestFixture" name="ApiRequestTests" executed="True" result="Success" success="True" time="0.206" asserts="0">
+                                <results>
+                                  <test-case name="ShareFile.Api.Client.Core.Tests.Requests.ApiRequestTests.ApiRequest_FromQuery_CompositeActionIds" executed="True" result="Success" success="True" time="0.168" asserts="0" />
+                                  <test-case name="ShareFile.Api.Client.Core.Tests.Requests.ApiRequestTests.ApiRequest_FromQuery_CompositeIds" executed="True" result="Success" success="True" time="0.002" asserts="0" />
+                                  <test-case name="ShareFile.Api.Client.Core.Tests.Requests.ApiRequestTests.ApiRequest_FromQuery_CompositeSubActionIds" executed="True" result="Success" success="True" time="0.002" asserts="0" />
+                                  <test-case name="ShareFile.Api.Client.Core.Tests.Requests.ApiRequestTests.ApiRequest_FromQuery_WithBody_AsGet" executed="True" result="Success" success="True" time="0.004" asserts="0" />
+                                  <test-case name="ShareFile.Api.Client.Core.Tests.Requests.ApiRequestTests.ApiRequest_FromQuery_WithBody_AsPost" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+                                  <test-case name="ShareFile.Api.Client.Core.Tests.Requests.ApiRequestTests.ApiRequest_FromQuery_WithHeader" executed="True" result="Success" success="True" time="0.015" asserts="0" />
+                                  <test-case name="ShareFile.Api.Client.Core.Tests.Requests.ApiRequestTests.ApiRequest_FromQuery_WithId" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+                                  <test-case name="ShareFile.Api.Client.Core.Tests.Requests.ApiRequestTests.ApiRequest_FromQuery_WithQueryString" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+                                  <test-case name="ShareFile.Api.Client.Core.Tests.Requests.ApiRequestTests.ApiRequest_FromQuery_WithUri" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                                </results>
+                              </test-suite>
+                            </results>
+                          </test-suite>
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>

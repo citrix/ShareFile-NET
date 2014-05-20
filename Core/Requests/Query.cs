@@ -560,11 +560,7 @@ namespace ShareFile.Api.Client.Requests
                 if (actionParameters.Count > 0)
                 {
                     url.Append("(");
-                    foreach (var i in actionParameters)
-                    {
-                        url.AppendFormat("{0},", actionParameters.ToStringForUri());
-                    }
-                    url.Remove(url.Length - 1, 1);
+                    url.Append(actionParameters.ToStringForUri());
                     url.Append(")");
                 }
             }
@@ -576,11 +572,8 @@ namespace ShareFile.Api.Client.Requests
                     url.AppendFormat("/{0}", subAction.ActionName);
                     if (subAction.Parameters.Count > 0)
                     {
-                        foreach (var parameter in subAction.Parameters)
-                        {
-                            url.AppendFormat("{0},", parameter.ToStringForUri());
-                        }
-                        url.Remove(url.Length - 1, 1);
+                        url.Append("(");
+                        url.Append(subAction.Parameters.ToStringForUri());
                         url.Append(")");
                     }
                 }

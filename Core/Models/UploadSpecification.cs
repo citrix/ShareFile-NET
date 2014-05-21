@@ -38,6 +38,11 @@ namespace ShareFile.Api.Models
 		public Uri FinishUri { get; set; }
 
 		/// <summary>
+		/// Allows the client to check progress of standard uploads
+		/// </summary>
+		public string ProgressData { get; set; }
+
+		/// <summary>
 		/// Specifies a Resumable upload is supproted.
 		/// </summary>
 		public bool IsResume { get; set; }

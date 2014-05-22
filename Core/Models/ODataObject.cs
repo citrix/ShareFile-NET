@@ -8,20 +8,21 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ShareFile.Api.Models 
 {
 	public class ODataObject : object 
 	{
+
 		/// <summary>
 		/// ODATA Metadata information about the model instance
 		/// </summary>
 		[JsonProperty(PropertyName = "odata.metadata")] 
-		public string Metadata { get; set; }
+		public string MetadataUrl { get; set; }
 
 		/// <summary>
 		/// Object Identifier
@@ -30,7 +31,7 @@ namespace ShareFile.Api.Models
 
 		public Uri url { get; set; }
 
-		public IDictionary<string, string> Properties { get; set; }
-
+		[JsonExtensionData]
+		internal IDictionary<string, JToken> Properties { get; set; }
 	}
 }

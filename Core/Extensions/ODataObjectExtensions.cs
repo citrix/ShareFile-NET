@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Extensions
@@ -10,7 +11,7 @@ namespace ShareFile.Api.Client.Extensions
         {
             if (oDataObject.Properties == null)
             {
-                oDataObject.Properties = new Dictionary<string, string>();
+                oDataObject.Properties = new Dictionary<string, JToken>();
             }
 
             oDataObject.Properties.Add("MetadataBaseUri", baseUri.ToString());
@@ -69,7 +70,7 @@ namespace ShareFile.Api.Client.Extensions
         {
             string metadata;
 
-            if (oDataObject.Properties != null && oDataObject.Properties.TryGetValue("MetadataBaseUri", out metadata))
+            if (oDataObject.TryGetProperty("MetadataBaseUri", out metadata))
             {
                 return new Uri(metadata, UriKind.RelativeOrAbsolute);
             }
@@ -80,7 +81,7 @@ namespace ShareFile.Api.Client.Extensions
         {
             string entitySet;
 
-            if (oDataObject.Properties != null && oDataObject.Properties.TryGetValue("EntitySet", out entitySet))
+            if (oDataObject.TryGetProperty("EntitySet", out entitySet))
             {
                 return entitySet;
             }
@@ -91,7 +92,7 @@ namespace ShareFile.Api.Client.Extensions
         {
             string typeCast;
 
-            if (oDataObject.Properties != null && oDataObject.Properties.TryGetValue("TypeCast", out typeCast))
+            if (oDataObject.TryGetProperty("TypeCast", out typeCast))
             {
                 return typeCast;
             }
@@ -102,7 +103,7 @@ namespace ShareFile.Api.Client.Extensions
         {
             string type;
 
-            if (oDataObject.Properties != null && oDataObject.Properties.TryGetValue("TypeCast", out type))
+            if (oDataObject.TryGetProperty("TypeCast", out type))
             {
                 ODataObjectType @enum;
                 if (Enum.TryParse(type, out @enum))
@@ -113,14 +114,32 @@ namespace ShareFile.Api.Client.Extensions
             return ODataObjectType.Entity;
         }
 
-        public static void AddProperty(this ODataObject oDataObject, string key, string value)
+        public static void AddProperty(this ODataObject oDataObject, string key, object value)
         {
             if (oDataObject.Properties == null)
             {
-                oDataObject.Properties = new Dictionary<string, string>();
+                oDataObject.Properties = new Dictionary<string, JToken>();
             }
 
-            oDataObject.Properties[key] = value;
+            var token = value as JToken;
+            if (token != null)
+            {
+                oDataObject.Properties[key] = token;
+            }
+            else oDataObject.Properties[key] = JToken.FromObject(value);
+        }
+
+        public static bool TryGetProperty<T>(this ODataObject oDataObject, string key, out T value)
+        {
+            value = default(T);
+
+            JToken token;
+            if (oDataObject != null && oDataObject.Properties.TryGetValue(key, out token))
+            {
+                value = token.ToObject<T>();
+                return true;
+            }
+            return false;
         }
     }
 }

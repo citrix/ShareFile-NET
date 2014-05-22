@@ -4,7 +4,7 @@ namespace ShareFile.Api.Client.Core.Tests
 {
     public abstract class BaseTests
     {
-        protected const string BaseUriString = "https://release-sf-api.com/sf/v3/";
+        protected const string BaseUriString = "https://release.sf-api.com/sf/v3/";
         protected IShareFileClient GetShareFileClient()
         {
             return new ShareFileClient(BaseUriString);

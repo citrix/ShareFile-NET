@@ -36,6 +36,10 @@
     <Reference Include="FluentAssertions.Core">
       <HintPath>..\..\packages\FluentAssertions.3.0.107\lib\net45\FluentAssertions.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -60,6 +64,7 @@
     <Compile Include="Authentication\OAuth2\OAuth2AuthenticationHelperTests.cs" />
     <Compile Include="Authentication\WebAuthenticationHelperTests.cs" />
     <Compile Include="BaseTests.cs" />
+    <Compile Include="Converters\ODataConverterTests.cs" />
     <Compile Include="Extensions\BoolExtensionsTests.cs" />
     <Compile Include="Extensions\ContactExtensionsTests.cs" />
     <Compile Include="Extensions\ItemsEntityExtensionsTests.cs" />

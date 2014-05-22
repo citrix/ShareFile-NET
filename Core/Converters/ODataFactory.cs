@@ -241,19 +241,17 @@ namespace ShareFile.Api.Client.Converters
             };
         }
 
-        protected string[] metadataExpressions = new string[] {
-            @"(?<url>[^#\$]+)\$metadata#(?<entity>\w+)(?<element>@Element)",
-            @"(?<url>[^#\$]+)\$metadata#(?<entity>\w+)/(?<cast>[^@]+)(?<element>@Element)",
-            @"(?<url>[^#\$]+)\$metadata#(?<entity>\w+)/(?<cast>.+)",
-            string.Format(@"(?<url>[^#\$]+)\$metadata#{0}.(?<cast>.+)", typeof(ODataObject).Namespace),
-            @"(?<url>[^#\$]+)\$metadata#(?<feedentity>.+)"
+        protected Regex[] regexExpressions =
+        {
+            new Regex(@"(?<url>[^#\$]+)\$metadata#((ShareFile.Api.Models.(?<cast>.+))|((?<entity>\w+)(/(?<cast>([^@]+)|(.+)))?(?<element>@Element)?))", RegexOptions.IgnoreCase),
+            new Regex(@"(?<url>[^#\$]+)\$metadata#(?<feedentity>.+)", RegexOptions.IgnoreCase)
         };
 
         public ODataObject CreateFromMetadata(string metadata, Type knownType = null)
         {
-            foreach (var expression in metadataExpressions)
+            foreach (var expression in regexExpressions)
             {
-                var match = Regex.Match(metadata, expression, RegexOptions.IgnoreCase);
+                var match = expression.Match(metadata);
                 if (match.Success)
                 {
                     ODataObject o = null;

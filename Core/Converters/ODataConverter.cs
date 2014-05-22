@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Helpers;
 using ShareFile.Api.Models;
 
@@ -68,8 +70,6 @@ namespace ShareFile.Api.Client.Converters
             return o;
         }
 
-        private object[] defaultConstructorParamValues = new object[] { };
-
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             // Load JObject from stream
@@ -77,72 +77,67 @@ namespace ShareFile.Api.Client.Converters
 
             // Create target object based on JObject
             ODataObject target = Create(objectType, jObject);
-
-            if (target.Properties == null)
-            {
-                target.Properties = new Dictionary<string, string>();
-            }
             
             var targetType = target.GetType();
 
             // Special handling for known odata fields
             // JsonPropertyNameAttribute annotations has this information, but would require listing all properties looking for the match...
             var oDataFields = GetODataFields(targetType);
-
             foreach (var jProperty in jObject.Properties())
             {
                 var jpName = jProperty.Name;
-                var atIndex = jpName.IndexOf('@');
-                if (atIndex > -1) jpName = jpName.Substring(0, atIndex);
-                if (oDataFields.ContainsKey(jpName) && oDataFields[jpName] != null)
+                string propName;
+                if (oDataFields.TryGetValue(jpName, out propName))
                 {
-                    if (oDataFields[jpName] == "") continue;
+                    if (propName == "") continue;
                     jpName = oDataFields[jpName];
                 }
-                var oProperty = TypeHelpers.GetPublicProperty(jpName, target.GetType());
+
+                var oProperty = PropertyInfoCache.GetFromCache(targetType, jpName);
 
                 if (oProperty != null)
                 {
-                    // Shouldn't need this bit anymore.  Properties must be List or some IEnumerable derivative now.
-                    //if (TypeHelpers.IsAssignableFrom(typeof(ODataFeed<>), oProperty.PropertyType))
-                    //{
-                    //    // Special handling for feeds.. The properties are defined in the top object, but must be assigned to the feed
-                    //    // instance.. Part of ODATA spec
-                    //    // A feed that is a child of an element will contain the fields:
-                    //    // PropertyName@odata.count: n,
-                    //    // PropertyName: [ ... ],
-                    //    // PropertyName@odata.nextLink: "https://..."
-                    //    var feed = (ODataFeed<>)oProperty.GetValue(target);
-                    //    if (feed == null)
-                    //    {
-                    //        feed = (IODataFeed)oProperty.PropertyType.GetConstructor(GetEmptyTypes()).Invoke(defaultConstructorParamValues);
-                    //        oProperty.SetValue(target, feed);
-                    //    }
-                    //    if (jProperty.Name.EndsWith("@odata.nextLink"))
-                    //    {
-                    //        feed.SetNextLink((string)jProperty.Value.ToObject(typeof(string), serializer));
-                    //    }
-                    //    else if (atIndex == -1)
-                    //    {
-                    //        var feedProperty = TypeHelpers.GetPublicProperty("Feed", oProperty.PropertyType);
-                    //        //TODO: Fix this
-                    //        //feedProperty.SetValue(feed, jProperty.Value.ToObject(feedProperty.PropertyType, serializer));
-                    //    }
-                    //}
-                    //else
-                    //{
-                        // Regular non-feed fields: just ask the serializer to convert
-                        oProperty.SetValue(target, jProperty.Value.ToObject(oProperty.PropertyType, serializer), null);
-                    //}
+                    oProperty.SetValue(target, jProperty.Value.ToObject(oProperty.PropertyType, serializer), null);
                 }
                 else
                 {
                     // Hold any unknown property into a property bag for forward compatibility 
                     // Allows adding new properties for client consumption without the client updating the model
-                    target.Properties.Add(jProperty.Name, jProperty.Value.ToString());
+                    target.AddProperty(jProperty.Name, jProperty.Value);
                 }
             }
             return target;
+        }
+
+        private class PropertyInfoCache
+        {
+            private PropertyInfoCache()
+            {
+                PropertyInfos = new Dictionary<string, PropertyInfo>();
+            }
+
+            private Dictionary<string, PropertyInfo> PropertyInfos { get; set; }
+
+            private static object _cacheLock = new object();
+            private static Dictionary<Type, PropertyInfoCache> _cache = new Dictionary<Type, PropertyInfoCache>();
+            internal static PropertyInfo GetFromCache(Type type, string propertyName)
+            {
+                lock (_cacheLock)
+                {
+                    PropertyInfoCache cache;
+                    if (!_cache.TryGetValue(type, out cache))
+                    {
+                        cache = new PropertyInfoCache();
+                        foreach (var property in TypeHelpers.GetPublicProperties(type))
+                        {
+                            cache.PropertyInfos.Add(property.Name, property);
+                        }
+                        _cache.Add(type, cache);
+                    }
+
+                    return cache.PropertyInfos[propertyName];
+                }
+            }
         }
 
         public override bool CanConvert(Type objectType)
@@ -160,11 +155,6 @@ namespace ShareFile.Api.Client.Converters
                 }
             }
             return ODataFields;
-        }
-
-        private static Type[] GetEmptyTypes()
-        {
-            return new Type[] { };
         }
     }
 }

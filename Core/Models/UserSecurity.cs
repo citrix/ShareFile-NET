@@ -8,15 +8,16 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ShareFile.Api.Models 
 {
 	public class UserSecurity : ODataObject 
 	{
+
 		public bool? IsDisabled { get; set; }
 
 		public bool? IsLocked { get; set; }

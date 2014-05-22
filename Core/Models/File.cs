@@ -8,15 +8,16 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ShareFile.Api.Models 
 {
 	public class File : Item 
 	{
+
 		/// <summary>
 		/// Represents the Object Storage Identifier for this File. This field is
 		/// used in Object Storage providers - including sharefile.com and Storage Zones. Other

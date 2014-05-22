@@ -8,15 +8,16 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ShareFile.Api.Models 
 {
 	public class Query : ODataObject 
 	{
+
 		public IEnumerable<string> AuthIDs { get; set; }
 
 		public IEnumerable<string> ItemTypes { get; set; }

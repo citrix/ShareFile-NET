@@ -8,15 +8,16 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ShareFile.Api.Models 
 {
 	public class Share : ODataObject 
 	{
+
 		/// <summary>
 		/// When a Share is sent to multiple users, with RequireLogin or RequireUserInfo set, then a different
 		/// Share Alias is created for each user. The email ShareFile sends to these users will contain different

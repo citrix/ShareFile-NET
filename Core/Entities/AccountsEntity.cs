@@ -331,8 +331,6 @@ namespace ShareFile.Api.Client.Entities
 		IQuery<EnsSubscriberConfiguration> GetEnsSubscriberConfiguration();
 		IQuery EnableEns();
 		IQuery DisableEns();
-		/// <param name="newIntervalMs"></param>
-		IQuery ChangeEnsSyncInterval(int newIntervalMs);
 		/// <summary>
 		/// Get SSO Info
 		/// </summary>
@@ -889,17 +887,6 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.From("Accounts");
 			sfApiQuery.Action("DisableEns");
 			sfApiQuery.HttpMethod = "POST";
-			return sfApiQuery;
-		}
-
-		/// <param name="newIntervalMs"></param>
-		public IQuery ChangeEnsSyncInterval(int newIntervalMs)
-		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.From("Accounts");
-			sfApiQuery.Action("ChangeEnsSyncInterval");
-			sfApiQuery.QueryString("newIntervalMs", newIntervalMs);
-			sfApiQuery.HttpMethod = "PATCH";
 			return sfApiQuery;
 		}
 

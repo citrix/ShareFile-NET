@@ -405,7 +405,7 @@ namespace ShareFile.Api.Client
                     if (action.Action != EventHandlerResponseAction.Ignore) return action;
                 }
             }
-            return EventHandlerResponse.Ignore;
+            return new EventHandlerResponse() { Action = EventHandlerResponseAction.Redirect, Redirection = redirection };
         }
 
         public void RegisterSyncRequestProvider(ISyncRequestProvider syncRequestProvider)

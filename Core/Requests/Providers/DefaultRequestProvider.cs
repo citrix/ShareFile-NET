@@ -373,7 +373,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 
                 var apiRequest = ApiRequest.FromQuery(query as QueryBase);
 
-                if (action != null && action.Redirection != null && action.Redirection.Body != null)
+                if (action != null && action.Redirection != null)
                 {
                     apiRequest.IsComposed = true;
                     apiRequest.Uri = action.Redirection.Uri;
@@ -412,9 +412,8 @@ namespace ShareFile.Api.Client.Requests.Providers
                                 var redirection = response.Value as Redirection;
                                 if (httpRequestMessage.RequestUri.GetAuthority() != redirection.Uri.GetAuthority())
                                 {
-                                    ShareFileClient.OnChangeDomain(httpRequestMessage, redirection);
+                                    action = ShareFileClient.OnChangeDomain(httpRequestMessage, redirection);
                                 }
-                                action = EventHandlerResponse.Redirect(redirection);
                             }
                             else
                             {

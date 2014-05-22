@@ -22,6 +22,8 @@ namespace ShareFile.Api.Models
 
 		public IEnumerable<Item> Children { get; set; }
 
+		public bool? HasRemoteChildren { get; set; }
+
 		public ItemInfo Info { get; set; }
 
 	}

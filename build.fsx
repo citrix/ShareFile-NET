@@ -10,7 +10,7 @@ RestorePackages()
 let buildDir = "./build/"
 let packagingRoot = "./packaging/"
 let packagingDir = packagingRoot @@ "sharefile"
-let nugetVersion = "3.0.0-alpha15"
+let nugetVersion = "3.0.0-alpha17"
 let assemblyVersion = "3.0.0"
 let assemblyFileVersion = "3.0.0"
 let nugetAccessKey = "nUg3tMyP@cKag3"
@@ -77,13 +77,16 @@ Target "Build" (fun () ->
     let buildParams = List.append baseBuildParams ["DefineConstants", constants + ";Portable"]
     let net40PBuildParams = List.append baseBuildParams ["DefineConstants", constants + ";Net40"]
     let net45BuildParams = List.append baseBuildParams ["DefineConstants", constants]
-
-    MSBuild (buildDir @@ "Portable") "Build" buildParams ["./ShareFile.Api.Client.Core.sln"]
+    
+    MSBuild (buildDir @@ "Portable") "Clean;Build" buildParams ["./ShareFile.Api.Client.Core.sln"]
     |> Log "AppBuild-Output: "
-    MSBuild (buildDir @@ "Net45") "Build" net45BuildParams ["./ShareFile.Api.Client.Net45.sln"]
+    CleanDirs ["./Core" @@ "obj"]
+    MSBuild (buildDir @@ "Net45") "Clean;Build" net45BuildParams ["./ShareFile.Api.Client.Net45.sln"]
     |> Log "AppBuild-Output: "
-    MSBuild (buildDir @@ "Net40") "Build" net40PBuildParams ["./ShareFile.Api.Client.Net40.sln"]
+    CleanDirs ["./Core" @@ "obj"]
+    MSBuild (buildDir @@ "Net40") "Clean;Build" net40PBuildParams ["./ShareFile.Api.Client.Net40.sln"]
     |> Log "AppBuild-Output: "
+    CleanDirs ["./Core" @@ "obj"]
 )
 
 Target "CreateNuGetPackage" (fun () ->

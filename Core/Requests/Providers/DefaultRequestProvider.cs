@@ -407,7 +407,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 
                         if (response.Value != null)
                         {
-                            if (response.Value is Redirection)
+                            if (response.Value is Redirection && typeof(T) != typeof(Redirection))
                             {
                                 var redirection = response.Value as Redirection;
                                 if (httpRequestMessage.RequestUri.GetAuthority() != redirection.Uri.GetAuthority())

@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -67,5 +68,69 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public bool? IsOwner { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (AccessControl)source;
+				Item = typedSource.Item;
+				Principal = typedSource.Principal;
+				CanUpload = typedSource.CanUpload;
+				CanDownload = typedSource.CanDownload;
+				CanView = typedSource.CanView;
+				CanDelete = typedSource.CanDelete;
+				CanManagePermissions = typedSource.CanManagePermissions;
+				NotifyOnUpload = typedSource.NotifyOnUpload;
+				NotifyOnDownload = typedSource.NotifyOnDownload;
+				IsOwner = typedSource.IsOwner;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("Item", out token) && token.Type != JTokenType.Null)
+				{
+					Item = (Item)serializer.Deserialize(token.CreateReader(), typeof(Item));
+				}
+				if(source.TryGetProperty("Principal", out token) && token.Type != JTokenType.Null)
+				{
+					Principal = (Principal)serializer.Deserialize(token.CreateReader(), typeof(Principal));
+				}
+				if(source.TryGetProperty("CanUpload", out token) && token.Type != JTokenType.Null)
+				{
+					CanUpload = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanDownload", out token) && token.Type != JTokenType.Null)
+				{
+					CanDownload = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanView", out token) && token.Type != JTokenType.Null)
+				{
+					CanView = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanDelete", out token) && token.Type != JTokenType.Null)
+				{
+					CanDelete = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanManagePermissions", out token) && token.Type != JTokenType.Null)
+				{
+					CanManagePermissions = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("NotifyOnUpload", out token) && token.Type != JTokenType.Null)
+				{
+					NotifyOnUpload = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("NotifyOnDownload", out token) && token.Type != JTokenType.Null)
+				{
+					NotifyOnDownload = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IsOwner", out token) && token.Type != JTokenType.Null)
+				{
+					IsOwner = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+			}
+		}
 	}
 }

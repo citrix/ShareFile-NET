@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -63,5 +64,64 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public string ResumeFileHash { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (UploadSpecification)source;
+				Method = typedSource.Method;
+				PrepareUri = typedSource.PrepareUri;
+				ChunkUri = typedSource.ChunkUri;
+				FinishUri = typedSource.FinishUri;
+				ProgressData = typedSource.ProgressData;
+				IsResume = typedSource.IsResume;
+				ResumeIndex = typedSource.ResumeIndex;
+				ResumeOffset = typedSource.ResumeOffset;
+				ResumeFileHash = typedSource.ResumeFileHash;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("Method", out token) && token.Type != JTokenType.Null)
+				{
+					Method = (SafeEnum<UploadMethod>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<UploadMethod>));
+				}
+				if(source.TryGetProperty("PrepareUri", out token) && token.Type != JTokenType.Null)
+				{
+					PrepareUri = (Uri)serializer.Deserialize(token.CreateReader(), typeof(Uri));
+				}
+				if(source.TryGetProperty("ChunkUri", out token) && token.Type != JTokenType.Null)
+				{
+					ChunkUri = (Uri)serializer.Deserialize(token.CreateReader(), typeof(Uri));
+				}
+				if(source.TryGetProperty("FinishUri", out token) && token.Type != JTokenType.Null)
+				{
+					FinishUri = (Uri)serializer.Deserialize(token.CreateReader(), typeof(Uri));
+				}
+				if(source.TryGetProperty("ProgressData", out token) && token.Type != JTokenType.Null)
+				{
+					ProgressData = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("IsResume", out token) && token.Type != JTokenType.Null)
+				{
+					IsResume = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("ResumeIndex", out token) && token.Type != JTokenType.Null)
+				{
+					ResumeIndex = (long)serializer.Deserialize(token.CreateReader(), typeof(long));
+				}
+				if(source.TryGetProperty("ResumeOffset", out token) && token.Type != JTokenType.Null)
+				{
+					ResumeOffset = (long)serializer.Deserialize(token.CreateReader(), typeof(long));
+				}
+				if(source.TryGetProperty("ResumeFileHash", out token) && token.Type != JTokenType.Null)
+				{
+					ResumeFileHash = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+			}
+		}
 	}
 }

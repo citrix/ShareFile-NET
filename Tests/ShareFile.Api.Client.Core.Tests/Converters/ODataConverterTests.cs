@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -52,19 +48,17 @@ namespace ShareFile.Api.Client.Core.Tests.Converters
         {
             var folder = GetFolder();
 
-            (folder as ODataObject).MetadataUrl =
+            folder.MetadataUrl =
                 "https://onprem.sharefile.local/sf/v3/$metadata#Items/ShareFile.Api.Models.Folder@Element";
-            (folder.Children.First() as ODataObject).MetadataUrl =
+            folder.Children.First().MetadataUrl =
                 "https://onprem.sharefile.local/sf/v3/$metadata#Items/ShareFile.Api.Models.File@Element";
 
             var serializer = GetSerializer();
 
-            var serializedFolder = JsonConvert.SerializeObject(folder, new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore
-            });
-
-            var jsonReader = new JsonTextReader(new StringReader(serializedFolder));
+            StringWriter writer = new StringWriter();
+            serializer.Serialize(writer, folder);
+            
+            var jsonReader = new JsonTextReader(new StringReader(writer.ToString()));
             
             var item = serializer.Deserialize<ODataObject>(jsonReader) as Item;
             item.Should().NotBeNull();
@@ -74,22 +68,18 @@ namespace ShareFile.Api.Client.Core.Tests.Converters
         [Test]
         public void CreateFolder_Entity_Cast()
         {
-            //@"https://labs.sf-api.com/sf/v3/$metadata#Items/Folder"
-
             var folder = GetFolder();
-            (folder as ODataObject).MetadataUrl =
+            folder.MetadataUrl =
                 "https://labs.sf-api.com/sf/v3/$metadata#Items/Folder";
-            (folder.Children.First() as ODataObject).MetadataUrl =
+            folder.Children.First().MetadataUrl =
                 "https://labs.sf-api.com/sf/v3/$metadata#Items/File";
 
             var serializer = GetSerializer();
 
-            var serializedFolder = JsonConvert.SerializeObject(folder, new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore
-            });
+            StringWriter writer = new StringWriter();
+            serializer.Serialize(writer, folder);
 
-            var jsonReader = new JsonTextReader(new StringReader(serializedFolder));
+            var jsonReader = new JsonTextReader(new StringReader(writer.ToString()));
 
             var item = serializer.Deserialize<ODataObject>(jsonReader) as Item;
             item.Should().NotBeNull();
@@ -100,19 +90,17 @@ namespace ShareFile.Api.Client.Core.Tests.Converters
         public void CreateFolder_Cast()
         {
             var folder = GetFolder();
-            (folder as ODataObject).MetadataUrl =
+            folder.MetadataUrl =
                 "https://labs.sf-api.com/sf/v3/$metadata#ShareFile.Api.Models.Folder";
-            (folder.Children.First() as ODataObject).MetadataUrl =
+            folder.Children.First().MetadataUrl =
                 "https://labs.sf-api.com/sf/v3/$metadata#ShareFile.Api.Models.File";
 
             var serializer = GetSerializer();
 
-            var serializedFolder = JsonConvert.SerializeObject(folder, new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore
-            });
+            StringWriter writer = new StringWriter();
+            serializer.Serialize(writer, folder);
 
-            var jsonReader = new JsonTextReader(new StringReader(serializedFolder));
+            var jsonReader = new JsonTextReader(new StringReader(writer.ToString()));
 
             var item = serializer.Deserialize<ODataObject>(jsonReader) as Item;
             item.Should().NotBeNull();
@@ -127,19 +115,18 @@ namespace ShareFile.Api.Client.Core.Tests.Converters
             {
                 GetFolder()
             };
-            (feed.Feed.First() as ODataObject).MetadataUrl =
+            (feed.Feed.First()).MetadataUrl =
                 "https://labs.sf-api.com/sf/v3/$metadata#ShareFile.Api.Models.Folder";
-            ((feed.Feed.First() as Folder).Children.First() as ODataObject).MetadataUrl =
+            ((feed.Feed.First() as Folder).Children.First()).MetadataUrl =
                 "https://labs.sf-api.com/sf/v3/$metadata#ShareFile.Api.Models.File";
+            feed.MetadataUrl = "https://labs.sf-api.com/sf/v3/$metadata#Items";
 
             var serializer = GetSerializer();
 
-            var serializedFolder = JsonConvert.SerializeObject(feed, new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore
-            });
+            StringWriter writer = new StringWriter();
+            serializer.Serialize(writer, feed);
 
-            var jsonReader = new JsonTextReader(new StringReader(serializedFolder));
+            var jsonReader = new JsonTextReader(new StringReader(writer.ToString()));
 
             var item = serializer.Deserialize<ODataFeed<Item>>(jsonReader);
             item.Should().NotBeNull();

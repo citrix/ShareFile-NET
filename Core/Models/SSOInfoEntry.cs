@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -22,5 +23,29 @@ namespace ShareFile.Api.Models
 
 		public string Value { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (SSOInfoEntry)source;
+				Key = typedSource.Key;
+				Value = typedSource.Value;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("Key", out token) && token.Type != JTokenType.Null)
+				{
+					Key = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Value", out token) && token.Type != JTokenType.Null)
+				{
+					Value = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+			}
+		}
 	}
 }

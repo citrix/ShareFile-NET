@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -28,5 +29,29 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public IEnumerable<DeviceUserWipe> WipeResults { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (DeviceWipeReport)source;
+				Logs = typedSource.Logs;
+				WipeResults = typedSource.WipeResults;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("Logs", out token) && token.Type != JTokenType.Null)
+				{
+					Logs = (IEnumerable<DeviceLogEntry>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<DeviceLogEntry>));
+				}
+				if(source.TryGetProperty("WipeResults", out token) && token.Type != JTokenType.Null)
+				{
+					WipeResults = (IEnumerable<DeviceUserWipe>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<DeviceUserWipe>));
+				}
+			}
+		}
 	}
 }

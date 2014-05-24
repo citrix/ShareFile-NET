@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -22,9 +23,36 @@ namespace ShareFile.Api.Models
 
 		public IEnumerable<Item> Children { get; set; }
 
-		public bool? HasRemoteChildren { get; set; }
-
 		public ItemInfo Info { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (Folder)source;
+				FileCount = typedSource.FileCount;
+				Children = typedSource.Children;
+				Info = typedSource.Info;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("FileCount", out token) && token.Type != JTokenType.Null)
+				{
+					FileCount = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("Children", out token) && token.Type != JTokenType.Null)
+				{
+					Children = (IEnumerable<Item>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<Item>));
+				}
+				if(source.TryGetProperty("Info", out token) && token.Type != JTokenType.Null)
+				{
+					Info = (ItemInfo)serializer.Deserialize(token.CreateReader(), typeof(ItemInfo));
+				}
+			}
+		}
 	}
 }

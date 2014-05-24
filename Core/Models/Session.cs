@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -36,5 +37,64 @@ namespace ShareFile.Api.Models
 
 		public DeviceUser DeviceUser { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (Session)source;
+				Principal = typedSource.Principal;
+				AuthenticationType = typedSource.AuthenticationType;
+				OAuth2ClientName = typedSource.OAuth2ClientName;
+				Tool = typedSource.Tool;
+				Version = typedSource.Version;
+				ClientIPAddress = typedSource.ClientIPAddress;
+				IsAuthenticated = typedSource.IsAuthenticated;
+				Name = typedSource.Name;
+				DeviceUser = typedSource.DeviceUser;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("Principal", out token) && token.Type != JTokenType.Null)
+				{
+					Principal = (Principal)serializer.Deserialize(token.CreateReader(), typeof(Principal));
+				}
+				if(source.TryGetProperty("AuthenticationType", out token) && token.Type != JTokenType.Null)
+				{
+					AuthenticationType = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("OAuth2ClientName", out token) && token.Type != JTokenType.Null)
+				{
+					OAuth2ClientName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Tool", out token) && token.Type != JTokenType.Null)
+				{
+					Tool = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Version", out token) && token.Type != JTokenType.Null)
+				{
+					Version = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ClientIPAddress", out token) && token.Type != JTokenType.Null)
+				{
+					ClientIPAddress = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("IsAuthenticated", out token) && token.Type != JTokenType.Null)
+				{
+					IsAuthenticated = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("Name", out token) && token.Type != JTokenType.Null)
+				{
+					Name = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("DeviceUser", out token) && token.Type != JTokenType.Null)
+				{
+					DeviceUser = (DeviceUser)serializer.Deserialize(token.CreateReader(), typeof(DeviceUser));
+				}
+			}
+		}
 	}
 }

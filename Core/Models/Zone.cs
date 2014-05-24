@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -38,5 +39,69 @@ namespace ShareFile.Api.Models
 
 		public IEnumerable<Metadata> Metadata { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (Zone)source;
+				Secret = typedSource.Secret;
+				ZoneType = typedSource.ZoneType;
+				Account = typedSource.Account;
+				HeartBeatTolerance = typedSource.HeartBeatTolerance;
+				PingBackInterval = typedSource.PingBackInterval;
+				Version = typedSource.Version;
+				ZoneServices = typedSource.ZoneServices;
+				IsHIPAAZone = typedSource.IsHIPAAZone;
+				StorageCenters = typedSource.StorageCenters;
+				Metadata = typedSource.Metadata;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("Secret", out token) && token.Type != JTokenType.Null)
+				{
+					Secret = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ZoneType", out token) && token.Type != JTokenType.Null)
+				{
+					ZoneType = (SafeEnum<ZoneType>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<ZoneType>));
+				}
+				if(source.TryGetProperty("Account", out token) && token.Type != JTokenType.Null)
+				{
+					Account = (Account)serializer.Deserialize(token.CreateReader(), typeof(Account));
+				}
+				if(source.TryGetProperty("HeartBeatTolerance", out token) && token.Type != JTokenType.Null)
+				{
+					HeartBeatTolerance = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("PingBackInterval", out token) && token.Type != JTokenType.Null)
+				{
+					PingBackInterval = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("Version", out token) && token.Type != JTokenType.Null)
+				{
+					Version = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ZoneServices", out token) && token.Type != JTokenType.Null)
+				{
+					ZoneServices = (SafeEnum<ZoneService>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<ZoneService>));
+				}
+				if(source.TryGetProperty("IsHIPAAZone", out token) && token.Type != JTokenType.Null)
+				{
+					IsHIPAAZone = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("StorageCenters", out token) && token.Type != JTokenType.Null)
+				{
+					StorageCenters = (IEnumerable<StorageCenter>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<StorageCenter>));
+				}
+				if(source.TryGetProperty("Metadata", out token) && token.Type != JTokenType.Null)
+				{
+					Metadata = (IEnumerable<Metadata>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<Metadata>));
+				}
+			}
+		}
 	}
 }

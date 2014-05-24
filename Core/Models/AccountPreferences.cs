@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -174,5 +175,409 @@ namespace ShareFile.Api.Models
 
 		public bool? HasAnyConnectorZones { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (AccountPreferences)source;
+				EnableViewOnly = typedSource.EnableViewOnly;
+				EnableWatermarkOnViewOnly = typedSource.EnableWatermarkOnViewOnly;
+				AllowProactiveNotifications = typedSource.AllowProactiveNotifications;
+				ShowUserListToClients = typedSource.ShowUserListToClients;
+				RequireLoginOnDownload = typedSource.RequireLoginOnDownload;
+				RequireLoginByDefault = typedSource.RequireLoginByDefault;
+				EnableClientSend = typedSource.EnableClientSend;
+				EnableThumbnails = typedSource.EnableThumbnails;
+				EnableSSO = typedSource.EnableSSO;
+				VirusStrictness = typedSource.VirusStrictness;
+				EnableSfAdi = typedSource.EnableSfAdi;
+				EnableMultipleZones = typedSource.EnableMultipleZones;
+				DefaultZone = typedSource.DefaultZone;
+				EnableVersioning = typedSource.EnableVersioning;
+				SystemType = typedSource.SystemType;
+				EnableSync = typedSource.EnableSync;
+				EnableSyncAutoUpdate = typedSource.EnableSyncAutoUpdate;
+				SystemName = typedSource.SystemName;
+				HomeScreenName = typedSource.HomeScreenName;
+				ShowTermsCheckbox = typedSource.ShowTermsCheckbox;
+				TermsCheckboxText = typedSource.TermsCheckboxText;
+				TermsCheckboxStrictness = typedSource.TermsCheckboxStrictness;
+				RequireCompanyNameWithUserInfo = typedSource.RequireCompanyNameWithUserInfo;
+				EnableEditor = typedSource.EnableEditor;
+				ShareIDMaxExpirationDays = typedSource.ShareIDMaxExpirationDays;
+				AdminIsSuperUser = typedSource.AdminIsSuperUser;
+				ShowFolderAccessList = typedSource.ShowFolderAccessList;
+				FromEmailIsShareFile = typedSource.FromEmailIsShareFile;
+				UseAlternateSMTP = typedSource.UseAlternateSMTP;
+				ShowPasswordInEmail = typedSource.ShowPasswordInEmail;
+				EmailPasswordText = typedSource.EmailPasswordText;
+				EnableSelfNotificationsUpload = typedSource.EnableSelfNotificationsUpload;
+				EnableSelfNotificationsDownload = typedSource.EnableSelfNotificationsDownload;
+				EnableUploadShareIDReceipt = typedSource.EnableUploadShareIDReceipt;
+				DefaultConsolidatedNotificationInterval = typedSource.DefaultConsolidatedNotificationInterval;
+				ExpirationDays = typedSource.ExpirationDays;
+				DefaultSortField = typedSource.DefaultSortField;
+				DefaultSortOrder = typedSource.DefaultSortOrder;
+				DefaultIsVersioned = typedSource.DefaultIsVersioned;
+				DefaultMaxVersions = typedSource.DefaultMaxVersions;
+				ViewOnlyWatermarkText = typedSource.ViewOnlyWatermarkText;
+				EnableDocViewerPrinting = typedSource.EnableDocViewerPrinting;
+				EnableWatermarkedDownloads = typedSource.EnableWatermarkedDownloads;
+				EnableCaseSensitivePasswords = typedSource.EnableCaseSensitivePasswords;
+				EnableTwoFactorAuth = typedSource.EnableTwoFactorAuth;
+				LoginFailMaxAttempts = typedSource.LoginFailMaxAttempts;
+				LoginFailLockoutSecs = typedSource.LoginFailLockoutSecs;
+				IPRestrictions = typedSource.IPRestrictions;
+				InactiveTimeoutMins = typedSource.InactiveTimeoutMins;
+				OAuth2RefreshTokenLifetimeMinutes = typedSource.OAuth2RefreshTokenLifetimeMinutes;
+				PasswordRegEx = typedSource.PasswordRegEx;
+				PasswordRegExFormula = typedSource.PasswordRegExFormula;
+				PasswordRegExDescription = typedSource.PasswordRegExDescription;
+				EnableActivationLinks = typedSource.EnableActivationLinks;
+				IsFINRA = typedSource.IsFINRA;
+				EnableOAuth = typedSource.EnableOAuth;
+				EnableQandA = typedSource.EnableQandA;
+				EnableQandATextInNotifications = typedSource.EnableQandATextInNotifications;
+				UXMode = typedSource.UXMode;
+				IndustryCode = typedSource.IndustryCode;
+				PasswordMaxAgeDays = typedSource.PasswordMaxAgeDays;
+				PasswordHistoryCount = typedSource.PasswordHistoryCount;
+				MinimumLength = typedSource.MinimumLength;
+				AlphaRequired = typedSource.AlphaRequired;
+				CaseRequired = typedSource.CaseRequired;
+				NumericRequired = typedSource.NumericRequired;
+				SpecialRequired = typedSource.SpecialRequired;
+				AllowedSpecialCharacters = typedSource.AllowedSpecialCharacters;
+				EnableWebDAV = typedSource.EnableWebDAV;
+				EnableFTP = typedSource.EnableFTP;
+				EnableSFTP = typedSource.EnableSFTP;
+				DisableMarketing = typedSource.DisableMarketing;
+				VDRDocViewerURL = typedSource.VDRDocViewerURL;
+				EnableSMBConnectorForAccount = typedSource.EnableSMBConnectorForAccount;
+				AccountID = typedSource.AccountID;
+				EnableGetApp = typedSource.EnableGetApp;
+				EnableStorageZoneConnector = typedSource.EnableStorageZoneConnector;
+				HasAnyConnectorZones = typedSource.HasAnyConnectorZones;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("EnableViewOnly", out token) && token.Type != JTokenType.Null)
+				{
+					EnableViewOnly = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableWatermarkOnViewOnly", out token) && token.Type != JTokenType.Null)
+				{
+					EnableWatermarkOnViewOnly = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("AllowProactiveNotifications", out token) && token.Type != JTokenType.Null)
+				{
+					AllowProactiveNotifications = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("ShowUserListToClients", out token) && token.Type != JTokenType.Null)
+				{
+					ShowUserListToClients = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("RequireLoginOnDownload", out token) && token.Type != JTokenType.Null)
+				{
+					RequireLoginOnDownload = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("RequireLoginByDefault", out token) && token.Type != JTokenType.Null)
+				{
+					RequireLoginByDefault = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableClientSend", out token) && token.Type != JTokenType.Null)
+				{
+					EnableClientSend = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableThumbnails", out token) && token.Type != JTokenType.Null)
+				{
+					EnableThumbnails = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableSSO", out token) && token.Type != JTokenType.Null)
+				{
+					EnableSSO = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("VirusStrictness", out token) && token.Type != JTokenType.Null)
+				{
+					VirusStrictness = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("EnableSfAdi", out token) && token.Type != JTokenType.Null)
+				{
+					EnableSfAdi = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableMultipleZones", out token) && token.Type != JTokenType.Null)
+				{
+					EnableMultipleZones = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("DefaultZone", out token) && token.Type != JTokenType.Null)
+				{
+					DefaultZone = (Zone)serializer.Deserialize(token.CreateReader(), typeof(Zone));
+				}
+				if(source.TryGetProperty("EnableVersioning", out token) && token.Type != JTokenType.Null)
+				{
+					EnableVersioning = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("SystemType", out token) && token.Type != JTokenType.Null)
+				{
+					SystemType = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("EnableSync", out token) && token.Type != JTokenType.Null)
+				{
+					EnableSync = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableSyncAutoUpdate", out token) && token.Type != JTokenType.Null)
+				{
+					EnableSyncAutoUpdate = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("SystemName", out token) && token.Type != JTokenType.Null)
+				{
+					SystemName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("HomeScreenName", out token) && token.Type != JTokenType.Null)
+				{
+					HomeScreenName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ShowTermsCheckbox", out token) && token.Type != JTokenType.Null)
+				{
+					ShowTermsCheckbox = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("TermsCheckboxText", out token) && token.Type != JTokenType.Null)
+				{
+					TermsCheckboxText = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("TermsCheckboxStrictness", out token) && token.Type != JTokenType.Null)
+				{
+					TermsCheckboxStrictness = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("RequireCompanyNameWithUserInfo", out token) && token.Type != JTokenType.Null)
+				{
+					RequireCompanyNameWithUserInfo = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableEditor", out token) && token.Type != JTokenType.Null)
+				{
+					EnableEditor = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("ShareIDMaxExpirationDays", out token) && token.Type != JTokenType.Null)
+				{
+					ShareIDMaxExpirationDays = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("AdminIsSuperUser", out token) && token.Type != JTokenType.Null)
+				{
+					AdminIsSuperUser = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("ShowFolderAccessList", out token) && token.Type != JTokenType.Null)
+				{
+					ShowFolderAccessList = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("FromEmailIsShareFile", out token) && token.Type != JTokenType.Null)
+				{
+					FromEmailIsShareFile = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("UseAlternateSMTP", out token) && token.Type != JTokenType.Null)
+				{
+					UseAlternateSMTP = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("ShowPasswordInEmail", out token) && token.Type != JTokenType.Null)
+				{
+					ShowPasswordInEmail = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EmailPasswordText", out token) && token.Type != JTokenType.Null)
+				{
+					EmailPasswordText = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("EnableSelfNotificationsUpload", out token) && token.Type != JTokenType.Null)
+				{
+					EnableSelfNotificationsUpload = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableSelfNotificationsDownload", out token) && token.Type != JTokenType.Null)
+				{
+					EnableSelfNotificationsDownload = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableUploadShareIDReceipt", out token) && token.Type != JTokenType.Null)
+				{
+					EnableUploadShareIDReceipt = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("DefaultConsolidatedNotificationInterval", out token) && token.Type != JTokenType.Null)
+				{
+					DefaultConsolidatedNotificationInterval = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("ExpirationDays", out token) && token.Type != JTokenType.Null)
+				{
+					ExpirationDays = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("DefaultSortField", out token) && token.Type != JTokenType.Null)
+				{
+					DefaultSortField = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("DefaultSortOrder", out token) && token.Type != JTokenType.Null)
+				{
+					DefaultSortOrder = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("DefaultIsVersioned", out token) && token.Type != JTokenType.Null)
+				{
+					DefaultIsVersioned = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("DefaultMaxVersions", out token) && token.Type != JTokenType.Null)
+				{
+					DefaultMaxVersions = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("ViewOnlyWatermarkText", out token) && token.Type != JTokenType.Null)
+				{
+					ViewOnlyWatermarkText = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("EnableDocViewerPrinting", out token) && token.Type != JTokenType.Null)
+				{
+					EnableDocViewerPrinting = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableWatermarkedDownloads", out token) && token.Type != JTokenType.Null)
+				{
+					EnableWatermarkedDownloads = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableCaseSensitivePasswords", out token) && token.Type != JTokenType.Null)
+				{
+					EnableCaseSensitivePasswords = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableTwoFactorAuth", out token) && token.Type != JTokenType.Null)
+				{
+					EnableTwoFactorAuth = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("LoginFailMaxAttempts", out token) && token.Type != JTokenType.Null)
+				{
+					LoginFailMaxAttempts = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("LoginFailLockoutSecs", out token) && token.Type != JTokenType.Null)
+				{
+					LoginFailLockoutSecs = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("IPRestrictions", out token) && token.Type != JTokenType.Null)
+				{
+					IPRestrictions = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("InactiveTimeoutMins", out token) && token.Type != JTokenType.Null)
+				{
+					InactiveTimeoutMins = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("OAuth2RefreshTokenLifetimeMinutes", out token) && token.Type != JTokenType.Null)
+				{
+					OAuth2RefreshTokenLifetimeMinutes = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("PasswordRegEx", out token) && token.Type != JTokenType.Null)
+				{
+					PasswordRegEx = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("PasswordRegExFormula", out token) && token.Type != JTokenType.Null)
+				{
+					PasswordRegExFormula = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("PasswordRegExDescription", out token) && token.Type != JTokenType.Null)
+				{
+					PasswordRegExDescription = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("EnableActivationLinks", out token) && token.Type != JTokenType.Null)
+				{
+					EnableActivationLinks = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IsFINRA", out token) && token.Type != JTokenType.Null)
+				{
+					IsFINRA = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableOAuth", out token) && token.Type != JTokenType.Null)
+				{
+					EnableOAuth = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableQandA", out token) && token.Type != JTokenType.Null)
+				{
+					EnableQandA = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("EnableQandATextInNotifications", out token) && token.Type != JTokenType.Null)
+				{
+					EnableQandATextInNotifications = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("UXMode", out token) && token.Type != JTokenType.Null)
+				{
+					UXMode = (SafeEnum<UXMode>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<UXMode>));
+				}
+				if(source.TryGetProperty("IndustryCode", out token) && token.Type != JTokenType.Null)
+				{
+					IndustryCode = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("PasswordMaxAgeDays", out token) && token.Type != JTokenType.Null)
+				{
+					PasswordMaxAgeDays = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
+				}
+				if(source.TryGetProperty("PasswordHistoryCount", out token) && token.Type != JTokenType.Null)
+				{
+					PasswordHistoryCount = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
+				}
+				if(source.TryGetProperty("MinimumLength", out token) && token.Type != JTokenType.Null)
+				{
+					MinimumLength = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
+				}
+				if(source.TryGetProperty("AlphaRequired", out token) && token.Type != JTokenType.Null)
+				{
+					AlphaRequired = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("CaseRequired", out token) && token.Type != JTokenType.Null)
+				{
+					CaseRequired = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("NumericRequired", out token) && token.Type != JTokenType.Null)
+				{
+					NumericRequired = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("SpecialRequired", out token) && token.Type != JTokenType.Null)
+				{
+					SpecialRequired = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("AllowedSpecialCharacters", out token) && token.Type != JTokenType.Null)
+				{
+					AllowedSpecialCharacters = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("EnableWebDAV", out token) && token.Type != JTokenType.Null)
+				{
+					EnableWebDAV = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableFTP", out token) && token.Type != JTokenType.Null)
+				{
+					EnableFTP = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableSFTP", out token) && token.Type != JTokenType.Null)
+				{
+					EnableSFTP = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("DisableMarketing", out token) && token.Type != JTokenType.Null)
+				{
+					DisableMarketing = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("VDRDocViewerURL", out token) && token.Type != JTokenType.Null)
+				{
+					VDRDocViewerURL = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("EnableSMBConnectorForAccount", out token) && token.Type != JTokenType.Null)
+				{
+					EnableSMBConnectorForAccount = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("AccountID", out token) && token.Type != JTokenType.Null)
+				{
+					AccountID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("EnableGetApp", out token) && token.Type != JTokenType.Null)
+				{
+					EnableGetApp = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableStorageZoneConnector", out token) && token.Type != JTokenType.Null)
+				{
+					EnableStorageZoneConnector = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("HasAnyConnectorZones", out token) && token.Type != JTokenType.Null)
+				{
+					HasAnyConnectorZones = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+			}
+		}
 	}
 }

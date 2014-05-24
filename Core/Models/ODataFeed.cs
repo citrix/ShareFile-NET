@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -27,5 +28,34 @@ namespace ShareFile.Api.Models
 		[JsonProperty(PropertyName = "odata.nextLink")] 
 		public string NextLink { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (ODataFeed<T>)source;
+				count = typedSource.count;
+				Feed = typedSource.Feed;
+				NextLink = typedSource.NextLink;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("odata.count", out token) && token.Type != JTokenType.Null)
+				{
+					count = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
+				}
+				if(source.TryGetProperty("value", out token) && token.Type != JTokenType.Null)
+				{
+					Feed = (IEnumerable<T>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<T>));
+				}
+				if(source.TryGetProperty("odata.nextLink", out token) && token.Type != JTokenType.Null)
+				{
+					NextLink = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+			}
+		}
 	}
 }

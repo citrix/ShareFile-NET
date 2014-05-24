@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -36,5 +37,64 @@ namespace ShareFile.Api.Models
 
 		public int? EmailInterval { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (UserConfirmationSettings)source;
+				FirstName = typedSource.FirstName;
+				LastName = typedSource.LastName;
+				Company = typedSource.Company;
+				Password = typedSource.Password;
+				DayLightName = typedSource.DayLightName;
+				UTCOffset = typedSource.UTCOffset;
+				DateFormat = typedSource.DateFormat;
+				TimeFormat = typedSource.TimeFormat;
+				EmailInterval = typedSource.EmailInterval;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("FirstName", out token) && token.Type != JTokenType.Null)
+				{
+					FirstName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("LastName", out token) && token.Type != JTokenType.Null)
+				{
+					LastName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Company", out token) && token.Type != JTokenType.Null)
+				{
+					Company = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Password", out token) && token.Type != JTokenType.Null)
+				{
+					Password = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("DayLightName", out token) && token.Type != JTokenType.Null)
+				{
+					DayLightName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("UTCOffset", out token) && token.Type != JTokenType.Null)
+				{
+					UTCOffset = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("DateFormat", out token) && token.Type != JTokenType.Null)
+				{
+					DateFormat = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("TimeFormat", out token) && token.Type != JTokenType.Null)
+				{
+					TimeFormat = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("EmailInterval", out token) && token.Type != JTokenType.Null)
+				{
+					EmailInterval = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+			}
+		}
 	}
 }

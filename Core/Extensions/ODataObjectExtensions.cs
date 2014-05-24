@@ -14,10 +14,10 @@ namespace ShareFile.Api.Client.Extensions
                 oDataObject.Properties = new Dictionary<string, JToken>();
             }
 
-            oDataObject.Properties.Add("MetadataBaseUri", baseUri.ToString());
-            oDataObject.Properties.Add("EntitySet", entitySet);
-            oDataObject.Properties.Add("TypeCast", typeCast);
-            oDataObject.Properties.Add("Type", type.GetValueOrDefault(ODataObjectType.Entity).ToString());
+            oDataObject.AddProperty("MetadataBaseUri", baseUri.ToString());
+            oDataObject.AddProperty("EntitySet", entitySet);
+            oDataObject.AddProperty("TypeCast", typeCast);
+            oDataObject.AddProperty("Type", type.GetValueOrDefault(ODataObjectType.Entity).ToString());
         }
 
         public static Uri GetObjectUri(this ODataObject oDataObject, bool useStreamId = false)
@@ -116,6 +116,8 @@ namespace ShareFile.Api.Client.Extensions
 
         public static void AddProperty(this ODataObject oDataObject, string key, object value)
         {
+            if (value == null) return;
+
             if (oDataObject.Properties == null)
             {
                 oDataObject.Properties = new Dictionary<string, JToken>();
@@ -134,7 +136,7 @@ namespace ShareFile.Api.Client.Extensions
             value = default(T);
 
             JToken token;
-            if (oDataObject != null && oDataObject.Properties.TryGetValue(key, out token))
+            if (oDataObject != null && oDataObject.Properties != null && oDataObject.Properties.TryGetValue(key, out token))
             {
                 value = token.ToObject<T>();
                 return true;

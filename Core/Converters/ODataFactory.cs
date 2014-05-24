@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Helpers;
 using ShareFile.Api.Models;
@@ -46,19 +46,19 @@ namespace ShareFile.Api.Client.Converters
         {
             var effectiveType = overrideType ?? modelType;
 
-            var ctor = effectiveType.GetConstructor(new Type[] { });
+            var ctor = effectiveType.GetConstructor(new[] { typeof(ODataObject), typeof(JsonSerializer) });
             if (ctor != null)
             {
                 _constructorCache[modelType] = ctor;
             }
         }
 
-        private ODataObject InvokeConstructor(Type type, string id = "")
+        private ODataObject InvokeConstructor(Type type, ODataObject existingObject, JsonSerializer serializer)
         {
             ODataObject oDataObject = null;
             if (_constructorCache.ContainsKey(type))
             {
-                oDataObject = (ODataObject)_constructorCache[type].Invoke(new Object[] {});
+                oDataObject = (ODataObject)_constructorCache[type].Invoke(new Object[] { });
             }
             else if (type != null)
             {
@@ -74,13 +74,36 @@ namespace ShareFile.Api.Client.Converters
                 oDataObject = new ODataObject();
             }
 
-            oDataObject.Id = id;
+            oDataObject.Copy(existingObject, serializer);
+
             return oDataObject;
         }
 
         private readonly Dictionary<Type, ConstructorInfo> _constructorCache;
         private readonly Dictionary<Type, Type> _typeMap;
         private readonly Dictionary<string, Type> _entityTypeMap;
+        private readonly Dictionary<Type, bool> _typeHasSubclassMap = new Dictionary<Type, bool>();
+        private readonly object _hasSubclassLock = new object();
+
+        internal bool HasSubclass(Type type)
+        {
+            bool hasSubclass;
+
+            if (!_typeHasSubclassMap.TryGetValue(type, out hasSubclass))
+            {
+                lock (_hasSubclassLock)
+                {
+                    hasSubclass = FindModelType(type, null) != type;
+                    if (!hasSubclass)
+                    {
+                        hasSubclass = _constructorCache.Keys.FirstOrDefault(x => x.IsSubclassOf(type)) != null;
+                    }
+                    _typeHasSubclassMap[type] = hasSubclass;
+                }
+            }
+
+            return hasSubclass;
+        }
 
         /// <summary>
         /// Allow consumers to regsiter type substitutions.
@@ -121,7 +144,7 @@ namespace ShareFile.Api.Client.Converters
         public ODataObject Create(string cast, string id = null)
         {
             var type = FindModelType(null, cast, id);
-            return InvokeConstructor(type, id);
+            return InvokeConstructor(type, null, null);
         }
 
         public Type FindModelType(Type knownType, string cast, string id = null)
@@ -187,30 +210,20 @@ namespace ShareFile.Api.Client.Converters
         /// <param name="cast"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public ODataObject Create(Type type, string cast = null, string id = null)
+        public ODataObject Create(Type type, string cast = null, ODataObject oDataObject = null, JsonSerializer serializer = null, string id = null)
         {
-            type = FindModelType(type, cast, id);
+            type = FindModelType(type, cast, null);
+            if (oDataObject != null && type == oDataObject.GetType()) return oDataObject;
 
-            if (TypeHelpers.IsGenericType(type))
+            var obj = InvokeConstructor(type, oDataObject, serializer);
+            if (!string.IsNullOrEmpty(id))
             {
-                var genericODataFeed = typeof(ODataFeed<>);
-                var genericType = type.GetGenericTypeDefinition();
-                if (genericType == genericODataFeed)
-                {
-                    var ctor = type.GetConstructors().FirstOrDefault();
-                    if (ctor != null)
-                    {
-                        var oDataObject = (ODataObject)Activator.CreateInstance(type, new object[] { });
-                        oDataObject.Id = id;
-
-                        return oDataObject;
-                    }
-                }
+                obj.Id = id;
             }
-            return InvokeConstructor(type, id);
+            return obj;
         }
 
-        public ODataObject CreateFromUrl(string Url)
+        public ODataObject CreateFromUrl(string Url, ODataObject oDataObject, JsonSerializer serializer)
         {
             var odataExpression = @"^(?<cast>[^$\(]+)\((?<id>[^\)]+)\)";
 
@@ -232,59 +245,110 @@ namespace ShareFile.Api.Client.Converters
 
             if (type != null)
             {
-                var o = Create(type, id);
+                var o = Create(oDataObject.GetType(), type, oDataObject, serializer, id);
                 return o;
             }
-            return new ODataObject
-            {
-                Id = id
-            };
+
+            if (oDataObject != null) return oDataObject;
+
+            return null;
         }
 
-        protected Regex[] regexExpressions =
+        internal class JsonLightMetadataParser
         {
-            new Regex(@"(?<url>[^#\$]+)\$metadata#((ShareFile.Api.Models.(?<cast>.+))|((?<entity>\w+)(/(?<cast>([^@]+)|(.+)))?(?<element>@Element)?))", RegexOptions.IgnoreCase),
-            new Regex(@"(?<url>[^#\$]+)\$metadata#(?<feedentity>.+)", RegexOptions.IgnoreCase)
-        };
+            internal static char[] SplitChars = {'/'};
+            internal static string Namespace = typeof (ODataObject).Namespace + ".";
 
-        public ODataObject CreateFromMetadata(string metadata, Type knownType = null)
-        {
-            foreach (var expression in regexExpressions)
+            internal JsonLightMetadataParserResult Parse(string metadataUri)
             {
-                var match = expression.Match(metadata);
-                if (match.Success)
+                var indexOfMetadataStart = metadataUri.IndexOf('$');
+                var result = new JsonLightMetadataParserResult
                 {
-                    ODataObject o = null;
-                    if (match.Groups["feedentity"].Success)
+                    MetadataBaseUri = metadataUri.Substring(0, indexOfMetadataStart)
+                };
+
+                var metadataString = metadataUri.Substring(indexOfMetadataStart + "$metadata#".Length);
+                var splitResults = metadataString.Split(SplitChars, StringSplitOptions.RemoveEmptyEntries);
+
+                if (splitResults.Length == 1)
+                {
+                    var indexOfAtElement = splitResults[0].IndexOf("@Element", StringComparison.Ordinal);
+                    if (indexOfAtElement >= 0)
                     {
-                        var type = FindModelType(knownType, match.Groups["feedentity"].Value, null);
-                        Type specificType;
-                        if (TypeHelpers.IsGenericType(type) && type.GetGenericTypeDefinition() == typeof(ODataFeed<>))
-                        {
-                            specificType = type;
-                        }
-                        else specificType = typeof(ODataFeed<>).MakeGenericType(new System.Type[] { type });
-                        o = (ODataObject)Activator.CreateInstance(specificType, new object[] { });
-                  
-                        o.SetMetadata(new Uri(match.Groups["url"].Value), match.Groups["feedentity"].Value, null, ODataObjectType.ComplexType);
+                        result.Entity = splitResults[0].Substring(0, indexOfAtElement);
+                        return result;
                     }
-                    else
+                    var indexOfNamespace = splitResults[0].IndexOf(Namespace, StringComparison.Ordinal);
+                    if (indexOfNamespace == 0)
                     {
-                        string metadataType = match.Groups["cast"].Success ? match.Groups["cast"].Value : match.Groups["entity"].Value;
-                        o = Create(knownType, metadataType);
-                        if (match.Groups["entity"].Success)
-                        {
-                            o.SetMetadata(new Uri(match.Groups["url"].Value), match.Groups["entity"].Value, match.Groups["cast"].Value, ODataObjectType.Entity);
-                        }
-                        else
-                        {
-                            o.SetMetadata(new Uri(match.Groups["url"].Value), null, o.GetType().FullName, ODataObjectType.ComplexType);
-                        }
+                        result.Cast = splitResults[0].Substring(Namespace.Length);
+                        return result;
                     }
-                    return o;
+                    result.FeedEntity = splitResults[0];
+                    return result;
+                }
+                if (splitResults.Length == 2)
+                {
+                    result.Entity = splitResults[0];
+                    var indexOfAtElement = splitResults[1].IndexOf("@Element", StringComparison.Ordinal);
+                    if (indexOfAtElement >= 0)
+                    {
+                        result.Cast = splitResults[1].Substring(0, indexOfAtElement);
+                        return result;
+                    }
+                    result.Cast = splitResults[1];
+                }
+
+                return result;
+            }
+        }
+
+        internal class JsonLightMetadataParserResult
+        {
+            internal string MetadataBaseUri { get; set; }
+            internal string Cast { get; set; }
+            internal string Entity { get; set; }
+            internal string FeedEntity { get; set; }
+            internal bool HasCast { get { return Cast != null; } }
+            internal bool HasEntity { get { return Entity != null; } }
+            internal bool HasFeedEntity { get { return FeedEntity != null; } }
+        }
+
+        public ODataObject CreateFromMetadata(string metadata, Type knownType, ODataObject jObject, JsonSerializer serializer)
+        {
+            var parser = new JsonLightMetadataParser();
+            var result = parser.Parse(metadata);
+
+            ODataObject o = null;
+            if (result.HasFeedEntity)
+            {
+                var type = FindModelType(knownType, result.FeedEntity);
+                Type specificType;
+                if (TypeHelpers.IsGenericType(type) && type.GetGenericTypeDefinition() == typeof(ODataFeed<>))
+                {
+                    specificType = type;
+                }
+                else specificType = typeof(ODataFeed<>).MakeGenericType(new [] { type });
+
+                if (specificType == knownType) return jObject;
+                o = InvokeConstructor(specificType, jObject, serializer);
+
+                o.SetMetadata(new Uri(result.MetadataBaseUri), result.FeedEntity, null, ODataObjectType.ComplexType);
+            }
+            else
+            {
+                string metadataType = result.HasCast ? result.Cast : result.Entity;
+                o = Create(knownType, metadataType, jObject, serializer);
+                if (result.HasEntity)
+                {
+                    o.SetMetadata(new Uri(result.MetadataBaseUri), result.Entity, result.Cast, ODataObjectType.Entity);
+                }
+                else
+                {
+                    o.SetMetadata(new Uri(result.MetadataBaseUri), null, o.GetType().FullName, ODataObjectType.ComplexType);
                 }
             }
-            return null;
+            return o;
         }
     }
 }

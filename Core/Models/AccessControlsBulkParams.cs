@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -35,5 +36,34 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public IEnumerable<AccessControlParam> AccessControlParams { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (AccessControlsBulkParams)source;
+				NotifyUser = typedSource.NotifyUser;
+				NotifyMessage = typedSource.NotifyMessage;
+				AccessControlParams = typedSource.AccessControlParams;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("NotifyUser", out token) && token.Type != JTokenType.Null)
+				{
+					NotifyUser = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("NotifyMessage", out token) && token.Type != JTokenType.Null)
+				{
+					NotifyMessage = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("AccessControlParams", out token) && token.Type != JTokenType.Null)
+				{
+					AccessControlParams = (IEnumerable<AccessControlParam>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<AccessControlParam>));
+				}
+			}
+		}
 	}
 }

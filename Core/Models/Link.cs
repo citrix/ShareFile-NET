@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -23,5 +24,24 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public Uri Uri { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (Link)source;
+				Uri = typedSource.Uri;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("Uri", out token) && token.Type != JTokenType.Null)
+				{
+					Uri = (Uri)serializer.Deserialize(token.CreateReader(), typeof(Uri));
+				}
+			}
+		}
 	}
 }

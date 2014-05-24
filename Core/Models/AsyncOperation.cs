@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -82,5 +83,79 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public string BatchTargetID { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (AsyncOperation)source;
+				Operation = typedSource.Operation;
+				Account = typedSource.Account;
+				AuthorityZone = typedSource.AuthorityZone;
+				Source = typedSource.Source;
+				User = typedSource.User;
+				CreationDate = typedSource.CreationDate;
+				State = typedSource.State;
+				UpdateDate = typedSource.UpdateDate;
+				Target = typedSource.Target;
+				BatchID = typedSource.BatchID;
+				BatchSourceID = typedSource.BatchSourceID;
+				BatchTargetID = typedSource.BatchTargetID;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("Operation", out token) && token.Type != JTokenType.Null)
+				{
+					Operation = (SafeEnum<AsyncOperationType>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<AsyncOperationType>));
+				}
+				if(source.TryGetProperty("Account", out token) && token.Type != JTokenType.Null)
+				{
+					Account = (Account)serializer.Deserialize(token.CreateReader(), typeof(Account));
+				}
+				if(source.TryGetProperty("AuthorityZone", out token) && token.Type != JTokenType.Null)
+				{
+					AuthorityZone = (Zone)serializer.Deserialize(token.CreateReader(), typeof(Zone));
+				}
+				if(source.TryGetProperty("Source", out token) && token.Type != JTokenType.Null)
+				{
+					Source = (Item)serializer.Deserialize(token.CreateReader(), typeof(Item));
+				}
+				if(source.TryGetProperty("User", out token) && token.Type != JTokenType.Null)
+				{
+					User = (User)serializer.Deserialize(token.CreateReader(), typeof(User));
+				}
+				if(source.TryGetProperty("CreationDate", out token) && token.Type != JTokenType.Null)
+				{
+					CreationDate = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("State", out token) && token.Type != JTokenType.Null)
+				{
+					State = (SafeEnum<AsyncOperationState>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<AsyncOperationState>));
+				}
+				if(source.TryGetProperty("UpdateDate", out token) && token.Type != JTokenType.Null)
+				{
+					UpdateDate = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("Target", out token) && token.Type != JTokenType.Null)
+				{
+					Target = (Item)serializer.Deserialize(token.CreateReader(), typeof(Item));
+				}
+				if(source.TryGetProperty("BatchID", out token) && token.Type != JTokenType.Null)
+				{
+					BatchID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("BatchSourceID", out token) && token.Type != JTokenType.Null)
+				{
+					BatchSourceID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("BatchTargetID", out token) && token.Type != JTokenType.Null)
+				{
+					BatchTargetID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+			}
+		}
 	}
 }

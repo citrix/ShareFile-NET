@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -24,5 +25,34 @@ namespace ShareFile.Api.Models
 
 		public bool EmployeeOnly { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (FindSubdomainParams)source;
+				UsernameShort = typedSource.UsernameShort;
+				Password = typedSource.Password;
+				EmployeeOnly = typedSource.EmployeeOnly;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("UsernameShort", out token) && token.Type != JTokenType.Null)
+				{
+					UsernameShort = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Password", out token) && token.Type != JTokenType.Null)
+				{
+					Password = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("EmployeeOnly", out token) && token.Type != JTokenType.Null)
+				{
+					EmployeeOnly = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+			}
+		}
 	}
 }

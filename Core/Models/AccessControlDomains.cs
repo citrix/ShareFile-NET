@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -28,5 +29,29 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public IEnumerable<string> Domains { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (AccessControlDomains)source;
+				AccessControlType = typedSource.AccessControlType;
+				Domains = typedSource.Domains;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("AccessControlType", out token) && token.Type != JTokenType.Null)
+				{
+					AccessControlType = (SafeEnum<AccessControlFilter>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<AccessControlFilter>));
+				}
+				if(source.TryGetProperty("Domains", out token) && token.Type != JTokenType.Null)
+				{
+					Domains = (IEnumerable<string>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<string>));
+				}
+			}
+		}
 	}
 }

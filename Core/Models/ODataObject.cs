@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -33,5 +34,15 @@ namespace ShareFile.Api.Models
 
 		[JsonExtensionData]
 		internal IDictionary<string, JToken> Properties { get; set; }
+
+		public virtual void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+
+				var typedSource = (ODataObject)source;
+				MetadataUrl = typedSource.MetadataUrl;
+				Id = typedSource.Id;
+				url = typedSource.url;
+		}
 	}
 }

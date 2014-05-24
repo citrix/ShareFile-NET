@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -48,5 +49,94 @@ namespace ShareFile.Api.Models
 
 		public int? FailedLoginCount { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (UserSecurity)source;
+				IsDisabled = typedSource.IsDisabled;
+				IsLocked = typedSource.IsLocked;
+				LockExpires = typedSource.LockExpires;
+				LastWebAppLogin = typedSource.LastWebAppLogin;
+				LastAnyLogin = typedSource.LastAnyLogin;
+				UserIPRestrictions = typedSource.UserIPRestrictions;
+				DisableLoginBefore = typedSource.DisableLoginBefore;
+				DisableLoginAfter = typedSource.DisableLoginAfter;
+				ForcePasswordChange = typedSource.ForcePasswordChange;
+				PasswordNeverExpires = typedSource.PasswordNeverExpires;
+				LastPasswordChange = typedSource.LastPasswordChange;
+				UsernameShort = typedSource.UsernameShort;
+				LastFailedLogin = typedSource.LastFailedLogin;
+				LastFailedLoginIP = typedSource.LastFailedLoginIP;
+				FailedLoginCount = typedSource.FailedLoginCount;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("IsDisabled", out token) && token.Type != JTokenType.Null)
+				{
+					IsDisabled = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IsLocked", out token) && token.Type != JTokenType.Null)
+				{
+					IsLocked = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("LockExpires", out token) && token.Type != JTokenType.Null)
+				{
+					LockExpires = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("LastWebAppLogin", out token) && token.Type != JTokenType.Null)
+				{
+					LastWebAppLogin = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("LastAnyLogin", out token) && token.Type != JTokenType.Null)
+				{
+					LastAnyLogin = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("UserIPRestrictions", out token) && token.Type != JTokenType.Null)
+				{
+					UserIPRestrictions = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("DisableLoginBefore", out token) && token.Type != JTokenType.Null)
+				{
+					DisableLoginBefore = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("DisableLoginAfter", out token) && token.Type != JTokenType.Null)
+				{
+					DisableLoginAfter = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("ForcePasswordChange", out token) && token.Type != JTokenType.Null)
+				{
+					ForcePasswordChange = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("PasswordNeverExpires", out token) && token.Type != JTokenType.Null)
+				{
+					PasswordNeverExpires = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("LastPasswordChange", out token) && token.Type != JTokenType.Null)
+				{
+					LastPasswordChange = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("UsernameShort", out token) && token.Type != JTokenType.Null)
+				{
+					UsernameShort = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("LastFailedLogin", out token) && token.Type != JTokenType.Null)
+				{
+					LastFailedLogin = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("LastFailedLoginIP", out token) && token.Type != JTokenType.Null)
+				{
+					LastFailedLoginIP = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("FailedLoginCount", out token) && token.Type != JTokenType.Null)
+				{
+					FailedLoginCount = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+			}
+		}
 	}
 }

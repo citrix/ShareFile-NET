@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -22,5 +23,29 @@ namespace ShareFile.Api.Models
 
 		public string Version { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (Capability)source;
+				Name = typedSource.Name;
+				Version = typedSource.Version;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("Name", out token) && token.Type != JTokenType.Null)
+				{
+					Name = (SafeEnum<CapabilityName>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<CapabilityName>));
+				}
+				if(source.TryGetProperty("Version", out token) && token.Type != JTokenType.Null)
+				{
+					Version = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+			}
+		}
 	}
 }

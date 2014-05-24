@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -26,5 +27,39 @@ namespace ShareFile.Api.Models
 
 		public string Body { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (Redirection)source;
+				Method = typedSource.Method;
+				Zone = typedSource.Zone;
+				Uri = typedSource.Uri;
+				Body = typedSource.Body;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("Method", out token) && token.Type != JTokenType.Null)
+				{
+					Method = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Zone", out token) && token.Type != JTokenType.Null)
+				{
+					Zone = (Zone)serializer.Deserialize(token.CreateReader(), typeof(Zone));
+				}
+				if(source.TryGetProperty("Uri", out token) && token.Type != JTokenType.Null)
+				{
+					Uri = (Uri)serializer.Deserialize(token.CreateReader(), typeof(Uri));
+				}
+				if(source.TryGetProperty("Body", out token) && token.Type != JTokenType.Null)
+				{
+					Body = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+			}
+		}
 	}
 }

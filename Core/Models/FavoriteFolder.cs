@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -38,5 +39,69 @@ namespace ShareFile.Api.Models
 
 		public string CreatorLastName { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (FavoriteFolder)source;
+				User = typedSource.User;
+				Folder = typedSource.Folder;
+				SortOrder = typedSource.SortOrder;
+				FolderAlias = typedSource.FolderAlias;
+				FolderName = typedSource.FolderName;
+				Path = typedSource.Path;
+				FileSize = typedSource.FileSize;
+				CreationDate = typedSource.CreationDate;
+				CreatorFirstName = typedSource.CreatorFirstName;
+				CreatorLastName = typedSource.CreatorLastName;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("User", out token) && token.Type != JTokenType.Null)
+				{
+					User = (User)serializer.Deserialize(token.CreateReader(), typeof(User));
+				}
+				if(source.TryGetProperty("Folder", out token) && token.Type != JTokenType.Null)
+				{
+					Folder = (Item)serializer.Deserialize(token.CreateReader(), typeof(Item));
+				}
+				if(source.TryGetProperty("SortOrder", out token) && token.Type != JTokenType.Null)
+				{
+					SortOrder = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("FolderAlias", out token) && token.Type != JTokenType.Null)
+				{
+					FolderAlias = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("FolderName", out token) && token.Type != JTokenType.Null)
+				{
+					FolderName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Path", out token) && token.Type != JTokenType.Null)
+				{
+					Path = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("FileSize", out token) && token.Type != JTokenType.Null)
+				{
+					FileSize = (long?)serializer.Deserialize(token.CreateReader(), typeof(long?));
+				}
+				if(source.TryGetProperty("CreationDate", out token) && token.Type != JTokenType.Null)
+				{
+					CreationDate = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("CreatorFirstName", out token) && token.Type != JTokenType.Null)
+				{
+					CreatorFirstName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CreatorLastName", out token) && token.Type != JTokenType.Null)
+				{
+					CreatorLastName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+			}
+		}
 	}
 }

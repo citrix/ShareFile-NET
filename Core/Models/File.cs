@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -51,5 +52,49 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public float? Version { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (File)source;
+				FilePath = typedSource.FilePath;
+				Hash = typedSource.Hash;
+				HasPreview = typedSource.HasPreview;
+				VirusStatus = typedSource.VirusStatus;
+				LockedBy = typedSource.LockedBy;
+				Version = typedSource.Version;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("FilePath", out token) && token.Type != JTokenType.Null)
+				{
+					FilePath = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Hash", out token) && token.Type != JTokenType.Null)
+				{
+					Hash = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("HasPreview", out token) && token.Type != JTokenType.Null)
+				{
+					HasPreview = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("VirusStatus", out token) && token.Type != JTokenType.Null)
+				{
+					VirusStatus = (SafeEnum<FileVirusStatus>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<FileVirusStatus>));
+				}
+				if(source.TryGetProperty("LockedBy", out token) && token.Type != JTokenType.Null)
+				{
+					LockedBy = (User)serializer.Deserialize(token.CreateReader(), typeof(User));
+				}
+				if(source.TryGetProperty("Version", out token) && token.Type != JTokenType.Null)
+				{
+					Version = (float?)serializer.Deserialize(token.CreateReader(), typeof(float?));
+				}
+			}
+		}
 	}
 }

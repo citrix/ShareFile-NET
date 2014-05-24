@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -50,5 +51,99 @@ namespace ShareFile.Api.Models
 
 		public string SystemType { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (ProductDefaults)source;
+				ProductName = typedSource.ProductName;
+				DefaultWindowTitle = typedSource.DefaultWindowTitle;
+				TopLevelDomain = typedSource.TopLevelDomain;
+				APITopLevelDomain = typedSource.APITopLevelDomain;
+				DefaultApiVersion = typedSource.DefaultApiVersion;
+				DefaultSmtpServer = typedSource.DefaultSmtpServer;
+				NoReplyUserName = typedSource.NoReplyUserName;
+				NoReplyUserEmail = typedSource.NoReplyUserEmail;
+				SupportUserName = typedSource.SupportUserName;
+				SupportUserEmail = typedSource.SupportUserEmail;
+				DefaultEmailFooter = typedSource.DefaultEmailFooter;
+				DefaultEmailFooterHtml = typedSource.DefaultEmailFooterHtml;
+				DefaultEmailFooterPlaintext = typedSource.DefaultEmailFooterPlaintext;
+				DefaultEmailOverview = typedSource.DefaultEmailOverview;
+				SupportUserNotificationEmail = typedSource.SupportUserNotificationEmail;
+				SystemType = typedSource.SystemType;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("ProductName", out token) && token.Type != JTokenType.Null)
+				{
+					ProductName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("DefaultWindowTitle", out token) && token.Type != JTokenType.Null)
+				{
+					DefaultWindowTitle = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("TopLevelDomain", out token) && token.Type != JTokenType.Null)
+				{
+					TopLevelDomain = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("APITopLevelDomain", out token) && token.Type != JTokenType.Null)
+				{
+					APITopLevelDomain = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("DefaultApiVersion", out token) && token.Type != JTokenType.Null)
+				{
+					DefaultApiVersion = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("DefaultSmtpServer", out token) && token.Type != JTokenType.Null)
+				{
+					DefaultSmtpServer = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("NoReplyUserName", out token) && token.Type != JTokenType.Null)
+				{
+					NoReplyUserName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("NoReplyUserEmail", out token) && token.Type != JTokenType.Null)
+				{
+					NoReplyUserEmail = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("SupportUserName", out token) && token.Type != JTokenType.Null)
+				{
+					SupportUserName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("SupportUserEmail", out token) && token.Type != JTokenType.Null)
+				{
+					SupportUserEmail = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("DefaultEmailFooter", out token) && token.Type != JTokenType.Null)
+				{
+					DefaultEmailFooter = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("DefaultEmailFooterHtml", out token) && token.Type != JTokenType.Null)
+				{
+					DefaultEmailFooterHtml = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("DefaultEmailFooterPlaintext", out token) && token.Type != JTokenType.Null)
+				{
+					DefaultEmailFooterPlaintext = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("DefaultEmailOverview", out token) && token.Type != JTokenType.Null)
+				{
+					DefaultEmailOverview = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("SupportUserNotificationEmail", out token) && token.Type != JTokenType.Null)
+				{
+					SupportUserNotificationEmail = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("SystemType", out token) && token.Type != JTokenType.Null)
+				{
+					SystemType = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+			}
+		}
 	}
 }

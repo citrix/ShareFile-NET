@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -36,5 +37,64 @@ namespace ShareFile.Api.Models
 
 		public bool ItemNameOnly { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (SimpleQuery)source;
+				AuthID = typedSource.AuthID;
+				ItemType = typedSource.ItemType;
+				ParentID = typedSource.ParentID;
+				CreatorID = typedSource.CreatorID;
+				LuceneQuery = typedSource.LuceneQuery;
+				SearchQuery = typedSource.SearchQuery;
+				CreateStartDate = typedSource.CreateStartDate;
+				CreateEndDate = typedSource.CreateEndDate;
+				ItemNameOnly = typedSource.ItemNameOnly;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("AuthID", out token) && token.Type != JTokenType.Null)
+				{
+					AuthID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ItemType", out token) && token.Type != JTokenType.Null)
+				{
+					ItemType = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ParentID", out token) && token.Type != JTokenType.Null)
+				{
+					ParentID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CreatorID", out token) && token.Type != JTokenType.Null)
+				{
+					CreatorID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("LuceneQuery", out token) && token.Type != JTokenType.Null)
+				{
+					LuceneQuery = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("SearchQuery", out token) && token.Type != JTokenType.Null)
+				{
+					SearchQuery = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CreateStartDate", out token) && token.Type != JTokenType.Null)
+				{
+					CreateStartDate = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CreateEndDate", out token) && token.Type != JTokenType.Null)
+				{
+					CreateEndDate = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ItemNameOnly", out token) && token.Type != JTokenType.Null)
+				{
+					ItemNameOnly = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+			}
+		}
 	}
 }

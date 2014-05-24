@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -28,5 +29,44 @@ namespace ShareFile.Api.Models
 
 		public string StorageCenterUrl { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (UserInfo)source;
+				CompanyName = typedSource.CompanyName;
+				PlanName = typedSource.PlanName;
+				PlanFeatures = typedSource.PlanFeatures;
+				ApplicationUrl = typedSource.ApplicationUrl;
+				StorageCenterUrl = typedSource.StorageCenterUrl;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("CompanyName", out token) && token.Type != JTokenType.Null)
+				{
+					CompanyName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("PlanName", out token) && token.Type != JTokenType.Null)
+				{
+					PlanName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("PlanFeatures", out token) && token.Type != JTokenType.Null)
+				{
+					PlanFeatures = (PlanFeatures)serializer.Deserialize(token.CreateReader(), typeof(PlanFeatures));
+				}
+				if(source.TryGetProperty("ApplicationUrl", out token) && token.Type != JTokenType.Null)
+				{
+					ApplicationUrl = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("StorageCenterUrl", out token) && token.Type != JTokenType.Null)
+				{
+					StorageCenterUrl = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+			}
+		}
 	}
 }

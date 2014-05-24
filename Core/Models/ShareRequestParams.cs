@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -38,5 +39,69 @@ namespace ShareFile.Api.Models
 
 		public bool IsViewOnly { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (ShareRequestParams)source;
+				FolderId = typedSource.FolderId;
+				FolderPath = typedSource.FolderPath;
+				Emails = typedSource.Emails;
+				Subject = typedSource.Subject;
+				Body = typedSource.Body;
+				CcSender = typedSource.CcSender;
+				RequireLogin = typedSource.RequireLogin;
+				ExpirationDays = typedSource.ExpirationDays;
+				NotifyOnUpload = typedSource.NotifyOnUpload;
+				IsViewOnly = typedSource.IsViewOnly;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("FolderId", out token) && token.Type != JTokenType.Null)
+				{
+					FolderId = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("FolderPath", out token) && token.Type != JTokenType.Null)
+				{
+					FolderPath = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Emails", out token) && token.Type != JTokenType.Null)
+				{
+					Emails = (IEnumerable<string>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<string>));
+				}
+				if(source.TryGetProperty("Subject", out token) && token.Type != JTokenType.Null)
+				{
+					Subject = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Body", out token) && token.Type != JTokenType.Null)
+				{
+					Body = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CcSender", out token) && token.Type != JTokenType.Null)
+				{
+					CcSender = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("RequireLogin", out token) && token.Type != JTokenType.Null)
+				{
+					RequireLogin = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("ExpirationDays", out token) && token.Type != JTokenType.Null)
+				{
+					ExpirationDays = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
+				}
+				if(source.TryGetProperty("NotifyOnUpload", out token) && token.Type != JTokenType.Null)
+				{
+					NotifyOnUpload = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("IsViewOnly", out token) && token.Type != JTokenType.Null)
+				{
+					IsViewOnly = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+			}
+		}
 	}
 }

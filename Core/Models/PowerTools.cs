@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -24,5 +25,34 @@ namespace ShareFile.Api.Models
 
 		public bool ShowMobileTools { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (PowerTools)source;
+				EnableDesktopToolsPage = typedSource.EnableDesktopToolsPage;
+				EnableMobileApps = typedSource.EnableMobileApps;
+				ShowMobileTools = typedSource.ShowMobileTools;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("EnableDesktopToolsPage", out token) && token.Type != JTokenType.Null)
+				{
+					EnableDesktopToolsPage = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("EnableMobileApps", out token) && token.Type != JTokenType.Null)
+				{
+					EnableMobileApps = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("ShowMobileTools", out token) && token.Type != JTokenType.Null)
+				{
+					ShowMobileTools = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+			}
+		}
 	}
 }

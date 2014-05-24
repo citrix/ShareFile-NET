@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -209,5 +210,189 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public IEnumerable<Metadata> Metadata { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (Item)source;
+				Name = typedSource.Name;
+				FileName = typedSource.FileName;
+				Creator = typedSource.Creator;
+				Parent = typedSource.Parent;
+				AccessControls = typedSource.AccessControls;
+				Zone = typedSource.Zone;
+				CreationDate = typedSource.CreationDate;
+				ProgenyEditDate = typedSource.ProgenyEditDate;
+				ClientCreatedDate = typedSource.ClientCreatedDate;
+				ClientModifiedDate = typedSource.ClientModifiedDate;
+				ExpirationDate = typedSource.ExpirationDate;
+				Description = typedSource.Description;
+				DiskSpaceLimit = typedSource.DiskSpaceLimit;
+				IsHidden = typedSource.IsHidden;
+				BandwidthLimitInMB = typedSource.BandwidthLimitInMB;
+				Owner = typedSource.Owner;
+				Account = typedSource.Account;
+				FileSizeInKB = typedSource.FileSizeInKB;
+				Path = typedSource.Path;
+				CreatorFirstName = typedSource.CreatorFirstName;
+				CreatorLastName = typedSource.CreatorLastName;
+				ExpirationDays = typedSource.ExpirationDays;
+				FileSizeBytes = typedSource.FileSizeBytes;
+				PreviewStatus = typedSource.PreviewStatus;
+				MaxPreviewSize = typedSource.MaxPreviewSize;
+				HasPendingDeletion = typedSource.HasPendingDeletion;
+				AssociatedFolderTemplateID = typedSource.AssociatedFolderTemplateID;
+				IsTemplateOwned = typedSource.IsTemplateOwned;
+				HasPermissionInfo = typedSource.HasPermissionInfo;
+				State = typedSource.State;
+				StreamID = typedSource.StreamID;
+				CreatorNameShort = typedSource.CreatorNameShort;
+				HasMultipleVersions = typedSource.HasMultipleVersions;
+				Metadata = typedSource.Metadata;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("Name", out token) && token.Type != JTokenType.Null)
+				{
+					Name = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("FileName", out token) && token.Type != JTokenType.Null)
+				{
+					FileName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Creator", out token) && token.Type != JTokenType.Null)
+				{
+					Creator = (User)serializer.Deserialize(token.CreateReader(), typeof(User));
+				}
+				if(source.TryGetProperty("Parent", out token) && token.Type != JTokenType.Null)
+				{
+					Parent = (Item)serializer.Deserialize(token.CreateReader(), typeof(Item));
+				}
+				if(source.TryGetProperty("AccessControls", out token) && token.Type != JTokenType.Null)
+				{
+					AccessControls = (IEnumerable<AccessControl>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<AccessControl>));
+				}
+				if(source.TryGetProperty("Zone", out token) && token.Type != JTokenType.Null)
+				{
+					Zone = (Zone)serializer.Deserialize(token.CreateReader(), typeof(Zone));
+				}
+				if(source.TryGetProperty("CreationDate", out token) && token.Type != JTokenType.Null)
+				{
+					CreationDate = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("ProgenyEditDate", out token) && token.Type != JTokenType.Null)
+				{
+					ProgenyEditDate = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("ClientCreatedDate", out token) && token.Type != JTokenType.Null)
+				{
+					ClientCreatedDate = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("ClientModifiedDate", out token) && token.Type != JTokenType.Null)
+				{
+					ClientModifiedDate = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("ExpirationDate", out token) && token.Type != JTokenType.Null)
+				{
+					ExpirationDate = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("Description", out token) && token.Type != JTokenType.Null)
+				{
+					Description = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("DiskSpaceLimit", out token) && token.Type != JTokenType.Null)
+				{
+					DiskSpaceLimit = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("IsHidden", out token) && token.Type != JTokenType.Null)
+				{
+					IsHidden = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("BandwidthLimitInMB", out token) && token.Type != JTokenType.Null)
+				{
+					BandwidthLimitInMB = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("Owner", out token) && token.Type != JTokenType.Null)
+				{
+					Owner = (User)serializer.Deserialize(token.CreateReader(), typeof(User));
+				}
+				if(source.TryGetProperty("Account", out token) && token.Type != JTokenType.Null)
+				{
+					Account = (Account)serializer.Deserialize(token.CreateReader(), typeof(Account));
+				}
+				if(source.TryGetProperty("FileSizeInKB", out token) && token.Type != JTokenType.Null)
+				{
+					FileSizeInKB = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("Path", out token) && token.Type != JTokenType.Null)
+				{
+					Path = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CreatorFirstName", out token) && token.Type != JTokenType.Null)
+				{
+					CreatorFirstName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CreatorLastName", out token) && token.Type != JTokenType.Null)
+				{
+					CreatorLastName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ExpirationDays", out token) && token.Type != JTokenType.Null)
+				{
+					ExpirationDays = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("FileSizeBytes", out token) && token.Type != JTokenType.Null)
+				{
+					FileSizeBytes = (long?)serializer.Deserialize(token.CreateReader(), typeof(long?));
+				}
+				if(source.TryGetProperty("PreviewStatus", out token) && token.Type != JTokenType.Null)
+				{
+					PreviewStatus = (SafeEnum<PreviewStatus>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<PreviewStatus>));
+				}
+				if(source.TryGetProperty("MaxPreviewSize", out token) && token.Type != JTokenType.Null)
+				{
+					MaxPreviewSize = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("HasPendingDeletion", out token) && token.Type != JTokenType.Null)
+				{
+					HasPendingDeletion = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("AssociatedFolderTemplateID", out token) && token.Type != JTokenType.Null)
+				{
+					AssociatedFolderTemplateID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("IsTemplateOwned", out token) && token.Type != JTokenType.Null)
+				{
+					IsTemplateOwned = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("HasPermissionInfo", out token) && token.Type != JTokenType.Null)
+				{
+					HasPermissionInfo = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("State", out token) && token.Type != JTokenType.Null)
+				{
+					State = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("StreamID", out token) && token.Type != JTokenType.Null)
+				{
+					StreamID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CreatorNameShort", out token) && token.Type != JTokenType.Null)
+				{
+					CreatorNameShort = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("HasMultipleVersions", out token) && token.Type != JTokenType.Null)
+				{
+					HasMultipleVersions = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("Metadata", out token) && token.Type != JTokenType.Null)
+				{
+					Metadata = (IEnumerable<Metadata>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<Metadata>));
+				}
+			}
+		}
 	}
 }

@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -82,5 +83,179 @@ namespace ShareFile.Api.Models
 
 		public bool EnableTopLevelView { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (PlanFeatures)source;
+				PlanType = typedSource.PlanType;
+				API = typedSource.API;
+				Outlook = typedSource.Outlook;
+				DriveMapping = typedSource.DriveMapping;
+				CLI = typedSource.CLI;
+				FTP = typedSource.FTP;
+				FTPS = typedSource.FTPS;
+				Sync = typedSource.Sync;
+				AntiVirus = typedSource.AntiVirus;
+				RequireLoginOnDownload = typedSource.RequireLoginOnDownload;
+				MaxFileMB = typedSource.MaxFileMB;
+				PlanStorMB = typedSource.PlanStorMB;
+				PlanBandMB = typedSource.PlanBandMB;
+				SystemName = typedSource.SystemName;
+				SystemType = typedSource.SystemType;
+				HasOutlookOptions = typedSource.HasOutlookOptions;
+				SimpleMAPI = typedSource.SimpleMAPI;
+				ForceAttachLink = typedSource.ForceAttachLink;
+				UsedStorMB = typedSource.UsedStorMB;
+				UsedStorUtcTicks = typedSource.UsedStorUtcTicks;
+				UsedStorBytes = typedSource.UsedStorBytes;
+				IsEmployee = typedSource.IsEmployee;
+				IsAdministrator = typedSource.IsAdministrator;
+				CanCreateRootFolders = typedSource.CanCreateRootFolders;
+				CanUseFileBox = typedSource.CanUseFileBox;
+				IsConfirmed = typedSource.IsConfirmed;
+				CanResetPassword = typedSource.CanResetPassword;
+				PasswordRegEx = typedSource.PasswordRegEx;
+				CanManageMySettings = typedSource.CanManageMySettings;
+				HomeFolder = typedSource.HomeFolder;
+				EnableAutoUpdate = typedSource.EnableAutoUpdate;
+				EnableTopLevelView = typedSource.EnableTopLevelView;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("PlanType", out token) && token.Type != JTokenType.Null)
+				{
+					PlanType = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("API", out token) && token.Type != JTokenType.Null)
+				{
+					API = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("Outlook", out token) && token.Type != JTokenType.Null)
+				{
+					Outlook = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("DriveMapping", out token) && token.Type != JTokenType.Null)
+				{
+					DriveMapping = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("CLI", out token) && token.Type != JTokenType.Null)
+				{
+					CLI = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("FTP", out token) && token.Type != JTokenType.Null)
+				{
+					FTP = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("FTPS", out token) && token.Type != JTokenType.Null)
+				{
+					FTPS = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("Sync", out token) && token.Type != JTokenType.Null)
+				{
+					Sync = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("AntiVirus", out token) && token.Type != JTokenType.Null)
+				{
+					AntiVirus = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("RequireLoginOnDownload", out token) && token.Type != JTokenType.Null)
+				{
+					RequireLoginOnDownload = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("MaxFileMB", out token) && token.Type != JTokenType.Null)
+				{
+					MaxFileMB = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
+				}
+				if(source.TryGetProperty("PlanStorMB", out token) && token.Type != JTokenType.Null)
+				{
+					PlanStorMB = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
+				}
+				if(source.TryGetProperty("PlanBandMB", out token) && token.Type != JTokenType.Null)
+				{
+					PlanBandMB = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
+				}
+				if(source.TryGetProperty("SystemName", out token) && token.Type != JTokenType.Null)
+				{
+					SystemName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("SystemType", out token) && token.Type != JTokenType.Null)
+				{
+					SystemType = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("HasOutlookOptions", out token) && token.Type != JTokenType.Null)
+				{
+					HasOutlookOptions = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("SimpleMAPI", out token) && token.Type != JTokenType.Null)
+				{
+					SimpleMAPI = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("ForceAttachLink", out token) && token.Type != JTokenType.Null)
+				{
+					ForceAttachLink = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("UsedStorMB", out token) && token.Type != JTokenType.Null)
+				{
+					UsedStorMB = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("UsedStorUtcTicks", out token) && token.Type != JTokenType.Null)
+				{
+					UsedStorUtcTicks = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("UsedStorBytes", out token) && token.Type != JTokenType.Null)
+				{
+					UsedStorBytes = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("IsEmployee", out token) && token.Type != JTokenType.Null)
+				{
+					IsEmployee = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("IsAdministrator", out token) && token.Type != JTokenType.Null)
+				{
+					IsAdministrator = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("CanCreateRootFolders", out token) && token.Type != JTokenType.Null)
+				{
+					CanCreateRootFolders = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("CanUseFileBox", out token) && token.Type != JTokenType.Null)
+				{
+					CanUseFileBox = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("IsConfirmed", out token) && token.Type != JTokenType.Null)
+				{
+					IsConfirmed = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("CanResetPassword", out token) && token.Type != JTokenType.Null)
+				{
+					CanResetPassword = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("PasswordRegEx", out token) && token.Type != JTokenType.Null)
+				{
+					PasswordRegEx = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CanManageMySettings", out token) && token.Type != JTokenType.Null)
+				{
+					CanManageMySettings = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("HomeFolder", out token) && token.Type != JTokenType.Null)
+				{
+					HomeFolder = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("EnableAutoUpdate", out token) && token.Type != JTokenType.Null)
+				{
+					EnableAutoUpdate = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableTopLevelView", out token) && token.Type != JTokenType.Null)
+				{
+					EnableTopLevelView = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+			}
+		}
 	}
 }

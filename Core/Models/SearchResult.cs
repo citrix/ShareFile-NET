@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -66,5 +67,139 @@ namespace ShareFile.Api.Models
 
 		public string AccountID { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (SearchResult)source;
+				Rank = typedSource.Rank;
+				Score = typedSource.Score;
+				ItemID = typedSource.ItemID;
+				ParentID = typedSource.ParentID;
+				ParentName = typedSource.ParentName;
+				ItemType = typedSource.ItemType;
+				FileName = typedSource.FileName;
+				DisplayName = typedSource.DisplayName;
+				Size = typedSource.Size;
+				CreatorID = typedSource.CreatorID;
+				CreatorName = typedSource.CreatorName;
+				CreatorFirstName = typedSource.CreatorFirstName;
+				CreatorLastName = typedSource.CreatorLastName;
+				CreationDate = typedSource.CreationDate;
+				Details = typedSource.Details;
+				MD5 = typedSource.MD5;
+				PreviewStatus = typedSource.PreviewStatus;
+				VirusStatus = typedSource.VirusStatus;
+				Url = typedSource.Url;
+				CanDownload = typedSource.CanDownload;
+				CanView = typedSource.CanView;
+				ParentSemanticPath = typedSource.ParentSemanticPath;
+				StreamID = typedSource.StreamID;
+				AccountID = typedSource.AccountID;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("Rank", out token) && token.Type != JTokenType.Null)
+				{
+					Rank = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
+				}
+				if(source.TryGetProperty("Score", out token) && token.Type != JTokenType.Null)
+				{
+					Score = (decimal)serializer.Deserialize(token.CreateReader(), typeof(decimal));
+				}
+				if(source.TryGetProperty("ItemID", out token) && token.Type != JTokenType.Null)
+				{
+					ItemID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ParentID", out token) && token.Type != JTokenType.Null)
+				{
+					ParentID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ParentName", out token) && token.Type != JTokenType.Null)
+				{
+					ParentName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ItemType", out token) && token.Type != JTokenType.Null)
+				{
+					ItemType = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("FileName", out token) && token.Type != JTokenType.Null)
+				{
+					FileName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("DisplayName", out token) && token.Type != JTokenType.Null)
+				{
+					DisplayName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Size", out token) && token.Type != JTokenType.Null)
+				{
+					Size = (long)serializer.Deserialize(token.CreateReader(), typeof(long));
+				}
+				if(source.TryGetProperty("CreatorID", out token) && token.Type != JTokenType.Null)
+				{
+					CreatorID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CreatorName", out token) && token.Type != JTokenType.Null)
+				{
+					CreatorName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CreatorFirstName", out token) && token.Type != JTokenType.Null)
+				{
+					CreatorFirstName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CreatorLastName", out token) && token.Type != JTokenType.Null)
+				{
+					CreatorLastName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CreationDate", out token) && token.Type != JTokenType.Null)
+				{
+					CreationDate = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Details", out token) && token.Type != JTokenType.Null)
+				{
+					Details = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("MD5", out token) && token.Type != JTokenType.Null)
+				{
+					MD5 = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("PreviewStatus", out token) && token.Type != JTokenType.Null)
+				{
+					PreviewStatus = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
+				}
+				if(source.TryGetProperty("VirusStatus", out token) && token.Type != JTokenType.Null)
+				{
+					VirusStatus = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
+				}
+				if(source.TryGetProperty("Url", out token) && token.Type != JTokenType.Null)
+				{
+					Url = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CanDownload", out token) && token.Type != JTokenType.Null)
+				{
+					CanDownload = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("CanView", out token) && token.Type != JTokenType.Null)
+				{
+					CanView = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("ParentSemanticPath", out token) && token.Type != JTokenType.Null)
+				{
+					ParentSemanticPath = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("StreamID", out token) && token.Type != JTokenType.Null)
+				{
+					StreamID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("AccountID", out token) && token.Type != JTokenType.Null)
+				{
+					AccountID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+			}
+		}
 	}
 }

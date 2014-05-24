@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
@@ -148,5 +149,169 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public string Signature { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			{
+				var typedSource = (Share)source;
+				AliasID = typedSource.AliasID;
+				ShareType = typedSource.ShareType;
+				Title = typedSource.Title;
+				HasSentMessage = typedSource.HasSentMessage;
+				SentMessageTitle = typedSource.SentMessageTitle;
+				RequireLogin = typedSource.RequireLogin;
+				RequireUserInfo = typedSource.RequireUserInfo;
+				Parent = typedSource.Parent;
+				Creator = typedSource.Creator;
+				User = typedSource.User;
+				Items = typedSource.Items;
+				CreationDate = typedSource.CreationDate;
+				ExpirationDate = typedSource.ExpirationDate;
+				MaxDownloads = typedSource.MaxDownloads;
+				TotalDownloads = typedSource.TotalDownloads;
+				IsViewOnly = typedSource.IsViewOnly;
+				TrackUntilDate = typedSource.TrackUntilDate;
+				SendFrequency = typedSource.SendFrequency;
+				SendInterval = typedSource.SendInterval;
+				LastDateSent = typedSource.LastDateSent;
+				IsConsumed = typedSource.IsConsumed;
+				IsRead = typedSource.IsRead;
+				IsArchived = typedSource.IsArchived;
+				SendTool = typedSource.SendTool;
+				SendMethod = typedSource.SendMethod;
+				UsesStreamIDs = typedSource.UsesStreamIDs;
+				Uri = typedSource.Uri;
+				Recipients = typedSource.Recipients;
+				Zone = typedSource.Zone;
+				Signature = typedSource.Signature;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("AliasID", out token) && token.Type != JTokenType.Null)
+				{
+					AliasID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ShareType", out token) && token.Type != JTokenType.Null)
+				{
+					ShareType = (SafeEnum<ShareType>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<ShareType>));
+				}
+				if(source.TryGetProperty("Title", out token) && token.Type != JTokenType.Null)
+				{
+					Title = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("HasSentMessage", out token) && token.Type != JTokenType.Null)
+				{
+					HasSentMessage = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("SentMessageTitle", out token) && token.Type != JTokenType.Null)
+				{
+					SentMessageTitle = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("RequireLogin", out token) && token.Type != JTokenType.Null)
+				{
+					RequireLogin = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("RequireUserInfo", out token) && token.Type != JTokenType.Null)
+				{
+					RequireUserInfo = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("Parent", out token) && token.Type != JTokenType.Null)
+				{
+					Parent = (Item)serializer.Deserialize(token.CreateReader(), typeof(Item));
+				}
+				if(source.TryGetProperty("Creator", out token) && token.Type != JTokenType.Null)
+				{
+					Creator = (User)serializer.Deserialize(token.CreateReader(), typeof(User));
+				}
+				if(source.TryGetProperty("User", out token) && token.Type != JTokenType.Null)
+				{
+					User = (User)serializer.Deserialize(token.CreateReader(), typeof(User));
+				}
+				if(source.TryGetProperty("Items", out token) && token.Type != JTokenType.Null)
+				{
+					Items = (IEnumerable<Item>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<Item>));
+				}
+				if(source.TryGetProperty("CreationDate", out token) && token.Type != JTokenType.Null)
+				{
+					CreationDate = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("ExpirationDate", out token) && token.Type != JTokenType.Null)
+				{
+					ExpirationDate = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("MaxDownloads", out token) && token.Type != JTokenType.Null)
+				{
+					MaxDownloads = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("TotalDownloads", out token) && token.Type != JTokenType.Null)
+				{
+					TotalDownloads = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("IsViewOnly", out token) && token.Type != JTokenType.Null)
+				{
+					IsViewOnly = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("TrackUntilDate", out token) && token.Type != JTokenType.Null)
+				{
+					TrackUntilDate = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("SendFrequency", out token) && token.Type != JTokenType.Null)
+				{
+					SendFrequency = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("SendInterval", out token) && token.Type != JTokenType.Null)
+				{
+					SendInterval = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("LastDateSent", out token) && token.Type != JTokenType.Null)
+				{
+					LastDateSent = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("IsConsumed", out token) && token.Type != JTokenType.Null)
+				{
+					IsConsumed = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IsRead", out token) && token.Type != JTokenType.Null)
+				{
+					IsRead = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IsArchived", out token) && token.Type != JTokenType.Null)
+				{
+					IsArchived = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("SendTool", out token) && token.Type != JTokenType.Null)
+				{
+					SendTool = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("SendMethod", out token) && token.Type != JTokenType.Null)
+				{
+					SendMethod = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("UsesStreamIDs", out token) && token.Type != JTokenType.Null)
+				{
+					UsesStreamIDs = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("Uri", out token) && token.Type != JTokenType.Null)
+				{
+					Uri = (Uri)serializer.Deserialize(token.CreateReader(), typeof(Uri));
+				}
+				if(source.TryGetProperty("Recipients", out token) && token.Type != JTokenType.Null)
+				{
+					Recipients = (IEnumerable<ShareAlias>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<ShareAlias>));
+				}
+				if(source.TryGetProperty("Zone", out token) && token.Type != JTokenType.Null)
+				{
+					Zone = (Zone)serializer.Deserialize(token.CreateReader(), typeof(Zone));
+				}
+				if(source.TryGetProperty("Signature", out token) && token.Type != JTokenType.Null)
+				{
+					Signature = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+			}
+		}
 	}
 }

@@ -29,9 +29,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as Link;
+			if(typedSource != null)
 			{
-				var typedSource = (Link)source;
 				Uri = typedSource.Uri;
 			}
 			else

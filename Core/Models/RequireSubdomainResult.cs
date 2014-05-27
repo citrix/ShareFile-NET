@@ -26,9 +26,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as RequireSubdomainResult;
+			if(typedSource != null)
 			{
-				var typedSource = (RequireSubdomainResult)source;
 				RequireSubdomain = typedSource.RequireSubdomain;
 			}
 			else

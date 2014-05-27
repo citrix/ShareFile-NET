@@ -154,9 +154,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as Share;
+			if(typedSource != null)
 			{
-				var typedSource = (Share)source;
 				AliasID = typedSource.AliasID;
 				ShareType = typedSource.ShareType;
 				Title = typedSource.Title;

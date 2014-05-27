@@ -42,9 +42,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as Query;
+			if(typedSource != null)
 			{
-				var typedSource = (Query)source;
 				AuthIDs = typedSource.AuthIDs;
 				ItemTypes = typedSource.ItemTypes;
 				ParentID = typedSource.ParentID;

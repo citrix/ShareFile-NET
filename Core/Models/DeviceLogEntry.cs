@@ -41,9 +41,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as DeviceLogEntry;
+			if(typedSource != null)
 			{
-				var typedSource = (DeviceLogEntry)source;
 				FileName = typedSource.FileName;
 				FileID = typedSource.FileID;
 				Timestamp = typedSource.Timestamp;

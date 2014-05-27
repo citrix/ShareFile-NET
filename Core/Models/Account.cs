@@ -216,9 +216,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as Account;
+			if(typedSource != null)
 			{
-				var typedSource = (Account)source;
 				CompanyName = typedSource.CompanyName;
 				BillingContact = typedSource.BillingContact;
 				BillingContactId = typedSource.BillingContactId;

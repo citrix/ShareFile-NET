@@ -39,9 +39,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as DeviceUserWipe;
+			if(typedSource != null)
 			{
-				var typedSource = (DeviceUserWipe)source;
 				WipeToken = typedSource.WipeToken;
 				Success = typedSource.Success;
 				ErrorMessage = typedSource.ErrorMessage;

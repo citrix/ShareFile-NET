@@ -45,9 +45,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as Principal;
+			if(typedSource != null)
 			{
-				var typedSource = (Principal)source;
 				Name = typedSource.Name;
 				Email = typedSource.Email;
 				Username = typedSource.Username;

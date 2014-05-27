@@ -32,9 +32,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as SearchQuery;
+			if(typedSource != null)
 			{
-				var typedSource = (SearchQuery)source;
 				Query = typedSource.Query;
 				Paging = typedSource.Paging;
 				Sort = typedSource.Sort;

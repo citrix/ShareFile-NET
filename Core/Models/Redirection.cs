@@ -32,9 +32,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as Redirection;
+			if(typedSource != null)
 			{
-				var typedSource = (Redirection)source;
 				Method = typedSource.Method;
 				Zone = typedSource.Zone;
 				Uri = typedSource.Uri;

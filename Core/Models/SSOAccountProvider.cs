@@ -52,9 +52,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as SSOAccountProvider;
+			if(typedSource != null)
 			{
-				var typedSource = (SSOAccountProvider)source;
 				LogoutUrl = typedSource.LogoutUrl;
 				LoginUrl = typedSource.LoginUrl;
 				IPRestrictions = typedSource.IPRestrictions;

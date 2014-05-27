@@ -28,9 +28,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as SearchResults;
+			if(typedSource != null)
 			{
-				var typedSource = (SearchResults)source;
 				ParitalResults = typedSource.ParitalResults;
 				Results = typedSource.Results;
 			}

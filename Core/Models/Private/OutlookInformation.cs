@@ -51,9 +51,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as OutlookInformation;
+			if(typedSource != null)
 			{
-				var typedSource = (OutlookInformation)source;
 				DownloadInfoLevel = typedSource.DownloadInfoLevel;
 				UploadInfoLevel = typedSource.UploadInfoLevel;
 				NotifyOnDownload = typedSource.NotifyOnDownload;

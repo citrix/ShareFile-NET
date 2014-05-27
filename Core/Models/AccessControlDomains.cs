@@ -34,9 +34,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as AccessControlDomains;
+			if(typedSource != null)
 			{
-				var typedSource = (AccessControlDomains)source;
 				AccessControlType = typedSource.AccessControlType;
 				Domains = typedSource.Domains;
 			}

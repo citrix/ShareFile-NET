@@ -30,9 +30,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as PowerTools;
+			if(typedSource != null)
 			{
-				var typedSource = (PowerTools)source;
 				EnableDesktopToolsPage = typedSource.EnableDesktopToolsPage;
 				EnableMobileApps = typedSource.EnableMobileApps;
 				ShowMobileTools = typedSource.ShowMobileTools;

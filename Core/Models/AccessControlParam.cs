@@ -46,9 +46,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as AccessControlParam;
+			if(typedSource != null)
 			{
-				var typedSource = (AccessControlParam)source;
 				AccessControl = typedSource.AccessControl;
 				NotifyUser = typedSource.NotifyUser;
 				NotifyMessage = typedSource.NotifyMessage;

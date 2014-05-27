@@ -70,9 +70,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as Notification;
+			if(typedSource != null)
 			{
-				var typedSource = (Notification)source;
 				NotificationType = typedSource.NotificationType;
 				EventID = typedSource.EventID;
 				SenderID = typedSource.SenderID;

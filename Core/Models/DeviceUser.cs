@@ -60,9 +60,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as DeviceUser;
+			if(typedSource != null)
 			{
-				var typedSource = (DeviceUser)source;
 				Account = typedSource.Account;
 				User = typedSource.User;
 				Device = typedSource.Device;

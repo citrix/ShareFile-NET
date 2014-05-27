@@ -23,6 +23,8 @@ namespace ShareFile.Api.Models
 
 		public IEnumerable<Item> Children { get; set; }
 
+		public bool? HasRemoteChildren { get; set; }
+
 		public ItemInfo Info { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
@@ -30,11 +32,12 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as Folder;
+			if(typedSource != null)
 			{
-				var typedSource = (Folder)source;
 				FileCount = typedSource.FileCount;
 				Children = typedSource.Children;
+				HasRemoteChildren = typedSource.HasRemoteChildren;
 				Info = typedSource.Info;
 			}
 			else
@@ -47,6 +50,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("Children", out token) && token.Type != JTokenType.Null)
 				{
 					Children = (IEnumerable<Item>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<Item>));
+				}
+				if(source.TryGetProperty("HasRemoteChildren", out token) && token.Type != JTokenType.Null)
+				{
+					HasRemoteChildren = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("Info", out token) && token.Type != JTokenType.Null)
 				{

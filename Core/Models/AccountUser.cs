@@ -42,9 +42,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as AccountUser;
+			if(typedSource != null)
 			{
-				var typedSource = (AccountUser)source;
 				IsAdministrator = typedSource.IsAdministrator;
 				CanCreateFolders = typedSource.CanCreateFolders;
 				CanUseFileBox = typedSource.CanUseFileBox;

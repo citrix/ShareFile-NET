@@ -69,9 +69,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as UploadSpecification;
+			if(typedSource != null)
 			{
-				var typedSource = (UploadSpecification)source;
 				Method = typedSource.Method;
 				PrepareUri = typedSource.PrepareUri;
 				ChunkUri = typedSource.ChunkUri;

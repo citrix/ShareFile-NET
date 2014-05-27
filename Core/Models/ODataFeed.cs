@@ -33,9 +33,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as ODataFeed<T>;
+			if(typedSource != null)
 			{
-				var typedSource = (ODataFeed<T>)source;
 				count = typedSource.count;
 				Feed = typedSource.Feed;
 				NextLink = typedSource.NextLink;

@@ -39,7 +39,7 @@ namespace ShareFile.Api.Models
 		{
 			if(source == null || serializer == null) return;
 
-				var typedSource = (ODataObject)source;
+			var typedSource = source as ODataObject;
 				MetadataUrl = typedSource.MetadataUrl;
 				Id = typedSource.Id;
 				url = typedSource.url;

@@ -56,9 +56,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as ProductDefaults;
+			if(typedSource != null)
 			{
-				var typedSource = (ProductDefaults)source;
 				ProductName = typedSource.ProductName;
 				DefaultWindowTitle = typedSource.DefaultWindowTitle;
 				TopLevelDomain = typedSource.TopLevelDomain;

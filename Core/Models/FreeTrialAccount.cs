@@ -62,9 +62,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as FreeTrialAccount;
+			if(typedSource != null)
 			{
-				var typedSource = (FreeTrialAccount)source;
 				PromoCode = typedSource.PromoCode;
 				EndDate = typedSource.EndDate;
 				IsValid = typedSource.IsValid;

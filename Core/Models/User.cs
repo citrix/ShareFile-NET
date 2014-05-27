@@ -71,9 +71,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as User;
+			if(typedSource != null)
 			{
-				var typedSource = (User)source;
 				Account = typedSource.Account;
 				Company = typedSource.Company;
 				TotalSharedFiles = typedSource.TotalSharedFiles;

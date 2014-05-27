@@ -52,9 +52,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as StorageCenter;
+			if(typedSource != null)
 			{
-				var typedSource = (StorageCenter)source;
 				Zone = typedSource.Zone;
 				Address = typedSource.Address;
 				LocalAddress = typedSource.LocalAddress;

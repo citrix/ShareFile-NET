@@ -54,9 +54,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as UserSecurity;
+			if(typedSource != null)
 			{
-				var typedSource = (UserSecurity)source;
 				IsDisabled = typedSource.IsDisabled;
 				IsLocked = typedSource.IsLocked;
 				LockExpires = typedSource.LockExpires;

@@ -32,9 +32,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as Group;
+			if(typedSource != null)
 			{
-				var typedSource = (Group)source;
 				Owner = typedSource.Owner;
 				Account = typedSource.Account;
 				IsShared = typedSource.IsShared;

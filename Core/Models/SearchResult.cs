@@ -72,9 +72,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as SearchResult;
+			if(typedSource != null)
 			{
-				var typedSource = (SearchResult)source;
 				Rank = typedSource.Rank;
 				Score = typedSource.Score;
 				ItemID = typedSource.ItemID;

@@ -36,9 +36,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as Device;
+			if(typedSource != null)
 			{
-				var typedSource = (Device)source;
 				Tool = typedSource.Tool;
 				ToolRaw = typedSource.ToolRaw;
 				Owner = typedSource.Owner;

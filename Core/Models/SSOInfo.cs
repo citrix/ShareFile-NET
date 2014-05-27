@@ -30,9 +30,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as SSOInfo;
+			if(typedSource != null)
 			{
-				var typedSource = (SSOInfo)source;
 				Info = typedSource.Info;
 				AppControlPlane = typedSource.AppControlPlane;
 				ApiControlPlane = typedSource.ApiControlPlane;

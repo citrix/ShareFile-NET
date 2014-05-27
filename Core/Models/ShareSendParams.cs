@@ -48,9 +48,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as ShareSendParams;
+			if(typedSource != null)
 			{
-				var typedSource = (ShareSendParams)source;
 				Items = typedSource.Items;
 				Emails = typedSource.Emails;
 				Subject = typedSource.Subject;

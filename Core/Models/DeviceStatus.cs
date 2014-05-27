@@ -34,9 +34,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as DeviceStatus;
+			if(typedSource != null)
 			{
-				var typedSource = (DeviceStatus)source;
 				LockedUsers = typedSource.LockedUsers;
 				UsersToWipe = typedSource.UsersToWipe;
 			}

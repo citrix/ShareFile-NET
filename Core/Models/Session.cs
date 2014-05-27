@@ -42,9 +42,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as Session;
+			if(typedSource != null)
 			{
-				var typedSource = (Session)source;
 				Principal = typedSource.Principal;
 				AuthenticationType = typedSource.AuthenticationType;
 				OAuth2ClientName = typedSource.OAuth2ClientName;

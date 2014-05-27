@@ -44,9 +44,9 @@ namespace ShareFile.Api.Models
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			if(source.GetType().IsSubclassOf(GetType()) || GetType() == source.GetType())
+			var typedSource = source as FavoriteFolder;
+			if(typedSource != null)
 			{
-				var typedSource = (FavoriteFolder)source;
 				User = typedSource.User;
 				Folder = typedSource.Folder;
 				SortOrder = typedSource.SortOrder;

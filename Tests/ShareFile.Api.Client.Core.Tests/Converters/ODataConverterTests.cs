@@ -12,7 +12,7 @@ using File = ShareFile.Api.Models.File;
 namespace ShareFile.Api.Client.Core.Tests.Converters
 {
     [TestFixture]
-    public class ODataConverterTests
+    public class ODataConverterTests : BaseTests
     {
         protected JsonSerializer GetSerializer()
         {
@@ -131,6 +131,34 @@ namespace ShareFile.Api.Client.Core.Tests.Converters
             var item = serializer.Deserialize<ODataFeed<Item>>(jsonReader);
             item.Should().NotBeNull();
             item.Feed.First().GetType().Should().Be(typeof (Folder));
+        }
+
+        [Test]
+        public void VerifyTypeOverrideSupport()
+        {
+            var test = new ShareFileClient(BaseUriString);
+            test.RegisterType<FolderTestClass, Folder>();
+
+            var folder = GetFolder();
+            folder.MetadataUrl =
+                "https://labs.sf-api.com/sf/v3/$metadata#ShareFile.Api.Models.Folder";
+            folder.Children.First().MetadataUrl =
+                "https://labs.sf-api.com/sf/v3/$metadata#ShareFile.Api.Models.File";
+
+            var serializer = GetSerializer();
+
+            StringWriter writer = new StringWriter();
+            serializer.Serialize(writer, folder);
+
+            var jsonReader = new JsonTextReader(new StringReader(writer.ToString()));
+
+            var item = serializer.Deserialize<Item>(jsonReader);
+            item.GetType().Should().Be(typeof (FolderTestClass));
+        }
+
+        public class FolderTestClass : Folder
+        {
+            public string TestProp1 { get; set; }
         }
     }
 }

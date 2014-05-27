@@ -116,7 +116,7 @@ namespace ShareFile.Api.Client.Converters
         {
             var overrideType = typeof(TNew);
             var modelType = typeof(TReplace);
-            _typeMap[overrideType] = modelType;
+            _typeMap[modelType] = overrideType;
 
             TryAddType(modelType, overrideType);
         }

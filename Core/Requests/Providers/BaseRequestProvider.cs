@@ -254,6 +254,65 @@ namespace ShareFile.Api.Client.Requests.Providers
         }
 #endif
 
+        protected void LogRequest(ApiRequest request, string headers)
+        {
+            if (ShareFileClient.Logging.IsDebugEnabled)
+            {
+                ShareFileClient.Logging.Debug("{0} {1}", request.HttpMethod, request.GetComposedUri());
+                ShareFileClient.Logging.Debug("Headers: {0}", headers);
+                LogCookies(request.GetComposedUri());
+                if (request.Body != null)
+                {
+                    ShareFileClient.Logging.Debug("Content:{0}{1}", Environment.NewLine, SerializeObject(request.Body));
+                }
+            }
+            else if (ShareFileClient.Logging.IsTraceEnabled)
+            {
+                ShareFileClient.Logging.Trace("{0} {1}", request.HttpMethod, request.GetComposedUri());
+            }
+        }
+
+        protected void LogResponse<T>(T response, Uri requestUri, string headers, HttpStatusCode statusCode, MediaTypeHeaderValue mediaType = null)
+        {
+            if (ShareFileClient.Logging.IsDebugEnabled)
+            {
+                ShareFileClient.Logging.Debug("Response Code: {0}", statusCode);
+                ShareFileClient.Logging.Debug("{0}", headers);
+                LogCookies(requestUri);
+                if (response != null)
+                {
+                    if (mediaType == null || mediaType.MediaType == "application/json")
+                    {
+                        ShareFileClient.Logging.Debug("Content:{0}{1}", Environment.NewLine, SerializeObject(response));
+                    }
+                    else ShareFileClient.Logging.Debug("Content {0}", response.ToString());
+                }
+            }
+            else if (ShareFileClient.Logging.IsTraceEnabled)
+            {
+                ShareFileClient.Logging.Trace("Response Code: {0}", statusCode);
+            }
+        }
+
+        protected string SerializeObject(object obj)
+        {
+            try
+            {
+                var stringWriter = new StringWriter();
+                using (var textWriter = new JsonTextWriter(stringWriter))
+                {
+                    ShareFileClient.LoggingSerializer.Serialize(textWriter, obj);
+
+                    return stringWriter.ToString();
+                }
+
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
         protected void LogCookies(Uri uri)
         {
             if (ShareFileClient.Logging.IsDebugEnabled)

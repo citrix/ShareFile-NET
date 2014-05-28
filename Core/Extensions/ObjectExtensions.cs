@@ -16,5 +16,18 @@ namespace ShareFile.Api.Client.Extensions
 
             return instance;
         }
+
+        public static TResult As<TCast, TResult>(this object obj, Func<TCast, TResult> map, TResult defaultValue)
+        {
+            //check assignable from instead?
+            if (typeof(TCast).IsInstanceOfType(obj))
+            {
+                return map((TCast)obj);
+            }
+            else
+            {
+                return defaultValue;
+            }
+        }
     }
 }

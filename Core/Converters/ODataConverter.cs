@@ -33,7 +33,7 @@ namespace ShareFile.Api.Client.Converters
         /// <returns></returns>
         protected ODataObject Create(Type objectType, ODataObject oDataObject, JsonSerializer serializer)
         {
-            ODataObject result = null;
+            ODataObject result = oDataObject;
             if(!string.IsNullOrEmpty(oDataObject.MetadataUrl))
             {
                 result = _factory.CreateFromMetadata(oDataObject.MetadataUrl, objectType, oDataObject, serializer);

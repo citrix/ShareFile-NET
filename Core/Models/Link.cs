@@ -8,19 +8,40 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
 	public class Link : Item 
 	{
+
 		/// <summary>
 		/// Universal Reference Identifier for this Link object
 		/// </summary>
 		public Uri Uri { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			var typedSource = source as Link;
+			if(typedSource != null)
+			{
+				Uri = typedSource.Uri;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("Uri", out token) && token.Type != JTokenType.Null)
+				{
+					Uri = (Uri)serializer.Deserialize(token.CreateReader(), typeof(Uri));
+				}
+			}
+		}
 	}
 }

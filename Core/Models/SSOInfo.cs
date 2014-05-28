@@ -8,20 +8,51 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
 	public class SSOInfo : ODataObject 
 	{
+
 		public IEnumerable<SSOInfoEntry> Info { get; set; }
 
 		public string AppControlPlane { get; set; }
 
 		public string ApiControlPlane { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			var typedSource = source as SSOInfo;
+			if(typedSource != null)
+			{
+				Info = typedSource.Info;
+				AppControlPlane = typedSource.AppControlPlane;
+				ApiControlPlane = typedSource.ApiControlPlane;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("Info", out token) && token.Type != JTokenType.Null)
+				{
+					Info = (IEnumerable<SSOInfoEntry>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<SSOInfoEntry>));
+				}
+				if(source.TryGetProperty("AppControlPlane", out token) && token.Type != JTokenType.Null)
+				{
+					AppControlPlane = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ApiControlPlane", out token) && token.Type != JTokenType.Null)
+				{
+					ApiControlPlane = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+			}
+		}
 	}
 }

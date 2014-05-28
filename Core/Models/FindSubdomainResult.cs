@@ -8,15 +8,17 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
 	public class FindSubdomainResult : ODataObject 
 	{
+
 		public string UserID { get; set; }
 
 		public string Email { get; set; }
@@ -27,5 +29,44 @@ namespace ShareFile.Api.Models
 
 		public string Subdomain { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			var typedSource = source as FindSubdomainResult;
+			if(typedSource != null)
+			{
+				UserID = typedSource.UserID;
+				Email = typedSource.Email;
+				AccountID = typedSource.AccountID;
+				CompanyName = typedSource.CompanyName;
+				Subdomain = typedSource.Subdomain;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("UserID", out token) && token.Type != JTokenType.Null)
+				{
+					UserID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Email", out token) && token.Type != JTokenType.Null)
+				{
+					Email = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("AccountID", out token) && token.Type != JTokenType.Null)
+				{
+					AccountID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CompanyName", out token) && token.Type != JTokenType.Null)
+				{
+					CompanyName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Subdomain", out token) && token.Type != JTokenType.Null)
+				{
+					Subdomain = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+			}
+		}
 	}
 }

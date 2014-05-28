@@ -8,15 +8,17 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
 	public class User : Principal 
 	{
+
 		public Account Account { get; set; }
 
 		public string Company { get; set; }
@@ -64,5 +66,129 @@ namespace ShareFile.Api.Models
 
 		public UserInfo Info { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			var typedSource = source as User;
+			if(typedSource != null)
+			{
+				Account = typedSource.Account;
+				Company = typedSource.Company;
+				TotalSharedFiles = typedSource.TotalSharedFiles;
+				Contacted = typedSource.Contacted;
+				FullName = typedSource.FullName;
+				ReferredBy = typedSource.ReferredBy;
+				Notifications = typedSource.Notifications;
+				DefaultZone = typedSource.DefaultZone;
+				FirstName = typedSource.FirstName;
+				LastName = typedSource.LastName;
+				DateCreated = typedSource.DateCreated;
+				FullNameShort = typedSource.FullNameShort;
+				IsConfirmed = typedSource.IsConfirmed;
+				Password = typedSource.Password;
+				Preferences = typedSource.Preferences;
+				Security = typedSource.Security;
+				FavoriteFolders = typedSource.FavoriteFolders;
+				HomeFolder = typedSource.HomeFolder;
+				Devices = typedSource.Devices;
+				VirtualRoot = typedSource.VirtualRoot;
+				Roles = typedSource.Roles;
+				Info = typedSource.Info;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("Account", out token) && token.Type != JTokenType.Null)
+				{
+					Account = (Account)serializer.Deserialize(token.CreateReader(), typeof(Account));
+				}
+				if(source.TryGetProperty("Company", out token) && token.Type != JTokenType.Null)
+				{
+					Company = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("TotalSharedFiles", out token) && token.Type != JTokenType.Null)
+				{
+					TotalSharedFiles = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("Contacted", out token) && token.Type != JTokenType.Null)
+				{
+					Contacted = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("FullName", out token) && token.Type != JTokenType.Null)
+				{
+					FullName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ReferredBy", out token) && token.Type != JTokenType.Null)
+				{
+					ReferredBy = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Notifications", out token) && token.Type != JTokenType.Null)
+				{
+					Notifications = (IEnumerable<Notification>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<Notification>));
+				}
+				if(source.TryGetProperty("DefaultZone", out token) && token.Type != JTokenType.Null)
+				{
+					DefaultZone = (Zone)serializer.Deserialize(token.CreateReader(), typeof(Zone));
+				}
+				if(source.TryGetProperty("FirstName", out token) && token.Type != JTokenType.Null)
+				{
+					FirstName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("LastName", out token) && token.Type != JTokenType.Null)
+				{
+					LastName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("DateCreated", out token) && token.Type != JTokenType.Null)
+				{
+					DateCreated = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("FullNameShort", out token) && token.Type != JTokenType.Null)
+				{
+					FullNameShort = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("IsConfirmed", out token) && token.Type != JTokenType.Null)
+				{
+					IsConfirmed = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("Password", out token) && token.Type != JTokenType.Null)
+				{
+					Password = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Preferences", out token) && token.Type != JTokenType.Null)
+				{
+					Preferences = (UserPreferences)serializer.Deserialize(token.CreateReader(), typeof(UserPreferences));
+				}
+				if(source.TryGetProperty("Security", out token) && token.Type != JTokenType.Null)
+				{
+					Security = (UserSecurity)serializer.Deserialize(token.CreateReader(), typeof(UserSecurity));
+				}
+				if(source.TryGetProperty("FavoriteFolders", out token) && token.Type != JTokenType.Null)
+				{
+					FavoriteFolders = (IEnumerable<FavoriteFolder>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<FavoriteFolder>));
+				}
+				if(source.TryGetProperty("HomeFolder", out token) && token.Type != JTokenType.Null)
+				{
+					HomeFolder = (Folder)serializer.Deserialize(token.CreateReader(), typeof(Folder));
+				}
+				if(source.TryGetProperty("Devices", out token) && token.Type != JTokenType.Null)
+				{
+					Devices = (IEnumerable<DeviceUser>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<DeviceUser>));
+				}
+				if(source.TryGetProperty("VirtualRoot", out token) && token.Type != JTokenType.Null)
+				{
+					VirtualRoot = (Folder)serializer.Deserialize(token.CreateReader(), typeof(Folder));
+				}
+				if(source.TryGetProperty("Roles", out token) && token.Type != JTokenType.Null)
+				{
+					Roles = (IEnumerable<SafeEnum<UserRole>>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<SafeEnum<UserRole>>));
+				}
+				if(source.TryGetProperty("Info", out token) && token.Type != JTokenType.Null)
+				{
+					Info = (UserInfo)serializer.Deserialize(token.CreateReader(), typeof(UserInfo));
+				}
+			}
+		}
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Extensions
@@ -10,13 +11,13 @@ namespace ShareFile.Api.Client.Extensions
         {
             if (oDataObject.Properties == null)
             {
-                oDataObject.Properties = new Dictionary<string, string>();
+                oDataObject.Properties = new Dictionary<string, JToken>();
             }
 
-            oDataObject.Properties.Add("MetadataBaseUri", baseUri.ToString());
-            oDataObject.Properties.Add("EntitySet", entitySet);
-            oDataObject.Properties.Add("TypeCast", typeCast);
-            oDataObject.Properties.Add("Type", type.GetValueOrDefault(ODataObjectType.Entity).ToString());
+            oDataObject.AddProperty("MetadataBaseUri", baseUri.ToString());
+            oDataObject.AddProperty("EntitySet", entitySet);
+            oDataObject.AddProperty("TypeCast", typeCast);
+            oDataObject.AddProperty("Type", type.GetValueOrDefault(ODataObjectType.Entity).ToString());
         }
 
         public static Uri GetObjectUri(this ODataObject oDataObject, bool useStreamId = false)
@@ -24,11 +25,14 @@ namespace ShareFile.Api.Client.Extensions
             if (useStreamId && oDataObject is Item)
             {
                 var item = oDataObject as Item;
-                if (oDataObject.url != null)
+                if (!string.IsNullOrEmpty(item.StreamID))
                 {
-                    return new Uri(oDataObject.url.ToString().Replace(item.Id, item.StreamID));
+                    if (oDataObject.url != null)
+                    {
+                        return new Uri(oDataObject.url.ToString().Replace(item.Id, item.StreamID));
+                    }
+                    return oDataObject.ComposeUri((oDataObject as Item).StreamID);
                 }
-                return oDataObject.ComposeUri((oDataObject as Item).StreamID);
             }
             if (oDataObject.url == null)
             {
@@ -66,7 +70,7 @@ namespace ShareFile.Api.Client.Extensions
         {
             string metadata;
 
-            if (oDataObject.Properties != null && oDataObject.Properties.TryGetValue("MetadataBaseUri", out metadata))
+            if (oDataObject.TryGetProperty("MetadataBaseUri", out metadata))
             {
                 return new Uri(metadata, UriKind.RelativeOrAbsolute);
             }
@@ -77,7 +81,7 @@ namespace ShareFile.Api.Client.Extensions
         {
             string entitySet;
 
-            if (oDataObject.Properties != null && oDataObject.Properties.TryGetValue("EntitySet", out entitySet))
+            if (oDataObject.TryGetProperty("EntitySet", out entitySet))
             {
                 return entitySet;
             }
@@ -88,7 +92,7 @@ namespace ShareFile.Api.Client.Extensions
         {
             string typeCast;
 
-            if (oDataObject.Properties != null && oDataObject.Properties.TryGetValue("TypeCast", out typeCast))
+            if (oDataObject.TryGetProperty("TypeCast", out typeCast))
             {
                 return typeCast;
             }
@@ -99,7 +103,7 @@ namespace ShareFile.Api.Client.Extensions
         {
             string type;
 
-            if (oDataObject.Properties != null && oDataObject.Properties.TryGetValue("TypeCast", out type))
+            if (oDataObject.TryGetProperty("TypeCast", out type))
             {
                 ODataObjectType @enum;
                 if (Enum.TryParse(type, out @enum))
@@ -110,14 +114,34 @@ namespace ShareFile.Api.Client.Extensions
             return ODataObjectType.Entity;
         }
 
-        public static void AddProperty(this ODataObject oDataObject, string key, string value)
+        public static void AddProperty(this ODataObject oDataObject, string key, object value)
         {
+            if (value == null) return;
+
             if (oDataObject.Properties == null)
             {
-                oDataObject.Properties = new Dictionary<string, string>();
+                oDataObject.Properties = new Dictionary<string, JToken>();
             }
 
-            oDataObject.Properties[key] = value;
+            var token = value as JToken;
+            if (token != null)
+            {
+                oDataObject.Properties[key] = token;
+            }
+            else oDataObject.Properties[key] = JToken.FromObject(value);
+        }
+
+        public static bool TryGetProperty<T>(this ODataObject oDataObject, string key, out T value)
+        {
+            value = default(T);
+
+            JToken token;
+            if (oDataObject != null && oDataObject.Properties != null && oDataObject.Properties.TryGetValue(key, out token))
+            {
+                value = token.ToObject<T>();
+                return true;
+            }
+            return false;
         }
     }
 }

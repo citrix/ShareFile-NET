@@ -8,15 +8,17 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
 	public class ItemInfo : ODataObject 
 	{
+
 		public AccessControl CurrentAccessControl { get; set; }
 
 		public bool? HasVroot { get; set; }
@@ -73,5 +75,159 @@ namespace ShareFile.Api.Models
 
 		public string TreeModeSourceId { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			var typedSource = source as ItemInfo;
+			if(typedSource != null)
+			{
+				CurrentAccessControl = typedSource.CurrentAccessControl;
+				HasVroot = typedSource.HasVroot;
+				IsSystemRoot = typedSource.IsSystemRoot;
+				IsAccountRoot = typedSource.IsAccountRoot;
+				IsVRoot = typedSource.IsVRoot;
+				IsMyFolders = typedSource.IsMyFolders;
+				IsAHomeFolder = typedSource.IsAHomeFolder;
+				IsMyHomeFolder = typedSource.IsMyHomeFolder;
+				IsAStartFolder = typedSource.IsAStartFolder;
+				IsSharedFolder = typedSource.IsSharedFolder;
+				IsPassthrough = typedSource.IsPassthrough;
+				IsVersioned = typedSource.IsVersioned;
+				CanAddFolder = typedSource.CanAddFolder;
+				CanAddNode = typedSource.CanAddNode;
+				CanView = typedSource.CanView;
+				CanDownload = typedSource.CanDownload;
+				CanWatermarkDownload = typedSource.CanWatermarkDownload;
+				CanUpload = typedSource.CanUpload;
+				CanSend = typedSource.CanSend;
+				CanDeleteCurrentItem = typedSource.CanDeleteCurrentItem;
+				CanDeleteChildItems = typedSource.CanDeleteChildItems;
+				CanManagePermissions = typedSource.CanManagePermissions;
+				CanEditFolderOpts = typedSource.CanEditFolderOpts;
+				FolderPayID = typedSource.FolderPayID;
+				ShowFolderPayBuyButton = typedSource.ShowFolderPayBuyButton;
+				TreeMode = typedSource.TreeMode;
+				TreeModeOperationAllowed = typedSource.TreeModeOperationAllowed;
+				TreeModeSourceId = typedSource.TreeModeSourceId;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("CurrentAccessControl", out token) && token.Type != JTokenType.Null)
+				{
+					CurrentAccessControl = (AccessControl)serializer.Deserialize(token.CreateReader(), typeof(AccessControl));
+				}
+				if(source.TryGetProperty("HasVroot", out token) && token.Type != JTokenType.Null)
+				{
+					HasVroot = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IsSystemRoot", out token) && token.Type != JTokenType.Null)
+				{
+					IsSystemRoot = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IsAccountRoot", out token) && token.Type != JTokenType.Null)
+				{
+					IsAccountRoot = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IsVRoot", out token) && token.Type != JTokenType.Null)
+				{
+					IsVRoot = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IsMyFolders", out token) && token.Type != JTokenType.Null)
+				{
+					IsMyFolders = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IsAHomeFolder", out token) && token.Type != JTokenType.Null)
+				{
+					IsAHomeFolder = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IsMyHomeFolder", out token) && token.Type != JTokenType.Null)
+				{
+					IsMyHomeFolder = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IsAStartFolder", out token) && token.Type != JTokenType.Null)
+				{
+					IsAStartFolder = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IsSharedFolder", out token) && token.Type != JTokenType.Null)
+				{
+					IsSharedFolder = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IsPassthrough", out token) && token.Type != JTokenType.Null)
+				{
+					IsPassthrough = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IsVersioned", out token) && token.Type != JTokenType.Null)
+				{
+					IsVersioned = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanAddFolder", out token) && token.Type != JTokenType.Null)
+				{
+					CanAddFolder = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanAddNode", out token) && token.Type != JTokenType.Null)
+				{
+					CanAddNode = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanView", out token) && token.Type != JTokenType.Null)
+				{
+					CanView = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanDownload", out token) && token.Type != JTokenType.Null)
+				{
+					CanDownload = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanWatermarkDownload", out token) && token.Type != JTokenType.Null)
+				{
+					CanWatermarkDownload = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanUpload", out token) && token.Type != JTokenType.Null)
+				{
+					CanUpload = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanSend", out token) && token.Type != JTokenType.Null)
+				{
+					CanSend = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanDeleteCurrentItem", out token) && token.Type != JTokenType.Null)
+				{
+					CanDeleteCurrentItem = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanDeleteChildItems", out token) && token.Type != JTokenType.Null)
+				{
+					CanDeleteChildItems = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanManagePermissions", out token) && token.Type != JTokenType.Null)
+				{
+					CanManagePermissions = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanEditFolderOpts", out token) && token.Type != JTokenType.Null)
+				{
+					CanEditFolderOpts = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("FolderPayID", out token) && token.Type != JTokenType.Null)
+				{
+					FolderPayID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ShowFolderPayBuyButton", out token) && token.Type != JTokenType.Null)
+				{
+					ShowFolderPayBuyButton = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("TreeMode", out token) && token.Type != JTokenType.Null)
+				{
+					TreeMode = (SafeEnum<TreeMode>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<TreeMode>));
+				}
+				if(source.TryGetProperty("TreeModeOperationAllowed", out token) && token.Type != JTokenType.Null)
+				{
+					TreeModeOperationAllowed = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("TreeModeSourceId", out token) && token.Type != JTokenType.Null)
+				{
+					TreeModeSourceId = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+			}
+		}
 	}
 }

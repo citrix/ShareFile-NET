@@ -255,10 +255,10 @@
     <Compile Include="Requests\ODataParameterCollection.cs" />
     <Compile Include="Requests\Providers\AsyncRequestProvider.cs" />
     <Compile Include="Requests\Providers\BaseRequestProvider.cs" />
-    <Compile Include="Requests\Providers\DefaultRequestProvider.cs" />
     <Compile Include="Requests\Providers\IAsyncRequestProvider.cs" />
     <Compile Include="Requests\Providers\ISyncRequestProvider.cs" />
     <Compile Include="Requests\Providers\RequestProviderFactory.cs" />
+    <Compile Include="Requests\Providers\Response.cs" />
     <Compile Include="Requests\Providers\SyncRequestProvider.cs" />
     <Compile Include="Requests\Query.cs" />
     <Compile Include="Security\Authentication\OAuth2\IOAuthResponse.cs" />

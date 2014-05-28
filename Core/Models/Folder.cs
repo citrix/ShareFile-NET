@@ -8,20 +8,58 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
 	public class Folder : Item 
 	{
+
 		public int? FileCount { get; set; }
 
 		public IEnumerable<Item> Children { get; set; }
 
+		public bool? HasRemoteChildren { get; set; }
+
 		public ItemInfo Info { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			var typedSource = source as Folder;
+			if(typedSource != null)
+			{
+				FileCount = typedSource.FileCount;
+				Children = typedSource.Children;
+				HasRemoteChildren = typedSource.HasRemoteChildren;
+				Info = typedSource.Info;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("FileCount", out token) && token.Type != JTokenType.Null)
+				{
+					FileCount = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("Children", out token) && token.Type != JTokenType.Null)
+				{
+					Children = (IEnumerable<Item>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<Item>));
+				}
+				if(source.TryGetProperty("HasRemoteChildren", out token) && token.Type != JTokenType.Null)
+				{
+					HasRemoteChildren = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("Info", out token) && token.Type != JTokenType.Null)
+				{
+					Info = (ItemInfo)serializer.Deserialize(token.CreateReader(), typeof(ItemInfo));
+				}
+			}
+		}
 	}
 }

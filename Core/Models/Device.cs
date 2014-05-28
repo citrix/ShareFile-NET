@@ -8,15 +8,17 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
 	public class Device : ODataObject 
 	{
+
 		public SafeEnum<SFTool> Tool { get; set; }
 
 		public string ToolRaw { get; set; }
@@ -29,5 +31,49 @@ namespace ShareFile.Api.Models
 
 		public bool JustRegistered { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			var typedSource = source as Device;
+			if(typedSource != null)
+			{
+				Tool = typedSource.Tool;
+				ToolRaw = typedSource.ToolRaw;
+				Owner = typedSource.Owner;
+				Created = typedSource.Created;
+				ToolVersion = typedSource.ToolVersion;
+				JustRegistered = typedSource.JustRegistered;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("Tool", out token) && token.Type != JTokenType.Null)
+				{
+					Tool = (SafeEnum<SFTool>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<SFTool>));
+				}
+				if(source.TryGetProperty("ToolRaw", out token) && token.Type != JTokenType.Null)
+				{
+					ToolRaw = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Owner", out token) && token.Type != JTokenType.Null)
+				{
+					Owner = (User)serializer.Deserialize(token.CreateReader(), typeof(User));
+				}
+				if(source.TryGetProperty("Created", out token) && token.Type != JTokenType.Null)
+				{
+					Created = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("ToolVersion", out token) && token.Type != JTokenType.Null)
+				{
+					ToolVersion = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("JustRegistered", out token) && token.Type != JTokenType.Null)
+				{
+					JustRegistered = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+			}
+		}
 	}
 }

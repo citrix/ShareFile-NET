@@ -8,15 +8,17 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
 	public class FreeTrialAccount : Account 
 	{
+
 		public string PromoCode { get; set; }
 
 		public DateTime? EndDate { get; set; }
@@ -55,5 +57,114 @@ namespace ShareFile.Api.Models
 
 		public string MarketoID { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			var typedSource = source as FreeTrialAccount;
+			if(typedSource != null)
+			{
+				PromoCode = typedSource.PromoCode;
+				EndDate = typedSource.EndDate;
+				IsValid = typedSource.IsValid;
+				ConversionType = typedSource.ConversionType;
+				HasFollowedUp = typedSource.HasFollowedUp;
+				FollowUpDate = typedSource.FollowUpDate;
+				CancellationReason = typedSource.CancellationReason;
+				SignupProcess = typedSource.SignupProcess;
+				ConversionIndexDay7 = typedSource.ConversionIndexDay7;
+				ConversionIndexDay14 = typedSource.ConversionIndexDay14;
+				LTVIndex = typedSource.LTVIndex;
+				AllSources = typedSource.AllSources;
+				ReferralID = typedSource.ReferralID;
+				TrialTypeID = typedSource.TrialTypeID;
+				InitialCallRepID = typedSource.InitialCallRepID;
+				InitialCallDate = typedSource.InitialCallDate;
+				DemoStatus = typedSource.DemoStatus;
+				DemoDate = typedSource.DemoDate;
+				MarketoID = typedSource.MarketoID;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("PromoCode", out token) && token.Type != JTokenType.Null)
+				{
+					PromoCode = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("EndDate", out token) && token.Type != JTokenType.Null)
+				{
+					EndDate = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("IsValid", out token) && token.Type != JTokenType.Null)
+				{
+					IsValid = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("ConversionType", out token) && token.Type != JTokenType.Null)
+				{
+					ConversionType = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("HasFollowedUp", out token) && token.Type != JTokenType.Null)
+				{
+					HasFollowedUp = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("FollowUpDate", out token) && token.Type != JTokenType.Null)
+				{
+					FollowUpDate = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("CancellationReason", out token) && token.Type != JTokenType.Null)
+				{
+					CancellationReason = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("SignupProcess", out token) && token.Type != JTokenType.Null)
+				{
+					SignupProcess = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ConversionIndexDay7", out token) && token.Type != JTokenType.Null)
+				{
+					ConversionIndexDay7 = (decimal?)serializer.Deserialize(token.CreateReader(), typeof(decimal?));
+				}
+				if(source.TryGetProperty("ConversionIndexDay14", out token) && token.Type != JTokenType.Null)
+				{
+					ConversionIndexDay14 = (decimal?)serializer.Deserialize(token.CreateReader(), typeof(decimal?));
+				}
+				if(source.TryGetProperty("LTVIndex", out token) && token.Type != JTokenType.Null)
+				{
+					LTVIndex = (decimal?)serializer.Deserialize(token.CreateReader(), typeof(decimal?));
+				}
+				if(source.TryGetProperty("AllSources", out token) && token.Type != JTokenType.Null)
+				{
+					AllSources = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ReferralID", out token) && token.Type != JTokenType.Null)
+				{
+					ReferralID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("TrialTypeID", out token) && token.Type != JTokenType.Null)
+				{
+					TrialTypeID = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("InitialCallRepID", out token) && token.Type != JTokenType.Null)
+				{
+					InitialCallRepID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("InitialCallDate", out token) && token.Type != JTokenType.Null)
+				{
+					InitialCallDate = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("DemoStatus", out token) && token.Type != JTokenType.Null)
+				{
+					DemoStatus = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("DemoDate", out token) && token.Type != JTokenType.Null)
+				{
+					DemoDate = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("MarketoID", out token) && token.Type != JTokenType.Null)
+				{
+					MarketoID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+			}
+		}
 	}
 }

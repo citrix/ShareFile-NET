@@ -8,15 +8,17 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
 	public class AccountUser : User 
 	{
+
 		public bool? IsAdministrator { get; set; }
 
 		public bool? CanCreateFolders { get; set; }
@@ -35,5 +37,64 @@ namespace ShareFile.Api.Models
 
 		public int? StorageQuotaPercent { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			var typedSource = source as AccountUser;
+			if(typedSource != null)
+			{
+				IsAdministrator = typedSource.IsAdministrator;
+				CanCreateFolders = typedSource.CanCreateFolders;
+				CanUseFileBox = typedSource.CanUseFileBox;
+				CanManageUsers = typedSource.CanManageUsers;
+				IsVirtualClient = typedSource.IsVirtualClient;
+				DiskSpace = typedSource.DiskSpace;
+				Bandwidth = typedSource.Bandwidth;
+				StorageQuotaLimitGB = typedSource.StorageQuotaLimitGB;
+				StorageQuotaPercent = typedSource.StorageQuotaPercent;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("IsAdministrator", out token) && token.Type != JTokenType.Null)
+				{
+					IsAdministrator = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanCreateFolders", out token) && token.Type != JTokenType.Null)
+				{
+					CanCreateFolders = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanUseFileBox", out token) && token.Type != JTokenType.Null)
+				{
+					CanUseFileBox = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanManageUsers", out token) && token.Type != JTokenType.Null)
+				{
+					CanManageUsers = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IsVirtualClient", out token) && token.Type != JTokenType.Null)
+				{
+					IsVirtualClient = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("DiskSpace", out token) && token.Type != JTokenType.Null)
+				{
+					DiskSpace = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("Bandwidth", out token) && token.Type != JTokenType.Null)
+				{
+					Bandwidth = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("StorageQuotaLimitGB", out token) && token.Type != JTokenType.Null)
+				{
+					StorageQuotaLimitGB = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("StorageQuotaPercent", out token) && token.Type != JTokenType.Null)
+				{
+					StorageQuotaPercent = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+			}
+		}
 	}
 }

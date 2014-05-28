@@ -8,15 +8,17 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
 	public class Principal : ODataObject 
 	{
+
 		/// <summary>
 		/// User name
 		/// </summary>
@@ -38,5 +40,39 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public string Domain { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			var typedSource = source as Principal;
+			if(typedSource != null)
+			{
+				Name = typedSource.Name;
+				Email = typedSource.Email;
+				Username = typedSource.Username;
+				Domain = typedSource.Domain;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("Name", out token) && token.Type != JTokenType.Null)
+				{
+					Name = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Email", out token) && token.Type != JTokenType.Null)
+				{
+					Email = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Username", out token) && token.Type != JTokenType.Null)
+				{
+					Username = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Domain", out token) && token.Type != JTokenType.Null)
+				{
+					Domain = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+			}
+		}
 	}
 }

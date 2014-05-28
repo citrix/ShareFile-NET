@@ -8,15 +8,17 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
 	public class DownloadSpecification : ODataObject 
 	{
+
 		public string DownloadToken { get; set; }
 
 		public string PrepareXmlInfo { get; set; }
@@ -25,5 +27,39 @@ namespace ShareFile.Api.Models
 
 		public Uri DownloadPrepStartURL { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			var typedSource = source as DownloadSpecification;
+			if(typedSource != null)
+			{
+				DownloadToken = typedSource.DownloadToken;
+				PrepareXmlInfo = typedSource.PrepareXmlInfo;
+				DownloadUrl = typedSource.DownloadUrl;
+				DownloadPrepStartURL = typedSource.DownloadPrepStartURL;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("DownloadToken", out token) && token.Type != JTokenType.Null)
+				{
+					DownloadToken = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("PrepareXmlInfo", out token) && token.Type != JTokenType.Null)
+				{
+					PrepareXmlInfo = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("DownloadUrl", out token) && token.Type != JTokenType.Null)
+				{
+					DownloadUrl = (Uri)serializer.Deserialize(token.CreateReader(), typeof(Uri));
+				}
+				if(source.TryGetProperty("DownloadPrepStartURL", out token) && token.Type != JTokenType.Null)
+				{
+					DownloadPrepStartURL = (Uri)serializer.Deserialize(token.CreateReader(), typeof(Uri));
+				}
+			}
+		}
 	}
 }

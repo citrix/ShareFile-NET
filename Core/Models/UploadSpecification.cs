@@ -8,15 +8,17 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
 	public class UploadSpecification : ODataObject 
 	{
+
 		/// <summary>
 		/// The Upload method that must be used for this upload
 		/// </summary>
@@ -38,6 +40,11 @@ namespace ShareFile.Api.Models
 		public Uri FinishUri { get; set; }
 
 		/// <summary>
+		/// Allows the client to check progress of standard uploads
+		/// </summary>
+		public string ProgressData { get; set; }
+
+		/// <summary>
 		/// Specifies a Resumable upload is supproted.
 		/// </summary>
 		public bool IsResume { get; set; }
@@ -57,5 +64,64 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public string ResumeFileHash { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			var typedSource = source as UploadSpecification;
+			if(typedSource != null)
+			{
+				Method = typedSource.Method;
+				PrepareUri = typedSource.PrepareUri;
+				ChunkUri = typedSource.ChunkUri;
+				FinishUri = typedSource.FinishUri;
+				ProgressData = typedSource.ProgressData;
+				IsResume = typedSource.IsResume;
+				ResumeIndex = typedSource.ResumeIndex;
+				ResumeOffset = typedSource.ResumeOffset;
+				ResumeFileHash = typedSource.ResumeFileHash;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("Method", out token) && token.Type != JTokenType.Null)
+				{
+					Method = (SafeEnum<UploadMethod>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<UploadMethod>));
+				}
+				if(source.TryGetProperty("PrepareUri", out token) && token.Type != JTokenType.Null)
+				{
+					PrepareUri = (Uri)serializer.Deserialize(token.CreateReader(), typeof(Uri));
+				}
+				if(source.TryGetProperty("ChunkUri", out token) && token.Type != JTokenType.Null)
+				{
+					ChunkUri = (Uri)serializer.Deserialize(token.CreateReader(), typeof(Uri));
+				}
+				if(source.TryGetProperty("FinishUri", out token) && token.Type != JTokenType.Null)
+				{
+					FinishUri = (Uri)serializer.Deserialize(token.CreateReader(), typeof(Uri));
+				}
+				if(source.TryGetProperty("ProgressData", out token) && token.Type != JTokenType.Null)
+				{
+					ProgressData = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("IsResume", out token) && token.Type != JTokenType.Null)
+				{
+					IsResume = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("ResumeIndex", out token) && token.Type != JTokenType.Null)
+				{
+					ResumeIndex = (long)serializer.Deserialize(token.CreateReader(), typeof(long));
+				}
+				if(source.TryGetProperty("ResumeOffset", out token) && token.Type != JTokenType.Null)
+				{
+					ResumeOffset = (long)serializer.Deserialize(token.CreateReader(), typeof(long));
+				}
+				if(source.TryGetProperty("ResumeFileHash", out token) && token.Type != JTokenType.Null)
+				{
+					ResumeFileHash = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+			}
+		}
 	}
 }

@@ -8,15 +8,17 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
 	public class AccessControlParam : ODataObject 
 	{
+
 		/// <summary>
 		/// AccessControl.Item is inherited from AccessControlsBulkParams and cannot be specified here
 		/// </summary>
@@ -39,5 +41,39 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public bool? Recursive { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			var typedSource = source as AccessControlParam;
+			if(typedSource != null)
+			{
+				AccessControl = typedSource.AccessControl;
+				NotifyUser = typedSource.NotifyUser;
+				NotifyMessage = typedSource.NotifyMessage;
+				Recursive = typedSource.Recursive;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("AccessControl", out token) && token.Type != JTokenType.Null)
+				{
+					AccessControl = (AccessControl)serializer.Deserialize(token.CreateReader(), typeof(AccessControl));
+				}
+				if(source.TryGetProperty("NotifyUser", out token) && token.Type != JTokenType.Null)
+				{
+					NotifyUser = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("NotifyMessage", out token) && token.Type != JTokenType.Null)
+				{
+					NotifyMessage = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Recursive", out token) && token.Type != JTokenType.Null)
+				{
+					Recursive = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+			}
+		}
 	}
 }

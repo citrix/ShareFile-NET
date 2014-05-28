@@ -8,15 +8,17 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
 	public class DeviceStatus : ODataObject 
 	{
+
 		/// <summary>
 		/// Locked users
 		/// </summary>
@@ -27,5 +29,29 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public IEnumerable<DeviceUserWipe> UsersToWipe { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			var typedSource = source as DeviceStatus;
+			if(typedSource != null)
+			{
+				LockedUsers = typedSource.LockedUsers;
+				UsersToWipe = typedSource.UsersToWipe;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("LockedUsers", out token) && token.Type != JTokenType.Null)
+				{
+					LockedUsers = (IEnumerable<User>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<User>));
+				}
+				if(source.TryGetProperty("UsersToWipe", out token) && token.Type != JTokenType.Null)
+				{
+					UsersToWipe = (IEnumerable<DeviceUserWipe>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<DeviceUserWipe>));
+				}
+			}
+		}
 	}
 }

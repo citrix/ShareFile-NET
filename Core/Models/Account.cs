@@ -8,15 +8,17 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
 	public class Account : ODataObject 
 	{
+
 		public string CompanyName { get; set; }
 
 		public User BillingContact { get; set; }
@@ -209,5 +211,379 @@ namespace ShareFile.Api.Models
 
 		public IEnumerable<ToolInformation> ToolInformation { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			var typedSource = source as Account;
+			if(typedSource != null)
+			{
+				CompanyName = typedSource.CompanyName;
+				BillingContact = typedSource.BillingContact;
+				BillingContactId = typedSource.BillingContactId;
+				TechnicalContact = typedSource.TechnicalContact;
+				TechnicalContactId = typedSource.TechnicalContactId;
+				AccountManager = typedSource.AccountManager;
+				AccountManagerId = typedSource.AccountManagerId;
+				AccountType = typedSource.AccountType;
+				PlanName = typedSource.PlanName;
+				PlanTrack = typedSource.PlanTrack;
+				PlanTrackEnum = typedSource.PlanTrackEnum;
+				BillingType = typedSource.BillingType;
+				BillingCycle = typedSource.BillingCycle;
+				BillingRate = typedSource.BillingRate;
+				BaseBillingRate = typedSource.BaseBillingRate;
+				BaseBandwidth = typedSource.BaseBandwidth;
+				BaseDiskSpace = typedSource.BaseDiskSpace;
+				BaseUsers = typedSource.BaseUsers;
+				AdditionalBandwidth = typedSource.AdditionalBandwidth;
+				AdditionalDiskSpace = typedSource.AdditionalDiskSpace;
+				AdditionalUsers = typedSource.AdditionalUsers;
+				AdditionalBandwidthRate = typedSource.AdditionalBandwidthRate;
+				AdditionalDiskSpaceRate = typedSource.AdditionalDiskSpaceRate;
+				AdditionalUserRate = typedSource.AdditionalUserRate;
+				UserMax = typedSource.UserMax;
+				DiskSpaceMax = typedSource.DiskSpaceMax;
+				BandwidthMax = typedSource.BandwidthMax;
+				HasPowerTools = typedSource.HasPowerTools;
+				HasEncryption = typedSource.HasEncryption;
+				PowerToolsRate = typedSource.PowerToolsRate;
+				EncryptionRate = typedSource.EncryptionRate;
+				Address1 = typedSource.Address1;
+				Address2 = typedSource.Address2;
+				City = typedSource.City;
+				State = typedSource.State;
+				Zip = typedSource.Zip;
+				Country = typedSource.Country;
+				CreditCardType = typedSource.CreditCardType;
+				CreditCardNumber = typedSource.CreditCardNumber;
+				CreditCardExpirationMonth = typedSource.CreditCardExpirationMonth;
+				CreditCardExpirationYear = typedSource.CreditCardExpirationYear;
+				CreditCardFirstName = typedSource.CreditCardFirstName;
+				CreditCardLastName = typedSource.CreditCardLastName;
+				Phone = typedSource.Phone;
+				LastBillingDate = typedSource.LastBillingDate;
+				NextBillingDate = typedSource.NextBillingDate;
+				UseAdvancedCustomBranding = typedSource.UseAdvancedCustomBranding;
+				AdvancedCustomBrandingFolderName = typedSource.AdvancedCustomBrandingFolderName;
+				BrandingStyles = typedSource.BrandingStyles;
+				LogoURL = typedSource.LogoURL;
+				RootItem = typedSource.RootItem;
+				RootItemId = typedSource.RootItemId;
+				CreationDate = typedSource.CreationDate;
+				IsFreeTrial = typedSource.IsFreeTrial;
+				IsCancelled = typedSource.IsCancelled;
+				CancellationDate = typedSource.CancellationDate;
+				SSO = typedSource.SSO;
+				Preferences = typedSource.Preferences;
+				ProductDefaults = typedSource.ProductDefaults;
+				Subdomain = typedSource.Subdomain;
+				Subdomains = typedSource.Subdomains;
+				MobileSecuritySettings = typedSource.MobileSecuritySettings;
+				LoginAccessControlDomains = typedSource.LoginAccessControlDomains;
+				FolderAccessControlDomains = typedSource.FolderAccessControlDomains;
+				StorageQuotaPerUser = typedSource.StorageQuotaPerUser;
+				FreeTrialId = typedSource.FreeTrialId;
+				Source = typedSource.Source;
+				AttributedSource = typedSource.AttributedSource;
+				CompanyURL = typedSource.CompanyURL;
+				MarketingOptIn = typedSource.MarketingOptIn;
+				CreditCardSecurityCode = typedSource.CreditCardSecurityCode;
+				ToolInformation = typedSource.ToolInformation;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("CompanyName", out token) && token.Type != JTokenType.Null)
+				{
+					CompanyName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("BillingContact", out token) && token.Type != JTokenType.Null)
+				{
+					BillingContact = (User)serializer.Deserialize(token.CreateReader(), typeof(User));
+				}
+				if(source.TryGetProperty("BillingContactId", out token) && token.Type != JTokenType.Null)
+				{
+					BillingContactId = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("TechnicalContact", out token) && token.Type != JTokenType.Null)
+				{
+					TechnicalContact = (User)serializer.Deserialize(token.CreateReader(), typeof(User));
+				}
+				if(source.TryGetProperty("TechnicalContactId", out token) && token.Type != JTokenType.Null)
+				{
+					TechnicalContactId = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("AccountManager", out token) && token.Type != JTokenType.Null)
+				{
+					AccountManager = (User)serializer.Deserialize(token.CreateReader(), typeof(User));
+				}
+				if(source.TryGetProperty("AccountManagerId", out token) && token.Type != JTokenType.Null)
+				{
+					AccountManagerId = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("AccountType", out token) && token.Type != JTokenType.Null)
+				{
+					AccountType = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("PlanName", out token) && token.Type != JTokenType.Null)
+				{
+					PlanName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("PlanTrack", out token) && token.Type != JTokenType.Null)
+				{
+					PlanTrack = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("PlanTrackEnum", out token) && token.Type != JTokenType.Null)
+				{
+					PlanTrackEnum = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("BillingType", out token) && token.Type != JTokenType.Null)
+				{
+					BillingType = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("BillingCycle", out token) && token.Type != JTokenType.Null)
+				{
+					BillingCycle = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("BillingRate", out token) && token.Type != JTokenType.Null)
+				{
+					BillingRate = (decimal?)serializer.Deserialize(token.CreateReader(), typeof(decimal?));
+				}
+				if(source.TryGetProperty("BaseBillingRate", out token) && token.Type != JTokenType.Null)
+				{
+					BaseBillingRate = (decimal?)serializer.Deserialize(token.CreateReader(), typeof(decimal?));
+				}
+				if(source.TryGetProperty("BaseBandwidth", out token) && token.Type != JTokenType.Null)
+				{
+					BaseBandwidth = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("BaseDiskSpace", out token) && token.Type != JTokenType.Null)
+				{
+					BaseDiskSpace = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("BaseUsers", out token) && token.Type != JTokenType.Null)
+				{
+					BaseUsers = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("AdditionalBandwidth", out token) && token.Type != JTokenType.Null)
+				{
+					AdditionalBandwidth = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("AdditionalDiskSpace", out token) && token.Type != JTokenType.Null)
+				{
+					AdditionalDiskSpace = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("AdditionalUsers", out token) && token.Type != JTokenType.Null)
+				{
+					AdditionalUsers = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("AdditionalBandwidthRate", out token) && token.Type != JTokenType.Null)
+				{
+					AdditionalBandwidthRate = (decimal?)serializer.Deserialize(token.CreateReader(), typeof(decimal?));
+				}
+				if(source.TryGetProperty("AdditionalDiskSpaceRate", out token) && token.Type != JTokenType.Null)
+				{
+					AdditionalDiskSpaceRate = (decimal?)serializer.Deserialize(token.CreateReader(), typeof(decimal?));
+				}
+				if(source.TryGetProperty("AdditionalUserRate", out token) && token.Type != JTokenType.Null)
+				{
+					AdditionalUserRate = (decimal?)serializer.Deserialize(token.CreateReader(), typeof(decimal?));
+				}
+				if(source.TryGetProperty("UserMax", out token) && token.Type != JTokenType.Null)
+				{
+					UserMax = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("DiskSpaceMax", out token) && token.Type != JTokenType.Null)
+				{
+					DiskSpaceMax = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("BandwidthMax", out token) && token.Type != JTokenType.Null)
+				{
+					BandwidthMax = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("HasPowerTools", out token) && token.Type != JTokenType.Null)
+				{
+					HasPowerTools = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("HasEncryption", out token) && token.Type != JTokenType.Null)
+				{
+					HasEncryption = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("PowerToolsRate", out token) && token.Type != JTokenType.Null)
+				{
+					PowerToolsRate = (decimal?)serializer.Deserialize(token.CreateReader(), typeof(decimal?));
+				}
+				if(source.TryGetProperty("EncryptionRate", out token) && token.Type != JTokenType.Null)
+				{
+					EncryptionRate = (decimal?)serializer.Deserialize(token.CreateReader(), typeof(decimal?));
+				}
+				if(source.TryGetProperty("Address1", out token) && token.Type != JTokenType.Null)
+				{
+					Address1 = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Address2", out token) && token.Type != JTokenType.Null)
+				{
+					Address2 = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("City", out token) && token.Type != JTokenType.Null)
+				{
+					City = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("State", out token) && token.Type != JTokenType.Null)
+				{
+					State = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Zip", out token) && token.Type != JTokenType.Null)
+				{
+					Zip = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Country", out token) && token.Type != JTokenType.Null)
+				{
+					Country = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CreditCardType", out token) && token.Type != JTokenType.Null)
+				{
+					CreditCardType = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CreditCardNumber", out token) && token.Type != JTokenType.Null)
+				{
+					CreditCardNumber = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CreditCardExpirationMonth", out token) && token.Type != JTokenType.Null)
+				{
+					CreditCardExpirationMonth = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CreditCardExpirationYear", out token) && token.Type != JTokenType.Null)
+				{
+					CreditCardExpirationYear = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CreditCardFirstName", out token) && token.Type != JTokenType.Null)
+				{
+					CreditCardFirstName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CreditCardLastName", out token) && token.Type != JTokenType.Null)
+				{
+					CreditCardLastName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Phone", out token) && token.Type != JTokenType.Null)
+				{
+					Phone = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("LastBillingDate", out token) && token.Type != JTokenType.Null)
+				{
+					LastBillingDate = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("NextBillingDate", out token) && token.Type != JTokenType.Null)
+				{
+					NextBillingDate = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("UseAdvancedCustomBranding", out token) && token.Type != JTokenType.Null)
+				{
+					UseAdvancedCustomBranding = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("AdvancedCustomBrandingFolderName", out token) && token.Type != JTokenType.Null)
+				{
+					AdvancedCustomBrandingFolderName = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("BrandingStyles", out token) && token.Type != JTokenType.Null)
+				{
+					BrandingStyles = (IDictionary<string, string>)serializer.Deserialize(token.CreateReader(), typeof(IDictionary<string, string>));
+				}
+				if(source.TryGetProperty("LogoURL", out token) && token.Type != JTokenType.Null)
+				{
+					LogoURL = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("RootItem", out token) && token.Type != JTokenType.Null)
+				{
+					RootItem = (Item)serializer.Deserialize(token.CreateReader(), typeof(Item));
+				}
+				if(source.TryGetProperty("RootItemId", out token) && token.Type != JTokenType.Null)
+				{
+					RootItemId = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CreationDate", out token) && token.Type != JTokenType.Null)
+				{
+					CreationDate = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("IsFreeTrial", out token) && token.Type != JTokenType.Null)
+				{
+					IsFreeTrial = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IsCancelled", out token) && token.Type != JTokenType.Null)
+				{
+					IsCancelled = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CancellationDate", out token) && token.Type != JTokenType.Null)
+				{
+					CancellationDate = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("SSO", out token) && token.Type != JTokenType.Null)
+				{
+					SSO = (SSOAccountProvider)serializer.Deserialize(token.CreateReader(), typeof(SSOAccountProvider));
+				}
+				if(source.TryGetProperty("Preferences", out token) && token.Type != JTokenType.Null)
+				{
+					Preferences = (AccountPreferences)serializer.Deserialize(token.CreateReader(), typeof(AccountPreferences));
+				}
+				if(source.TryGetProperty("ProductDefaults", out token) && token.Type != JTokenType.Null)
+				{
+					ProductDefaults = (ProductDefaults)serializer.Deserialize(token.CreateReader(), typeof(ProductDefaults));
+				}
+				if(source.TryGetProperty("Subdomain", out token) && token.Type != JTokenType.Null)
+				{
+					Subdomain = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Subdomains", out token) && token.Type != JTokenType.Null)
+				{
+					Subdomains = (IEnumerable<string>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<string>));
+				}
+				if(source.TryGetProperty("MobileSecuritySettings", out token) && token.Type != JTokenType.Null)
+				{
+					MobileSecuritySettings = (MobileSecuritySettings)serializer.Deserialize(token.CreateReader(), typeof(MobileSecuritySettings));
+				}
+				if(source.TryGetProperty("LoginAccessControlDomains", out token) && token.Type != JTokenType.Null)
+				{
+					LoginAccessControlDomains = (AccessControlDomains)serializer.Deserialize(token.CreateReader(), typeof(AccessControlDomains));
+				}
+				if(source.TryGetProperty("FolderAccessControlDomains", out token) && token.Type != JTokenType.Null)
+				{
+					FolderAccessControlDomains = (AccessControlDomains)serializer.Deserialize(token.CreateReader(), typeof(AccessControlDomains));
+				}
+				if(source.TryGetProperty("StorageQuotaPerUser", out token) && token.Type != JTokenType.Null)
+				{
+					StorageQuotaPerUser = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("FreeTrialId", out token) && token.Type != JTokenType.Null)
+				{
+					FreeTrialId = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Source", out token) && token.Type != JTokenType.Null)
+				{
+					Source = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("AttributedSource", out token) && token.Type != JTokenType.Null)
+				{
+					AttributedSource = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CompanyURL", out token) && token.Type != JTokenType.Null)
+				{
+					CompanyURL = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("MarketingOptIn", out token) && token.Type != JTokenType.Null)
+				{
+					MarketingOptIn = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CreditCardSecurityCode", out token) && token.Type != JTokenType.Null)
+				{
+					CreditCardSecurityCode = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ToolInformation", out token) && token.Type != JTokenType.Null)
+				{
+					ToolInformation = (IEnumerable<ToolInformation>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<ToolInformation>));
+				}
+			}
+		}
 	}
 }

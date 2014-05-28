@@ -76,7 +76,7 @@ namespace ShareFile.Api.Client.Core.Tests.Authentication.OAuth2
             }
 
             response.GetType().Should().Be(typeof (OAuthResponseBase));
-            (response.Properties == null).Should().BeFalse();
+            response.Properties.Should().NotBeNull();
             var oauthResponseBase = response as OAuthResponseBase;
             oauthResponseBase.ApiControlPlane.Should().Be("sf-api.com");
             oauthResponseBase.ApplicationControlPlane.Should().Be("sharefile.com");

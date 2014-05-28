@@ -8,16 +8,37 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
 	public class Industry : ODataObject 
 	{
+
 		public string Name { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			var typedSource = source as Industry;
+			if(typedSource != null)
+			{
+				Name = typedSource.Name;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("Name", out token) && token.Type != JTokenType.Null)
+				{
+					Name = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+			}
+		}
 	}
 }

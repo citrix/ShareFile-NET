@@ -8,15 +8,17 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
 	public class MobileSecuritySettings : ODataObject 
 	{
+
 		public int PoisonPillInterval { get; set; }
 
 		public bool? EnableOpenExternal { get; set; }
@@ -29,5 +31,49 @@ namespace ShareFile.Api.Models
 
 		public SafeEnum<PinLockType> PinLockType { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			var typedSource = source as MobileSecuritySettings;
+			if(typedSource != null)
+			{
+				PoisonPillInterval = typedSource.PoisonPillInterval;
+				EnableOpenExternal = typedSource.EnableOpenExternal;
+				EnableOfflineCache = typedSource.EnableOfflineCache;
+				EnableAutoLogin = typedSource.EnableAutoLogin;
+				RestrictModifiedDevices = typedSource.RestrictModifiedDevices;
+				PinLockType = typedSource.PinLockType;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("PoisonPillInterval", out token) && token.Type != JTokenType.Null)
+				{
+					PoisonPillInterval = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
+				}
+				if(source.TryGetProperty("EnableOpenExternal", out token) && token.Type != JTokenType.Null)
+				{
+					EnableOpenExternal = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableOfflineCache", out token) && token.Type != JTokenType.Null)
+				{
+					EnableOfflineCache = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableAutoLogin", out token) && token.Type != JTokenType.Null)
+				{
+					EnableAutoLogin = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("RestrictModifiedDevices", out token) && token.Type != JTokenType.Null)
+				{
+					RestrictModifiedDevices = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("PinLockType", out token) && token.Type != JTokenType.Null)
+				{
+					PinLockType = (SafeEnum<PinLockType>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<PinLockType>));
+				}
+			}
+		}
 	}
 }

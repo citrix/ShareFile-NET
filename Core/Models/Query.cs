@@ -8,15 +8,17 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
 	public class Query : ODataObject 
 	{
+
 		public IEnumerable<string> AuthIDs { get; set; }
 
 		public IEnumerable<string> ItemTypes { get; set; }
@@ -35,5 +37,64 @@ namespace ShareFile.Api.Models
 
 		public bool ItemNameOnly { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			var typedSource = source as Query;
+			if(typedSource != null)
+			{
+				AuthIDs = typedSource.AuthIDs;
+				ItemTypes = typedSource.ItemTypes;
+				ParentID = typedSource.ParentID;
+				CreatorID = typedSource.CreatorID;
+				LuceneQuery = typedSource.LuceneQuery;
+				SearchQuery = typedSource.SearchQuery;
+				CreateStartDate = typedSource.CreateStartDate;
+				CreateEndDate = typedSource.CreateEndDate;
+				ItemNameOnly = typedSource.ItemNameOnly;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("AuthIDs", out token) && token.Type != JTokenType.Null)
+				{
+					AuthIDs = (IEnumerable<string>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<string>));
+				}
+				if(source.TryGetProperty("ItemTypes", out token) && token.Type != JTokenType.Null)
+				{
+					ItemTypes = (IEnumerable<string>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<string>));
+				}
+				if(source.TryGetProperty("ParentID", out token) && token.Type != JTokenType.Null)
+				{
+					ParentID = (IEnumerable<string>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<string>));
+				}
+				if(source.TryGetProperty("CreatorID", out token) && token.Type != JTokenType.Null)
+				{
+					CreatorID = (IEnumerable<string>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<string>));
+				}
+				if(source.TryGetProperty("LuceneQuery", out token) && token.Type != JTokenType.Null)
+				{
+					LuceneQuery = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("SearchQuery", out token) && token.Type != JTokenType.Null)
+				{
+					SearchQuery = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CreateStartDate", out token) && token.Type != JTokenType.Null)
+				{
+					CreateStartDate = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CreateEndDate", out token) && token.Type != JTokenType.Null)
+				{
+					CreateEndDate = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ItemNameOnly", out token) && token.Type != JTokenType.Null)
+				{
+					ItemNameOnly = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+			}
+		}
 	}
 }

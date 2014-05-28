@@ -13,7 +13,7 @@ namespace ShareFile.Api.Client.Credentials
         {
             lock (_credentialLock)
             {
-                _credentials.Add(uri.Host + authType, credentials);
+                _credentials.Add(GetKey(uri, authType), credentials);
             }
         }
 
@@ -40,7 +40,7 @@ namespace ShareFile.Api.Client.Credentials
 
         private string GetKey(Uri uri, string authType)
         {
-            return uri.Host + authType;
+            return uri.Host + authType.ToLower();
         }
     }
 }

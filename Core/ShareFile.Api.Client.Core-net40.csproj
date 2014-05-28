@@ -129,6 +129,7 @@
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\ODataObjectExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\TaskExtensions.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="FileSystem\IPlatformFile.cs" />
     <Compile Include="FileSystem\PlatformFileStream.cs" />
@@ -252,10 +253,13 @@
     <Compile Include="Requests\IQuery.cs" />
     <Compile Include="Requests\ODataParameter.cs" />
     <Compile Include="Requests\ODataParameterCollection.cs" />
+    <Compile Include="Requests\Providers\AsyncRequestProvider.cs" />
+    <Compile Include="Requests\Providers\BaseRequestProvider.cs" />
     <Compile Include="Requests\Providers\DefaultRequestProvider.cs" />
     <Compile Include="Requests\Providers\IAsyncRequestProvider.cs" />
     <Compile Include="Requests\Providers\ISyncRequestProvider.cs" />
     <Compile Include="Requests\Providers\RequestProviderFactory.cs" />
+    <Compile Include="Requests\Providers\SyncRequestProvider.cs" />
     <Compile Include="Requests\Query.cs" />
     <Compile Include="Security\Authentication\OAuth2\IOAuthResponse.cs" />
     <Compile Include="Security\Authentication\OAuth2\OAuth2AuthenticationHelper.cs" />

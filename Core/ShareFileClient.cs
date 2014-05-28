@@ -235,10 +235,10 @@ namespace ShareFile.Api.Client
         {
             RequestProviderFactory = new RequestProviderFactory();
 
-            var provider = new DefaultRequestProvider(this);
-
-            RegisterAsyncRequestProvider(provider);
-            RegisterSyncRequestProvider(provider);
+            RegisterSyncRequestProvider(new SyncRequestProvider(this));
+#if async
+            RegisterAsyncRequestProvider(new AsyncRequestProvider(this));
+#endif
         }
 
         private static JsonSerializer GetSerializer()

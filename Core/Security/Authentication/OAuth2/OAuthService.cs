@@ -79,7 +79,7 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
                 }, subdomain);
         }
 
-        private async Task<OAuthToken> RequestOAuthTokenAsync(string applicationControlPlane, IEnumerable<KeyValuePair<string, string>> requestFormData, string subdomain = "secure")
+        private Task<OAuthToken> RequestOAuthTokenAsync(string applicationControlPlane, IEnumerable<KeyValuePair<string, string>> requestFormData, string subdomain = "secure")
         {
             for (int i = 0; i < 2; i++)
             {
@@ -93,7 +93,7 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
 
                 try
                 {
-                    return await oauthTokenQuery.ExecuteAsync().ConfigureAwait(false);
+                    return oauthTokenQuery.ExecuteAsync();
                 }
                 catch (OAuthErrorException)
                 {

@@ -8,6 +8,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Models;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Client.Transfers.Downloaders
 {
@@ -21,7 +22,7 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
 
         protected DownloadSpecification PrepareDownload()
         {
-            var downloadSpecificationQuery = Client.Items.Download(Item.url, false);
+            var downloadSpecificationQuery = Client.Items.Download(Item.GetObjectUri(), false);
 
             return downloadSpecificationQuery.Execute();
         }

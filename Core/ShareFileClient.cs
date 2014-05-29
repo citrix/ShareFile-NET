@@ -58,7 +58,7 @@ namespace ShareFile.Api.Client
         ZoneAuthentication ZoneAuthentication { get; set; }
 #endif
 
-#if async
+#if Async
         AsyncThreadedFileUploader GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null);
         AsyncFileDownloader GetAsyncFileDownloader(Item itemToDownload, DownloaderConfig config = null);
 #endif
@@ -243,7 +243,7 @@ namespace ShareFile.Api.Client
             RequestProviderFactory = new RequestProviderFactory();
 
             RegisterSyncRequestProvider(new SyncRequestProvider(this));
-#if async
+#if Async
             RegisterAsyncRequestProvider(new AsyncRequestProvider(this));
 #endif
         }
@@ -271,7 +271,7 @@ namespace ShareFile.Api.Client
             };
         }
 
-#if async
+#if Async
         public AsyncThreadedFileUploader GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null)
         {
             uploadSpecificationRequest.Method = UploadMethod.Threaded;

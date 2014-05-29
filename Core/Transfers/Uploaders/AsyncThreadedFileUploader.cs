@@ -13,7 +13,7 @@ using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Transfers.Uploaders
 {
-#if async
+#if Async
     public class AsyncThreadedFileUploader : TransfererBase
     {
         private AsyncThreadedFileUploader(ShareFileClient client, IPlatformFile file, FileUploaderConfig config = null)

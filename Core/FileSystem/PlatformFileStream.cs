@@ -33,7 +33,7 @@ namespace ShareFile.Api.Client.FileSystem
         public string Name { get; private set; }
         public long Length { get; private set; }
 
-#if async
+#if Async
         public async Task<Stream> OpenReadAsync()
         {
             if (Stream != null)

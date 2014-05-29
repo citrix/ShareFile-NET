@@ -9,7 +9,7 @@ using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Transfers.Downloaders
 {
-#if async
+#if Async
     public class AsyncFileDownloader : TransfererBase
     {
         private IQuery<DownloadSpecification> Query { get; set; }

@@ -160,7 +160,7 @@ namespace ShareFile.Api.Client.Requests.Providers
             return responseValue;
         }
 
-#if async
+#if Async
         protected Task<T> DeserializeStreamAsync<T>(Stream stream)
         {
             var tcs = new TaskCompletionSource<T>();

@@ -22,7 +22,7 @@ using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Requests.Providers
 {
-#if async
+#if Async
     internal class AsyncRequestProvider : BaseRequestProvider, IAsyncRequestProvider
     {
         public AsyncRequestProvider(ShareFileClient client) : base(client) { }

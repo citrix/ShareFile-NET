@@ -40,7 +40,7 @@ namespace ShareFile.Api.Client.Transfers
             return GetState() == TransfererState.Paused && !cancellationToken.Value.IsCancellationRequested;
         }
 
-#if async
+#if Async
         protected async Task TryPause(CancellationToken? cancellationToken)
         {
             while (ShouldPause(cancellationToken))

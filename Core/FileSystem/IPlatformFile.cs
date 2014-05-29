@@ -10,8 +10,10 @@ namespace ShareFile.Api.Client.FileSystem
         string Name { get; }
         long Length { get; }
 
+#if Async
         Task<Stream> OpenReadAsync();
         Task<Stream> OpenWriteAsync();
+#endif
 
         Stream OpenRead();
         Stream OpenWrite();

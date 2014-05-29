@@ -33,12 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Microsoft.Threading.Tasks">
       <HintPath>$(SolutionDir)packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Threading.Tasks.Extensions, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions">
       <HintPath>$(SolutionDir)packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop">
@@ -129,6 +127,7 @@
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\ODataObjectExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\TaskExtensions.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="FileSystem\IPlatformFile.cs" />
     <Compile Include="FileSystem\PlatformFileStream.cs" />
@@ -253,10 +252,13 @@
     <Compile Include="Requests\IQuery.cs" />
     <Compile Include="Requests\ODataParameter.cs" />
     <Compile Include="Requests\ODataParameterCollection.cs" />
-    <Compile Include="Requests\Providers\DefaultRequestProvider.cs" />
+    <Compile Include="Requests\Providers\AsyncRequestProvider.cs" />
+    <Compile Include="Requests\Providers\BaseRequestProvider.cs" />
     <Compile Include="Requests\Providers\IAsyncRequestProvider.cs" />
     <Compile Include="Requests\Providers\ISyncRequestProvider.cs" />
     <Compile Include="Requests\Providers\RequestProviderFactory.cs" />
+    <Compile Include="Requests\Providers\Response.cs" />
+    <Compile Include="Requests\Providers\SyncRequestProvider.cs" />
     <Compile Include="Requests\Query.cs" />
     <Compile Include="Security\Authentication\OAuth2\IOAuthResponse.cs" />
     <Compile Include="Security\Authentication\OAuth2\OAuth2AuthenticationHelper.cs" />
@@ -273,8 +275,9 @@
     <Compile Include="Security\Cryptography\PortableMD5HashProvider.cs" />
     <Compile Include="Security\ZoneAuthentication.cs" />
     <Compile Include="ShareFileClient.cs" />
-    <Compile Include="Transfers\Downloaders\Downloader.cs" />
+    <Compile Include="Transfers\Downloaders\AsyncFileDownloader.cs" />
     <Compile Include="Transfers\Downloaders\DownloaderConfig.cs" />
+    <Compile Include="Transfers\Downloaders\FileDownloader.cs" />
     <Compile Include="Transfers\DownloadRequest.cs" />
     <Compile Include="Transfers\ShareFileApiResponse.cs" />
     <Compile Include="Transfers\TransfererBase.cs" />

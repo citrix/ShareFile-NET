@@ -61,9 +61,10 @@ namespace ShareFile.Api.Client
 #if Async
         AsyncThreadedFileUploader GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null);
         AsyncFileDownloader GetAsyncFileDownloader(Item itemToDownload, DownloaderConfig config = null);
-#endif
+#else
         ThreadedFileUploader GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null);
         FileDownloader GetFileDownloader(Item itemToDownload, DownloaderConfig config = null);
+#endif
 
         /// <summary>
         /// Get request base Uri for the next request executed by the client.  Will use <value>NextRequestBaseUri</value> if available.
@@ -283,7 +284,8 @@ namespace ShareFile.Api.Client
         {
             return new AsyncFileDownloader(itemToDownload, this, config);
         }
-#endif
+
+#else
 
         public ThreadedFileUploader GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null)
         {
@@ -296,6 +298,8 @@ namespace ShareFile.Api.Client
         {
             return new FileDownloader(itemToDownload, this, config);
         }
+
+#endif
 
         /// <summary>
         /// Get request base Uri for the next request executed by the client.  Will use <value>NextRequestBaseUri</value> if available.

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !Async
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -556,3 +557,4 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         }
     }
 }
+#endif

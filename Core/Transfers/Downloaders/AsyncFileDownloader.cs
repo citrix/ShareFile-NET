@@ -18,7 +18,7 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
         private IShareFileClient Client { get; set; }
         private Item Item { get; set; }
 
-        internal AsyncDownloader(Item item, IShareFileClient client, DownloaderConfig config = null)
+        internal AsyncFileDownloader(Item item, IShareFileClient client, DownloaderConfig config = null)
         {
             Client = client;
             Config = config ?? DownloaderConfig.Default;

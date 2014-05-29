@@ -33,6 +33,7 @@ namespace ShareFile.Api.Client.FileSystem
         public string Name { get; private set; }
         public long Length { get; private set; }
 
+#if async
         public async Task<Stream> OpenReadAsync()
         {
             if (Stream != null)
@@ -57,6 +58,7 @@ namespace ShareFile.Api.Client.FileSystem
 
             throw new Exception("Stream is not writable.");
         }
+#endif
 
         public Stream OpenRead()
         {

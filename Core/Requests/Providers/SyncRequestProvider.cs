@@ -67,7 +67,14 @@ namespace ShareFile.Api.Client.Requests.Providers
                     LogResponse(result, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode);
                     ShareFileClient.Logging.Trace(watch);
 
-                    if (result is Redirection)
+                    //workaround for metadata not returning on Redirections
+                    string redirectUri;
+                    if (result is ODataObject && result.TryGetProperty("Uri", out redirectUri))
+                    {
+                        result = new Redirection { Uri = new Uri(redirectUri) };
+                    }
+
+                    if (result is Redirection && typeof(T) != typeof(Redirection))
                     {
                         var redirection = result as Redirection;
                         if (httpResponseMessage.RequestMessage.RequestUri.GetAuthority() != redirection.Uri.GetAuthority())

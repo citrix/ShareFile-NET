@@ -101,6 +101,8 @@ namespace ShareFile.Api.Client
         void RegisterSyncRequestProvider(ISyncRequestProvider syncRequestProvider);
         void RegisterAsyncRequestProvider(IAsyncRequestProvider syncRequestProvider);
 
+        bool HasCredentials(Uri uri, string authenticationType);
+
         /// <summary>
         /// 
         /// </summary>
@@ -435,6 +437,13 @@ namespace ShareFile.Api.Client
         public void RegisterAsyncRequestProvider(IAsyncRequestProvider asyncRequestProvider)
         {
             RequestProviderFactory.RegisterAsyncRequestProvider(asyncRequestProvider);
+        }
+
+        public bool HasCredentials(Uri uri, string authenticationType)
+        {
+            var existingCredential = CredentialCache.GetCredential(uri, authenticationType);
+
+            return existingCredential != null && existingCredential != CredentialAuthorityContainer.Default.Credentials;
         }
 
         /// <summary>

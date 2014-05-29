@@ -112,7 +112,16 @@ namespace ShareFile.Api.Client.Requests.Providers
 
                         if (response.Value != null)
                         {
-                            if (response.Value is Redirection)
+                            string redirectUri;
+                            if (response.Value is ODataObject && response.Value.TryGetProperty("Uri", out redirectUri))
+                            {
+                                response.Value = new Redirection
+                                {
+                                    Uri = new Uri(redirectUri)
+                                };
+                            }
+
+                            if (response.Value is Redirection && typeof(T) != typeof(Redirection))
                             {
                                 var redirection = response.Value as Redirection;
                                 if (httpRequestMessage.RequestUri.GetAuthority() != redirection.Uri.GetAuthority())

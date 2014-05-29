@@ -2,7 +2,7 @@
 {
     public class PlatformCredentialCache : System.Net.CredentialCache, ICredentialCache
     {
-        static PlatformCredentialCache()
+        public static void Register()
         {
             CredentialCacheFactory.RegisterCredentialCache(() => new PlatformCredentialCache());
         }

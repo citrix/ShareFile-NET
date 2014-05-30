@@ -563,7 +563,7 @@ namespace ShareFile.Api.Client.Entities
 			parameters.Properties["employeesonly"] = Convert.ToString(employeesonly);
 			parameters.Properties["requirehomefolders"] = Convert.ToString(requirehomefolders);
 			sfApiQuery.Body = parameters;
-			sfApiQuery.HttpMethod = "GET";
+			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}
 

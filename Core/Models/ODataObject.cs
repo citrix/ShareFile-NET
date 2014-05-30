@@ -22,7 +22,7 @@ namespace ShareFile.Api.Models
 		/// <summary>
 		/// ODATA Metadata information about the model instance
 		/// </summary>
-		[JsonProperty(PropertyName = "odata.metadata")]
+		[JsonProperty(PropertyName = "odata.metadata")] 
 		public string MetadataUrl { get; set; }
 
 		/// <summary>

@@ -2,13 +2,13 @@
 
 namespace ShareFile.Api.Models
 {
-    public interface ISafeEnum
+    public interface ISafeEnum 
     {
         object Object { set; }
         string Value { get; set; }
     }
 
-    public struct SafeEnum<TEnumSource> : ISafeEnum
+    public struct SafeEnum<TEnumSource> : ISafeEnum, IEquatable<SafeEnum<TEnumSource>>
         where TEnumSource : struct
     {
         private TEnumSource? _enum;
@@ -45,5 +45,48 @@ namespace ShareFile.Api.Models
 
             return instance;
         }
+
+        #region equality
+        public bool Equals(SafeEnum<TEnumSource> other)
+        {
+            if (Enum.HasValue && other.Enum.HasValue)
+            {
+                return Enum.Value.Equals(other.Enum.Value);
+            }
+            else if (Value != null && other.Value != null)
+            {
+                return String.Equals(Value, other.Value, StringComparison.InvariantCultureIgnoreCase);
+            }
+
+            return true;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is SafeEnum<TEnumSource>)
+            {
+                return this.Equals((SafeEnum<TEnumSource>)obj);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public static bool operator ==(SafeEnum<TEnumSource> safeEnum1, SafeEnum<TEnumSource> safeEnum2)
+        {
+            return safeEnum1.Equals(safeEnum2);
+        }
+
+        public static bool operator !=(SafeEnum<TEnumSource> safeEnum1, SafeEnum<TEnumSource> safeEnum2)
+        {
+            return !safeEnum1.Equals(safeEnum2);
+        }
+
+        public static implicit operator TEnumSource?(SafeEnum<TEnumSource> safeEnum)
+        {
+            return safeEnum.Enum;
+        }
+        #endregion
     }
 }

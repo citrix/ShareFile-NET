@@ -55,7 +55,7 @@ namespace ShareFile.Api.Models
             }
             else if (Value != null && other.Value != null)
             {
-                return String.Equals(Value, other.Value, StringComparison.InvariantCultureIgnoreCase);
+                return String.Equals(Value, other.Value, StringComparison.OrdinalIgnoreCase);
             }
 
             return true;

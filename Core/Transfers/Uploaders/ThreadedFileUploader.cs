@@ -290,15 +290,13 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         {
             var buffer = new byte[filePart.Length];
 
-            using (var file = File.OpenRead())
-            {
-                file.Seek(filePart.Offset, SeekOrigin.Begin);
-                int bytesRead = file.Read(buffer, 0, buffer.Length);
+            var file = File.OpenRead();
+            file.Seek(filePart.Offset, SeekOrigin.Begin);
+            int bytesRead = file.Read(buffer, 0, buffer.Length);
 
-                Array.Resize(ref buffer, bytesRead);
+            Array.Resize(ref buffer, bytesRead);
 
-                filePart.Bytes = buffer;
-            }
+            filePart.Bytes = buffer;
 
             var partHashProvider = MD5HashProviderFactory.GetHashProvider().CreateHash();
 

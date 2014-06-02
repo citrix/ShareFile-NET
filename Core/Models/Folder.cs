@@ -27,6 +27,8 @@ namespace ShareFile.Api.Models
 
 		public ItemInfo Info { get; set; }
 
+		public Redirection Redirection { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -39,6 +41,7 @@ namespace ShareFile.Api.Models
 				Children = typedSource.Children;
 				HasRemoteChildren = typedSource.HasRemoteChildren;
 				Info = typedSource.Info;
+				Redirection = typedSource.Redirection;
 			}
 			else
 			{
@@ -58,6 +61,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("Info", out token) && token.Type != JTokenType.Null)
 				{
 					Info = (ItemInfo)serializer.Deserialize(token.CreateReader(), typeof(ItemInfo));
+				}
+				if(source.TryGetProperty("Redirection", out token) && token.Type != JTokenType.Null)
+				{
+					Redirection = (Redirection)serializer.Deserialize(token.CreateReader(), typeof(Redirection));
 				}
 			}
 		}

@@ -510,6 +510,17 @@ namespace ShareFile.Api.Client.Entities
 		/// A single protocol link if supported, 404 (Not Found) if not supported by the item
 		/// </returns>
 		IQuery<ItemProtocolLink> GetProtocolLinks(Uri url, string protocol);
+		/// <summary>
+		/// Get Redirection endpoint Information
+		/// </summary>
+		/// <remarks>
+		/// Returns the redirection endpoint for this Item.This operation applies to Folders and SymbolicLinks only, will return an error for other Item types.
+		/// </remarks>
+		/// <param name="url"></param>
+		/// <returns>
+		/// The Redirection endpoint Information
+		/// </returns>
+		IQuery<Redirection> GetRedirection(Uri url);
 	}
 
 	public class ItemsEntity : EntityBase, IItemsEntity
@@ -1302,6 +1313,25 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.Action("ProtocolLinks");
 			sfApiQuery.Uri(url);
 			sfApiQuery.ActionIds(protocol);
+			sfApiQuery.HttpMethod = "GET";
+			return sfApiQuery;
+		}
+
+		/// <summary>
+		/// Get Redirection endpoint Information
+		/// </summary>
+		/// <remarks>
+		/// Returns the redirection endpoint for this Item.This operation applies to Folders and SymbolicLinks only, will return an error for other Item types.
+		/// </remarks>
+		/// <param name="url"></param>
+		/// <returns>
+		/// The Redirection endpoint Information
+		/// </returns>
+		public IQuery<Redirection> GetRedirection(Uri url)
+		{
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Redirection>(Client);
+			sfApiQuery.Action("Redirection");
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}

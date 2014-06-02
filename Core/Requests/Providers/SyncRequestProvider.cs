@@ -79,9 +79,12 @@ namespace ShareFile.Api.Client.Requests.Providers
                         var redirection = result as Redirection;
                         if (httpResponseMessage.RequestMessage.RequestUri.GetAuthority() != redirection.Uri.GetAuthority())
                         {
-                            ShareFileClient.OnChangeDomain(httpResponseMessage.RequestMessage, redirection);
+                            return Response.CreateAction<T>(ShareFileClient.OnChangeDomain(httpResponseMessage.RequestMessage, redirection));
                         }
-                        return Response.CreateAction<T>(EventHandlerResponse.Redirect(redirection));
+                        else
+                        {
+                            return Response.CreateAction<T>(EventHandlerResponse.Redirect(redirection));
+                        }
                     }
                     else
                     {

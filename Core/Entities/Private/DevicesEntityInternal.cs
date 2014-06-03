@@ -96,10 +96,11 @@ namespace ShareFile.Api.Client.Entities
 		/// Check Device Status
 		/// </summary>
 		/// <param name="deviceUrl"></param>
+		/// <param name="singlePlane"></param>
 		/// <returns>
 		/// DeviceStatus
 		/// </returns>
-		IQuery<DeviceStatus> Status(Uri deviceUrl);
+		IQuery<DeviceStatus> Status(Uri deviceUrl, bool singlePlane = false);
 	}
 
 	public class DevicesEntityInternal : EntityBase, IDevicesEntityInternal
@@ -251,14 +252,16 @@ namespace ShareFile.Api.Client.Entities
 		/// Check Device Status
 		/// </summary>
 		/// <param name="deviceUrl"></param>
+		/// <param name="singlePlane"></param>
 		/// <returns>
 		/// DeviceStatus
 		/// </returns>
-		public IQuery<DeviceStatus> Status(Uri deviceUrl)
+		public IQuery<DeviceStatus> Status(Uri deviceUrl, bool singlePlane = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<DeviceStatus>(Client);
 			sfApiQuery.Action("Status");
 			sfApiQuery.Uri(deviceUrl);
+			sfApiQuery.QueryString("singlePlane", singlePlane);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}

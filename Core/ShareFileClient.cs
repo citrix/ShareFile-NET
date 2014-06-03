@@ -18,6 +18,7 @@ using ShareFile.Api.Client.Logging;
 using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Requests.Providers;
 using ShareFile.Api.Client.Security;
+using ShareFile.Api.Client.Security.Authentication.OAuth2;
 using ShareFile.Api.Client.Security.Cryptography;
 using ShareFile.Api.Client.Transfers;
 using ShareFile.Api.Client.Transfers.Downloaders;
@@ -102,7 +103,8 @@ namespace ShareFile.Api.Client
         void RegisterSyncRequestProvider(ISyncRequestProvider syncRequestProvider);
         void RegisterAsyncRequestProvider(IAsyncRequestProvider syncRequestProvider);
 
-        bool HasCredentials(Uri uri, string authenticationType);
+        bool HasCredentials(Uri uri, string authenticationType = "");
+        NetworkCredential GetCredential(Uri uri, string authenticationType = "");
 
         /// <summary>
         /// 
@@ -117,6 +119,12 @@ namespace ShareFile.Api.Client
         /// <param name="host"></param>
         /// <param name="oauthToken"></param>
         void AddOAuthCredentials(Uri host, string oauthToken);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="oauthToken"></param>
+        void AddOAuthCredentials(OAuthToken oauthToken);
+
 
         void ClearCredentialsAndCookies();
 
@@ -443,11 +451,25 @@ namespace ShareFile.Api.Client
             RequestProviderFactory.RegisterAsyncRequestProvider(asyncRequestProvider);
         }
 
-        public bool HasCredentials(Uri uri, string authenticationType)
+        public bool HasCredentials(Uri uri, string authenticationType = "")
+        {
+            return IsValidCredential(GetCredential(uri, authenticationType));
+        }
+
+        public NetworkCredential GetCredential(Uri uri, string authenticationType = "")
         {
             var existingCredential = CredentialCache.GetCredential(uri, authenticationType);
 
-            return existingCredential != null && existingCredential != CredentialAuthorityContainer.Default.Credentials;
+            if (IsValidCredential(existingCredential))
+            {
+                return existingCredential;
+            }
+            return null;
+        }
+
+        protected bool IsValidCredential(NetworkCredential credential)
+        {
+            return credential != null && credential != CredentialAuthorityContainer.Default.Credentials;
         }
 
         /// <summary>
@@ -474,6 +496,35 @@ namespace ShareFile.Api.Client
         public void AddOAuthCredentials(Uri host, string oauthToken)
         {
             Logging.Info("Adding OAuth Credentials");
+            Logging.Debug("Host: {0}", host);
+
+            try
+            {
+                var existingCredentials = CredentialCache.GetCredential(host, "Bearer");
+                if (existingCredentials != null)
+                {
+                    CredentialCache.Remove(host, "Bearer");
+                }
+            }
+            catch (Exception exception)
+            {
+                Logging.Error("Failed to add OAuth credentials", exception);
+            }
+            finally
+            {
+                CredentialCache.Add(host, "Bearer", new OAuth2Credential(oauthToken));
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="oauthToken"></param>
+        public void AddOAuthCredentials(OAuthToken oauthToken)
+        {
+            var host = oauthToken.GetUri();
+
+            Logging.Info("Adding OAuth Credentials using oauthToken");
             Logging.Debug("Host: {0}", host);
 
             try

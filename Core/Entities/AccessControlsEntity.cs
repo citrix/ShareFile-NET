@@ -15,6 +15,7 @@ using System.IO;
 using ShareFile.Api.Models;
 using ShareFile.Api.Client;
 using ShareFile.Api.Client.Requests;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Client.Entities
 {
@@ -184,7 +185,7 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("recursive", recursive);
 			sfApiQuery.QueryString("sendDefaultNotification", sendDefaultNotification);
-			accessControl.Properties["message"] = message;
+			accessControl.AddProperty("message", message);
 			sfApiQuery.Body = accessControl;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;

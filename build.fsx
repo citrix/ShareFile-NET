@@ -10,7 +10,7 @@ RestorePackages()
 let buildDir = "./build/"
 let packagingRoot = "./packaging/"
 let packagingDir = packagingRoot @@ "sharefile"
-let nugetVersion = "3.0.0-alpha22"
+let nugetVersion = "3.0.0-alpha23"
 let assemblyVersion = "3.0.0"
 let assemblyFileVersion = "3.0.0"
 let nugetAccessKey = "nUg3tMyP@cKag3"
@@ -74,9 +74,9 @@ Target "Build" (fun () ->
             "AssemblyOriginatorKeyFile", signKeyPath
         ]
 
-    let buildParams = List.append baseBuildParams ["DefineConstants", constants + ";Portable"]
+    let buildParams = List.append baseBuildParams ["DefineConstants", constants + ";Portable;Async"]
     let net40PBuildParams = List.append baseBuildParams ["DefineConstants", constants + ";Net40"]
-    let net45BuildParams = List.append baseBuildParams ["DefineConstants", constants]
+    let net45BuildParams = List.append baseBuildParams ["DefineConstants", constants + ";Async"]
     
     MSBuild (buildDir @@ "Portable") "Clean;Build" buildParams ["./ShareFile.Api.Client.Core.sln"]
     |> Log "AppBuild-Output: "

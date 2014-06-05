@@ -15,6 +15,7 @@ using System.IO;
 using ShareFile.Api.Models;
 using ShareFile.Api.Client;
 using ShareFile.Api.Client.Requests;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Client.Entities
 {
@@ -559,9 +560,9 @@ namespace ShareFile.Api.Client.Entities
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Account>>(Client);
 			sfApiQuery.From("Accounts");
 			sfApiQuery.Action("GetByUser");
-			parameters.Properties["username"] = username;
-			parameters.Properties["employeesonly"] = Convert.ToString(employeesonly);
-			parameters.Properties["requirehomefolders"] = Convert.ToString(requirehomefolders);
+			parameters.AddProperty("username", username);
+			parameters.AddProperty("employeesonly", employeesonly);
+			parameters.AddProperty("requirehomefolders", requirehomefolders);
 			sfApiQuery.Body = parameters;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;

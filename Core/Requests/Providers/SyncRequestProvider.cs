@@ -118,7 +118,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 
                 var apiRequest = ApiRequest.FromQuery(query);
 
-                if (action != null && action.Redirection != null && action.Redirection.Body != null)
+                if (action != null && action.Redirection != null)
                 {
                     apiRequest.IsComposed = true;
                     apiRequest.Uri = action.Redirection.Uri;

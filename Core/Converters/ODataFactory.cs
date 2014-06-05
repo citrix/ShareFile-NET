@@ -171,18 +171,25 @@ namespace ShareFile.Api.Client.Converters
                     {
                         type = _entityTypeMap.ContainsKey(cast) ? _entityTypeMap[cast] : type;
                     }
+
                     // Try the ID
-                    if (id != null && (type == typeof(Item) || type == typeof(Principal)))
+                    if (id != null)
                     {
-                        if (id.StartsWith("fi")) type = typeof(File);
-                        else if (id.StartsWith("for")) type = typeof(SymbolicLink);
-                        else if (id.StartsWith("fo")) type = typeof(Folder);
-                        else if (id.StartsWith("n")) type = typeof(Note);
-                        else if (id.StartsWith("l")) type = typeof(Link);
-                        else if (id.StartsWith("a")) type = typeof(Folder);
-                        else if (id.StartsWith("g")) type = typeof(Group);
-                        // User has no prefix; so assume it's an user at this point (if superclass is Principal)
-                        else if (type == typeof(Principal)) type = typeof(User);
+                        if (type == typeof (Item))
+                        {
+                            if (id.StartsWith("fi")) type = typeof (File);
+                            else if (id.StartsWith("for")) type = typeof (SymbolicLink);
+                            else if (id.StartsWith("fo")) type = typeof (Folder);
+                            else if (id.StartsWith("n")) type = typeof (Note);
+                            else if (id.StartsWith("l")) type = typeof (Link);
+                            else if (id.StartsWith("a")) type = typeof (Folder);
+                            else if (id.StartsWith("g")) type = typeof (Group);
+                        }
+                        else if (type == typeof (Principal))
+                        {
+                            // User has no prefix; so assume it's an user at this point (if superclass is Principal)
+                            type = typeof (User);
+                        }
                     }
                 }
             }

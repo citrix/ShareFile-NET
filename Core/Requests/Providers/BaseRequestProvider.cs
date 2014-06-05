@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Converters;
 using ShareFile.Api.Client.Credentials;
 using ShareFile.Api.Client.Events;
 using ShareFile.Api.Client.Exceptions;
@@ -75,8 +76,6 @@ namespace ShareFile.Api.Client.Requests.Providers
             var watch = new ActionStopwatch("BuildRequest", ShareFileClient.Logging);
             var uri = request.GetComposedUri();
 
-            ShareFileClient.Logging.Debug(uri.ToString());
-
 #if ShareFile
             if (ShareFileClient.ZoneAuthentication != null) uri = ShareFileClient.ZoneAuthentication.Sign(uri);
 #endif
@@ -95,6 +94,8 @@ namespace ShareFile.Api.Client.Requests.Providers
 
                 requestMessage = new HttpRequestMessage(new HttpMethod(request.HttpMethod), uri);
             }
+
+            ShareFileClient.Logging.Debug("{0} {1}", request.HttpMethod, LoggingConverter.GetHash(uri.ToString()));
 
             foreach (var kvp in request.HeaderCollection)
             {
@@ -217,9 +218,12 @@ namespace ShareFile.Api.Client.Requests.Providers
         {
             if (ShareFileClient.Logging.IsDebugEnabled)
             {
-                ShareFileClient.Logging.Debug("{0} {1}", request.HttpMethod, request.GetComposedUri());
-                ShareFileClient.Logging.Debug("Headers: {0}", headers);
-                LogCookies(request.GetComposedUri());
+                ShareFileClient.Logging.Debug("{0} {1}", request.HttpMethod, LoggingConverter.GetHash(request.GetComposedUri().ToString()));
+                if (ShareFileClient.Configuration.LogCookiesAndHeaders)
+                {
+                    ShareFileClient.Logging.Debug("Headers: {0}", headers);
+                    LogCookies(request.GetComposedUri());
+                }
                 if (request.Body != null)
                 {
                     ShareFileClient.Logging.Debug("Content:{0}{1}", Environment.NewLine, await SerializeObjectAsync(request.Body).ConfigureAwait(false));
@@ -236,8 +240,11 @@ namespace ShareFile.Api.Client.Requests.Providers
             if (ShareFileClient.Logging.IsDebugEnabled)
             {
                 ShareFileClient.Logging.Debug("Response Code: {0}", statusCode);
-                ShareFileClient.Logging.Debug("{0}", headers);
-                LogCookies(requestUri);
+                if (ShareFileClient.Configuration.LogCookiesAndHeaders)
+                {
+                    ShareFileClient.Logging.Debug("{0}", headers);
+                    LogCookies(requestUri);
+                }
                 if (response != null)
                 {
                     if (mediaType == null || mediaType.MediaType == "application/json")
@@ -259,8 +266,11 @@ namespace ShareFile.Api.Client.Requests.Providers
             if (ShareFileClient.Logging.IsDebugEnabled)
             {
                 ShareFileClient.Logging.Debug("{0} {1}", request.HttpMethod, request.GetComposedUri());
-                ShareFileClient.Logging.Debug("Headers: {0}", headers);
-                LogCookies(request.GetComposedUri());
+                if (ShareFileClient.Configuration.LogCookiesAndHeaders)
+                {
+                    ShareFileClient.Logging.Debug("Headers: {0}", headers);
+                    LogCookies(request.GetComposedUri());
+                }
                 if (request.Body != null)
                 {
                     ShareFileClient.Logging.Debug("Content:{0}{1}", Environment.NewLine, SerializeObject(request.Body));
@@ -277,8 +287,11 @@ namespace ShareFile.Api.Client.Requests.Providers
             if (ShareFileClient.Logging.IsDebugEnabled)
             {
                 ShareFileClient.Logging.Debug("Response Code: {0}", statusCode);
-                ShareFileClient.Logging.Debug("{0}", headers);
-                LogCookies(requestUri);
+                if (ShareFileClient.Configuration.LogCookiesAndHeaders)
+                {
+                    ShareFileClient.Logging.Debug("{0}", headers);
+                    LogCookies(requestUri);
+                }
                 if (response != null)
                 {
                     if (mediaType == null || mediaType.MediaType == "application/json")

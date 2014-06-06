@@ -125,6 +125,14 @@ namespace ShareFile.Api.Client.Requests.Providers
                 {
                     requestMessage.Headers.Add("Cookie", cookieHeader);
                 }
+                else
+                {
+                    cookieHeader = ShareFileClient.CookieContainer.GetCookieHeader(requestMessage.RequestUri);
+                    if (!string.IsNullOrEmpty(cookieHeader))
+                    {
+                        requestMessage.Headers.Add("Cookie", cookieHeader);
+                    }
+                }
             }
 
             ShareFileClient.Logging.Trace(watch);

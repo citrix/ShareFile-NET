@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -95,7 +96,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 requestMessage = new HttpRequestMessage(new HttpMethod(request.HttpMethod), uri);
             }
 
-            ShareFileClient.Logging.Debug("{0} {1}", request.HttpMethod, LoggingConverter.GetHash(uri.ToString()));
+            LogRequestUri(request);
 
             foreach (var kvp in request.HeaderCollection)
             {
@@ -224,9 +225,10 @@ namespace ShareFile.Api.Client.Requests.Providers
 
         protected async Task LogRequestAsync(ApiRequest request, string headers)
         {
+            LogRequestUri(request);
+
             if (ShareFileClient.Logging.IsDebugEnabled)
             {
-                ShareFileClient.Logging.Debug("{0} {1}", request.HttpMethod, LoggingConverter.GetHash(request.GetComposedUri().ToString()));
                 if (ShareFileClient.Configuration.LogCookiesAndHeaders)
                 {
                     ShareFileClient.Logging.Debug("Headers: {0}", headers);
@@ -236,10 +238,6 @@ namespace ShareFile.Api.Client.Requests.Providers
                 {
                     ShareFileClient.Logging.Debug("Content:{0}{1}", Environment.NewLine, await SerializeObjectAsync(request.Body).ConfigureAwait(false));
                 }
-            }
-            else if (ShareFileClient.Logging.IsTraceEnabled)
-            {
-                ShareFileClient.Logging.Trace("{0} {1}", request.HttpMethod, request.GetComposedUri());
             }
         }
 
@@ -271,9 +269,10 @@ namespace ShareFile.Api.Client.Requests.Providers
 
         protected void LogRequest(ApiRequest request, string headers)
         {
+            LogRequestUri(request);
+
             if (ShareFileClient.Logging.IsDebugEnabled)
             {
-                ShareFileClient.Logging.Debug("{0} {1}", request.HttpMethod, request.GetComposedUri());
                 if (ShareFileClient.Configuration.LogCookiesAndHeaders)
                 {
                     ShareFileClient.Logging.Debug("Headers: {0}", headers);
@@ -283,10 +282,6 @@ namespace ShareFile.Api.Client.Requests.Providers
                 {
                     ShareFileClient.Logging.Debug("Content:{0}{1}", Environment.NewLine, SerializeObject(request.Body));
                 }
-            }
-            else if (ShareFileClient.Logging.IsTraceEnabled)
-            {
-                ShareFileClient.Logging.Trace("{0} {1}", request.HttpMethod, request.GetComposedUri());
             }
         }
 
@@ -331,6 +326,25 @@ namespace ShareFile.Api.Client.Requests.Providers
             catch (Exception)
             {
                 return null;
+            }
+        }
+
+        protected void LogRequestUri(ApiRequest request)
+        {
+            var requestUri = request.GetComposedUri().ToString();
+
+            if (!ShareFileClient.Configuration.LogPersonalInformation)
+            {
+                LoggingConverter.GuidRegex.Replace(requestUri, LoggingConverter.GetHash);
+            }
+
+            if (ShareFileClient.Logging.IsDebugEnabled)
+            {
+                ShareFileClient.Logging.Debug("{0} {1}", request.HttpMethod, requestUri);
+            }
+            else if (ShareFileClient.Logging.IsTraceEnabled)
+            {
+                ShareFileClient.Logging.Trace("{0} {1}", request.HttpMethod, requestUri);
             }
         }
 

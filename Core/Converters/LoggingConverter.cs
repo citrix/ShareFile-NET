@@ -139,7 +139,7 @@ namespace ShareFile.Api.Client.Converters
             return converter != null;
         }
 
-        private string GetHash(Match match)
+        internal static string GetHash(Match match)
         {
             return GetHash(match.Value);
         }

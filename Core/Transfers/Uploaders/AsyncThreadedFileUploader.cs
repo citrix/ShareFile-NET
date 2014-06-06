@@ -346,6 +346,11 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 }
             }
 
+            if (response.Content != null)
+            {
+                Client.Logging.Error(await response.Content.ReadAsStringAsync());
+            }
+
             throw new UploadException("Error completing upload.", -1);
         }
 

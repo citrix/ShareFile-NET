@@ -34,6 +34,7 @@ namespace ShareFile.Api.Models
 		ItemDescription = 18,
 		VersionMax = 19,
 		VersionMin = 20,
-		Favorites = 21
+		Favorites = 21,
+		ReusableItemId = 22
 	}
 }

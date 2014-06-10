@@ -22,17 +22,6 @@ namespace ShareFile.Api.Client.Entities
 
 	public interface IItemsEntity : IEntityBase
 	{
-		/// <summary>
-		/// Get List of Items
-		/// </summary>
-		/// <remarks>
-		/// Retrieve the initial folder and files of the authenticated user.
-		/// This method will return the user's root directory, using Item.GetRootFromWasabiPath("root").
-		/// It will force expansion of the Children element, so first level of items under the root is also returned
-		/// </remarks>
-		/// <returns>
-		/// a user's root directory and first level of children items
-		/// </returns>
 		IQuery<Item> Get();
 		/// <summary>
 		/// Get Item by ID
@@ -533,17 +522,6 @@ namespace ShareFile.Api.Client.Entities
 
 		}
 
-		/// <summary>
-		/// Get List of Items
-		/// </summary>
-		/// <remarks>
-		/// Retrieve the initial folder and files of the authenticated user.
-		/// This method will return the user's root directory, using Item.GetRootFromWasabiPath("root").
-		/// It will force expansion of the Children element, so first level of items under the root is also returned
-		/// </remarks>
-		/// <returns>
-		/// a user's root directory and first level of children items
-		/// </returns>
 		public IQuery<Item> Get()
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);

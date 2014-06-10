@@ -91,8 +91,10 @@
     <Compile Include="Extensions\ItemsEntityExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\ODataObjectExtensions.cs" />
+    <Compile Include="Extensions\QueryExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\TaskExtensions.cs" />
+    <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="FileSystem\IPlatformFile.cs" />
     <Compile Include="FileSystem\PlatformFileStream.cs" />

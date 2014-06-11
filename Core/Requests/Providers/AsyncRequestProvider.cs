@@ -204,6 +204,8 @@ namespace ShareFile.Api.Client.Requests.Providers
 
         protected async Task<Response<T>> HandleTypedResponse<T>(HttpResponseMessage httpResponseMessage, ApiRequest request, int retryCount, bool tryResolveUnauthorizedChallenge = true)
         {
+            await CheckAsyncOperationScheduled(httpResponseMessage);
+
             if (httpResponseMessage.IsSuccessStatusCode)
             {
                 var watch = new ActionStopwatch("ProcessResponse", ShareFileClient.Logging);
@@ -224,7 +226,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 throw new InvalidApiResponseException(httpResponseMessage.StatusCode, "Unable to read response stream");
             }
 
-            if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized)
+            if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized || tryResolveUnauthorizedChallenge)
             {
                 LogResponseAsync(httpResponseMessage, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode).ConfigureAwait(false);
 
@@ -255,12 +257,14 @@ namespace ShareFile.Api.Client.Requests.Providers
 
         protected async Task<Response> HandleResponse(HttpResponseMessage httpResponseMessage, ApiRequest request, int retryCount, bool tryResolveUnauthorizedChallenge = true)
         {
+            await CheckAsyncOperationScheduled(httpResponseMessage);
+
             if (httpResponseMessage.IsSuccessStatusCode)
             {
                 return Response.Success;
             }
 
-            if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized)
+            if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized || tryResolveUnauthorizedChallenge)
             {
                 LogResponseAsync(httpResponseMessage, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode).ConfigureAwait(false);
 
@@ -290,6 +294,8 @@ namespace ShareFile.Api.Client.Requests.Providers
 
         protected async Task<Response<Stream>> HandleStreamResponse(HttpResponseMessage httpResponseMessage, ApiRequest request, int retryCount, bool tryResolveUnauthorizedChallenge = true)
         {
+            await CheckAsyncOperationScheduled(httpResponseMessage);
+
             if (httpResponseMessage.IsSuccessStatusCode)
             {
                 return new Response<Stream>
@@ -298,7 +304,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 };
             }
 
-            if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized)
+            if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized || tryResolveUnauthorizedChallenge)
             {
                 LogResponseAsync(httpResponseMessage, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode).ConfigureAwait(false);
 
@@ -332,6 +338,26 @@ namespace ShareFile.Api.Client.Requests.Providers
             {
                 Action = await HandleNonSuccess(httpResponseMessage, retryCount, typeof(Stream))
             };
+        }
+
+        protected async Task CheckAsyncOperationScheduled(HttpResponseMessage httpResponseMessage)
+        {
+            if (httpResponseMessage.StatusCode == HttpStatusCode.Accepted)
+            {
+                if (httpResponseMessage.Content != null &&
+                    httpResponseMessage.Content.Headers.ContentType.ToString()
+                        .IndexOf("application/json", StringComparison.OrdinalIgnoreCase) > -1)
+                {
+                    var responseStream = await httpResponseMessage.Content.ReadAsStreamAsync();
+                    if (responseStream != null)
+                    {
+                        var asyncOperation =
+                            await DeserializeStreamAsync<AsyncOperation>(responseStream).ConfigureAwait(false);
+
+                        throw new AsyncOperationScheduledException(asyncOperation);
+                    }
+                }
+            }
         }
 
         async Task<EventHandlerResponse> HandleNonSuccess(HttpResponseMessage responseMessage, int retryCount, Type expectedType = null)

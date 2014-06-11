@@ -74,6 +74,7 @@
     <Compile Include="Events\EventHandlerResponse.cs" />
     <Compile Include="Events\ExceptionCallback.cs" />
     <Compile Include="Exceptions\ApplicationException.cs" />
+    <Compile Include="Exceptions\AsyncOperationScheduledException.cs" />
     <Compile Include="Exceptions\AuthenticationException.cs" />
     <Compile Include="Exceptions\EntityNotFoundException.cs" />
     <Compile Include="Exceptions\InvalidApiResponseException.cs" />

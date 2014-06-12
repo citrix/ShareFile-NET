@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -63,6 +63,7 @@
     <Compile Include="Entities\Private\AccountsEntityInternal.cs" />
     <Compile Include="Entities\Private\DevicesEntityInternal.cs" />
     <Compile Include="Entities\Private\ItemsEntityInternal.cs" />
+    <Compile Include="Entities\Private\OAuthClientsEntityInternal.cs" />
     <Compile Include="Entities\Private\StorageCentersEntityInternal.cs" />
     <Compile Include="Entities\Private\UsersEntityInternal.cs" />
     <Compile Include="Entities\Private\ZonesEntityInternal.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Models\AccountUser.cs" />
     <Compile Include="Models\AddressListType.cs" />
     <Compile Include="Models\AdvancedSearchResults.cs" />
+    <Compile Include="Models\AppCodes.cs" />
     <Compile Include="Models\AsyncOperation.cs" />
     <Compile Include="Models\AsyncOperationState.cs" />
     <Compile Include="Models\AsyncOperationType.cs" />
@@ -150,6 +152,9 @@
     <Compile Include="Models\MobileSecuritySettings.cs" />
     <Compile Include="Models\Note.cs" />
     <Compile Include="Models\Notification.cs" />
+    <Compile Include="Models\OAuthClient.cs" />
+    <Compile Include="Models\OAuthClientPermissions.cs" />
+    <Compile Include="Models\OAuthState.cs" />
     <Compile Include="Models\ODataFeed.cs" />
     <Compile Include="Models\ODataObject.cs" />
     <Compile Include="Models\ODataObjectType.cs" />

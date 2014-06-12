@@ -27,6 +27,8 @@ namespace ShareFile.Api.Models
 				_entityTypeMap.Add("AccessControlsBulkParamss", typeof(AccessControlsBulkParams));
 				_entityTypeMap.Add("AccessControlParam", typeof(AccessControlParam));
 				_entityTypeMap.Add("AccessControlParams", typeof(AccessControlParam));
+				_entityTypeMap.Add("OAuthClient", typeof(OAuthClient));
+				_entityTypeMap.Add("OAuthClients", typeof(OAuthClient));
 				_entityTypeMap.Add("PowerTools", typeof(PowerTools));
 				_entityTypeMap.Add("PowerToolss", typeof(PowerTools));
 				_entityTypeMap.Add("ToolInformation", typeof(ToolInformation));

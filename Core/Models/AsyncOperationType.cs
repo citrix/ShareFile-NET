@@ -19,6 +19,10 @@ namespace ShareFile.Api.Models
 		ScheduleChangeZone = 3,
 		Recovery = 4,
 		Delete = 5,
-		DeletePermanent = 6
+		DeletePermanent = 6,
+		CloudConnectorCopy = 7,
+		CloudConnectorFileCopy = 8,
+		CloudConnectorMove = 9,
+		CloudConnectorFileMove = 10
 	}
 }

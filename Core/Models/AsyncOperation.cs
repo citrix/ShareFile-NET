@@ -83,6 +83,17 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public string BatchTargetID { get; set; }
 
+		/// <summary>
+		/// BatchProgress indicates the progress of the Batch operation
+		/// </summary>
+		public double? BatchProgress { get; set; }
+
+		/// <summary>
+		/// Batch Operation state. State 'Scheduled' indicate the operation is
+		/// in progress; States 'Success' and 'Failure' indicate the operation is finalized
+		/// </summary>
+		public SafeEnum<AsyncOperationState> BatchState { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -103,6 +114,8 @@ namespace ShareFile.Api.Models
 				BatchID = typedSource.BatchID;
 				BatchSourceID = typedSource.BatchSourceID;
 				BatchTargetID = typedSource.BatchTargetID;
+				BatchProgress = typedSource.BatchProgress;
+				BatchState = typedSource.BatchState;
 			}
 			else
 			{
@@ -154,6 +167,14 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("BatchTargetID", out token) && token.Type != JTokenType.Null)
 				{
 					BatchTargetID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("BatchProgress", out token) && token.Type != JTokenType.Null)
+				{
+					BatchProgress = (double?)serializer.Deserialize(token.CreateReader(), typeof(double?));
+				}
+				if(source.TryGetProperty("BatchState", out token) && token.Type != JTokenType.Null)
+				{
+					BatchState = (SafeEnum<AsyncOperationState>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<AsyncOperationState>));
 				}
 			}
 		}

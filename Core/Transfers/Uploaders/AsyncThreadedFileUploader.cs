@@ -151,7 +151,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             _maxConsumersSemaphore = new AsyncSemaphore(Config.NumberOfThreads);
             _pendingPartSemaphore = new AsyncSemaphore(0);
             await PrepareAsync();
-            SetState(TransfererState.Active);
 
             if (_itemsToFill.Count > 0)
             {

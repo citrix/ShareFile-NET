@@ -57,7 +57,6 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
             {
                 if (stream != null)
                 {
-                    SetState(TransfererState.Active);
                     var totalBytesToDownload = Item.FileSizeBytes.GetValueOrDefault();
 
                     var progress = new TransferProgress

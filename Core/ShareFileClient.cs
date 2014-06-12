@@ -125,6 +125,7 @@ namespace ShareFile.Api.Client
         /// <param name="oauthToken"></param>
         void AddOAuthCredentials(OAuthToken oauthToken);
 
+        void RemoveCredentials(Uri uri, string authenticationType);
 
         void ClearCredentialsAndCookies();
 
@@ -543,6 +544,11 @@ namespace ShareFile.Api.Client
             {
                 CredentialCache.Add(host, "Bearer", new OAuth2Credential(oauthToken));
             }
+        }
+
+        public void RemoveCredentials(Uri uri, string authenticationType)
+        {
+            CredentialCache.Remove(uri, authenticationType);
         }
 
         #region Entity Registration

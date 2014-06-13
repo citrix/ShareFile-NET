@@ -167,6 +167,8 @@ namespace ShareFile.Api.Models
 
 		public bool? EnableSMBConnectorForAccount { get; set; }
 
+		public bool? EnablePersonalCloudConnectors { get; set; }
+
 		public string AccountID { get; set; }
 
 		public bool? EnableGetApp { get; set; }
@@ -257,6 +259,7 @@ namespace ShareFile.Api.Models
 				DisableMarketing = typedSource.DisableMarketing;
 				VDRDocViewerURL = typedSource.VDRDocViewerURL;
 				EnableSMBConnectorForAccount = typedSource.EnableSMBConnectorForAccount;
+				EnablePersonalCloudConnectors = typedSource.EnablePersonalCloudConnectors;
 				AccountID = typedSource.AccountID;
 				EnableGetApp = typedSource.EnableGetApp;
 				EnableStorageZoneConnector = typedSource.EnableStorageZoneConnector;
@@ -560,6 +563,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("EnableSMBConnectorForAccount", out token) && token.Type != JTokenType.Null)
 				{
 					EnableSMBConnectorForAccount = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnablePersonalCloudConnectors", out token) && token.Type != JTokenType.Null)
+				{
+					EnablePersonalCloudConnectors = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("AccountID", out token) && token.Type != JTokenType.Null)
 				{

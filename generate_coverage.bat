@@ -17,4 +17,4 @@ IF "%1" NEQ "" (
 
 packages\OpenCover\OpenCover.Console.exe -target:"packages\NUnit.Runners\tools\nunit-console-x86.exe" -targetargs:"/noshadow Tests\ShareFile.Api.Client.Core.Tests\bin\%config%\ShareFile.Api.Client.Core.Tests.dll" -register:user -filter:+[ShareFile*]* -filter:-[*Test*]* -filter:-[ShareFile*]ShareFile.Api.Models.* -filter:-[ShareFile*]ShareFile.Api.Client.Entities.* -output:"coverage\results.xml"
 
-packages\ReportGenerator\ReportGenerator.exe -reports:"coverage\results.xml" -targetdir:coverage
+packages\ReportGenerator\ReportGenerator.exe -verbosity:Error -reports:"coverage\results.xml" -targetdir:coverage

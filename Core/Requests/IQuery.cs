@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ShareFile.Api.Client.Requests.Filters;
@@ -10,7 +11,8 @@ namespace ShareFile.Api.Client.Requests
         void Execute();
         Task ExecuteAsync(CancellationToken? token = null);
 
-        void AddHeader(string key, string value);
+        Query AddHeader(string key, string value);
+        Query WithBaseUri(Uri uri);
     }
 
     public interface IQuery<T>
@@ -30,6 +32,7 @@ namespace ShareFile.Api.Client.Requests
         Query<T> Top(int top);
 
         Query<T> AddHeader(string key, string value);
+        Query<T> WithBaseUri(Uri uri);
     }
 
     public interface IReadOnlyQuery

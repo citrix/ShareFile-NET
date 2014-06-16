@@ -23,12 +23,7 @@ namespace ShareFile.Api.Client.Extensions
         /// <returns></returns>
         public static Uri GetAlias(this IItemsEntity items, string aliasOrId)
         {
-            string url;
-            if (items.Client.NextRequestBaseUri != null)
-            {
-                url = items.Client.NextRequestBaseUri.ToString();
-            }
-            else url = items.Client.BaseUri.ToString();
+            string url = items.Client.BaseUri.ToString();
 
             return new Uri(url.TrimEnd(new[] { '/' }) + "/" + items.Entity + "(" + aliasOrId + ")", UriKind.RelativeOrAbsolute);
         }

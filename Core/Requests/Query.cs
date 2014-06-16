@@ -20,6 +20,7 @@ namespace ShareFile.Api.Client.Requests
         protected IList<ODataAction> _subActions;
         protected readonly ODataParameterCollection _queryString;
         protected IDictionary<string, string> _headerCollection;
+        protected Uri _baseUri;
 // ReSharper restore InconsistentNaming
 
         protected QueryBase(IShareFileClient client)
@@ -165,6 +166,35 @@ namespace ShareFile.Api.Client.Requests
         {
             return _entity;
         }
+
+        public Uri GetBaseUri()
+        {
+            return _baseUri;
+        }
+
+        protected void SetBaseUri(Uri uri)
+        {
+            string baseUri;
+
+            if (!TryGetUriRoot(uri, out baseUri))
+            {
+                throw new ArgumentException("Unable to create a BaseUri from the provided uri.  The uri start the following format: https://secure.sf-api.com/sf/v3/");
+            }
+
+            _baseUri = new Uri(baseUri, UriKind.Absolute);
+        }
+
+        protected bool TryGetUriRoot(Uri providedUri, out string uriRoot)
+        {
+            uriRoot = null;
+            var pathComponents = providedUri.AbsolutePath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            if (pathComponents.Length > 2)
+            {
+                uriRoot = string.Format("{0}://{1}/{2}/{3}/", providedUri.Scheme, providedUri.Host, pathComponents[0], pathComponents[1]);
+                return true;
+            }
+            return false;
+        }
     }
 
     public class Query : QueryBase, IQuery
@@ -263,9 +293,16 @@ namespace ShareFile.Api.Client.Requests
             return Client.ExecuteAsync(this, token);
         }
 
-        public void AddHeader(string key, string value)
+        public Query AddHeader(string key, string value)
         {
             _AddHeader(key, value);
+            return this;
+        }
+
+        public Query WithBaseUri(Uri uri)
+        {
+            SetBaseUri(uri);
+            return this;
         }
     }
 
@@ -433,6 +470,12 @@ namespace ShareFile.Api.Client.Requests
             return this;
         }
 
+        public Query<T> WithBaseUri(Uri uri)
+        {
+            SetBaseUri(uri);
+            return this;
+        }
+
         public virtual T Execute()
         {
             return Client.Execute(this);
@@ -536,6 +579,7 @@ namespace ShareFile.Api.Client.Requests
             var entityType = query.GetEntity();
             var client = query.Client;
             var subActions = query.GetSubActions().ToList();
+            var queryBaseUri = query.GetBaseUri();
             
             StringBuilder url;
             if (IsUri(ids))
@@ -544,7 +588,7 @@ namespace ShareFile.Api.Client.Requests
             }
             else
             {
-                var baseUri = client.GetRequestBaseUri();
+                var baseUri = queryBaseUri ?? client.BaseUri;
                 if (baseUri == null) throw new ArgumentNullException("client.BaseUri", "baseUri cannot be null, ensure the property has been passed in correctly");
                 url = new StringBuilder(baseUri.ToString().TrimEnd('/') + '/' + entityType);
                 if (!string.IsNullOrEmpty(ids))
@@ -650,11 +694,11 @@ namespace ShareFile.Api.Client.Requests
         public Uri GetComposedUri()
         {
             if (IsComposed) return Uri;
-
             var queryString = GetQueryStringForUri();
+            var bridgeChar = (Uri.ToString().IndexOf('?') < 0) ? '?' : '&';
             return string.IsNullOrEmpty(queryString)
                 ? Uri
-                : new Uri(string.Format("{0}?{1}", Uri, queryString));
+                : new Uri(string.Format("{0}{1}{2}", Uri, bridgeChar, queryString));
         }
     }
 }

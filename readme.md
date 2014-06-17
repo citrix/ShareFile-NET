@@ -1,18 +1,37 @@
 # ShareFile Client SDK Documentation #
 
-Before continuing please familiarize yourself with the API and it's methodology at https://api.sharefile.com/rest
+Before continuing please familiarize yourself with the API and it's methodology
+at https://api.sharefile.com/rest
+
+## Definitions ##
+
+* `applicationControlPlane` - Describes the domain that the ShareFile account is available on.  
+For example: `sharefile.com`, `securevdr.com`, `sharefile.eu`, etc.
+* `authorizationUrl` - The initial url that should be visited to being web authentication.
+* `client_id` - The identifier that is uniquely identifies an OAuth client consumer.
+* `client_secret` - This is a shared secret that is required to exchange an `OAuthAuthorizationCode` for an `OAuthToken`.
+* `completionUri` - Alias for `redirectUri`.  Used primarily in `OAuth2AuthenticationHelper`.
+* `OAuthAuthorizationCode` - One-time use code that is returned as part of an oauth `code` grant request.  
+We provide a class with the specific properties for this type of response.
+* `OAuthToken` - Used to authenticate with ShareFile, specifically using AccessToken - however, this is taken care of for you by the SDK.
+* `redirectUri` - Resource that can be used to track when authentication is complete.  Generally, this resource is controlled by the OAuth client consumer.
+* `state` - Token created by the OAuth consumer to associate an authorization request
+with an authorization response.
 
 ## Authentication ##
 
-Authentication with ShareFile v3 API makes use of OAuth 2.0 protocol.  Some helper methods and classes are provided to make authentication easier for consumers.
+Authentication with ShareFile v3 API makes use of [OAuth 2.0 protocol](http://api.sharefile.com/rest/oauth2.aspx).
+Some helper methods and classes are provided to make authentication easier for consumers.
 
 * **Web Authentication**
 
         var redirectUri = new Uri("https://secure.sharefile.com/oauth/oauthcomplete.aspx");
+
+        // Recommended this value is held on to to verify the authentication response.
         var state = Guid.NewGuid().ToString();
 
         var sfClient = new ShareFileClient("https://secure.sf-api.com/sf/v3/");
-        var oauthService = new OAuthService(sfClient, "[clientid]", "[clientSecret]");
+        var oauthService = new OAuthService(sfClient, "[client_id]", "[client_secret]");
 
         var authorizationUrl = oauthService.GetAuthorizationUrl("sharefile.com", "code", "clientId", redirectUri.ToString(),
                 state);
@@ -43,9 +62,11 @@ Authentication with ShareFile v3 API makes use of OAuth 2.0 protocol.  Some help
 
   To exchange an `OAuthAuthorizationCode` for an `OAuthToken`:
 
-        var oauthToken = await oauthService.ExchangeAuthorizationCodeAsync(oauthAuthorizationCodeInstance);
+        var oauthToken = await oauthService.
+          ExchangeAuthorizationCodeAsync(oauthAuthorizationCodeInstance);
 
         sfClient.AddOAuthCredentials(oauthToken);
+        sfClient.BaseUri = oauthToken.GetUri();
 
   ** Note ** - If you use your own mechanism for tracking when authentication
   is complete (based on redirectUri), it is still advisable to use `OAuth2AuthenticationHelper`
@@ -60,8 +81,11 @@ these are assumed to have been obtained already.
       var sfClient = new ShareFileClient("https://secure.sf-api.com/sf/v3/");
       var oauthService = new OAuthService(sfClient, "[clientid]", "[clientSecret]");
 
-      var oauthToken = await oauthService.PasswordGrantAsync(username, password, subdomain, applicationControlPlane);
+      var oauthToken = await oauthService.PasswordGrantAsync(username,
+        password, subdomain, applicationControlPlane);
+
       sfClient.AddOAuthCredentials(oauthToken);
+      sfClient.BaseUri = oauthToken.GetUri();
 
 * **SAML Authentication**:  This authentication support assumes you have a mechanism
 for obtaining a SAML assertion, `samlAssertion` from the user's IdP.
@@ -70,8 +94,28 @@ for obtaining a SAML assertion, `samlAssertion` from the user's IdP.
       var sfClient = new ShareFileClient("https://secure.sf-api.com/sf/v3/");
       var oauthService = new OAuthService(sfClient, "[clientid]", "[clientSecret]");
 
-      var oauthToken = await oauthService.ExchangeSamlAssertionAsync(samlAssertion, subdomain, applicationControlPlane);
+      var oauthToken = await oauthService.ExchangeSamlAssertionAsync(samlAssertion,
+         subdomain, applicationControlPlane);
+
       sfClient.AddOAuthCredentials(oauthToken);
+      sfClient.BaseUri = oauthToken.GetUri();
+
+* **Refreshing an OAuthToken**:  Any `OAuthToken` that is obtained using a `code`
+grant type can be refreshed.  This allows a consumer to silently reauthenticate
+with the ShareFile API without needing to prompt the user.  This is useful if
+you plan on caching the `OAuthToken`.  The sample below assumes you have already
+pulled an instance of `OAuthToken` as `cachedOAuthToken` from some local cache.
+
+
+      var sfClient = new ShareFileClient(cachedOAuthToken.GetUri());
+      var oauthService = new OAuthService(sfClient, "[clientid]", "[clientSecret]");
+
+      var oauthToken = await oauthService.RefreshOAuthTokenAsync(samlAssertion,
+        subdomain, applicationControlPlane);
+
+      sfClient.AddOAuthCredentials(oauthToken);
+      sfClient.BaseUri = oauthToken.GetUri();
+
 
 ## ShareFile Basics ##
 
@@ -135,6 +179,13 @@ This call will return the default folder for the currently authenticated `User`.
 To browse search results (currently, there is no `Uri` returned that points to the `Item`):
 
       var itemUri = sfClient.Items.GetAlias(searchResult.ItemID);
+      var item = await sfClient.Items.Get(itemUri).ExecuteAsync();
+
+### Access Aliased Folders ###
+There are some folders within ShareFile that are not easily discovered, however
+the SDK can help you find them.  These aliases are exposed on an enum `ItemAlias`.
+
+      var itemUri = sfClient.Items.GetAlias(ItemAlias.Top);
       var item = await sfClient.Items.Get(itemUri).ExecuteAsync();
 
 ## Upload/Download ##

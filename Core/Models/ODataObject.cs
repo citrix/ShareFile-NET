@@ -25,6 +25,9 @@ namespace ShareFile.Api.Models
 		[JsonProperty(PropertyName = "odata.metadata")] 
 		public string MetadataUrl { get; set; }
 
+		[JsonProperty(PropertyName = "odata.type")] 
+		public string __type { get; set; }
+
 		/// <summary>
 		/// Object Identifier
 		/// </summary>
@@ -41,6 +44,7 @@ namespace ShareFile.Api.Models
 
 			var typedSource = source as ODataObject;
 				MetadataUrl = typedSource.MetadataUrl;
+				__type = typedSource.__type;
 				Id = typedSource.Id;
 				url = typedSource.url;
 		}

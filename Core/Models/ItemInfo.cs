@@ -53,6 +53,8 @@ namespace ShareFile.Api.Models
 
 		public bool? CanWatermarkDownload { get; set; }
 
+		public bool? CanDocViewerPrint { get; set; }
+
 		public bool? CanUpload { get; set; }
 
 		public bool? CanSend { get; set; }
@@ -100,6 +102,7 @@ namespace ShareFile.Api.Models
 				CanView = typedSource.CanView;
 				CanDownload = typedSource.CanDownload;
 				CanWatermarkDownload = typedSource.CanWatermarkDownload;
+				CanDocViewerPrint = typedSource.CanDocViewerPrint;
 				CanUpload = typedSource.CanUpload;
 				CanSend = typedSource.CanSend;
 				CanDeleteCurrentItem = typedSource.CanDeleteCurrentItem;
@@ -182,6 +185,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("CanWatermarkDownload", out token) && token.Type != JTokenType.Null)
 				{
 					CanWatermarkDownload = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanDocViewerPrint", out token) && token.Type != JTokenType.Null)
+				{
+					CanDocViewerPrint = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("CanUpload", out token) && token.Type != JTokenType.Null)
 				{

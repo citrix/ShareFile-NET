@@ -19,14 +19,29 @@ namespace ShareFile.Api.Models
 	public class Folder : Item 
 	{
 
+		/// <summary>
+		/// Number of Items defined under this Folder, including sub-folder counts.
+		/// </summary>
 		public int? FileCount { get; set; }
 
+		/// <summary>
+		/// List of Children defined under this folder.
+		/// </summary>
 		public IEnumerable<Item> Children { get; set; }
 
+		/// <summary>
+		/// Defines whether the request to retreive Children is to be navigated to a remote endpoint.
+		/// </summary>
 		public bool? HasRemoteChildren { get; set; }
 
+		/// <summary>
+		/// Effective Access Control Permissions for this Folder
+		/// </summary>
 		public ItemInfo Info { get; set; }
 
+		/// <summary>
+		/// Redirection endpoint for this Item.
+		/// </summary>
 		public Redirection Redirection { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

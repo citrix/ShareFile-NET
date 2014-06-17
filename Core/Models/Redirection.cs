@@ -21,9 +21,21 @@ namespace ShareFile.Api.Models
 
 		public string Method { get; set; }
 
+		public string Root { get; set; }
+
 		public Zone Zone { get; set; }
 
+		public object Domain { get; set; }
+
 		public Uri Uri { get; set; }
+
+		public Uri FormsUri { get; set; }
+
+		public Uri SessionUri { get; set; }
+
+		public Uri TokenUri { get; set; }
+
+		public bool SessionCheck { get; set; }
 
 		public string Body { get; set; }
 
@@ -36,8 +48,14 @@ namespace ShareFile.Api.Models
 			if(typedSource != null)
 			{
 				Method = typedSource.Method;
+				Root = typedSource.Root;
 				Zone = typedSource.Zone;
+				Domain = typedSource.Domain;
 				Uri = typedSource.Uri;
+				FormsUri = typedSource.FormsUri;
+				SessionUri = typedSource.SessionUri;
+				TokenUri = typedSource.TokenUri;
+				SessionCheck = typedSource.SessionCheck;
 				Body = typedSource.Body;
 			}
 			else
@@ -47,13 +65,37 @@ namespace ShareFile.Api.Models
 				{
 					Method = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
+				if(source.TryGetProperty("Root", out token) && token.Type != JTokenType.Null)
+				{
+					Root = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
 				if(source.TryGetProperty("Zone", out token) && token.Type != JTokenType.Null)
 				{
 					Zone = (Zone)serializer.Deserialize(token.CreateReader(), typeof(Zone));
 				}
+				if(source.TryGetProperty("Domain", out token) && token.Type != JTokenType.Null)
+				{
+					Domain = (object)serializer.Deserialize(token.CreateReader(), typeof(object));
+				}
 				if(source.TryGetProperty("Uri", out token) && token.Type != JTokenType.Null)
 				{
 					Uri = (Uri)serializer.Deserialize(token.CreateReader(), typeof(Uri));
+				}
+				if(source.TryGetProperty("FormsUri", out token) && token.Type != JTokenType.Null)
+				{
+					FormsUri = (Uri)serializer.Deserialize(token.CreateReader(), typeof(Uri));
+				}
+				if(source.TryGetProperty("SessionUri", out token) && token.Type != JTokenType.Null)
+				{
+					SessionUri = (Uri)serializer.Deserialize(token.CreateReader(), typeof(Uri));
+				}
+				if(source.TryGetProperty("TokenUri", out token) && token.Type != JTokenType.Null)
+				{
+					TokenUri = (Uri)serializer.Deserialize(token.CreateReader(), typeof(Uri));
+				}
+				if(source.TryGetProperty("SessionCheck", out token) && token.Type != JTokenType.Null)
+				{
+					SessionCheck = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
 				}
 				if(source.TryGetProperty("Body", out token) && token.Type != JTokenType.Null)
 				{

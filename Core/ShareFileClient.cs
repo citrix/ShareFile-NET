@@ -51,7 +51,6 @@ namespace ShareFile.Api.Client
         ISessionsEntity Sessions { get; }
         ISharesEntity Shares { get; }
         IUsersEntity Users { get; }
-        Uri NextRequestBaseUri { get; }
         Uri BaseUri { get; set; }
         Configuration Configuration { get; set; }
 
@@ -66,19 +65,6 @@ namespace ShareFile.Api.Client
         ThreadedFileUploader GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null);
         FileDownloader GetFileDownloader(Item itemToDownload, DownloaderConfig config = null);
 #endif
-
-        /// <summary>
-        /// Get request base Uri for the next request executed by the client.  Will use <value>NextRequestBaseUri</value> if available.
-        /// </summary>
-        /// <returns></returns>
-        Uri GetRequestBaseUri();
-
-        /// <summary>
-        /// Set the next base Uri to be used for the next request executed by the client.  This value will only be used once.
-        /// </summary>
-        /// <param name="tempBaseUri"></param>
-        void SetBaseUriForNextRequest(Uri tempBaseUri);
-
         void AddCookie(Uri host, Cookie cookie);
 
 #if ShareFile
@@ -125,6 +111,7 @@ namespace ShareFile.Api.Client
         /// <param name="oauthToken"></param>
         void AddOAuthCredentials(OAuthToken oauthToken);
 
+        void RemoveCredentials(Uri uri, string authenticationType);
 
         void ClearCredentialsAndCookies();
 
@@ -219,7 +206,6 @@ namespace ShareFile.Api.Client
         public ISharesEntity Shares { get; private set; }
         public IUsersEntity Users { get; private set; }
 
-        public Uri NextRequestBaseUri { get; private set; }
         public Uri BaseUri { get; set; }
 
         public Configuration Configuration { get; set; }
@@ -308,33 +294,6 @@ namespace ShareFile.Api.Client
         }
 
 #endif
-
-        /// <summary>
-        /// Get request base Uri for the next request executed by the client.  Will use <value>NextRequestBaseUri</value> if available.
-        /// </summary>
-        /// <returns></returns>
-        public Uri GetRequestBaseUri()
-        {
-            var requestUri = BaseUri;
-
-            if (NextRequestBaseUri != null)
-            {
-                requestUri = NextRequestBaseUri;
-                NextRequestBaseUri = null;
-            }
-
-            return requestUri;
-        }
-
-        /// <summary>
-        /// Set the next base Uri to be used for the next request executed by the client.  This value will only be used once.
-        /// </summary>
-        /// <param name="tempBaseUri"></param>
-        public void SetBaseUriForNextRequest(Uri tempBaseUri)
-        {
-            NextRequestBaseUri = new Uri(string.Format("{0}/sf/v3", tempBaseUri.GetAuthority()), UriKind.RelativeOrAbsolute);
-        }
-
         public void AddCookie(Uri host, Cookie cookie)
         {
             Logging.Info("Add cookie");
@@ -543,6 +502,11 @@ namespace ShareFile.Api.Client
             {
                 CredentialCache.Add(host, "Bearer", new OAuth2Credential(oauthToken));
             }
+        }
+
+        public void RemoveCredentials(Uri uri, string authenticationType)
+        {
+            CredentialCache.Remove(uri, authenticationType);
         }
 
         #region Entity Registration

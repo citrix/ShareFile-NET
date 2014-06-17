@@ -39,6 +39,10 @@ namespace ShareFile.Api.Client
         /// </summary>
         public bool LogFullResponse { get; set; }
 
+        /// <summary>
+        /// If true, all cookies and headers associated with a request will be logged.
+        /// </summary>
+        public bool LogCookiesAndHeaders { get; set; }
 
         #region DeviceId properties
         public string ToolName { get; set; }

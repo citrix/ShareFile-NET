@@ -22,17 +22,6 @@ namespace ShareFile.Api.Client.Entities
 
 	public interface IItemsEntity : IEntityBase
 	{
-		/// <summary>
-		/// Get List of Items
-		/// </summary>
-		/// <remarks>
-		/// Retrieve the initial folder and files of the authenticated user.
-		/// This method will return the user's root directory, using Item.GetRootFromWasabiPath("root").
-		/// It will force expansion of the Children element, so first level of items under the root is also returned
-		/// </remarks>
-		/// <returns>
-		/// a user's root directory and first level of children items
-		/// </returns>
 		IQuery<Item> Get();
 		/// <summary>
 		/// Get Item by ID
@@ -66,6 +55,7 @@ namespace ShareFile.Api.Client.Entities
 		/// A tree root element.
 		/// </returns>
 		IQuery<Item> Get(Uri url, TreeMode treeMode, string sourceId, bool canCreateRootFolder = false, bool fileBox = false);
+		IQuery<ODataFeed<Item>> GetChildrenByConnectorGroup(Uri url);
 		/// <summary>
 		/// Get Stream
 		/// </summary>
@@ -224,14 +214,10 @@ namespace ShareFile.Api.Client.Entities
 		/// </summary>
 		/// <example>
 		/// {
-		/// "Name":"Connection Name",
+		/// "Name":"RemoteFileName",
 		/// "Description":"Description",
-		/// "Link":"https://server/path"
-		/// }
-		/// {
-		/// "FileName":"RemoteFileName",
-		/// "Description":"Description",
-		/// "Zone":{ "Id":"z014766e-8e96-4615-86aa-57132a69843c" }
+		/// "Zone":{ "Id":"z014766e-8e96-4615-86aa-57132a69843c" },
+		/// "ConnectorGroup": { "Id":"1" }
 		/// }
 		/// </example>
 		/// <remarks>
@@ -241,7 +227,11 @@ namespace ShareFile.Api.Client.Entities
 		/// URI using a call to the Zone - using ShareFile Hash authentication mode. For active
 		/// clients, it's recommended to make the convertion call to the Zone directly, using
 		/// Items/ByPath=name, retriving the resulting URL, and calling this method with the
-		/// Link parameter.SymbolicLinks must be created as top-level folders
+		/// Link parameter.SymbolicLinks must be created as top-level folders - i.e., this call requires
+		/// the parent to be the Item(accountid) element.Zone defines the location of the SymbolicLink target - for example, for
+		/// Network Shares connectors, the SymbolicLink will point to the StorageZone Controller
+		/// that will serve the file browsing requests.The ConnectorGroup parameter indicates the kind of symbolic link - e.g., Network
+		/// Share, or SharePoint.
 		/// </remarks>
 		/// <param name="parentUrl"></param>
 		/// <param name="symlink"></param>
@@ -250,6 +240,25 @@ namespace ShareFile.Api.Client.Entities
 		/// the new SymbolicLink
 		/// </returns>
 		IQuery<SymbolicLink> CreateSymbolicLink(Uri parentUrl, SymbolicLink symlink, bool overwrite = false);
+		/// <summary>
+		/// Creates SymbolicLink
+		/// </summary>
+		/// <example>
+		/// {
+		/// "Name":"RemoteFileName",
+		/// "Description":"Description",
+		/// "Link":"https://server/provider/version/Items(id)",
+		/// "Zone":{ "Id":"z014766e-8e96-4615-86aa-57132a69843c" },
+		/// "ConnectorGroup": { "Id":"1" }
+		/// }
+		/// </example>
+		/// <param name="url"></param>
+		/// <param name="symlink"></param>
+		/// <param name="overwrite"></param>
+		/// <returns>
+		/// the new SymbolicLink
+		/// </returns>
+		IQuery<SymbolicLink> CreateChildrenByConnectorGroup(Uri url, SymbolicLink symlink, bool overwrite = false);
 		/// <summary>
 		/// Update Item
 		/// </summary>
@@ -533,17 +542,6 @@ namespace ShareFile.Api.Client.Entities
 
 		}
 
-		/// <summary>
-		/// Get List of Items
-		/// </summary>
-		/// <remarks>
-		/// Retrieve the initial folder and files of the authenticated user.
-		/// This method will return the user's root directory, using Item.GetRootFromWasabiPath("root").
-		/// It will force expansion of the Children element, so first level of items under the root is also returned
-		/// </remarks>
-		/// <returns>
-		/// a user's root directory and first level of children items
-		/// </returns>
 		public IQuery<Item> Get()
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
@@ -599,6 +597,15 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.QueryString("sourceId", sourceId);
 			sfApiQuery.QueryString("canCreateRootFolder", canCreateRootFolder);
 			sfApiQuery.QueryString("fileBox", fileBox);
+			sfApiQuery.HttpMethod = "GET";
+			return sfApiQuery;
+		}
+
+		public IQuery<ODataFeed<Item>> GetChildrenByConnectorGroup(Uri url)
+		{
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
+			sfApiQuery.Action("Children");
+			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -850,14 +857,10 @@ namespace ShareFile.Api.Client.Entities
 		/// </summary>
 		/// <example>
 		/// {
-		/// "Name":"Connection Name",
+		/// "Name":"RemoteFileName",
 		/// "Description":"Description",
-		/// "Link":"https://server/path"
-		/// }
-		/// {
-		/// "FileName":"RemoteFileName",
-		/// "Description":"Description",
-		/// "Zone":{ "Id":"z014766e-8e96-4615-86aa-57132a69843c" }
+		/// "Zone":{ "Id":"z014766e-8e96-4615-86aa-57132a69843c" },
+		/// "ConnectorGroup": { "Id":"1" }
 		/// }
 		/// </example>
 		/// <remarks>
@@ -867,7 +870,11 @@ namespace ShareFile.Api.Client.Entities
 		/// URI using a call to the Zone - using ShareFile Hash authentication mode. For active
 		/// clients, it's recommended to make the convertion call to the Zone directly, using
 		/// Items/ByPath=name, retriving the resulting URL, and calling this method with the
-		/// Link parameter.SymbolicLinks must be created as top-level folders
+		/// Link parameter.SymbolicLinks must be created as top-level folders - i.e., this call requires
+		/// the parent to be the Item(accountid) element.Zone defines the location of the SymbolicLink target - for example, for
+		/// Network Shares connectors, the SymbolicLink will point to the StorageZone Controller
+		/// that will serve the file browsing requests.The ConnectorGroup parameter indicates the kind of symbolic link - e.g., Network
+		/// Share, or SharePoint.
 		/// </remarks>
 		/// <param name="parentUrl"></param>
 		/// <param name="symlink"></param>
@@ -880,6 +887,35 @@ namespace ShareFile.Api.Client.Entities
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<SymbolicLink>(Client);
 			sfApiQuery.Action("SymbolicLink");
 			sfApiQuery.Uri(parentUrl);
+			sfApiQuery.QueryString("overwrite", overwrite);
+			sfApiQuery.Body = symlink;
+			sfApiQuery.HttpMethod = "POST";
+			return sfApiQuery;
+		}
+
+		/// <summary>
+		/// Creates SymbolicLink
+		/// </summary>
+		/// <example>
+		/// {
+		/// "Name":"RemoteFileName",
+		/// "Description":"Description",
+		/// "Link":"https://server/provider/version/Items(id)",
+		/// "Zone":{ "Id":"z014766e-8e96-4615-86aa-57132a69843c" },
+		/// "ConnectorGroup": { "Id":"1" }
+		/// }
+		/// </example>
+		/// <param name="url"></param>
+		/// <param name="symlink"></param>
+		/// <param name="overwrite"></param>
+		/// <returns>
+		/// the new SymbolicLink
+		/// </returns>
+		public IQuery<SymbolicLink> CreateChildrenByConnectorGroup(Uri url, SymbolicLink symlink, bool overwrite = false)
+		{
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<SymbolicLink>(Client);
+			sfApiQuery.Action("Children");
+			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("overwrite", overwrite);
 			sfApiQuery.Body = symlink;
 			sfApiQuery.HttpMethod = "POST";

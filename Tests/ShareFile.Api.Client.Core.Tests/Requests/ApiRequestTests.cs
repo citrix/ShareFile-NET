@@ -193,5 +193,68 @@ namespace ShareFile.Api.Client.Core.Tests.Requests
             var expectedUri = string.Format("https://release.sf-api.com/sf/v3/Items/Test(id={0},id2={1})/TestSubAction(subid={2},subid2={3})", id, id2, subid, subid2);
             apiRequest.GetComposedUri().ToString().Should().Be(expectedUri);
         }
+
+        [Test]
+        public void ApiRequest_FromQuery_WithBaseUri()
+        {
+            // Arrange
+            var id = GetId();
+            var query = new Query<ODataObject>(GetShareFileClient())
+                .From("Items")
+                .Action("Test")
+                .ActionIds("id", id)
+                .WithBaseUri(new Uri("https://test.sf-api.com/sf/v3/RandomEntity(folderId)"));
+
+            // Act
+            var apiRequest = ApiRequest.FromQuery(query);
+
+            // Assert
+            apiRequest.Body.Should().BeNull();
+            var expectedUri = string.Format("https://test.sf-api.com/sf/v3/Items/Test(id={0})", id);
+            apiRequest.GetComposedUri().ToString().Should().Be(expectedUri);
+        }
+
+        [Test]
+        public void ApiRequest_FromQuery_WithBaseUri_Fails()
+        {
+            // Arrange
+            var id = GetId();
+
+            try
+            {
+                // Act
+                var query = new Query<ODataObject>(GetShareFileClient())
+                    .From("Items")
+                    .Action("Test")
+                    .ActionIds("id", id)
+                    .WithBaseUri(new Uri("https://test.sf-api.com/sfItems(folderId)"));
+            }
+            catch (ArgumentException argumentException)
+            {
+                Assert.Pass();
+            }
+            catch (Exception)
+            {
+                
+            }
+
+            Assert.Fail();
+        }
+
+        [Test]
+        public void ApiRequest_FromQuery_WithQueryStringOnUri()
+        {
+            // Arrange
+            var id = GetId();
+
+            // Act
+            var query = new Query<ODataObject>(GetShareFileClient())
+                .Uri(new Uri("https://release.sf-api.com/sf/v3/Items(folder)?qsParam=1"))
+                .QueryString("testKey", "testValue");
+            var apiRequest = ApiRequest.FromQuery(query);
+
+            var expectedUri = "https://release.sf-api.com/sf/v3/Items(folder)?qsParam=1&testKey=testValue";
+            apiRequest.GetComposedUri().ToString().Should().Be(expectedUri);
+        }
     }
 }

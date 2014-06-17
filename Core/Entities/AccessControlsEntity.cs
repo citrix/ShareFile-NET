@@ -222,7 +222,7 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("recursive", recursive);
 			sfApiQuery.Body = accessControl;
-			sfApiQuery.HttpMethod = "POST";
+			sfApiQuery.HttpMethod = "PATCH";
 			return sfApiQuery;
 		}
 

@@ -169,12 +169,14 @@ namespace ShareFile.Api.Client.Requests.Providers
         private Response HandleResponse<TResponse>(HttpResponseMessage httpResponseMessage, Func<HttpResponseMessage, TResponse> parseSuccessResponse, ApiRequest request, int retryCount, bool tryResolveUnauthorizedChallenge = true)
             where TResponse : Response
         {
+            CheckAsyncOperationScheduled(httpResponseMessage);
+
             if (httpResponseMessage.IsSuccessStatusCode)
             {
                 return parseSuccessResponse(httpResponseMessage);
             }
 
-            if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized)
+            if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized || tryResolveUnauthorizedChallenge)
             {
                 LogResponse(httpResponseMessage, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode);
 
@@ -308,6 +310,25 @@ namespace ShareFile.Api.Client.Requests.Providers
             }
 
             return action;
+        }
+
+        protected void CheckAsyncOperationScheduled(HttpResponseMessage httpResponseMessage)
+        {
+            if (httpResponseMessage.StatusCode == HttpStatusCode.Accepted)
+            {
+                if (httpResponseMessage.Content != null &&
+                    httpResponseMessage.Content.Headers.ContentType.ToString()
+                        .IndexOf("application/json", StringComparison.OrdinalIgnoreCase) > -1)
+                {
+                    var responseStream = httpResponseMessage.Content.ReadAsStreamAsync().WaitForTask();
+                    if (responseStream != null)
+                    {
+                        var asyncOperation = DeserializeStream<AsyncOperation>(responseStream);
+
+                        throw new AsyncOperationScheduledException(asyncOperation);
+                    }
+                }
+            }
         }
     }
 }

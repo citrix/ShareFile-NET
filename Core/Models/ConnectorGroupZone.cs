@@ -8,15 +8,17 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
 	public class ConnectorGroupZone : ODataObject 
 	{
+
 		/// <summary>
 		/// Zone that contains this connector class
 		/// </summary>
@@ -47,5 +49,49 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public string FormUrl { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			var typedSource = source as ConnectorGroupZone;
+			if(typedSource != null)
+			{
+				Zone = typedSource.Zone;
+				StorageCenters = typedSource.StorageCenters;
+				ApiVersionMin = typedSource.ApiVersionMin;
+				ApiVersionMax = typedSource.ApiVersionMax;
+				IconUrl = typedSource.IconUrl;
+				FormUrl = typedSource.FormUrl;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("Zone", out token) && token.Type != JTokenType.Null)
+				{
+					Zone = (Zone)serializer.Deserialize(token.CreateReader(), typeof(Zone));
+				}
+				if(source.TryGetProperty("StorageCenters", out token) && token.Type != JTokenType.Null)
+				{
+					StorageCenters = (IEnumerable<StorageCenter>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<StorageCenter>));
+				}
+				if(source.TryGetProperty("ApiVersionMin", out token) && token.Type != JTokenType.Null)
+				{
+					ApiVersionMin = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ApiVersionMax", out token) && token.Type != JTokenType.Null)
+				{
+					ApiVersionMax = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("IconUrl", out token) && token.Type != JTokenType.Null)
+				{
+					IconUrl = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("FormUrl", out token) && token.Type != JTokenType.Null)
+				{
+					FormUrl = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+			}
+		}
 	}
 }

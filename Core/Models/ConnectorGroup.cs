@@ -8,15 +8,17 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
 	public class ConnectorGroup : Folder 
 	{
+
 		/// <summary>
 		/// Zones that contain this Connector type
 		/// </summary>
@@ -29,5 +31,29 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public string Provider { get; set; }
 
+		public override void Copy(ODataObject source, JsonSerializer serializer)
+		{
+			if(source == null || serializer == null) return;
+			base.Copy(source, serializer);
+
+			var typedSource = source as ConnectorGroup;
+			if(typedSource != null)
+			{
+				Zones = typedSource.Zones;
+				Provider = typedSource.Provider;
+			}
+			else
+			{
+				JToken token;
+				if(source.TryGetProperty("Zones", out token) && token.Type != JTokenType.Null)
+				{
+					Zones = (IEnumerable<ConnectorGroupZone>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<ConnectorGroupZone>));
+				}
+				if(source.TryGetProperty("Provider", out token) && token.Type != JTokenType.Null)
+				{
+					Provider = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+			}
+		}
 	}
 }

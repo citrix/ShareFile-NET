@@ -151,7 +151,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             _maxConsumersSemaphore = new AsyncSemaphore(Config.NumberOfThreads);
             _pendingPartSemaphore = new AsyncSemaphore(0);
             await PrepareAsync();
-            SetState(TransfererState.Active);
 
             if (_itemsToFill.Count > 0)
             {
@@ -344,6 +343,11 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
                     return uploadResponse.Value;
                 }
+            }
+
+            if (response.Content != null)
+            {
+                Client.Logging.Error(await response.Content.ReadAsStringAsync());
             }
 
             throw new UploadException("Error completing upload.", -1);

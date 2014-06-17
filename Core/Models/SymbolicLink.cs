@@ -21,6 +21,8 @@ namespace ShareFile.Api.Models
 
 		public Uri Link { get; set; }
 
+		public ConnectorGroup ConnectorGroup { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -30,6 +32,7 @@ namespace ShareFile.Api.Models
 			if(typedSource != null)
 			{
 				Link = typedSource.Link;
+				ConnectorGroup = typedSource.ConnectorGroup;
 			}
 			else
 			{
@@ -37,6 +40,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("Link", out token) && token.Type != JTokenType.Null)
 				{
 					Link = (Uri)serializer.Deserialize(token.CreateReader(), typeof(Uri));
+				}
+				if(source.TryGetProperty("ConnectorGroup", out token) && token.Type != JTokenType.Null)
+				{
+					ConnectorGroup = (ConnectorGroup)serializer.Deserialize(token.CreateReader(), typeof(ConnectorGroup));
 				}
 			}
 		}

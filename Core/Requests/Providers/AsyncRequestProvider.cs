@@ -226,7 +226,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 throw new InvalidApiResponseException(httpResponseMessage.StatusCode, "Unable to read response stream");
             }
 
-            if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized || tryResolveUnauthorizedChallenge)
+            if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized && tryResolveUnauthorizedChallenge)
             {
                 LogResponseAsync(httpResponseMessage, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode).ConfigureAwait(false);
 
@@ -264,7 +264,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 return Response.Success;
             }
 
-            if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized || tryResolveUnauthorizedChallenge)
+            if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized && tryResolveUnauthorizedChallenge)
             {
                 LogResponseAsync(httpResponseMessage, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode).ConfigureAwait(false);
 
@@ -304,7 +304,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 };
             }
 
-            if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized || tryResolveUnauthorizedChallenge)
+            if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized && tryResolveUnauthorizedChallenge)
             {
                 LogResponseAsync(httpResponseMessage, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode).ConfigureAwait(false);
 

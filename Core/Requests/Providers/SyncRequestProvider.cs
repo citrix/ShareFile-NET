@@ -176,7 +176,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 return parseSuccessResponse(httpResponseMessage);
             }
 
-            if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized || tryResolveUnauthorizedChallenge)
+            if (httpResponseMessage.StatusCode == HttpStatusCode.Unauthorized && tryResolveUnauthorizedChallenge)
             {
                 LogResponse(httpResponseMessage, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode);
 

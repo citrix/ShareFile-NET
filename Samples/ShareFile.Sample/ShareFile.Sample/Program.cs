@@ -83,7 +83,8 @@ namespace ShareFile.Sample
             Console.WriteLine("Successfully created a share, it be be accessed using: " + share.Uri);
 
             // Share a file via ShareFile
-            await ShareViaShareFileEmail(sfClient, uploadedFile);
+            string recipientEmailAddress = "[EnterEmailAddress]";
+            await ShareViaShareFileEmail(sfClient, uploadedFile, recipientEmailAddress);
 
             Console.ReadKey();
         }
@@ -179,13 +180,15 @@ namespace ShareFile.Sample
             return await sfClient.Shares.Create(share).ExecuteAsync();
         }
 
-        public static async Task ShareViaShareFileEmail(ShareFileClient sfClient, Item fileToShare)
+        public static async Task ShareViaShareFileEmail(ShareFileClient sfClient, Item fileToShare, string recipientEmailAddress)
         {
             var sendShare = new ShareSendParams
             {
-                Emails = new[] {"robert.mills@citrix.com"},
+                Emails = new[] { recipientEmailAddress },
                 Items = new[] {fileToShare.Id},
-                Subject = "Sample SDK Share"
+                Subject = "Sample SDK Share",
+                // Allow unlimited downloads
+                MaxDownloads = -1
             };
 
             await sfClient.Shares.CreateSend(sendShare).ExecuteAsync();

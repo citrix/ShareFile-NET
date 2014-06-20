@@ -177,6 +177,18 @@ namespace ShareFile.Api.Models
 
 		public bool? HasAnyConnectorZones { get; set; }
 
+		public bool? EnableENSForAccount { get; set; }
+
+		public string ENSRecommendedPollingSyncInterval { get; set; }
+
+		public string ENSRecommendedNotificationSyncInterval { get; set; }
+
+		public int? ENSNotificationConfigurationCount { get; set; }
+
+		public int? ENSFailSafePollingCount { get; set; }
+
+		public int? ENSMaxNotificationSyncWaitCount { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -264,6 +276,12 @@ namespace ShareFile.Api.Models
 				EnableGetApp = typedSource.EnableGetApp;
 				EnableStorageZoneConnector = typedSource.EnableStorageZoneConnector;
 				HasAnyConnectorZones = typedSource.HasAnyConnectorZones;
+				EnableENSForAccount = typedSource.EnableENSForAccount;
+				ENSRecommendedPollingSyncInterval = typedSource.ENSRecommendedPollingSyncInterval;
+				ENSRecommendedNotificationSyncInterval = typedSource.ENSRecommendedNotificationSyncInterval;
+				ENSNotificationConfigurationCount = typedSource.ENSNotificationConfigurationCount;
+				ENSFailSafePollingCount = typedSource.ENSFailSafePollingCount;
+				ENSMaxNotificationSyncWaitCount = typedSource.ENSMaxNotificationSyncWaitCount;
 			}
 			else
 			{
@@ -583,6 +601,30 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("HasAnyConnectorZones", out token) && token.Type != JTokenType.Null)
 				{
 					HasAnyConnectorZones = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableENSForAccount", out token) && token.Type != JTokenType.Null)
+				{
+					EnableENSForAccount = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("ENSRecommendedPollingSyncInterval", out token) && token.Type != JTokenType.Null)
+				{
+					ENSRecommendedPollingSyncInterval = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ENSRecommendedNotificationSyncInterval", out token) && token.Type != JTokenType.Null)
+				{
+					ENSRecommendedNotificationSyncInterval = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ENSNotificationConfigurationCount", out token) && token.Type != JTokenType.Null)
+				{
+					ENSNotificationConfigurationCount = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("ENSFailSafePollingCount", out token) && token.Type != JTokenType.Null)
+				{
+					ENSFailSafePollingCount = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("ENSMaxNotificationSyncWaitCount", out token) && token.Type != JTokenType.Null)
+				{
+					ENSMaxNotificationSyncWaitCount = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
 				}
 			}
 		}

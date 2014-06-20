@@ -117,10 +117,11 @@ namespace ShareFile.Api.Client.Entities
 		/// will enumerate the children of the remote connector
 		/// </remarks>
 		/// <param name="url"></param>
+		/// <param name="includeDeleted"></param>
 		/// <returns>
 		/// the list of children under the given object ID
 		/// </returns>
-		IQuery<ODataFeed<Item>> GetChildren(Uri url);
+		IQuery<ODataFeed<Item>> GetChildren(Uri url, bool includeDeleted = false);
 		/// <summary>
 		/// Get Folder Access Info
 		/// </summary>
@@ -493,12 +494,12 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Redirects the caller to the Web Edit application for the selected item.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// A redirection message to the Web Edit app for this item. It returns 400 (BadRequest)
 		/// if the Web Preview app doesn't support the file type.
 		/// </returns>
-		IQuery<Redirection> WebView(Uri url, string id);
+		IQuery<Redirection> WebView(Uri url);
 		/// <summary>
 		/// Get all Item Protocol Link
 		/// </summary>
@@ -706,14 +707,16 @@ namespace ShareFile.Api.Client.Entities
 		/// will enumerate the children of the remote connector
 		/// </remarks>
 		/// <param name="url"></param>
+		/// <param name="includeDeleted"></param>
 		/// <returns>
 		/// the list of children under the given object ID
 		/// </returns>
-		public IQuery<ODataFeed<Item>> GetChildren(Uri url)
+		public IQuery<ODataFeed<Item>> GetChildren(Uri url, bool includeDeleted = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
 			sfApiQuery.Action("Children");
 			sfApiQuery.Uri(url);
+			sfApiQuery.QueryString("includeDeleted", includeDeleted);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -1301,17 +1304,16 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Redirects the caller to the Web Edit application for the selected item.
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="url"></param>
 		/// <returns>
 		/// A redirection message to the Web Edit app for this item. It returns 400 (BadRequest)
 		/// if the Web Preview app doesn't support the file type.
 		/// </returns>
-		public IQuery<Redirection> WebView(Uri url, string id)
+		public IQuery<Redirection> WebView(Uri url)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Redirection>(Client);
 			sfApiQuery.Action("WebView");
 			sfApiQuery.Uri(url);
-			sfApiQuery.QueryString("id", id);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}

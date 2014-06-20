@@ -70,7 +70,7 @@ namespace ShareFile.Api.Client.Entities
 		/// </returns>
 		IQuery<ODataFeed<Item>> GetItems(Uri url);
 		/// <summary>
-		/// Get Recipients of a Share
+		/// Get Items of a Share
 		/// </summary>
 		/// <remarks>
 		/// Retrieve a single Item in the Share
@@ -364,7 +364,7 @@ namespace ShareFile.Api.Client.Entities
 		}
 
 		/// <summary>
-		/// Get Recipients of a Share
+		/// Get Items of a Share
 		/// </summary>
 		/// <remarks>
 		/// Retrieve a single Item in the Share

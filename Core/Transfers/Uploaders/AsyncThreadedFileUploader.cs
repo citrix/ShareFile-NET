@@ -133,7 +133,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     Index = index,
                     Length = _effectivePartSize,
                     Offset = offset,
-                    UploadUrl = UploadSpecification.ChunkUri.ToString(),
+                    UploadUrl = UploadSpecification.ChunkUri.AbsoluteUri,
                     IsLastPart = i + 1 == numberOfParts
                 };
                 _itemsToFill.Enqueue(part);
@@ -355,7 +355,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         private string GetComposedFinishUri()
         {
-            var finishUri = new StringBuilder(string.Format("{0}&respformat=json", UploadSpecification.FinishUri));
+            var finishUri = new StringBuilder(string.Format("{0}&respformat=json", UploadSpecification.FinishUri.AbsoluteUri));
 
             if (File.Length > 0)
             {

@@ -35,6 +35,7 @@ namespace ShareFile.Api.Client
         IItemsEntityInternal Items { get; }
         IStorageCentersEntityInternal StorageCenters { get; }
         IZonesEntityInternal Zones { get; }
+        IOAuthClientsEntityInternal OAuthClients { get; }
 #else
         IAccountsEntity Accounts { get; }
         IItemsEntity Items { get; }
@@ -182,6 +183,7 @@ namespace ShareFile.Api.Client
             Devices = new DevicesEntityInternal(this); 
             StorageCenters = new StorageCentersEntityInternal(this);
             Zones = new ZonesEntityInternal(this);
+            OAuthClients = new OAuthClientsEntityInternal(this);
 #else
             Accounts = new AccountsEntity(this);
             Items = new ItemsEntity(this);
@@ -194,6 +196,7 @@ namespace ShareFile.Api.Client
         public IItemsEntityInternal Items { get; private set; }
         public IStorageCentersEntityInternal StorageCenters { get; private set; }
         public IZonesEntityInternal Zones { get; private set; }
+        public IOAuthClientsEntityInternal OAuthClients { get; private set; }
 #else
         public IAccountsEntity Accounts { get; private set; }
         public IItemsEntity Items { get; private set; }

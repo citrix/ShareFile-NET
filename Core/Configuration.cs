@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
+using System.Threading;
 using ShareFile.Api.Client.Logging;
 
 namespace ShareFile.Api.Client
@@ -43,6 +45,11 @@ namespace ShareFile.Api.Client
         /// If true, all cookies and headers associated with a request will be logged.
         /// </summary>
         public bool LogCookiesAndHeaders { get; set; }
+
+        /// <summary>
+        /// Header value to send on every API call.
+        /// </summary>
+        public IEnumerable<string> AcceptLanguageHeader { get; set; }
 
         #region DeviceId properties
         public string ToolName { get; set; }

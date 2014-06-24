@@ -96,6 +96,11 @@ namespace ShareFile.Api.Client.Requests.Providers
                 requestMessage = new HttpRequestMessage(new HttpMethod(request.HttpMethod), uri);
             }
 
+            foreach(var acceptLanguageHeader in ShareFileClient.Configuration.AcceptLanguageHeader)
+            {
+                requestMessage.Headers.AcceptLanguage.Add(new StringWithQualityHeaderValue(acceptLanguageHeader));
+            }
+
             LogRequestUri(request);
 
             foreach (var kvp in request.HeaderCollection)

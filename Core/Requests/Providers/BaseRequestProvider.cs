@@ -96,9 +96,9 @@ namespace ShareFile.Api.Client.Requests.Providers
                 requestMessage = new HttpRequestMessage(new HttpMethod(request.HttpMethod), uri);
             }
 
-            foreach(var acceptLanguageHeader in ShareFileClient.Configuration.AcceptLanguageHeader)
+            foreach(var cultureInfo in ShareFileClient.Configuration.SupportedCultures)
             {
-                requestMessage.Headers.AcceptLanguage.Add(new StringWithQualityHeaderValue(acceptLanguageHeader));
+                requestMessage.Headers.AcceptLanguage.Add(new StringWithQualityHeaderValue(cultureInfo.Name));
             }
 
             LogRequestUri(request);

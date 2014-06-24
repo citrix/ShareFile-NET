@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Net;
 using System.Threading;
 using ShareFile.Api.Client.Logging;
@@ -49,7 +50,7 @@ namespace ShareFile.Api.Client
         /// <summary>
         /// Header value to send on every API call.
         /// </summary>
-        public IEnumerable<string> AcceptLanguageHeader { get; set; }
+        public IEnumerable<CultureInfo> SupportedCultures { get; set; }
 
         #region DeviceId properties
         public string ToolName { get; set; }

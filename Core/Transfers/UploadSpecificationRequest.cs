@@ -62,8 +62,8 @@ namespace ShareFile.Api.Client.Transfers
                     {"isSend", IsSend.ToLowerString()},
                     {"responseFormat", ResponseFormat},
                     {"notify", Notify.ToLowerString()},
-                    {"clientCreatedDateUTC", ClientCreatedDateUtc.ToString("u")},
-                    {"clientModifiedDateUTC", ClientModifiedDateUtc.ToString("u")}
+                    {"clientCreatedDateUTC", ClientCreatedDateUtc != null ? ClientCreatedDateUtc.ToString("u"): ""},
+                    {"clientModifiedDateUTC", ClientModifiedDateUtc != null ? ClientModifiedDateUtc.ToString("u"): ""}
                 };
         }
     }

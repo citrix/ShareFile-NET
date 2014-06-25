@@ -1,9 +1,9 @@
 rmdir /S /Q coverage
 mkdir coverage
 
-NuGet.exe install NUnit.Runners -ExcludeVersion -o packages
-NuGet.exe install OpenCover -ExcludeVersion -o packages
-NuGet.exe install ReportGenerator -ExcludeVersion -o packages
+NuGet.exe install NUnit.Runners -ExcludeVersion -o packages -Version 2.6.3
+NuGet.exe install OpenCover -ExcludeVersion -o packages -Version 4.5.2506
+NuGet.exe install ReportGenerator -ExcludeVersion -o packages -Version 1.9.1
 
 @ECHO OFF
 IF "%1" == "" (

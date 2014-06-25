@@ -27,8 +27,8 @@ namespace ShareFile.Api.Client.Transfers
         public bool Notify { get; set; }
         public int ThreadCount { get; set; }
         public string ResponseFormat { get; private set; }
-        public DateTime ClientCreatedDateUtc { get; set; }
-        public DateTime ClientModifiedDateUtc { get; set; }
+        public DateTime? ClientCreatedDateUtc { get; set; }
+        public DateTime? ClientModifiedDateUtc { get; set; }
 
         public UploadSpecificationRequest()
         {
@@ -62,8 +62,8 @@ namespace ShareFile.Api.Client.Transfers
                     {"isSend", IsSend.ToLowerString()},
                     {"responseFormat", ResponseFormat},
                     {"notify", Notify.ToLowerString()},
-                    {"clientCreatedDateUTC", ClientCreatedDateUtc != null ? ClientCreatedDateUtc.ToString("u"): ""},
-                    {"clientModifiedDateUTC", ClientModifiedDateUtc != null ? ClientModifiedDateUtc.ToString("u"): ""}
+                    {"clientCreatedDateUTC", ClientCreatedDateUtc.HasValue ? ClientCreatedDateUtc.Value.ToString("u"): ""},
+                    {"clientModifiedDateUTC", ClientModifiedDateUtc.HasValue ? ClientModifiedDateUtc.Value.ToString("u"): ""}
                 };
         }
     }

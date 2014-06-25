@@ -155,7 +155,9 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             {
                 AllowAutoRedirect = true,
                 CookieContainer = Client.CookieContainer,
-                Credentials = Client.CredentialCache
+                Credentials = Client.CredentialCache,
+                Proxy = Client.Configuration.ProxyConfiguration,
+                UseProxy = Client.Configuration.ProxyConfiguration != null
             }) { Timeout = new TimeSpan(0, 0, 0, 0, Config.HttpTimeout) };
 
             var message = new HttpRequestMessage(HttpMethod.Get, finishUri);
@@ -449,7 +451,9 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             {
                 AllowAutoRedirect = true,
                 CookieContainer = ThreadedFileUploader.Client.CookieContainer,
-                Credentials = ThreadedFileUploader.Client.CredentialCache
+                Credentials = ThreadedFileUploader.Client.CredentialCache,
+                Proxy = ThreadedFileUploader.Client.Configuration.ProxyConfiguration,
+                UseProxy = ThreadedFileUploader.Client.Configuration.ProxyConfiguration != null
             }) { Timeout = new TimeSpan(0, 0, 0, 0, ThreadedFileUploader.Config.HttpTimeout) };
 
             var message = new HttpRequestMessage(HttpMethod.Post, part.GetComposedUploadUrl())

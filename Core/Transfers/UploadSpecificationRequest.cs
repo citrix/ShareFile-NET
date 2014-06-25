@@ -27,6 +27,8 @@ namespace ShareFile.Api.Client.Transfers
         public bool Notify { get; set; }
         public int ThreadCount { get; set; }
         public string ResponseFormat { get; private set; }
+        public DateTime ClientCreatedDateUtc { get; set; }
+        public DateTime ClientModifiedDateUtc { get; set; }
 
         public UploadSpecificationRequest()
         {
@@ -59,7 +61,9 @@ namespace ShareFile.Api.Client.Transfers
                     {"overwrite", Overwrite.ToLowerString()},
                     {"isSend", IsSend.ToLowerString()},
                     {"responseFormat", ResponseFormat},
-                    {"notify", Notify.ToLowerString()}
+                    {"notify", Notify.ToLowerString()},
+                    {"clientCreatedDateUTC", ClientCreatedDateUtc.ToString("u")},
+                    {"clientModifiedDateUTC", ClientModifiedDateUtc.ToString("u")}
                 };
         }
     }

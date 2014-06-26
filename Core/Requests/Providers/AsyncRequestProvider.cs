@@ -16,6 +16,7 @@ using ShareFile.Api.Client.Events;
 using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Logging;
+using ShareFile.Api.Client.Requests.Executors;
 using ShareFile.Api.Client.Security.Authentication.OAuth2;
 using ShareFile.Api.Client.Security.Cryptography;
 using ShareFile.Api.Models;
@@ -375,7 +376,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                     ShareFileClient.Logging.Error(exception, "", null);
                 }
 
-                if (responseMessage.Content.Headers.ContentLength == 0)
+                if (responseMessage.Content != null && responseMessage.Content.Headers != null && responseMessage.Content.Headers.ContentLength == 0)
                 {
                     var exception = new NullReferenceException("Unable to retrieve HttpResponseMessage.Content");
                     ShareFileClient.Logging.Error(exception, string.Empty, null);
@@ -408,7 +409,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 
                 Exception exceptionToThrow = null;
 
-                if (expectedType == null || expectedType.IsAssignableFrom(typeof(ODataObject)))
+                if (expectedType == null || expectedType.IsAssignableFrom(typeof(ODataObject)) || expectedType.IsAssignableFrom(typeof(Stream)))
                 {
                     ODataRequestException requestException;
                     if (TryDeserialize(rawError, out requestException))
@@ -452,23 +453,14 @@ namespace ShareFile.Api.Client.Requests.Providers
         protected async Task<HttpResponseMessage> ExecuteRequestAsync(HttpRequestMessage requestMessage, CancellationToken? token = null)
         {
             HttpResponseMessage responseMessage;
+            var requestExecutor = RequestExecutorFactory.GetAsyncRequestExecutor();
             if (token == null)
             {
-                responseMessage = await HttpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
+                responseMessage = await requestExecutor.SendAsync(HttpClient, requestMessage, HttpCompletionOption.ResponseHeadersRead, CancellationToken.None);
             }
-            else responseMessage = await HttpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, token.Value);
+            else responseMessage = await requestExecutor.SendAsync(HttpClient, requestMessage, HttpCompletionOption.ResponseHeadersRead, token.Value);
 
-            if (RuntimeRequiresCustomCookieHandling)
-            {
-                IEnumerable<string> newCookies;
-                if (responseMessage.Headers.TryGetValues("Set-Cookie", out newCookies))
-                {
-                    foreach (var newCookie in newCookies)
-                    {
-                        ShareFileClient.CookieContainer.SetCookies(responseMessage.RequestMessage.RequestUri, newCookie);
-                    }
-                }
-            }
+            ProcessCookiesForRuntime(responseMessage);
 
             return responseMessage;
         }

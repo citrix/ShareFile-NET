@@ -96,9 +96,9 @@ namespace ShareFile.Api.Client.Requests.Providers
                 requestMessage = new HttpRequestMessage(new HttpMethod(request.HttpMethod), uri);
             }
 
-            if(ShareFileClient.Configuration.SupportedCultures != null)
+            if (ShareFileClient.Configuration.SupportedCultures != null)
             {
-                foreach(var cultureInfo in ShareFileClient.Configuration.SupportedCultures)
+                foreach (var cultureInfo in ShareFileClient.Configuration.SupportedCultures)
                 {
                     requestMessage.Headers.AcceptLanguage.Add(new StringWithQualityHeaderValue(cultureInfo.Name));
                 }
@@ -477,6 +477,21 @@ namespace ShareFile.Api.Client.Requests.Providers
             }
 
             return exception != null;
+        }
+
+        protected void ProcessCookiesForRuntime(HttpResponseMessage responseMessage)
+        {
+            if (RuntimeRequiresCustomCookieHandling)
+            {
+                IEnumerable<string> newCookies;
+                if (responseMessage.Headers.TryGetValues("Set-Cookie", out newCookies))
+                {
+                    foreach (var newCookie in newCookies)
+                    {
+                        ShareFileClient.CookieContainer.SetCookies(responseMessage.RequestMessage.RequestUri, newCookie);
+                    }
+                }
+            }
         }
     }
 }

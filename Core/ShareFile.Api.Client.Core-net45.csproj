@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -25,7 +25,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Net45\Release\</OutputPath>
-    <DefineConstants>TRACE;ShareFile;</DefineConstants>
+    <DefineConstants>TRACE;ShareFile;Async</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -219,6 +219,11 @@
     <Compile Include="Requests\IQuery.cs" />
     <Compile Include="Requests\ODataParameter.cs" />
     <Compile Include="Requests\ODataParameterCollection.cs" />
+    <Compile Include="Requests\Executors\AsyncRequestExecutor.cs" />
+    <Compile Include="Requests\Executors\IAsyncRequestExecutor.cs" />
+    <Compile Include="Requests\Executors\ISyncRequestExecutor.cs" />
+    <Compile Include="Requests\Executors\RequestExecutorFactory.cs" />
+    <Compile Include="Requests\Executors\SyncRequestExecutor.cs" />
     <Compile Include="Requests\Providers\AsyncRequestProvider.cs" />
     <Compile Include="Requests\Providers\BaseRequestProvider.cs" />
     <Compile Include="Requests\Providers\IAsyncRequestProvider.cs" />

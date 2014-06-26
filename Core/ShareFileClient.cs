@@ -16,6 +16,7 @@ using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Logging;
 using ShareFile.Api.Client.Requests;
+using ShareFile.Api.Client.Requests.Executors;
 using ShareFile.Api.Client.Requests.Providers;
 using ShareFile.Api.Client.Security;
 using ShareFile.Api.Client.Security.Authentication.OAuth2;
@@ -245,8 +246,10 @@ namespace ShareFile.Api.Client
             RequestProviderFactory = new RequestProviderFactory();
 
             RegisterSyncRequestProvider(new SyncRequestProvider(this));
+            RequestExecutorFactory.RegisterSyncRequestProvider(new SyncRequestExecutor());
 #if Async
             RegisterAsyncRequestProvider(new AsyncRequestProvider(this));
+            RequestExecutorFactory.RegisterAsyncRequestProvider(new AsyncRequestExecutor());
 #endif
         }
 

@@ -230,7 +230,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                     ShareFileClient.Logging.Error(exception, "", null);
                 }
 
-                if (responseMessage.Content.Headers.ContentLength == 0)
+                if (responseMessage.Content != null && responseMessage.Content.Headers != null && responseMessage.Content.Headers.ContentLength == 0)
                 {
                     var exception = new NullReferenceException("Unable to retrieve HttpResponseMessage.Content");
                     ShareFileClient.Logging.Error(exception, string.Empty, null);

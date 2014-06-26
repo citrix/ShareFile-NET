@@ -16,6 +16,7 @@ using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Logging;
 using ShareFile.Api.Client.Requests;
+using ShareFile.Api.Client.Requests.Executors;
 using ShareFile.Api.Client.Requests.Providers;
 using ShareFile.Api.Client.Security;
 using ShareFile.Api.Client.Security.Authentication.OAuth2;

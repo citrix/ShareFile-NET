@@ -58,21 +58,7 @@ namespace ShareFile.Api.Client.Helpers
 #if NETFX_CORE
             return assembly.DefinedTypes.Select(x => x.AsType());
 #else
-            try
-            {
-                return assembly.GetTypes();
-            }
-            catch (ReflectionTypeLoadException loadException)
-            {
-                foreach (var exceptions in loadException.LoaderExceptions)
-                {
-#if !NETFX_CORE
-                    Console.WriteLine(exceptions.ToString());
-#endif
-                    Debug.WriteLine(exceptions.ToString());
-                }
-                throw;
-            }
+            return assembly.GetTypes();
 #endif
         }
 

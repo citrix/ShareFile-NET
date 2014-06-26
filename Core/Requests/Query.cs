@@ -129,7 +129,14 @@ namespace ShareFile.Api.Client.Requests
 
         protected void _QueryString(string key, object value)
         {
-            _QueryString(key, Convert.ToString(value));
+            if (value is DateTime)
+            {
+                _QueryString(key, ((DateTime)value).ToString("u")); //Format in UTC
+            }
+            else
+            {
+                _QueryString(key, Convert.ToString(value));
+            }
         }
 
         protected void _AddHeader(string key, string value)

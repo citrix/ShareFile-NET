@@ -35,6 +35,7 @@ namespace ShareFile.Api.Client
         IItemsEntityInternal Items { get; }
         IStorageCentersEntityInternal StorageCenters { get; }
         IZonesEntityInternal Zones { get; }
+        IOAuthClientsEntityInternal OAuthClients { get; }
 #else
         IAccountsEntity Accounts { get; }
         IItemsEntity Items { get; }
@@ -62,7 +63,11 @@ namespace ShareFile.Api.Client
         AsyncThreadedFileUploader GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null);
         AsyncFileDownloader GetAsyncFileDownloader(Item itemToDownload, DownloaderConfig config = null);
 #else
+#if ShareFile
+        ThreadedFileUploader GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null);
+#else
         ThreadedFileUploader GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null);
+#endif
         FileDownloader GetFileDownloader(Item itemToDownload, DownloaderConfig config = null);
 #endif
         void AddCookie(Uri host, Cookie cookie);
@@ -178,6 +183,7 @@ namespace ShareFile.Api.Client
             Devices = new DevicesEntityInternal(this); 
             StorageCenters = new StorageCentersEntityInternal(this);
             Zones = new ZonesEntityInternal(this);
+            OAuthClients = new OAuthClientsEntityInternal(this);
 #else
             Accounts = new AccountsEntity(this);
             Items = new ItemsEntity(this);
@@ -190,6 +196,7 @@ namespace ShareFile.Api.Client
         public IItemsEntityInternal Items { get; private set; }
         public IStorageCentersEntityInternal StorageCenters { get; private set; }
         public IZonesEntityInternal Zones { get; private set; }
+        public IOAuthClientsEntityInternal OAuthClients { get; private set; }
 #else
         public IAccountsEntity Accounts { get; private set; }
         public IItemsEntity Items { get; private set; }
@@ -281,12 +288,22 @@ namespace ShareFile.Api.Client
 
 #else
 
+
+#if ShareFile
+        public ThreadedFileUploader GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
+        {
+            uploadSpecificationRequest.Method = UploadMethod.Threaded;
+
+            return new ThreadedFileUploader(this, uploadSpecificationRequest, file, config, expirationDays);
+        }
+#else        
         public ThreadedFileUploader GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null)
         {
             uploadSpecificationRequest.Method = UploadMethod.Threaded;
 
             return new ThreadedFileUploader(this, uploadSpecificationRequest, file, config);
         }
+#endif
 
         public FileDownloader GetFileDownloader(Item itemToDownload, DownloaderConfig config = null)
         {

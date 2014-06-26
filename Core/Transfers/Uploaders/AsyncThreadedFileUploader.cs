@@ -105,7 +105,8 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 uploadSpecificationRequest.Overwrite, uploadSpecificationRequest.Title,
                 uploadSpecificationRequest.Details, uploadSpecificationRequest.IsSend,
                 uploadSpecificationRequest.SendGuid, null, uploadSpecificationRequest.ThreadCount,
-                uploadSpecificationRequest.ResponseFormat, uploadSpecificationRequest.Notify);
+                uploadSpecificationRequest.ResponseFormat, uploadSpecificationRequest.Notify, 
+                uploadSpecificationRequest.ClientCreatedDateUtc, uploadSpecificationRequest.ClientModifiedDateUtc);
 
             return await query.ExecuteAsync(_cancellationToken);
         }
@@ -133,7 +134,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     Index = index,
                     Length = _effectivePartSize,
                     Offset = offset,
-                    UploadUrl = UploadSpecification.ChunkUri.ToString(),
+                    UploadUrl = UploadSpecification.ChunkUri.AbsoluteUri,
                     IsLastPart = i + 1 == numberOfParts
                 };
                 _itemsToFill.Enqueue(part);

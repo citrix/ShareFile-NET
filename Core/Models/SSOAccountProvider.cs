@@ -39,6 +39,8 @@ namespace ShareFile.Api.Models
 
 		public string SPInitatedAuthMethod { get; set; }
 
+		public bool? UseWebAuthentication { get; set; }
+
 		public bool? IsActive { get; set; }
 
 		public string ProviderID { get; set; }
@@ -65,6 +67,7 @@ namespace ShareFile.Api.Models
 				SFEntityID = typedSource.SFEntityID;
 				SPInitatedAuthContext = typedSource.SPInitatedAuthContext;
 				SPInitatedAuthMethod = typedSource.SPInitatedAuthMethod;
+				UseWebAuthentication = typedSource.UseWebAuthentication;
 				IsActive = typedSource.IsActive;
 				ProviderID = typedSource.ProviderID;
 				DebugMode = typedSource.DebugMode;
@@ -112,6 +115,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("SPInitatedAuthMethod", out token) && token.Type != JTokenType.Null)
 				{
 					SPInitatedAuthMethod = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("UseWebAuthentication", out token) && token.Type != JTokenType.Null)
+				{
+					UseWebAuthentication = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("IsActive", out token) && token.Type != JTokenType.Null)
 				{

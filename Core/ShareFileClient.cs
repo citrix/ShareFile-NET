@@ -243,7 +243,9 @@ namespace ShareFile.Api.Client
 
         internal void RegisterRequestProviders()
         {
+#if Async
             RequestExecutorFactory.RegisterAsyncRequestProvider(new AsyncRequestExecutor());
+#endif
             RequestExecutorFactory.RegisterSyncRequestProvider(new SyncRequestExecutor());
 
             RequestProviderFactory = new RequestProviderFactory();

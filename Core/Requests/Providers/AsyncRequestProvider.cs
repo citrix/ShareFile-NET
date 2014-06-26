@@ -16,6 +16,7 @@ using ShareFile.Api.Client.Events;
 using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Logging;
+using ShareFile.Api.Client.Requests.Executors;
 using ShareFile.Api.Client.Security.Authentication.OAuth2;
 using ShareFile.Api.Client.Security.Cryptography;
 using ShareFile.Api.Models;
@@ -452,23 +453,14 @@ namespace ShareFile.Api.Client.Requests.Providers
         protected async Task<HttpResponseMessage> ExecuteRequestAsync(HttpRequestMessage requestMessage, CancellationToken? token = null)
         {
             HttpResponseMessage responseMessage;
+            var requestExecutor = RequestExecutorFactory.GetAsyncRequestExecutor();
             if (token == null)
             {
-                responseMessage = await HttpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
+                responseMessage = await requestExecutor.SendAsync(HttpClient, requestMessage, HttpCompletionOption.ResponseHeadersRead, CancellationToken.None);
             }
-            else responseMessage = await HttpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, token.Value);
+            else responseMessage = await requestExecutor.SendAsync(HttpClient, requestMessage, HttpCompletionOption.ResponseHeadersRead, token.Value);
 
-            if (RuntimeRequiresCustomCookieHandling)
-            {
-                IEnumerable<string> newCookies;
-                if (responseMessage.Headers.TryGetValues("Set-Cookie", out newCookies))
-                {
-                    foreach (var newCookie in newCookies)
-                    {
-                        ShareFileClient.CookieContainer.SetCookies(responseMessage.RequestMessage.RequestUri, newCookie);
-                    }
-                }
-            }
+            ProcessCookiesForRuntime(responseMessage);
 
             return responseMessage;
         }

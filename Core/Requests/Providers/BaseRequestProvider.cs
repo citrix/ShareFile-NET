@@ -475,5 +475,20 @@ namespace ShareFile.Api.Client.Requests.Providers
 
             return exception != null;
         }
+
+        protected void ProcessCookiesForRuntime(HttpResponseMessage responseMessage)
+        {
+            if (RuntimeRequiresCustomCookieHandling)
+            {
+                IEnumerable<string> newCookies;
+                if (responseMessage.Headers.TryGetValues("Set-Cookie", out newCookies))
+                {
+                    foreach (var newCookie in newCookies)
+                    {
+                        ShareFileClient.CookieContainer.SetCookies(responseMessage.RequestMessage.RequestUri, newCookie);
+                    }
+                }
+            }
+        }
     }
 }

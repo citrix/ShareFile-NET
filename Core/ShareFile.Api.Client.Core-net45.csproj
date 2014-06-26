@@ -219,6 +219,11 @@
     <Compile Include="Requests\IQuery.cs" />
     <Compile Include="Requests\ODataParameter.cs" />
     <Compile Include="Requests\ODataParameterCollection.cs" />
+    <Compile Include="Requests\Executors\AsyncRequestExecutor.cs" />
+    <Compile Include="Requests\Executors\IAsyncRequestExecutor.cs" />
+    <Compile Include="Requests\Executors\ISyncRequestExecutor.cs" />
+    <Compile Include="Requests\Executors\RequestExecutorFactory.cs" />
+    <Compile Include="Requests\Executors\SyncRequestExecutor.cs" />
     <Compile Include="Requests\Providers\AsyncRequestProvider.cs" />
     <Compile Include="Requests\Providers\BaseRequestProvider.cs" />
     <Compile Include="Requests\Providers\IAsyncRequestProvider.cs" />

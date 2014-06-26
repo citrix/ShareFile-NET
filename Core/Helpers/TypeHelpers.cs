@@ -66,7 +66,9 @@ namespace ShareFile.Api.Client.Helpers
             {
                 foreach (var exceptions in loadException.LoaderExceptions)
                 {
+#if !NETFX_CORE
                     Console.WriteLine(exceptions.ToString());
+#endif
                     Debug.WriteLine(exceptions.ToString());
                 }
                 throw;

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -176,6 +176,8 @@
     <Compile Include="Models\EnsSubscriptionRequest.cs" />
     <Compile Include="Models\EnsSubscriptionToken.cs" />
     <Compile Include="Models\EntityTypeMap.cs" />
+    <Compile Include="Models\ESignature.cs" />
+    <Compile Include="Models\ESignatureDocumentStatus.cs" />
     <Compile Include="Models\FavoriteFolder.cs" />
     <Compile Include="Models\File.cs" />
     <Compile Include="Models\FileVirusStatus.cs" />
@@ -186,6 +188,7 @@
     <Compile Include="Models\GenericConfig.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\Industry.cs" />
+    <Compile Include="Models\IntegrationProvider.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\ItemInfo.cs" />
     <Compile Include="Models\ItemProtocolLink.cs" />
@@ -251,6 +254,11 @@
     <Compile Include="Models\ZoneService.cs" />
     <Compile Include="Models\ZoneType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Requests\Executors\AsyncRequestExecutor.cs" />
+    <Compile Include="Requests\Executors\IAsyncRequestExecutor.cs" />
+    <Compile Include="Requests\Executors\ISyncRequestExecutor.cs" />
+    <Compile Include="Requests\Executors\RequestExecutorFactory.cs" />
+    <Compile Include="Requests\Executors\SyncRequestExecutor.cs" />
     <Compile Include="Requests\Filters\EndsWithFilter.cs" />
     <Compile Include="Requests\Filters\EqualToFilter.cs" />
     <Compile Include="Requests\Filters\Filter.cs" />
@@ -260,11 +268,6 @@
     <Compile Include="Requests\IQuery.cs" />
     <Compile Include="Requests\ODataParameter.cs" />
     <Compile Include="Requests\ODataParameterCollection.cs" />
-    <Compile Include="Requests\Executors\AsyncRequestExecutor.cs" />
-    <Compile Include="Requests\Executors\IAsyncRequestExecutor.cs" />
-    <Compile Include="Requests\Executors\ISyncRequestExecutor.cs" />
-    <Compile Include="Requests\Executors\RequestExecutorFactory.cs" />
-    <Compile Include="Requests\Executors\SyncRequestExecutor.cs" />
     <Compile Include="Requests\Providers\AsyncRequestProvider.cs" />
     <Compile Include="Requests\Providers\BaseRequestProvider.cs" />
     <Compile Include="Requests\Providers\IAsyncRequestProvider.cs" />

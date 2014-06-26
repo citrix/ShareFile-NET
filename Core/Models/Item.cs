@@ -210,6 +210,11 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public IEnumerable<Metadata> Metadata { get; set; }
 
+		/// <summary>
+		/// Electronic signature object associated with this item
+		/// </summary>
+		public ESignature ESignatureDocument { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -252,6 +257,7 @@ namespace ShareFile.Api.Models
 				CreatorNameShort = typedSource.CreatorNameShort;
 				HasMultipleVersions = typedSource.HasMultipleVersions;
 				Metadata = typedSource.Metadata;
+				ESignatureDocument = typedSource.ESignatureDocument;
 			}
 			else
 			{
@@ -391,6 +397,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("Metadata", out token) && token.Type != JTokenType.Null)
 				{
 					Metadata = (IEnumerable<Metadata>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<Metadata>));
+				}
+				if(source.TryGetProperty("ESignatureDocument", out token) && token.Type != JTokenType.Null)
+				{
+					ESignatureDocument = (ESignature)serializer.Deserialize(token.CreateReader(), typeof(ESignature));
 				}
 			}
 		}

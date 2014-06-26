@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace ShareFile.Api.Client.Helpers
@@ -57,7 +58,19 @@ namespace ShareFile.Api.Client.Helpers
 #if NETFX_CORE
             return assembly.DefinedTypes.Select(x => x.AsType());
 #else
-            return assembly.GetTypes();
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException loadException)
+            {
+                foreach (var exceptions in loadException.LoaderExceptions)
+                {
+                    Console.WriteLine(exceptions.ToString());
+                    Debug.WriteLine(exceptions.ToString());
+                }
+                throw;
+            }
 #endif
         }
 

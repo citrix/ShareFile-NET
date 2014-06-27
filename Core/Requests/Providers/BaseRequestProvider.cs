@@ -60,9 +60,10 @@ namespace ShareFile.Api.Client.Requests.Providers
                 handler.UseCookies = false;
             }
 
-            if (shareFileClient.Configuration.ProxyConfiguration != null && handler.SupportsProxy)
+            if (shareFileClient.Configuration.ProxyConfiguration != null)
             {
                 handler.Proxy = shareFileClient.Configuration.ProxyConfiguration;
+                handler.UseProxy = true;
             }
 
             HttpClient = new HttpClient(handler, false)

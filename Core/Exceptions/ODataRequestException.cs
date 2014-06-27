@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace ShareFile.Api.Client.Exceptions
 {
-    internal class ODataRequestException
+    public class ODataRequestException
     {
         [JsonProperty("code")]
         public HttpStatusCode Code { get; set; }

@@ -17,6 +17,7 @@ using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Extensions.Tasks;
 using ShareFile.Api.Client.Logging;
+using ShareFile.Api.Client.Requests.Executors;
 using ShareFile.Api.Client.Security.Authentication.OAuth2;
 using ShareFile.Api.Client.Security.Cryptography;
 using ShareFile.Api.Models;
@@ -206,19 +207,10 @@ namespace ShareFile.Api.Client.Requests.Providers
 
         protected HttpResponseMessage ExecuteRequest(HttpRequestMessage requestMessage)
         {
-            HttpResponseMessage responseMessage = HttpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead).WaitForTask();
+            var responseMessage = RequestExecutorFactory.GetSyncRequestExecutor()
+                .Send(HttpClient, requestMessage, HttpCompletionOption.ResponseHeadersRead);
 
-            if (RuntimeRequiresCustomCookieHandling)
-            {
-                IEnumerable<string> newCookies;
-                if (responseMessage.Headers.TryGetValues("Set-Cookie", out newCookies))
-                {
-                    foreach (var newCookie in newCookies)
-                    {
-                        ShareFileClient.CookieContainer.SetCookies(responseMessage.RequestMessage.RequestUri, newCookie);
-                    }
-                }
-            }
+            ProcessCookiesForRuntime(responseMessage);
 
             return responseMessage;
         }
@@ -238,7 +230,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                     ShareFileClient.Logging.Error(exception, "", null);
                 }
 
-                if (responseMessage.Content.Headers.ContentLength == 0)
+                if (responseMessage.Content != null && responseMessage.Content.Headers != null && responseMessage.Content.Headers.ContentLength == 0)
                 {
                     var exception = new NullReferenceException("Unable to retrieve HttpResponseMessage.Content");
                     ShareFileClient.Logging.Error(exception, string.Empty, null);

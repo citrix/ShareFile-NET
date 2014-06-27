@@ -317,7 +317,9 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             {
                 AllowAutoRedirect = true,
                 CookieContainer = Client.CookieContainer,
-                Credentials = Client.CredentialCache
+                Credentials = Client.CredentialCache,
+                Proxy = Client.Configuration.ProxyConfiguration,
+                UseProxy = Client.Configuration.ProxyConfiguration != null
             };
         }
 

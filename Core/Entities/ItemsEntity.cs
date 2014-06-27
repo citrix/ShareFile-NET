@@ -489,6 +489,78 @@ namespace ShareFile.Api.Client.Entities
 		/// </returns>
 		IQuery<SearchResults> Search(string query);
 		/// <summary>
+		/// Advanced Simple Search
+		/// </summary>
+		/// <example>
+		/// {
+		/// "Query":{
+		/// "AuthID":"",
+		/// "ItemType":"",
+		/// "ParentID":"",
+		/// "CreatorID":"",
+		/// "LuceneQuery":"",
+		/// "SearchQuery":"",
+		/// "CreateStartDate":"",
+		/// "CreateEndDate":"",
+		/// "ItemNameOnly":"",
+		/// },
+		/// "Paging":{
+		/// "Key":"",
+		/// "PageNumber":1,
+		/// "PageSize":10,
+		/// },
+		/// "Sort":{
+		/// "SortBy":"",
+		/// "Ascending":false,
+		/// },
+		/// "TimeoutInSeconds":10
+		/// }
+		/// </example>
+		/// <remarks>
+		/// Search for Items matching the criteria of the query parameter
+		/// </remarks>
+		/// <param name="simpleSearchQuery"></param>
+		/// <returns>
+		/// AdvancedSearchResults
+		/// </returns>
+		IQuery<AdvancedSearchResults> AdvancedSimpleSearch(SimpleSearchQuery simpleSearchQuery);
+		/// <summary>
+		/// Advanced Search
+		/// </summary>
+		/// <example>
+		/// {
+		/// "Query":{
+		/// "AuthIDs":["id1", "id2", ...],
+		/// "ItemTypes":["type1", "type2", ...],
+		/// "ParentID":["id1", "id2", ...],
+		/// "CreatorID":["id1", "id2", ...],
+		/// "LuceneQuery":"",
+		/// "SearchQuery":"",
+		/// "CreateStartDate":"",
+		/// "CreateEndDate":"",
+		/// "ItemNameOnly":"",
+		/// },
+		/// "Paging":{
+		/// "Key":"",
+		/// "PageNumber":1,
+		/// "PageSize":10,
+		/// },
+		/// "Sort":{
+		/// "SortBy":"",
+		/// "Ascending":false,
+		/// },
+		/// "TimeoutInSeconds":10
+		/// }
+		/// </example>
+		/// <remarks>
+		/// Search for Items matching the criteria of the query parameter
+		/// </remarks>
+		/// <param name="searchQuery"></param>
+		/// <returns>
+		/// AdvancedSearchResults
+		/// </returns>
+		IQuery<AdvancedSearchResults> AdvancedSearch(SearchQuery searchQuery);
+		/// <summary>
 		/// Get Web Preview Link
 		/// </summary>
 		/// <remarks>
@@ -1295,6 +1367,96 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.Action("Search");
 			sfApiQuery.QueryString("query", query);
 			sfApiQuery.HttpMethod = "GET";
+			return sfApiQuery;
+		}
+
+		/// <summary>
+		/// Advanced Simple Search
+		/// </summary>
+		/// <example>
+		/// {
+		/// "Query":{
+		/// "AuthID":"",
+		/// "ItemType":"",
+		/// "ParentID":"",
+		/// "CreatorID":"",
+		/// "LuceneQuery":"",
+		/// "SearchQuery":"",
+		/// "CreateStartDate":"",
+		/// "CreateEndDate":"",
+		/// "ItemNameOnly":"",
+		/// },
+		/// "Paging":{
+		/// "Key":"",
+		/// "PageNumber":1,
+		/// "PageSize":10,
+		/// },
+		/// "Sort":{
+		/// "SortBy":"",
+		/// "Ascending":false,
+		/// },
+		/// "TimeoutInSeconds":10
+		/// }
+		/// </example>
+		/// <remarks>
+		/// Search for Items matching the criteria of the query parameter
+		/// </remarks>
+		/// <param name="simpleSearchQuery"></param>
+		/// <returns>
+		/// AdvancedSearchResults
+		/// </returns>
+		public IQuery<AdvancedSearchResults> AdvancedSimpleSearch(SimpleSearchQuery simpleSearchQuery)
+		{
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AdvancedSearchResults>(Client);
+			sfApiQuery.From("Items");
+			sfApiQuery.Action("AdvancedSimpleSearch");
+			sfApiQuery.Body = simpleSearchQuery;
+			sfApiQuery.HttpMethod = "POST";
+			return sfApiQuery;
+		}
+
+		/// <summary>
+		/// Advanced Search
+		/// </summary>
+		/// <example>
+		/// {
+		/// "Query":{
+		/// "AuthIDs":["id1", "id2", ...],
+		/// "ItemTypes":["type1", "type2", ...],
+		/// "ParentID":["id1", "id2", ...],
+		/// "CreatorID":["id1", "id2", ...],
+		/// "LuceneQuery":"",
+		/// "SearchQuery":"",
+		/// "CreateStartDate":"",
+		/// "CreateEndDate":"",
+		/// "ItemNameOnly":"",
+		/// },
+		/// "Paging":{
+		/// "Key":"",
+		/// "PageNumber":1,
+		/// "PageSize":10,
+		/// },
+		/// "Sort":{
+		/// "SortBy":"",
+		/// "Ascending":false,
+		/// },
+		/// "TimeoutInSeconds":10
+		/// }
+		/// </example>
+		/// <remarks>
+		/// Search for Items matching the criteria of the query parameter
+		/// </remarks>
+		/// <param name="searchQuery"></param>
+		/// <returns>
+		/// AdvancedSearchResults
+		/// </returns>
+		public IQuery<AdvancedSearchResults> AdvancedSearch(SearchQuery searchQuery)
+		{
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AdvancedSearchResults>(Client);
+			sfApiQuery.From("Items");
+			sfApiQuery.Action("AdvancedSimpleSearch");
+			sfApiQuery.Body = searchQuery;
+			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}
 

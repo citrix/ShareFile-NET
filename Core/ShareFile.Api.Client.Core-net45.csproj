@@ -55,6 +55,7 @@
     <Compile Include="Entities\CapabilitiesEntity.cs" />
     <Compile Include="Entities\ConfigsEntity.cs" />
     <Compile Include="Entities\ConnectorGroupsEntity.cs" />
+    <Compile Include="Entities\DevicesEntity.cs" />
     <Compile Include="Entities\EntityBase.cs" />
     <Compile Include="Entities\FavoriteFoldersEntity.cs" />
     <Compile Include="Entities\GroupsEntity.cs" />
@@ -69,7 +70,9 @@
     <Compile Include="Entities\Private\ZonesEntityInternal.cs" />
     <Compile Include="Entities\SessionsEntity.cs" />
     <Compile Include="Entities\SharesEntity.cs" />
+    <Compile Include="Entities\StorageCentersEntity.cs" />
     <Compile Include="Entities\UsersEntity.cs" />
+    <Compile Include="Entities\ZonesEntity.cs" />
     <Compile Include="Enums\ItemAlias.cs" />
     <Compile Include="Events\ChangeDomainCallback.cs" />
     <Compile Include="Events\EventHandlerResponse.cs" />

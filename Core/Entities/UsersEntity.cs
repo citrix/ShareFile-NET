@@ -256,6 +256,18 @@ namespace ShareFile.Api.Client.Entities
 		/// </returns>
 		IQuery<UserPreferences> GetPreferences(Uri url);
 		/// <summary>
+		/// Get User Security
+		/// </summary>
+		/// <remarks>
+		/// Retrieve the user security record - current state of the user regarding
+		/// security and password settings.
+		/// </remarks>
+		/// <param name="url"></param>
+		/// <returns>
+		/// the user security status
+		/// </returns>
+		IQuery<UserSecurity> GetSecurity(Uri url);
+		/// <summary>
 		/// Reset Password
 		/// </summary>
 		/// <example>
@@ -707,6 +719,26 @@ namespace ShareFile.Api.Client.Entities
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<UserPreferences>(Client);
 			sfApiQuery.Action("Preferences");
+			sfApiQuery.Uri(url);
+			sfApiQuery.HttpMethod = "GET";
+			return sfApiQuery;
+		}
+
+		/// <summary>
+		/// Get User Security
+		/// </summary>
+		/// <remarks>
+		/// Retrieve the user security record - current state of the user regarding
+		/// security and password settings.
+		/// </remarks>
+		/// <param name="url"></param>
+		/// <returns>
+		/// the user security status
+		/// </returns>
+		public IQuery<UserSecurity> GetSecurity(Uri url)
+		{
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<UserSecurity>(Client);
+			sfApiQuery.Action("Security");
 			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;

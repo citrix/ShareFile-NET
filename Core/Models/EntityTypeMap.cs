@@ -141,6 +141,10 @@ namespace ShareFile.Api.Models
 				_entityTypeMap.Add("SearchResults", typeof(SearchResults));
 				_entityTypeMap.Add("AdvancedSearchResults", typeof(AdvancedSearchResults));
 				_entityTypeMap.Add("SearchResult", typeof(SearchResult));
+				_entityTypeMap.Add("ServiceBusEndPointInfo", typeof(ServiceBusEndPointInfo));
+				_entityTypeMap.Add("ServiceBusEndPointInfos", typeof(ServiceBusEndPointInfo));
+				_entityTypeMap.Add("AzureSBTopicsResponse", typeof(AzureSBTopicsResponse));
+				_entityTypeMap.Add("AzureSBTopicsResponses", typeof(AzureSBTopicsResponse));
 				_entityTypeMap.Add("Session", typeof(Session));
 				_entityTypeMap.Add("Sessions", typeof(Session));
 				_entityTypeMap.Add("Share", typeof(Share));

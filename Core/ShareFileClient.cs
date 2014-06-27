@@ -32,14 +32,9 @@ namespace ShareFile.Api.Client
     {
 #if ShareFile
         IAccountsEntityInternal Accounts { get; }
-        IDevicesEntityInternal Devices { get; }
-        IItemsEntityInternal Items { get; }
-        IStorageCentersEntityInternal StorageCenters { get; }
-        IZonesEntityInternal Zones { get; }
         IOAuthClientsEntityInternal OAuthClients { get; }
 #else
         IAccountsEntity Accounts { get; }
-        IItemsEntity Items { get; }
 #endif
 
         IAccessControlsEntity AccessControls { get; }
@@ -53,6 +48,11 @@ namespace ShareFile.Api.Client
         ISessionsEntity Sessions { get; }
         ISharesEntity Shares { get; }
         IUsersEntity Users { get; }
+        IDevicesEntity Devices { get; }
+        IItemsEntity Items { get; }
+        IStorageCentersEntity StorageCenters { get; }
+        IZonesEntity Zones { get; }
+
         Uri BaseUri { get; set; }
         Configuration Configuration { get; set; }
 
@@ -178,30 +178,30 @@ namespace ShareFile.Api.Client
             Sessions = new SessionsEntity(this);
             Shares = new SharesEntity(this);
             Users = new UsersEntity(this);
+            Items = new ItemsEntity(this);
+            Devices = new DevicesEntity(this);
+            StorageCenters = new StorageCentersEntity(this);
+            Zones = new ZonesEntity(this);
+
 #if ShareFile
             Accounts = new AccountsEntityInternal(this);
-            Items = new ItemsEntityInternal(this);
-            Devices = new DevicesEntityInternal(this); 
-            StorageCenters = new StorageCentersEntityInternal(this);
-            Zones = new ZonesEntityInternal(this);
             OAuthClients = new OAuthClientsEntityInternal(this);
 #else
             Accounts = new AccountsEntity(this);
-            Items = new ItemsEntity(this);
 #endif
         }
 
 #if ShareFile
         public IAccountsEntityInternal Accounts { get; private set; }
-        public IDevicesEntityInternal Devices { get; private set; }
-        public IItemsEntityInternal Items { get; private set; }
-        public IStorageCentersEntityInternal StorageCenters { get; private set; }
-        public IZonesEntityInternal Zones { get; private set; }
         public IOAuthClientsEntityInternal OAuthClients { get; private set; }
 #else
         public IAccountsEntity Accounts { get; private set; }
         public IItemsEntity Items { get; private set; }
 #endif
+        public IDevicesEntity Devices { get; private set; }
+        public IItemsEntity Items { get; private set; }
+        public IStorageCentersEntity StorageCenters { get; private set; }
+        public IZonesEntity Zones { get; private set; }
         public IAccessControlsEntity AccessControls { get; private set; }
         public IAsyncOperationsEntity AsyncOperations { get; private set; }
         public ICapabilitiesEntity Capabilities { get; private set; }

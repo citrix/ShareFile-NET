@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using ShareFile.Api.Client.Helpers;
+using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Converters
@@ -58,7 +58,7 @@ namespace ShareFile.Api.Client.Converters
         private static readonly Type ODataObjectType = typeof(ODataObject);
         public override bool CanConvert(Type objectType)
         {
-            return TypeHelpers.IsAssignableFrom(ODataObjectType, objectType);
+            return ODataObjectType.IsAssignableFrom(objectType);
         }
     }
 }

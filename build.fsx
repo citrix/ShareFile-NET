@@ -10,7 +10,7 @@ RestorePackages()
 let buildDir = "./build/"
 let packagingRoot = "./packaging/"
 let packagingDir = packagingRoot @@ "sharefile"
-let nugetVersion = "3.0.0"
+let nugetVersion = "3.0.0-preview04"
 let assemblyVersion = "3.0.0"
 let assemblyFileVersion = "3.0.0"
 let nugetAccessKey = "nUg3tMyP@cKag3"
@@ -77,6 +77,7 @@ Target "Build" (fun () ->
     let buildParams = List.append baseBuildParams ["DefineConstants", constants + ";Portable;Async"]
     let net40PBuildParams = List.append baseBuildParams ["DefineConstants", constants + ";Net40"]
     let net45BuildParams = List.append baseBuildParams ["DefineConstants", constants + ";Async"]
+    let net45CoreBuildParams = List.append baseBuildParams ["DefineConstants", constants + ";Async;NETFX_CORE"]
     
     MSBuild (buildDir @@ "Portable") "Clean;Build" buildParams ["./ShareFile.Api.Client.Core.sln"]
     |> Log "AppBuild-Output: "
@@ -87,9 +88,13 @@ Target "Build" (fun () ->
     MSBuild (buildDir @@ "Net40") "Clean;Build" net40PBuildParams ["./ShareFile.Api.Client.Net40.sln"]
     |> Log "AppBuild-Output: "
     CleanDirs ["./Core" @@ "obj"]
+    MSBuild (buildDir @@ "NetCore45") "Clean;Build" net45CoreBuildParams ["./ShareFile.Api.Client.Net45Core.sln"]
+    |> Log "AppBuild-Output: "
+    CleanDirs ["./Core" @@ "obj"]
 )
 
 Target "CreateNuGetPackage" (fun () ->
+    let netCore45Dir = packagingDir @@ "lib/netcore45/"
     let net45Dir = packagingDir @@ "lib/net45/"
     let net40Dir = packagingDir @@ "lib/net40/"
     let portableDir = packagingDir @@ "lib/portable-net45+wp80+win8+wpa81/"
@@ -101,12 +106,13 @@ Target "CreateNuGetPackage" (fun () ->
         if signRequested = "true" then signedProjectName
         else projectName
 
-    CleanDirs [net45Dir; net40Dir; portableDir]
+    CleanDirs [net45Dir; net40Dir; portableDir; netCore45Dir]
     
     CopyFile net45Dir (buildDir @@ "Net45/ShareFile.Api.Client.Core.dll")
     CopyFile net45Dir (buildDir @@ "Net45/ShareFile.Api.Client.Net45.dll")
     CopyFile net40Dir (buildDir @@ "Net40/ShareFile.Api.Client.Core.dll")
     CopyFile portableDir (buildDir @@ "Portable/ShareFile.Api.Client.Core.dll")
+    CopyFile netCore45Dir (buildDir @@ "NetCore45/ShareFile.Api.Client.Core.dll")
     
     NuGet (fun p ->
         {p with

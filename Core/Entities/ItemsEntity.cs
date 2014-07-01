@@ -568,7 +568,7 @@ namespace ShareFile.Api.Client.Entities
 		/// </remarks>
 		/// <param name="url"></param>
 		/// <returns>
-		/// A redirection message to the Web Edit app for this item. It returns 400 (BadRequest)
+		/// A redirection message to the Web Edit app for this item. It returns 404 (Not Found)
 		/// if the Web Preview app doesn't support the file type.
 		/// </returns>
 		IQuery<Redirection> WebView(Uri url);
@@ -1468,7 +1468,7 @@ namespace ShareFile.Api.Client.Entities
 		/// </remarks>
 		/// <param name="url"></param>
 		/// <returns>
-		/// A redirection message to the Web Edit app for this item. It returns 400 (BadRequest)
+		/// A redirection message to the Web Edit app for this item. It returns 404 (Not Found)
 		/// if the Web Preview app doesn't support the file type.
 		/// </returns>
 		public IQuery<Redirection> WebView(Uri url)

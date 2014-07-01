@@ -1,4 +1,4 @@
-﻿#if Portable
+﻿#if Portable || NETFX_CORE
 using System;
 
 namespace ShareFile.Api.Client.Exceptions

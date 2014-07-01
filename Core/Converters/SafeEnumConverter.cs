@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Converters
@@ -62,7 +63,7 @@ namespace ShareFile.Api.Client.Converters
 
         public override bool CanConvert(Type objectType)
         {
-            return objectType.IsEnum || (objectType.IsGenericType && objectType.GetGenericTypeDefinition() == typeof(SafeEnum<>));
+            return objectType.IsEnum() || (objectType.IsGenericType() && objectType.GetGenericTypeDefinition() == typeof(SafeEnum<>));
         }
     }
 }

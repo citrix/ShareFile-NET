@@ -93,7 +93,6 @@
     <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="FileSystem\IPlatformFile.cs" />
     <Compile Include="FileSystem\PlatformFileStream.cs" />
-    <Compile Include="Helpers\TypeHelpers.cs" />
     <Compile Include="Logging\ActionStopwatch.cs" />
     <Compile Include="Logging\DefaultLoggingProvider.cs" />
     <Compile Include="Logging\ILogger.cs" />

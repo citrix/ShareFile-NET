@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using ShareFile.Api.Client.Extensions;
-using ShareFile.Api.Client.Helpers;
 using ShareFile.Api.Models;
 using Group = System.Text.RegularExpressions.Group;
 
@@ -32,9 +31,9 @@ namespace ShareFile.Api.Client.Converters
             _constructorCache = new Dictionary<Type, ConstructorInfo>();
             _typeMap = new Dictionary<Type, Type>();
             var odataObjectType = typeof(ODataObject);
-            var types = TypeHelpers.GetTypes(TypeHelpers.GetAssembly(odataObjectType));
+            var types = odataObjectType.GetAssembly().GetTypes();
 
-            foreach (var t in types.Where(x => TypeHelpers.IsAssignableFrom(odataObjectType, x)))
+            foreach (var t in types.Where(odataObjectType.IsAssignableFrom))
             {
                 TryAddType(t);
             }
@@ -331,7 +330,7 @@ namespace ShareFile.Api.Client.Converters
             {
                 var type = FindModelType(knownType, result.FeedEntity);
                 Type specificType;
-                if (TypeHelpers.IsGenericType(type) && type.GetGenericTypeDefinition() == typeof(ODataFeed<>))
+                if (type.IsGenericType() && type.GetGenericTypeDefinition() == typeof(ODataFeed<>))
                 {
                     specificType = type;
                 }

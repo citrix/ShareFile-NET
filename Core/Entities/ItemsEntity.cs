@@ -147,7 +147,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the download link for the provided item content.
 		/// </returns>
-		IQuery<DownloadSpecification> Download(Uri url, bool redirect = true);
+		IQuery<Stream> Download(Uri url, bool redirect = true);
 		/// <summary>
 		/// Create Folder
 		/// </summary>
@@ -826,9 +826,9 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the download link for the provided item content.
 		/// </returns>
-		public IQuery<DownloadSpecification> Download(Uri url, bool redirect = true)
+		public IQuery<Stream> Download(Uri url, bool redirect = true)
 		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<DownloadSpecification>(Client);
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
 			sfApiQuery.Action("Download");
 			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("redirect", redirect);

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using ShareFile.Api.Client.Core.Transfers.Uploaders;
 using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Security.Cryptography;
@@ -14,9 +15,10 @@ using ShareFile.Api.Models;
 namespace ShareFile.Api.Client.Transfers.Uploaders
 {
 #if Async
-    public class AsyncThreadedFileUploader : TransfererBase
+    public class AsyncThreadedFileUploader : UploaderBase
     {
-        private AsyncThreadedFileUploader(ShareFileClient client, IPlatformFile file, FileUploaderConfig config = null)
+        public AsyncThreadedFileUploader(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
+            : base(client, uploadSpecificationRequest, file, expirationDays)
         {
             _itemsToUpload = new Queue<FilePart>();
             _itemsToFill = new Queue<FilePart>();
@@ -31,48 +33,19 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 BytesTransferred = 0
             };
 
-            Client = client;
-            File = file;
-        }
-
-        public AsyncThreadedFileUploader(ShareFileClient client, UploadSpecification uploadSpecification,
-            IPlatformFile file, FileUploaderConfig config = null)
-            : this (client, file, config)
-        {
-            UploadSpecification = uploadSpecification;
-            Progress.TotalBytes = uploadSpecification.IsResume
-                ? (file.Length - uploadSpecification.ResumeOffset)
-                : file.Length;
-
-            Progress.BytesRemaining = Progress.TotalBytes;
-        }
-
-        public AsyncThreadedFileUploader(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null)
-            : this(client, file, config)
-        {   
-            UploadSpecificationRequest = uploadSpecificationRequest;
-
             Progress.BytesRemaining = Progress.TotalBytes = uploadSpecificationRequest.FileSize;
         }
 
         public FileUploaderConfig Config { get; private set; }
         public TransferProgress Progress { get; set; }
-        protected IMD5HashProvider HashProvider { get; set; }
-        protected ShareFileClient Client { get; set; }
-        protected UploadSpecificationRequest UploadSpecificationRequest { get; set; }
 
         private readonly Queue<FilePart> _itemsToFill;
         private readonly Queue<FilePart> _itemsToUpload;
         private AsyncSemaphore _maxConsumersSemaphore;
         private AsyncSemaphore _pendingPartSemaphore;
-        private IPlatformFile File { get; set; }
-        private Dictionary<string, object> TransferMetadata { get; set; }
         private CancellationToken? _cancellationToken { get; set; }
 
         private int _effectivePartSize;
-
-        protected bool Prepared { get; set; }
-        protected UploadSpecification UploadSpecification { get; set; }
 
         ///<summary>
         /// Object used to lock for reporting progress.
@@ -97,16 +70,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         public async Task<UploadSpecification> CreateUpload(UploadSpecificationRequest uploadSpecificationRequest)
         {
-            var query = Client.Items.Upload(uploadSpecificationRequest.Parent, uploadSpecificationRequest.Method,
-                uploadSpecificationRequest.Raw, uploadSpecificationRequest.FileName, uploadSpecificationRequest.FileSize,
-                uploadSpecificationRequest.BatchId,
-                uploadSpecificationRequest.BatchLast, uploadSpecificationRequest.CanResume,
-                uploadSpecificationRequest.StartOver, uploadSpecificationRequest.Unzip, uploadSpecificationRequest.Tool,
-                uploadSpecificationRequest.Overwrite, uploadSpecificationRequest.Title,
-                uploadSpecificationRequest.Details, uploadSpecificationRequest.IsSend,
-                uploadSpecificationRequest.SendGuid, null, uploadSpecificationRequest.ThreadCount,
-                uploadSpecificationRequest.ResponseFormat, uploadSpecificationRequest.Notify, 
-                uploadSpecificationRequest.ClientCreatedDateUtc, uploadSpecificationRequest.ClientModifiedDateUtc);
+            var query = CreateUploadSpecificationQuery(uploadSpecificationRequest);
 
             return await query.ExecuteAsync(_cancellationToken);
         }
@@ -285,10 +249,8 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         private async Task<ShareFileApiResponse<string>> SendAsync(FilePart part)
         {
-            var client = new HttpClient(GetHttpClientHandler())
-            {
-                Timeout = new TimeSpan(0, 0, 0, 0, Config.HttpTimeout)
-            };
+            var client = GetHttpClient();
+
             var message = new HttpRequestMessage(HttpMethod.Post, part.GetComposedUploadUrl())
             {
                 Content = new ByteArrayContent(part.Bytes, 0, part.Bytes.Length)
@@ -311,29 +273,20 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             return JsonConvert.DeserializeObject<ShareFileApiResponse<string>>(retVal);
         }
 
-        internal HttpClientHandler GetHttpClientHandler()
+        protected internal override HttpClient GetHttpClient()
         {
-            var httpClientHandler = new HttpClientHandler
+            return new HttpClient(GetHttpClientHandler())
             {
-                AllowAutoRedirect = true,
-                CookieContainer = Client.CookieContainer,
-                Credentials = Client.CredentialCache,
-                Proxy = Client.Configuration.ProxyConfiguration
+                Timeout = new TimeSpan(0, 0, 0, 0, Config.HttpTimeout)
             };
-
-            if (Client.Configuration.ProxyConfiguration != null && httpClientHandler.SupportsProxy)
-            {
-                httpClientHandler.UseProxy = true;
-            }
-
-            return httpClientHandler;
         }
 
         private async Task<UploadResponse> FinishUploadAsync()
         {
+            var client = GetHttpClient();
+
             var finishUri = GetComposedFinishUri();
 
-            var client = new HttpClient(GetHttpClientHandler()) { Timeout = new TimeSpan(0, 0, 0, 0, Config.HttpTimeout) };
             var message = new HttpRequestMessage(HttpMethod.Get, finishUri);
             message.Headers.Add("Accept", "application/json");
 

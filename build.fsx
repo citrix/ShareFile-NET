@@ -10,7 +10,7 @@ RestorePackages()
 let buildDir = "./build/"
 let packagingRoot = "./packaging/"
 let packagingDir = packagingRoot @@ "sharefile"
-let nugetVersion = "3.0.0-preview04"
+let nugetVersion = "3.0.0-preview05"
 let assemblyVersion = "3.0.0"
 let assemblyFileVersion = "3.0.0"
 let nugetAccessKey = "nUg3tMyP@cKag3"
@@ -125,7 +125,7 @@ Target "CreateNuGetPackage" (fun () ->
             Version = nugetVersion
             PublishUrl = nugetDestination
             AccessKey = nugetAccessKey
-            Publish = true
+            Publish = false
             Title = nugetTitle
             ReleaseNotes = "" }) "ShareFile.Api.Client.nuspec"
 )

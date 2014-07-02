@@ -304,6 +304,7 @@
     <Compile Include="Transfers\Uploaders\FilePart.cs" />
     <Compile Include="Transfers\Uploaders\FileUploaderConfig.cs" />
     <Compile Include="Transfers\Uploaders\ThreadedFileUploader.cs" />
+	<Compile Include="Transfers\Uploaders\UploaderBase.cs" />
     <Compile Include="Transfers\UploadResponse.cs" />
     <Compile Include="Transfers\UploadSpecificationRequest.cs" />
   </ItemGroup>

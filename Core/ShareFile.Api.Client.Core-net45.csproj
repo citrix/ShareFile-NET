@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5ADB6950-D609-4847-A842-0BDD6CDBBFB9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ShareFile.Api.Client.Core</RootNamespace>
+    <AssemblyName>ShareFile.Api.Client.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Net45\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;ShareFile;Async</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Net45\Release\</OutputPath>
+    <DefineConstants>TRACE;ShareFile;Async</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(SolutionDir)packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Configuration.cs" />
+    <Compile Include="Converters\LoggingConverter.cs" />
+    <Compile Include="Converters\ODataConverter.cs" />
+    <Compile Include="Converters\ODataFactory.cs" />
+    <Compile Include="Converters\SafeEnumConverter.cs" />
+    <Compile Include="Credentials\CredentialCache.cs" />
+    <Compile Include="Credentials\CredentialCacheFactory.cs" />
+    <Compile Include="Credentials\ICredentialCache.cs" />
+    <Compile Include="Credentials\OAuth2Credential.cs" />
+    <Compile Include="Entities\AccessControlsEntity.cs" />
+    <Compile Include="Entities\AccountsEntity.cs" />
+    <Compile Include="Entities\AsyncOperationsEntity.cs" />
+    <Compile Include="Entities\CapabilitiesEntity.cs" />
+    <Compile Include="Entities\ConfigsEntity.cs" />
+    <Compile Include="Entities\ConnectorGroupsEntity.cs" />
+    <Compile Include="Entities\DevicesEntity.cs" />
+    <Compile Include="Entities\EntityBase.cs" />
+    <Compile Include="Entities\FavoriteFoldersEntity.cs" />
+    <Compile Include="Entities\GroupsEntity.cs" />
+    <Compile Include="Entities\ItemsEntity.cs" />
+    <Compile Include="Entities\MetadataEntity.cs" />
+    <Compile Include="Entities\Private\AccountsEntityInternal.cs" />
+    <Compile Include="Entities\Private\AzureSBTopicsEntityInternal.cs" />
+    <Compile Include="Entities\Private\OAuthClientsEntityInternal.cs" />
+    <Compile Include="Entities\SessionsEntity.cs" />
+    <Compile Include="Entities\SharesEntity.cs" />
+    <Compile Include="Entities\StorageCentersEntity.cs" />
+    <Compile Include="Entities\UsersEntity.cs" />
+    <Compile Include="Entities\ZonesEntity.cs" />
+    <Compile Include="Enums\ItemAlias.cs" />
+    <Compile Include="Events\ChangeDomainCallback.cs" />
+    <Compile Include="Events\EventHandlerResponse.cs" />
+    <Compile Include="Events\ExceptionCallback.cs" />
+    <Compile Include="Exceptions\ApplicationException.cs" />
+    <Compile Include="Exceptions\AsyncOperationScheduledException.cs" />
+    <Compile Include="Exceptions\AuthenticationException.cs" />
+    <Compile Include="Exceptions\EntityNotFoundException.cs" />
+    <Compile Include="Exceptions\InvalidApiResponseException.cs" />
+    <Compile Include="Exceptions\ODataRequestException.cs" />
+    <Compile Include="Exceptions\UploadException.cs" />
+    <Compile Include="Extensions\BoolExtensions.cs" />
+    <Compile Include="Extensions\ContactExtensions.cs" />
+    <Compile Include="Extensions\DictionaryExtensions.cs" />
+    <Compile Include="Extensions\ItemsEntityExtensions.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
+    <Compile Include="Extensions\ODataObjectExtensions.cs" />
+    <Compile Include="Extensions\QueryExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\TaskExtensions.cs" />
+    <Compile Include="Extensions\TypeExtensions.cs" />
+    <Compile Include="Extensions\UriExtensions.cs" />
+    <Compile Include="FileSystem\IPlatformFile.cs" />
+    <Compile Include="FileSystem\PlatformFileStream.cs" />
+    <Compile Include="Logging\ActionStopwatch.cs" />
+    <Compile Include="Logging\DefaultLoggingProvider.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\LoggingProvider.cs" />
+    <Compile Include="Logging\LogLevel.cs" />
+    <Compile Include="Models\AccessControl.cs" />
+    <Compile Include="Models\AccessControlDomains.cs" />
+    <Compile Include="Models\AccessControlFilter.cs" />
+    <Compile Include="Models\AccessControlParam.cs" />
+    <Compile Include="Models\AccessControlsBulkParams.cs" />
+    <Compile Include="Models\Account.cs" />
+    <Compile Include="Models\AccountPreferences.cs" />
+    <Compile Include="Models\AccountUser.cs" />
+    <Compile Include="Models\AddressListType.cs" />
+    <Compile Include="Models\AdvancedSearchResults.cs" />
+    <Compile Include="Models\AppCodes.cs" />
+    <Compile Include="Models\AsyncOperation.cs" />
+    <Compile Include="Models\AsyncOperationState.cs" />
+    <Compile Include="Models\AsyncOperationType.cs" />
+    <Compile Include="Models\AzureSBTopicsEndPointInfo.cs" />
+    <Compile Include="Models\AzureSBTopicsResponse.cs" />
+    <Compile Include="Models\Capability.cs" />
+    <Compile Include="Models\CapabilityName.cs" />
+    <Compile Include="Models\ConnectorGroup.cs" />
+    <Compile Include="Models\ConnectorGroupAccessControl.cs" />
+    <Compile Include="Models\ConnectorGroupKind.cs" />
+    <Compile Include="Models\ConnectorGroupZone.cs" />
+    <Compile Include="Models\Contact.cs" />
+    <Compile Include="Models\Device.cs" />
+    <Compile Include="Models\DeviceActionInitiatorRole.cs" />
+    <Compile Include="Models\DeviceLogEntry.cs" />
+    <Compile Include="Models\DeviceLogEntryAction.cs" />
+    <Compile Include="Models\DeviceStatus.cs" />
+    <Compile Include="Models\DeviceUser.cs" />
+    <Compile Include="Models\DeviceUserWipe.cs" />
+    <Compile Include="Models\DeviceWipeReport.cs" />
+    <Compile Include="Models\DownloadSpecification.cs" />
+    <Compile Include="Models\EnsEventType.cs" />
+    <Compile Include="Models\EnsSubscriberConfiguration.cs" />
+    <Compile Include="Models\EnsSubscriptionRequest.cs" />
+    <Compile Include="Models\EnsSubscriptionToken.cs" />
+    <Compile Include="Models\EntityTypeMap.cs" />
+    <Compile Include="Models\ESignature.cs" />
+    <Compile Include="Models\ESignatureDocumentStatus.cs" />
+    <Compile Include="Models\FavoriteFolder.cs" />
+    <Compile Include="Models\File.cs" />
+    <Compile Include="Models\FileVirusStatus.cs" />
+    <Compile Include="Models\FindSubdomainParams.cs" />
+    <Compile Include="Models\FindSubdomainResult.cs" />
+    <Compile Include="Models\Folder.cs" />
+    <Compile Include="Models\FreeTrialAccount.cs" />
+    <Compile Include="Models\GenericConfig.cs" />
+    <Compile Include="Models\Group.cs" />
+    <Compile Include="Models\Industry.cs" />
+    <Compile Include="Models\IntegrationProvider.cs" />
+    <Compile Include="Models\Item.cs" />
+    <Compile Include="Models\ItemInfo.cs" />
+    <Compile Include="Models\ItemProtocolLink.cs" />
+    <Compile Include="Models\Link.cs" />
+    <Compile Include="Models\Metadata.cs" />
+    <Compile Include="Models\MobileSecuritySettings.cs" />
+    <Compile Include="Models\Note.cs" />
+    <Compile Include="Models\Notification.cs" />
+    <Compile Include="Models\OAuthClient.cs" />
+    <Compile Include="Models\OAuthClientPermissions.cs" />
+    <Compile Include="Models\OAuthState.cs" />
+    <Compile Include="Models\ODataFeed.cs" />
+    <Compile Include="Models\ODataObject.cs" />
+    <Compile Include="Models\ODataObjectType.cs" />
+    <Compile Include="Models\PinLockType.cs" />
+    <Compile Include="Models\PlanFeatures.cs" />
+    <Compile Include="Models\PowerTools.cs" />
+    <Compile Include="Models\PreviewStatus.cs" />
+    <Compile Include="Models\Principal.cs" />
+    <Compile Include="Models\Private\OutlookInformation.cs" />
+    <Compile Include="Models\Private\OutlookInformationOptionBool.cs" />
+    <Compile Include="Models\Private\OutlookInformationOptionInt.cs" />
+    <Compile Include="Models\Private\OutlookInformationOptionString.cs" />
+    <Compile Include="Models\ProductDefaults.cs" />
+    <Compile Include="Models\Query.cs" />
+    <Compile Include="Models\QueryPaging.cs" />
+    <Compile Include="Models\QuerySorting.cs" />
+    <Compile Include="Models\QueueStatus.cs" />
+    <Compile Include="Models\Redirection.cs" />
+    <Compile Include="Models\RequireSubdomainResult.cs" />
+    <Compile Include="Models\RequireWebPopResult.cs" />
+    <Compile Include="Models\SafeEnum.cs" />
+    <Compile Include="Models\SearchQuery.cs" />
+    <Compile Include="Models\SearchResult.cs" />
+    <Compile Include="Models\SearchResults.cs" />
+    <Compile Include="Models\ServiceBusEndPointInfo.cs" />
+    <Compile Include="Models\Session.cs" />
+    <Compile Include="Models\SFTool.cs" />
+    <Compile Include="Models\Share.cs" />
+    <Compile Include="Models\ShareAlias.cs" />
+    <Compile Include="Models\ShareRequestParams.cs" />
+    <Compile Include="Models\ShareSendParams.cs" />
+    <Compile Include="Models\ShareType.cs" />
+    <Compile Include="Models\SimpleQuery.cs" />
+    <Compile Include="Models\SimpleSearchQuery.cs" />
+    <Compile Include="Models\SSOAccountProvider.cs" />
+    <Compile Include="Models\SSOInfo.cs" />
+    <Compile Include="Models\SSOInfoEntry.cs" />
+    <Compile Include="Models\StorageCenter.cs" />
+    <Compile Include="Models\SymbolicLink.cs" />
+    <Compile Include="Models\ToolInformation.cs" />
+    <Compile Include="Models\TreeMode.cs" />
+    <Compile Include="Models\UploadMethod.cs" />
+    <Compile Include="Models\UploadSpecification.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\UserConfirmationSettings.cs" />
+    <Compile Include="Models\UserInfo.cs" />
+    <Compile Include="Models\UserPreferences.cs" />
+    <Compile Include="Models\UserRole.cs" />
+    <Compile Include="Models\UserSecurity.cs" />
+    <Compile Include="Models\UXMode.cs" />
+    <Compile Include="Models\VRootType.cs" />
+    <Compile Include="Models\Zone.cs" />
+    <Compile Include="Models\ZoneService.cs" />
+    <Compile Include="Models\ZoneType.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Requests\Executors\AsyncRequestExecutor.cs" />
+    <Compile Include="Requests\Executors\IAsyncRequestExecutor.cs" />
+    <Compile Include="Requests\Executors\ISyncRequestExecutor.cs" />
+    <Compile Include="Requests\Executors\RequestExecutorFactory.cs" />
+    <Compile Include="Requests\Executors\SyncRequestExecutor.cs" />
+    <Compile Include="Requests\Filters\EndsWithFilter.cs" />
+    <Compile Include="Requests\Filters\EqualToFilter.cs" />
+    <Compile Include="Requests\Filters\Filter.cs" />
+    <Compile Include="Requests\Filters\StartsWithFilter.cs" />
+    <Compile Include="Requests\Filters\SubstringFilter.cs" />
+    <Compile Include="Requests\Filters\TypeFilter.cs" />
+    <Compile Include="Requests\IQuery.cs" />
+    <Compile Include="Requests\ODataParameter.cs" />
+    <Compile Include="Requests\ODataParameterCollection.cs" />
+    <Compile Include="Requests\Providers\AsyncRequestProvider.cs" />
+    <Compile Include="Requests\Providers\BaseRequestProvider.cs" />
+    <Compile Include="Requests\Providers\IAsyncRequestProvider.cs" />
+    <Compile Include="Requests\Providers\ISyncRequestProvider.cs" />
+    <Compile Include="Requests\Providers\RequestProviderFactory.cs" />
+    <Compile Include="Requests\Providers\Response.cs" />
+    <Compile Include="Requests\Providers\SyncRequestProvider.cs" />
+    <Compile Include="Requests\Query.cs" />
+    <Compile Include="Security\Authentication\OAuth2\IOAuthResponse.cs" />
+    <Compile Include="Security\Authentication\OAuth2\OAuth2AuthenticationHelper.cs" />
+    <Compile Include="Security\Authentication\OAuth2\OAuthAuthorizationCode.cs" />
+    <Compile Include="Security\Authentication\OAuth2\OAuthError.cs" />
+    <Compile Include="Security\Authentication\OAuth2\OAuthResponseBase.cs" />
+    <Compile Include="Security\Authentication\OAuth2\OAuthService.cs" />
+    <Compile Include="Security\Authentication\OAuth2\OAuthToken.cs" />
+    <Compile Include="Security\Authentication\WebAuthenticationHelper.cs" />
+    <Compile Include="Security\Cryptography\HmacSha256ProviderFactory.cs" />
+    <Compile Include="Security\Cryptography\IHmacSha256Provider.cs" />
+    <Compile Include="Security\Cryptography\IMD5HashProvider.cs" />
+    <Compile Include="Security\Cryptography\MD5HashProviderFactory.cs" />
+    <Compile Include="Security\Cryptography\PortableMD5HashProvider.cs" />
+    <Compile Include="Security\ZoneAuthentication.cs" />
+    <Compile Include="ShareFileClient.cs" />
+    <Compile Include="Transfers\Downloaders\AsyncFileDownloader.cs" />
+    <Compile Include="Transfers\Downloaders\DownloaderConfig.cs" />
+    <Compile Include="Transfers\Downloaders\FileDownloader.cs" />
+    <Compile Include="Transfers\DownloadRequest.cs" />
+    <Compile Include="Transfers\ShareFileApiResponse.cs" />
+    <Compile Include="Transfers\TransfererBase.cs" />
+    <Compile Include="Transfers\TransferEventArgs.cs" />
+    <Compile Include="Transfers\TransferProgress.cs" />
+    <Compile Include="Transfers\Uploaders\AsyncSemaphone.cs" />
+    <Compile Include="Transfers\Uploaders\AsyncThreadedFileUploader.cs" />
+    <Compile Include="Transfers\Uploaders\FilePart.cs" />
+    <Compile Include="Transfers\Uploaders\FileUploaderConfig.cs" />
+    <Compile Include="Transfers\Uploaders\ThreadedFileUploader.cs" />
+    <Compile Include="Transfers\Uploaders\UploaderBase.cs" />
+    <Compile Include="Transfers\UploadResponse.cs" />
+    <Compile Include="Transfers\UploadSpecificationRequest.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

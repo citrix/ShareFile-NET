@@ -313,14 +313,20 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         internal HttpClientHandler GetHttpClientHandler()
         {
-            return new HttpClientHandler
+            var httpClientHandler = new HttpClientHandler
             {
                 AllowAutoRedirect = true,
                 CookieContainer = Client.CookieContainer,
                 Credentials = Client.CredentialCache,
-                Proxy = Client.Configuration.ProxyConfiguration,
-                UseProxy = Client.Configuration.ProxyConfiguration != null
+                Proxy = Client.Configuration.ProxyConfiguration
             };
+
+            if (Client.Configuration.ProxyConfiguration != null && httpClientHandler.SupportsProxy)
+            {
+                httpClientHandler.UseProxy = true;
+            }
+
+            return httpClientHandler;
         }
 
         private async Task<UploadResponse> FinishUploadAsync()

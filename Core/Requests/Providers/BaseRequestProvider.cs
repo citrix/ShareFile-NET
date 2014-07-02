@@ -60,7 +60,8 @@ namespace ShareFile.Api.Client.Requests.Providers
                 handler.UseCookies = false;
             }
 
-            if (shareFileClient.Configuration.ProxyConfiguration != null)
+            // Not all platforms support proxy.
+            if (shareFileClient.Configuration.ProxyConfiguration != null && handler.SupportsProxy)
             {
                 handler.Proxy = shareFileClient.Configuration.ProxyConfiguration;
                 handler.UseProxy = true;

@@ -151,14 +151,20 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         {
             var finishUri = GetComposedFinishUri();
 
-            var client = new HttpClient(new HttpClientHandler
+            var httpClientHandler = new HttpClientHandler
             {
                 AllowAutoRedirect = true,
                 CookieContainer = Client.CookieContainer,
                 Credentials = Client.CredentialCache,
-                Proxy = Client.Configuration.ProxyConfiguration,
-                UseProxy = Client.Configuration.ProxyConfiguration != null
-            }) { Timeout = new TimeSpan(0, 0, 0, 0, Config.HttpTimeout) };
+                Proxy = Client.Configuration.ProxyConfiguration
+            };
+
+            if (Client.Configuration.ProxyConfiguration != null && httpClientHandler.SupportsProxy)
+            {
+                httpClientHandler.UseProxy = true;
+            }
+
+            var client = new HttpClient(httpClientHandler) { Timeout = new TimeSpan(0, 0, 0, 0, Config.HttpTimeout) };
 
             var message = new HttpRequestMessage(HttpMethod.Get, finishUri);
             message.Headers.Add("Accept", "application/json");

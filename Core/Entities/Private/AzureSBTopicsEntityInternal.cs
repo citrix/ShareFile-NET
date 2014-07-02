@@ -25,7 +25,7 @@ namespace ShareFile.Api.Client.Entities
 	{
 		IQuery<AzureSBTopicsResponse> CheckIfTopicExists(Uri url);
 		IQuery CreateTopic(Uri url);
-		IQuery<ServiceBusEndPointInfo> GetTopicEndPoint(Uri url, string id);
+		IQuery<AzureSBTopicsEndPointInfo> GetTopicEndPoint(Uri url, string id);
 		IQuery RegenerateTopicCredentials(Uri url);
 		IQuery DeleteTopic(Uri url);
 	}
@@ -57,9 +57,9 @@ namespace ShareFile.Api.Client.Entities
 			return sfApiQuery;
 		}
 
-		public IQuery<ServiceBusEndPointInfo> GetTopicEndPoint(Uri url, string id)
+		public IQuery<AzureSBTopicsEndPointInfo> GetTopicEndPoint(Uri url, string id)
 		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ServiceBusEndPointInfo>(Client);
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AzureSBTopicsEndPointInfo>(Client);
 			sfApiQuery.Action("GetTopicEndPoint");
 			sfApiQuery.Uri(url);
 			sfApiQuery.ActionIds(id);

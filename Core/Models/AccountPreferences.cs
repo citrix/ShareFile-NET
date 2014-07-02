@@ -189,6 +189,8 @@ namespace ShareFile.Api.Models
 
 		public int? ENSMaxNotificationSyncWaitCount { get; set; }
 
+		public string WhiteListDomains { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -282,6 +284,7 @@ namespace ShareFile.Api.Models
 				ENSNotificationConfigurationCount = typedSource.ENSNotificationConfigurationCount;
 				ENSFailSafePollingCount = typedSource.ENSFailSafePollingCount;
 				ENSMaxNotificationSyncWaitCount = typedSource.ENSMaxNotificationSyncWaitCount;
+				WhiteListDomains = typedSource.WhiteListDomains;
 			}
 			else
 			{
@@ -625,6 +628,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("ENSMaxNotificationSyncWaitCount", out token) && token.Type != JTokenType.Null)
 				{
 					ENSMaxNotificationSyncWaitCount = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("WhiteListDomains", out token) && token.Type != JTokenType.Null)
+				{
+					WhiteListDomains = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
 			}
 		}

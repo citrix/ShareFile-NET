@@ -16,27 +16,41 @@ using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
-	public class AzureSBTopicsResponse : ODataObject 
+	public class AzureSBTopicsEndPointInfo : ODataObject 
 	{
 
-		public string Success { get; set; }
+		public string Key { get; set; }
+
+		public string Secret { get; set; }
+
+		public string EndPoint { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			var typedSource = source as AzureSBTopicsResponse;
+			var typedSource = source as AzureSBTopicsEndPointInfo;
 			if(typedSource != null)
 			{
-				Success = typedSource.Success;
+				Key = typedSource.Key;
+				Secret = typedSource.Secret;
+				EndPoint = typedSource.EndPoint;
 			}
 			else
 			{
 				JToken token;
-				if(source.TryGetProperty("Success", out token) && token.Type != JTokenType.Null)
+				if(source.TryGetProperty("Key", out token) && token.Type != JTokenType.Null)
 				{
-					Success = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+					Key = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Secret", out token) && token.Type != JTokenType.Null)
+				{
+					Secret = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("EndPoint", out token) && token.Type != JTokenType.Null)
+				{
+					EndPoint = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
 			}
 		}

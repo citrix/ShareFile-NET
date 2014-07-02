@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using Newtonsoft.Json;
+using ShareFile.Api.Client.Core.Transfers.Uploaders;
 using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Security.Cryptography;
@@ -16,7 +17,7 @@ using ShareFile.Api.Client.Extensions.Tasks;
 
 namespace ShareFile.Api.Client.Transfers.Uploaders
 {
-    public class ThreadedFileUploader : UploaderBase, IDisposable
+    public class ThreadedFileUploader : SyncUploaderBase, IDisposable
     {
         public ThreadedFileUploader(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
             : base(client, uploadSpecificationRequest, file, expirationDays)
@@ -67,7 +68,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         {
             if (!Prepared)
             {
-                UploadSpecification = CreateUpload(UploadSpecificationRequest).Execute();
+                UploadSpecification = CreateUploadSpecificationQuery(UploadSpecificationRequest).Execute();
 
                 CheckResume();
                 BuildFileParts();
@@ -150,21 +151,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         private UploadResponse FinishUpload()
         {
             var finishUri = GetComposedFinishUri();
-
-            var httpClientHandler = new HttpClientHandler
-            {
-                AllowAutoRedirect = true,
-                CookieContainer = Client.CookieContainer,
-                Credentials = Client.CredentialCache,
-                Proxy = Client.Configuration.ProxyConfiguration
-            };
-
-            if (Client.Configuration.ProxyConfiguration != null && httpClientHandler.SupportsProxy)
-            {
-                httpClientHandler.UseProxy = true;
-            }
-
-            var client = new HttpClient(httpClientHandler) { Timeout = new TimeSpan(0, 0, 0, 0, Config.HttpTimeout) };
+            var client = GetHttpClient();
 
             var message = new HttpRequestMessage(HttpMethod.Get, finishUri);
             message.Headers.Add("Accept", "application/json");
@@ -385,6 +372,14 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
             NotifyProgress(Progress);
         }
+
+        protected internal override HttpClient GetHttpClient()
+        {
+            return new HttpClient(GetHttpClientHandler())
+            {
+                Timeout = new TimeSpan(0, 0, 0, 0, Config.HttpTimeout)
+            };
+        }
     }
 
     internal class FilePartUploader
@@ -453,14 +448,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         private ShareFileApiResponse<string> Send(FilePart part)
         {
-            var client = new HttpClient(new HttpClientHandler
-            {
-                AllowAutoRedirect = true,
-                CookieContainer = ThreadedFileUploader.Client.CookieContainer,
-                Credentials = ThreadedFileUploader.Client.CredentialCache,
-                Proxy = ThreadedFileUploader.Client.Configuration.ProxyConfiguration,
-                UseProxy = ThreadedFileUploader.Client.Configuration.ProxyConfiguration != null
-            }) { Timeout = new TimeSpan(0, 0, 0, 0, ThreadedFileUploader.Config.HttpTimeout) };
+            var client = ThreadedFileUploader.GetHttpClient();
 
             var message = new HttpRequestMessage(HttpMethod.Post, part.GetComposedUploadUrl())
             {
@@ -514,55 +502,15 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         }
     }
 
-    public abstract class UploaderBase
+    public abstract class SyncUploaderBase : UploaderBase
     {
         public abstract UploadResponse Upload(Dictionary<string, object> transferMetadata = null);
         public abstract void Prepare();
 
-        protected UploaderBase(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, int? expirationDays)
+        protected SyncUploaderBase(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, int? expirationDays)
+            : base(client, uploadSpecificationRequest, file, expirationDays)
         {
-            Client = client;
-            UploadSpecificationRequest = uploadSpecificationRequest;
-            File = file;
 
-            ExpirationDays = expirationDays;
-        }
-
-        public Dictionary<string, object> TransferMetadata { get; set; }
-        public UploadSpecification UploadSpecification { get; protected set; }
-        public EventHandler<TransferEventArgs> OnTransferProgress;
-
-        protected int? ExpirationDays { get; set; }
-        protected bool Prepared;
-
-        protected readonly UploadSpecificationRequest UploadSpecificationRequest;
-        protected readonly IPlatformFile File;
-
-        internal ShareFileClient Client { get; set; }
-        internal IMD5HashProvider HashProvider { get; set; }        
-
-        protected virtual void NotifyProgress(TransferProgress progress)
-        {
-            if (OnTransferProgress != null)
-            {
-                OnTransferProgress.Invoke(this, new TransferEventArgs { Progress = progress });
-            }
-        }
-
-        internal IQuery<UploadSpecification> CreateUpload(UploadSpecificationRequest uploadSpecificationRequest)
-        {
-            var query = Client.Items.Upload(uploadSpecificationRequest.Parent, uploadSpecificationRequest.Method,
-                uploadSpecificationRequest.Raw, uploadSpecificationRequest.FileName, uploadSpecificationRequest.FileSize,
-                uploadSpecificationRequest.BatchId,
-                uploadSpecificationRequest.BatchLast, uploadSpecificationRequest.CanResume,
-                uploadSpecificationRequest.StartOver, uploadSpecificationRequest.Unzip, uploadSpecificationRequest.Tool,
-                uploadSpecificationRequest.Overwrite, uploadSpecificationRequest.Title,
-                uploadSpecificationRequest.Details, uploadSpecificationRequest.IsSend,
-                uploadSpecificationRequest.SendGuid, null, uploadSpecificationRequest.ThreadCount,
-                uploadSpecificationRequest.ResponseFormat, uploadSpecificationRequest.Notify, 
-                uploadSpecificationRequest.ClientCreatedDateUtc, uploadSpecificationRequest.ClientModifiedDateUtc);
-
-            return query;
         }
     }
 }

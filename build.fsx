@@ -7,19 +7,18 @@ open Fake.AssemblyInfoFile
 RestorePackages()
 
 // Properties
+let authors = ["Citrix ShareFile"]
 let buildDir = "./build/"
 let packagingRoot = "./packaging/"
 let packagingDir = packagingRoot @@ "sharefile"
-let nugetVersion = "3.0.0-preview05"
-let assemblyVersion = "3.0.0"
-let assemblyFileVersion = "3.0.0"
-let nugetAccessKey = "nUg3tMyP@cKag3"
-let nugetDestination = "http://sf-source.citrite.net:8081/"
-let title = "ShareFile Client SDK v3"
-let signedTitle = "ShareFile Client SDK v3 - Signed"
+let nugetVersion = getBuildParamOrDefault "nugetVersion" "3.0.0"
+let assemblyVersion = getBuildParamOrDefault "assemblyVersion" "3.0.0"
+let assemblyFileVersion = getBuildParamOrDefault "assemblyFileVersion" "3.0.0"
+let nugetAccessKey = getBuildParamOrDefault "nugetkey" ""
+let nugetDestination = getBuildParamOrDefault "nugetserver" ""
+let title = "ShareFile Client SDK"
+let signedTitle = "ShareFile Client SDK - Signed"
 
-let internalAuthors = ["Robert Mills"]
-let externalAuthors = ["Citrix ShareFile"]
 let projectName = "ShareFile.Api.Client"
 let signedProjectName = "ShareFile.Api.Client.Signed"
 let projectDescription = "A ShareFile API client library for .NET"
@@ -28,6 +27,9 @@ let projectSummary = projectDescription
 let buildMode = getBuildParamOrDefault "buildMode" "Release"
 let signKeyPath = getBuildParamOrDefault "signKeyPath" Environment.CurrentDirectory @@ "ShareFile.Api.Client.snk"
 let signRequested = getBuildParamOrDefault "sign" "false"
+
+// Internal will just hide some APIs that likely won't be useful outside of ShareFile relating
+// to administrative actions.
 let buildType = getBuildParamOrDefault "for" "internal"
 
 // *** Define Targets ***
@@ -116,7 +118,7 @@ Target "CreateNuGetPackage" (fun () ->
     
     NuGet (fun p ->
         {p with
-            Authors = internalAuthors
+            Authors = authors
             Project = nugetProjectName
             Description = projectDescription
             OutputPath = packagingRoot
@@ -125,7 +127,7 @@ Target "CreateNuGetPackage" (fun () ->
             Version = nugetVersion
             PublishUrl = nugetDestination
             AccessKey = nugetAccessKey
-            Publish = false
+            Publish = true
             Title = nugetTitle
             ReleaseNotes = "" }) "ShareFile.Api.Client.nuspec"
 )

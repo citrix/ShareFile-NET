@@ -346,18 +346,7 @@ namespace ShareFile.Api.Client.Entities
 		/// </returns>
 		IQuery<SymbolicLink> UpdateSymbolicLink(Uri url, SymbolicLink symlink);
 		IQuery Delete(Uri url, bool singleversion = false, bool forceSync = false);
-		/// <summary>
-		/// Delete Multiple Items
-		/// </summary>
-		/// <example>
-		/// ["id1","id2",...]
-		/// </example>
-		/// <remarks>
-		/// All items in bulk delete must be children of the same parent, identified in the URI
-		/// </remarks>
-		/// <param name="id"></param>
-		/// <param name="body"></param>
-		IQuery BulkDelete(Uri url, IEnumerable<string> ids, bool forceSync = false);
+		IQuery BulkDelete(Uri url, IEnumerable<string> ids, bool forceSync = false, bool deletePermanently = false);
 		IQuery<Stream> GetThumbnail(Uri url, int size = 75, bool redirect = false);
 		/// <summary>
 		/// Get Breadcrumbs
@@ -1133,24 +1122,14 @@ namespace ShareFile.Api.Client.Entities
 			return sfApiQuery;
 		}
 
-		/// <summary>
-		/// Delete Multiple Items
-		/// </summary>
-		/// <example>
-		/// ["id1","id2",...]
-		/// </example>
-		/// <remarks>
-		/// All items in bulk delete must be children of the same parent, identified in the URI
-		/// </remarks>
-		/// <param name="id"></param>
-		/// <param name="body"></param>
-		public IQuery BulkDelete(Uri url, IEnumerable<string> ids, bool forceSync = false)
+		public IQuery BulkDelete(Uri url, IEnumerable<string> ids, bool forceSync = false, bool deletePermanently = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 			sfApiQuery.Action("BulkDelete");
 			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("ids", ids);
 			sfApiQuery.QueryString("forceSync", forceSync);
+			sfApiQuery.QueryString("deletePermanently", deletePermanently);
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}

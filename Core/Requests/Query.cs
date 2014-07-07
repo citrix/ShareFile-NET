@@ -295,10 +295,12 @@ namespace ShareFile.Api.Client.Requests
             Client.Execute(this);
         }
 
+#if Async
         public Task ExecuteAsync(CancellationToken? token = null)
         {
             return Client.ExecuteAsync(this, token);
         }
+#endif
 
         public Query AddHeader(string key, string value)
         {
@@ -488,10 +490,12 @@ namespace ShareFile.Api.Client.Requests
             return Client.Execute(this);
         }
 
+#if Async
         public virtual Task<T> ExecuteAsync(CancellationToken? token = null)
         {
             return Client.ExecuteAsync(this, token);
         }
+#endif
 
         public int GetTop()
         {
@@ -550,10 +554,12 @@ namespace ShareFile.Api.Client.Requests
             return Client.Execute(this);
         }
 
+#if Async
         public override Task<Stream> ExecuteAsync(CancellationToken? token = null)
         {
             return Client.ExecuteAsync(this, token);
         }
+#endif
     }
 
     public class ApiRequest

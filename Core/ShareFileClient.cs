@@ -61,7 +61,11 @@ namespace ShareFile.Api.Client
 #endif
 
 #if Async
+#if ShareFile
+        AsyncThreadedFileUploader GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null);
+#else
         AsyncThreadedFileUploader GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null);
+#endif
         AsyncFileDownloader GetAsyncFileDownloader(Item itemToDownload, DownloaderConfig config = null);
 #else
 #if ShareFile
@@ -123,6 +127,7 @@ namespace ShareFile.Api.Client
 
         /// <summary>
         /// Substitute TNew for TReplace when instantiating TReplace for responses.
+        /// Helpful if you need some additional properties on responses to work with.
         /// </summary>
         /// <typeparam name="TNew"></typeparam>
         /// <typeparam name="TReplace"></typeparam>
@@ -131,16 +136,19 @@ namespace ShareFile.Api.Client
             where TReplace : ODataObject;
 
         T Entities<T>() where T : EntityBase;
+#if Async
         Task<Stream> ExecuteAsync(IStreamQuery stream, CancellationToken? token = null);
-        Stream Execute(IStreamQuery stream);
 
         Task<T> ExecuteAsync<T>(IQuery<T> query, CancellationToken? token = null)
             where T : class;
 
+        Task ExecuteAsync(IQuery query, CancellationToken? token = null);
+#endif
+
+        Stream Execute(IStreamQuery stream);
+
         T Execute<T>(IQuery<T> query)
             where T : class;
-
-        Task ExecuteAsync(IQuery query, CancellationToken? token = null);
         void Execute(IQuery query);
     }
 
@@ -277,18 +285,25 @@ namespace ShareFile.Api.Client
         }
 
 #if Async
+#if ShareFile
+        public AsyncThreadedFileUploader GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
+        {
+            uploadSpecificationRequest.Method = UploadMethod.Threaded;
+
+            return new AsyncThreadedFileUploader(this, uploadSpecificationRequest, file, config, expirationDays);
+        }
+#else
         public AsyncThreadedFileUploader GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null)
         {
             uploadSpecificationRequest.Method = UploadMethod.Threaded;
 
             return new AsyncThreadedFileUploader(this, uploadSpecificationRequest, file, config);
         }
-
+#endif
         public AsyncFileDownloader GetAsyncFileDownloader(Item itemToDownload, DownloaderConfig config = null)
         {
             return new AsyncFileDownloader(itemToDownload, this, config);
         }
-
 #else
 
 
@@ -545,14 +560,10 @@ namespace ShareFile.Api.Client
 
         #endregion
 
+#if Async
         public virtual Task<Stream> ExecuteAsync(IStreamQuery stream, CancellationToken? token = null)
         {
             return RequestProviderFactory.GetAsyncRequestProvider().ExecuteAsync(stream, token);
-        }
-
-        public virtual Stream Execute(IStreamQuery stream)
-        {
-            return RequestProviderFactory.GetSyncRequestProvider().Execute(stream);
         }
 
         public virtual Task<T> ExecuteAsync<T>(IQuery<T> query, CancellationToken? token = null)
@@ -561,15 +572,21 @@ namespace ShareFile.Api.Client
             return RequestProviderFactory.GetAsyncRequestProvider().ExecuteAsync(query, token);
         }
 
+        public virtual Task ExecuteAsync(IQuery query, CancellationToken? token = null)
+        {
+            return RequestProviderFactory.GetAsyncRequestProvider().ExecuteAsync(query, token);
+        }
+#endif
+
+        public virtual Stream Execute(IStreamQuery stream)
+        {
+            return RequestProviderFactory.GetSyncRequestProvider().Execute(stream);
+        }
+
         public virtual T Execute<T>(IQuery<T> query)
             where T : class
         {
             return RequestProviderFactory.GetSyncRequestProvider().Execute(query);
-        }
-
-        public virtual Task ExecuteAsync(IQuery query, CancellationToken? token = null)
-        {
-            return RequestProviderFactory.GetAsyncRequestProvider().ExecuteAsync(query, token);
         }
 
         public virtual void Execute(IQuery query)

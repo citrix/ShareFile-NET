@@ -33,11 +33,17 @@ namespace ShareFile.Api.Client.Transfers
             }
         }
 
+#if Async
         protected bool ShouldPause(CancellationToken? cancellationToken)
         {
             if (cancellationToken == null)
                 return GetState() == TransfererState.Paused;
             return GetState() == TransfererState.Paused && !cancellationToken.Value.IsCancellationRequested;
+        }
+#endif
+        protected bool ShouldPause()
+        {
+            return GetState() == TransfererState.Paused;
         }
 
 #if Async

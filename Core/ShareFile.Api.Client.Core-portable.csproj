@@ -262,7 +262,6 @@
     <Compile Include="Transfers\Downloaders\DownloaderConfig.cs" />
     <Compile Include="Transfers\Downloaders\FileDownloader.cs" />
     <Compile Include="Transfers\Downloaders\SyncDownloaderBase.cs" />
-    <Compile Include="Transfers\DownloadRequest.cs" />
     <Compile Include="Transfers\ShareFileApiResponse.cs" />
     <Compile Include="Transfers\TransfererBase.cs" />
     <Compile Include="Transfers\TransferEventArgs.cs" />

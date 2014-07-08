@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -258,9 +258,10 @@
     <Compile Include="Security\ZoneAuthentication.cs" />
     <Compile Include="ShareFileClient.cs" />
     <Compile Include="Transfers\Downloaders\AsyncFileDownloader.cs" />
+    <Compile Include="Transfers\Downloaders\DownloaderBase.cs" />
     <Compile Include="Transfers\Downloaders\DownloaderConfig.cs" />
     <Compile Include="Transfers\Downloaders\FileDownloader.cs" />
-    <Compile Include="Transfers\DownloadRequest.cs" />
+    <Compile Include="Transfers\Downloaders\SyncDownloaderBase.cs" />
     <Compile Include="Transfers\ShareFileApiResponse.cs" />
     <Compile Include="Transfers\TransfererBase.cs" />
     <Compile Include="Transfers\TransferEventArgs.cs" />
@@ -270,7 +271,7 @@
     <Compile Include="Transfers\Uploaders\FilePart.cs" />
     <Compile Include="Transfers\Uploaders\FileUploaderConfig.cs" />
     <Compile Include="Transfers\Uploaders\ThreadedFileUploader.cs" />
-	<Compile Include="Transfers\Uploaders\UploaderBase.cs" />
+    <Compile Include="Transfers\Uploaders\UploaderBase.cs" />
     <Compile Include="Transfers\UploadResponse.cs" />
     <Compile Include="Transfers\UploadSpecificationRequest.cs" />
   </ItemGroup>

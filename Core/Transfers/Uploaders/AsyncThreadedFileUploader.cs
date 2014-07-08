@@ -195,7 +195,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             {
                 await _pendingPartSemaphore.WaitAsync();
 
-                await TryPause(_cancellationToken);
+                await TryPauseAsync(_cancellationToken);
 
                 part = _itemsToUpload.Dequeue();
 #pragma warning disable 4014

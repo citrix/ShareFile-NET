@@ -36,11 +36,7 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
 
                     do
                     {
-                        // Is there a better way to do this?
-                        while (ShouldPause())
-                        {
-                            Thread.Sleep(1000);
-                        }
+                        TryPause();
 
                         bytesRead = stream.Read(buffer, 0, buffer.Length);
                         if (bytesRead > 0)

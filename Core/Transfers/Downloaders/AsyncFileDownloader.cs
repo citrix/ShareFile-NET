@@ -51,7 +51,7 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
 
                             NotifyProgress(progress);
 
-                            await TryPause(cancellationToken);
+                            await TryPauseAsync(cancellationToken);
                         }
                         else
                         {

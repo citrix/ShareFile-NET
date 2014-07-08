@@ -47,7 +47,7 @@ namespace ShareFile.Api.Client.Transfers
         }
 
 #if Async
-        protected async Task TryPause(CancellationToken? cancellationToken)
+        protected async Task TryPauseAsync(CancellationToken? cancellationToken)
         {
             while (ShouldPause(cancellationToken))
             {
@@ -59,6 +59,18 @@ namespace ShareFile.Api.Client.Transfers
             }
         }        
 #endif
+
+        protected void TryPause()
+        {
+            while (ShouldPause())
+            {
+#if Async
+                TryPauseAsync(null).Wait();
+#else
+                Thread.Sleep(1000);
+#endif
+            }
+        }
     }
 
     public enum TransfererState

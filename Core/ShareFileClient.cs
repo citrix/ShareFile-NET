@@ -62,7 +62,7 @@ namespace ShareFile.Api.Client
 
 #if Async
 #if ShareFile
-        AsyncThreadedFileUploader GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null);
+        AsyncThreadedFileUploader GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null);
 #else
         AsyncThreadedFileUploader GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null);
 #endif
@@ -286,7 +286,7 @@ namespace ShareFile.Api.Client
 
 #if Async
 #if ShareFile
-        public AsyncThreadedFileUploader GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
+        public AsyncThreadedFileUploader GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
         {
             uploadSpecificationRequest.Method = UploadMethod.Threaded;
 

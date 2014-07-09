@@ -19,7 +19,7 @@ namespace ShareFile.Api.Models
 	public class AdvancedSearchResults : ODataObject 
 	{
 
-		public bool ParitalResults { get; set; }
+		public bool PartialResults { get; set; }
 
 		public IEnumerable<SearchResult> Results { get; set; }
 
@@ -33,16 +33,16 @@ namespace ShareFile.Api.Models
 			var typedSource = source as AdvancedSearchResults;
 			if(typedSource != null)
 			{
-				ParitalResults = typedSource.ParitalResults;
+				PartialResults = typedSource.PartialResults;
 				Results = typedSource.Results;
 				QueryPaging = typedSource.QueryPaging;
 			}
 			else
 			{
 				JToken token;
-				if(source.TryGetProperty("ParitalResults", out token) && token.Type != JTokenType.Null)
+				if(source.TryGetProperty("PartialResults", out token) && token.Type != JTokenType.Null)
 				{
-					ParitalResults = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+					PartialResults = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
 				}
 				if(source.TryGetProperty("Results", out token) && token.Type != JTokenType.Null)
 				{

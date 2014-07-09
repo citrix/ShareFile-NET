@@ -3,6 +3,11 @@
 Before continuing please familiarize yourself with the API and it's methodology
 at https://api.sharefile.com/rest
 
+License
+----
+All code is licensed under the [MIT
+License](https://github.com/citrix/ShareFile-PowerShell/blob/master/ShareFileSnapIn/LICENSE.txt).
+
 ## Definitions ##
 
 * `applicationControlPlane` - Describes the domain that the ShareFile account is available on.  

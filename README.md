@@ -3,6 +3,9 @@
 Before continuing please familiarize yourself with the API and it's methodology
 at https://api.sharefile.com/rest
 
+If you would like to download the Nuget Package for this SDK, you can find it here
+https://www.nuget.org/packages/ShareFile.Api.Client/
+
 License
 ----
 All code is licensed under the [MIT

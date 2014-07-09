@@ -467,6 +467,15 @@ namespace ShareFile.Api.Client.Entities
 		/// <param name="url"></param>
 		IQuery CheckOut(Uri url);
 		/// <summary>
+		/// Discard CheckOut
+		/// </summary>
+		/// <remarks>
+		/// Discards the existing lock on the file
+		/// This operation is only implemented in Sharepoint providers (/sp)
+		/// </remarks>
+		/// <param name="url"></param>
+		IQuery DiscardCheckOut(Uri url);
+		/// <summary>
 		/// Search
 		/// </summary>
 		/// <remarks>
@@ -1324,6 +1333,23 @@ namespace ShareFile.Api.Client.Entities
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 			sfApiQuery.Action("CheckOut");
+			sfApiQuery.Uri(url);
+			sfApiQuery.HttpMethod = "POST";
+			return sfApiQuery;
+		}
+
+		/// <summary>
+		/// Discard CheckOut
+		/// </summary>
+		/// <remarks>
+		/// Discards the existing lock on the file
+		/// This operation is only implemented in Sharepoint providers (/sp)
+		/// </remarks>
+		/// <param name="url"></param>
+		public IQuery DiscardCheckOut(Uri url)
+		{
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+			sfApiQuery.Action("DiscardCheckOut");
 			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;

@@ -28,7 +28,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         private readonly Queue<FilePart> _itemsToUpload;
         private AsyncSemaphore _maxConsumersSemaphore;
         private AsyncSemaphore _pendingPartSemaphore;
-        private CancellationToken? _cancellationToken { get; set; }
 
         private int _effectivePartSize;
 
@@ -162,7 +161,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             {
                 await _pendingPartSemaphore.WaitAsync();
 
-                await TryPauseAsync(_cancellationToken);
+                await TryPauseAsync(CancellationToken);
 
                 part = _itemsToUpload.Dequeue();
 #pragma warning disable 4014
@@ -226,11 +225,11 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             string retVal;
 
             HttpResponseMessage response;
-            if (_cancellationToken == null)
+            if (CancellationToken == null)
             {
                 response = await client.SendAsync(message);
             }
-            else response = await client.SendAsync(message, _cancellationToken.Value);
+            else response = await client.SendAsync(message, CancellationToken.Value);
 
             var responseStream = await response.Content.ReadAsStreamAsync();
             using (var streamReader = new StreamReader(responseStream))

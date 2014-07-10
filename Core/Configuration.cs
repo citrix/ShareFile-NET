@@ -52,13 +52,8 @@ namespace ShareFile.Api.Client
         /// </summary>
         public IEnumerable<CultureInfo> SupportedCultures { get; set; }
 
-        #region DeviceId properties
         public string ToolName { get; set; }
         public string ToolVersion { get; set; }
-        public string DeviceId { get; set; }
-        public string DeviceName { get; set; }
-        public bool UseDeviceId { get; set; }
-        #endregion
 
         public static Configuration Default()
         {

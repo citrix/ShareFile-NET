@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
+using Newtonsoft.Json;
+using ShareFile.Api.Client.Exceptions;
+using ShareFile.Api.Client.Extensions.Tasks;
 using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Security.Cryptography;
-using ShareFile.Api.Client.Transfers;
 using ShareFile.Api.Models;
 
-namespace ShareFile.Api.Client.Core.Transfers.Uploaders
+namespace ShareFile.Api.Client.Transfers.Uploaders
 {
     public abstract class UploaderBase : TransfererBase
     {
@@ -32,6 +35,8 @@ namespace ShareFile.Api.Client.Core.Transfers.Uploaders
 
         public ShareFileClient Client { get; protected set; }
         public IMD5HashProvider HashProvider { get; protected set; }
+
+        protected const int MaxBufferLength = 65536;
 
         protected virtual void NotifyProgress(TransferProgress progress)
         {
@@ -78,6 +83,24 @@ namespace ShareFile.Api.Client.Core.Transfers.Uploaders
         protected internal virtual HttpClient GetHttpClient()
         {
             return new HttpClient(GetHttpClientHandler());
+        }
+
+        /// <summary>
+        /// Use specifically for Standard Uploads. The API call isn't guaranteed to include fmt=json on the query string
+        /// this is necessary to get file metadata back as part of the upload response.
+        /// </summary>
+        /// <returns></returns>
+        protected Uri GetChunkUriForStandardUploads()
+        {
+            var uploadUri = UploadSpecification.ChunkUri;
+
+            // Only add fmt=json if it does not already exist, just in case there is an API update to correct this.
+            if (UploadSpecification.ChunkUri.AbsoluteUri.IndexOf("&fmt=json", StringComparison.OrdinalIgnoreCase) == -1)
+            {
+                uploadUri = new Uri(UploadSpecification.ChunkUri.AbsoluteUri + "&fmt=json");
+            }
+
+            return uploadUri;
         }
     }
 }

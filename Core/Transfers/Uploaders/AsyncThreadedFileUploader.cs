@@ -6,44 +6,28 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using ShareFile.Api.Client.Core.Transfers.Uploaders;
 using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Security.Cryptography;
-using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Transfers.Uploaders
 {
 #if Async
-    public class AsyncThreadedFileUploader : UploaderBase
+    public class AsyncThreadedFileUploader : AsyncUploaderBase
     {
         public AsyncThreadedFileUploader(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
-            : base(client, uploadSpecificationRequest, file, expirationDays)
+            : base(client, uploadSpecificationRequest, file, config, expirationDays)
         {
             _itemsToUpload = new Queue<FilePart>();
             _itemsToFill = new Queue<FilePart>();
 
-            Config = config ?? new FileUploaderConfig();
-
             _effectivePartSize = Config.PartSize;
-            HashProvider = MD5HashProviderFactory.GetHashProvider().CreateHash();
-            Progress = new TransferProgress
-            {
-                TransferId = Guid.NewGuid().ToString(),
-                BytesTransferred = 0
-            };
-
-            Progress.BytesRemaining = Progress.TotalBytes = uploadSpecificationRequest.FileSize;
         }
-
-        public FileUploaderConfig Config { get; private set; }
-        public TransferProgress Progress { get; set; }
 
         private readonly Queue<FilePart> _itemsToFill;
         private readonly Queue<FilePart> _itemsToUpload;
         private AsyncSemaphore _maxConsumersSemaphore;
         private AsyncSemaphore _pendingPartSemaphore;
-        private CancellationToken? _cancellationToken { get; set; }
 
         private int _effectivePartSize;
 
@@ -52,7 +36,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         ///</summary>
         public readonly object CounterLock = new object();
 
-        public async Task PrepareAsync()
+        public override async Task PrepareAsync()
         {
             if (!Prepared)
             {
@@ -66,13 +50,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
                 Prepared = true;
             }
-        }
-
-        public async Task<UploadSpecification> CreateUpload(UploadSpecificationRequest uploadSpecificationRequest)
-        {
-            var query = CreateUploadSpecificationQuery(uploadSpecificationRequest);
-
-            return await query.ExecuteAsync(_cancellationToken);
         }
 
         private void BuildFileParts()
@@ -107,15 +84,10 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             }
         }
 
-        public async Task<UploadResponse> UploadAsync(Dictionary<string, object> transferMetadata = null, CancellationToken? cancellationToken = null)
+        protected override async Task<UploadResponse> InternalUploadAsync()
         {
-            TransferMetadata = transferMetadata ?? new Dictionary<string, object>();
-            Progress.TransferMetadata = TransferMetadata;
-            _cancellationToken = cancellationToken;
-
             _maxConsumersSemaphore = new AsyncSemaphore(Config.NumberOfThreads);
             _pendingPartSemaphore = new AsyncSemaphore(0);
-            await PrepareAsync();
 
             if (_itemsToFill.Count > 0)
             {
@@ -157,16 +129,9 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     {
                         _setResultAction(completedTasks, tcs);
                     }
-                }, CancellationToken.None, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
+                }, System.Threading.CancellationToken.None, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
 
             return tcs.Task;
-        }
-
-        private bool IsCancellationRequested()
-        {
-            if (_cancellationToken == null) return false;
-
-            return _cancellationToken.Value.IsCancellationRequested;
         }
 
         private async Task StartReaders()
@@ -195,7 +160,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             {
                 await _pendingPartSemaphore.WaitAsync();
 
-                await TryPause(_cancellationToken);
+                await TryPauseAsync(CancellationToken);
 
                 part = _itemsToUpload.Dequeue();
 #pragma warning disable 4014
@@ -259,11 +224,11 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             string retVal;
 
             HttpResponseMessage response;
-            if (_cancellationToken == null)
+            if (CancellationToken == null)
             {
                 response = await client.SendAsync(message);
             }
-            else response = await client.SendAsync(message, _cancellationToken.Value);
+            else response = await client.SendAsync(message, CancellationToken.Value);
 
             var responseStream = await response.Content.ReadAsStreamAsync();
             using (var streamReader = new StreamReader(responseStream))
@@ -271,14 +236,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 retVal = await streamReader.ReadToEndAsync();
             }
             return JsonConvert.DeserializeObject<ShareFileApiResponse<string>>(retVal);
-        }
-
-        protected internal override HttpClient GetHttpClient()
-        {
-            return new HttpClient(GetHttpClientHandler())
-            {
-                Timeout = new TimeSpan(0, 0, 0, 0, Config.HttpTimeout)
-            };
         }
 
         private async Task<UploadResponse> FinishUploadAsync()
@@ -291,28 +248,8 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             message.Headers.Add("Accept", "application/json");
 
             var response = await client.SendAsync(message);
-            if (response.IsSuccessStatusCode)
-            {
-                using (var responseStream = await response.Content.ReadAsStreamAsync())
-                using (var textReader = new JsonTextReader(new StreamReader(responseStream)))
-                {
-                    var uploadResponse = new JsonSerializer().Deserialize<ShareFileApiResponse<UploadResponse>>(textReader);
 
-                    if (uploadResponse.Error)
-                    {
-                        throw new UploadException(uploadResponse.ErrorMessage, uploadResponse.ErrorCode);
-                    }
-
-                    return uploadResponse.Value;
-                }
-            }
-
-            if (response.Content != null)
-            {
-                Client.Logging.Error(await response.Content.ReadAsStringAsync());
-            }
-
-            throw new UploadException("Error completing upload.", -1);
+            return await GetUploadResponseAsync(response);
         }
 
         private string GetComposedFinishUri()
@@ -333,75 +270,20 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             return finishUri.ToString();
         }
 
-        private async Task CheckResumeAsync()
-        {
-            if (UploadSpecification.IsResume)
-            {
-                if (UploadSpecification.ResumeFileHash != await CalculateHashAsync(UploadSpecification.ResumeOffset))
-                {
-                    HashProvider = MD5HashProviderFactory.GetHashProvider().CreateHash();
-                    UploadSpecification.ResumeIndex = 0;
-                    UploadSpecification.ResumeOffset = 0;
-                }
-                else
-                {
-                    UploadSpecification.ResumeIndex += 1;
-                }
-            }
-        }
-
-        private const int MaxBufferLength = 65536;
-        private async Task<string> CalculateHashAsync(long count)
-        {
-            var localHash = MD5HashProviderFactory.GetHashProvider().CreateHash();
-            using (var fileStream = await File.OpenReadAsync())
-            {
-                var buffer = new byte[MaxBufferLength];
-                do
-                {
-                    var bytesToRead = count < MaxBufferLength ? (int)count : MaxBufferLength;
-                    var bytesRead = fileStream.Read(buffer, 0, bytesToRead);
-                    if (bytesRead > 0)
-                    {
-                        localHash.Append(buffer, 0, bytesToRead);
-                        HashProvider.Append(buffer, 0, bytesToRead);
-                    }
-                    count -= bytesRead;
-                } while (count > 0);
-            }
-            localHash.Finalize(new byte[1], 0, 0);
-            return localHash.GetComputedHashAsString();
-        }
-
         private async Task<FilePart> FillFilePartAsync(FilePart filePart)
         {
             var buffer = new byte[filePart.Length];
 
-            using (var file = await File.OpenReadAsync())
-            {
-                file.Seek(filePart.Offset, SeekOrigin.Begin);
-                int bytesRead = file.Read(buffer, 0, buffer.Length);
-                Array.Resize(ref buffer, bytesRead);
-                filePart.Bytes = buffer;
-            }
+            var file = await File.OpenReadAsync();
+                
+            file.Seek(filePart.Offset, SeekOrigin.Begin);
+            int bytesRead = file.Read(buffer, 0, buffer.Length);
+            Array.Resize(ref buffer, bytesRead);
+            filePart.Bytes = buffer;
+
             var partHashProvider = MD5HashProviderFactory.GetHashProvider().CreateHash();
             filePart.Hash = partHashProvider.ComputeHash(filePart.Bytes);
             return filePart;
-        }
-
-        internal void OnProgress(int bytesTransferred)
-        {
-            Progress.BytesTransferred += bytesTransferred;
-            NotifyProgress(Progress);
-        }
-
-        public EventHandler<TransferEventArgs> OnTransferProgress;
-        protected void NotifyProgress(TransferProgress progress)
-        {
-            if (OnTransferProgress != null)
-            {
-                OnTransferProgress.Invoke(this, new TransferEventArgs { Progress = progress });
-            }
         }
     }
 #endif

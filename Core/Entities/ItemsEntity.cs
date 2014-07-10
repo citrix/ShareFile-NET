@@ -147,7 +147,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the download link for the provided item content.
 		/// </returns>
-		IQuery<DownloadSpecification> Download(Uri url, bool redirect = true);
+		IQuery<Stream> Download(Uri url, bool redirect = true);
 		/// <summary>
 		/// Create Folder
 		/// </summary>
@@ -346,18 +346,7 @@ namespace ShareFile.Api.Client.Entities
 		/// </returns>
 		IQuery<SymbolicLink> UpdateSymbolicLink(Uri url, SymbolicLink symlink);
 		IQuery Delete(Uri url, bool singleversion = false, bool forceSync = false);
-		/// <summary>
-		/// Delete Multiple Items
-		/// </summary>
-		/// <example>
-		/// ["id1","id2",...]
-		/// </example>
-		/// <remarks>
-		/// All items in bulk delete must be children of the same parent, identified in the URI
-		/// </remarks>
-		/// <param name="id"></param>
-		/// <param name="body"></param>
-		IQuery BulkDelete(Uri url, IEnumerable<string> ids, bool forceSync = false);
+		IQuery BulkDelete(Uri url, IEnumerable<string> ids, bool forceSync = false, bool deletePermanently = false);
 		IQuery<Stream> GetThumbnail(Uri url, int size = 75, bool redirect = false);
 		/// <summary>
 		/// Get Breadcrumbs
@@ -477,6 +466,15 @@ namespace ShareFile.Api.Client.Entities
 		/// </remarks>
 		/// <param name="url"></param>
 		IQuery CheckOut(Uri url);
+		/// <summary>
+		/// Discard CheckOut
+		/// </summary>
+		/// <remarks>
+		/// Discards the existing lock on the file
+		/// This operation is only implemented in Sharepoint providers (/sp)
+		/// </remarks>
+		/// <param name="url"></param>
+		IQuery DiscardCheckOut(Uri url);
 		/// <summary>
 		/// Search
 		/// </summary>
@@ -826,9 +824,9 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// the download link for the provided item content.
 		/// </returns>
-		public IQuery<DownloadSpecification> Download(Uri url, bool redirect = true)
+		public IQuery<Stream> Download(Uri url, bool redirect = true)
 		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<DownloadSpecification>(Client);
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
 			sfApiQuery.Action("Download");
 			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("redirect", redirect);
@@ -1133,24 +1131,14 @@ namespace ShareFile.Api.Client.Entities
 			return sfApiQuery;
 		}
 
-		/// <summary>
-		/// Delete Multiple Items
-		/// </summary>
-		/// <example>
-		/// ["id1","id2",...]
-		/// </example>
-		/// <remarks>
-		/// All items in bulk delete must be children of the same parent, identified in the URI
-		/// </remarks>
-		/// <param name="id"></param>
-		/// <param name="body"></param>
-		public IQuery BulkDelete(Uri url, IEnumerable<string> ids, bool forceSync = false)
+		public IQuery BulkDelete(Uri url, IEnumerable<string> ids, bool forceSync = false, bool deletePermanently = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 			sfApiQuery.Action("BulkDelete");
 			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("ids", ids);
 			sfApiQuery.QueryString("forceSync", forceSync);
+			sfApiQuery.QueryString("deletePermanently", deletePermanently);
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}
@@ -1345,6 +1333,23 @@ namespace ShareFile.Api.Client.Entities
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 			sfApiQuery.Action("CheckOut");
+			sfApiQuery.Uri(url);
+			sfApiQuery.HttpMethod = "POST";
+			return sfApiQuery;
+		}
+
+		/// <summary>
+		/// Discard CheckOut
+		/// </summary>
+		/// <remarks>
+		/// Discards the existing lock on the file
+		/// This operation is only implemented in Sharepoint providers (/sp)
+		/// </remarks>
+		/// <param name="url"></param>
+		public IQuery DiscardCheckOut(Uri url)
+		{
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+			sfApiQuery.Action("DiscardCheckOut");
 			sfApiQuery.Uri(url);
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;

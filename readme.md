@@ -3,6 +3,14 @@
 Before continuing please familiarize yourself with the API and it's methodology
 at https://api.sharefile.com/rest
 
+If you would like to download the Nuget Package for this SDK, you can find it here
+https://www.nuget.org/packages/ShareFile.Api.Client/
+
+License
+----
+All code is licensed under the [MIT
+License](https://github.com/citrix/ShareFile-PowerShell/blob/master/ShareFileSnapIn/LICENSE.txt).
+
 ## Definitions ##
 
 * `applicationControlPlane` - Describes the domain that the ShareFile account is available on.  
@@ -77,7 +85,6 @@ which is not currently documented.  In order to complete this authentication
 the consumer will must know `username`, `password`, `subdomain`, and `applicationControlPlane`.  In the sample below,
 these are assumed to have been obtained already.
 
-
       var sfClient = new ShareFileClient("https://secure.sf-api.com/sf/v3/");
       var oauthService = new OAuthService(sfClient, "[clientid]", "[clientSecret]");
 
@@ -89,7 +96,6 @@ these are assumed to have been obtained already.
 
 * **SAML Authentication**:  This authentication support assumes you have a mechanism
 for obtaining a SAML assertion, `samlAssertion` from the user's IdP.
-
 
       var sfClient = new ShareFileClient("https://secure.sf-api.com/sf/v3/");
       var oauthService = new OAuthService(sfClient, "[clientid]", "[clientSecret]");
@@ -105,7 +111,6 @@ grant type can be refreshed.  This allows a consumer to silently reauthenticate
 with the ShareFile API without needing to prompt the user.  This is useful if
 you plan on caching the `OAuthToken`.  The sample below assumes you have already
 pulled an instance of `OAuthToken` as `cachedOAuthToken` from some local cache.
-
 
       var sfClient = new ShareFileClient(cachedOAuthToken.GetUri());
       var oauthService = new OAuthService(sfClient, "[clientid]", "[clientSecret]");

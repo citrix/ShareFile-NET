@@ -89,7 +89,19 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             Progress.TransferMetadata = TransferMetadata;
             CancellationToken = cancellationToken;
 
-            return await InternalUploadAsync();
+            var response = await InternalUploadAsync();
+
+            try
+            {
+                var stream = await File.OpenReadAsync();
+                stream.Close();
+            }
+            catch (Exception)
+            {
+                // Eat the exception, we tried to clean up.
+            }
+
+            return response;
         }
 
         protected abstract Task<UploadResponse> InternalUploadAsync();

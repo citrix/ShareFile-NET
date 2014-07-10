@@ -88,7 +88,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         {
             _maxConsumersSemaphore = new AsyncSemaphore(Config.NumberOfThreads);
             _pendingPartSemaphore = new AsyncSemaphore(0);
-            await PrepareAsync();
 
             if (_itemsToFill.Count > 0)
             {
@@ -275,13 +274,13 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         {
             var buffer = new byte[filePart.Length];
 
-            using (var file = await File.OpenReadAsync())
-            {
-                file.Seek(filePart.Offset, SeekOrigin.Begin);
-                int bytesRead = file.Read(buffer, 0, buffer.Length);
-                Array.Resize(ref buffer, bytesRead);
-                filePart.Bytes = buffer;
-            }
+            var file = await File.OpenReadAsync();
+                
+            file.Seek(filePart.Offset, SeekOrigin.Begin);
+            int bytesRead = file.Read(buffer, 0, buffer.Length);
+            Array.Resize(ref buffer, bytesRead);
+            filePart.Bytes = buffer;
+
             var partHashProvider = MD5HashProviderFactory.GetHashProvider().CreateHash();
             filePart.Hash = partHashProvider.ComputeHash(filePart.Bytes);
             return filePart;

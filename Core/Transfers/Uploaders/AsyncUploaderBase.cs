@@ -94,7 +94,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             try
             {
                 var stream = await File.OpenReadAsync();
-                stream.Close();
+                stream.Dispose();
             }
             catch (Exception)
             {

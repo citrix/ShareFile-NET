@@ -29,7 +29,10 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     var requestMessage = new HttpRequestMessage(HttpMethod.Post, GetChunkUriForStandardUploads());
                     var multipartFormContent = new MultipartFormDataContent(boundaryGuid);
 
-                    multipartFormContent.Add(new StreamContent(File.OpenRead(), MaxBufferLength), "File1", File.Name);
+                    var streamContent = new StreamContent(File.OpenRead(), MaxBufferLength);
+                    streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                    multipartFormContent.Add(streamContent, "File1", File.Name);
+
                     requestMessage.Content = multipartFormContent;
 
                     var responseMessage = httpClient.SendAsync(requestMessage, CancellationToken.None).WaitForTask();

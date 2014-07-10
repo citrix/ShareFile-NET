@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.FileSystem;
@@ -44,7 +45,9 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     var requestMessage = new HttpRequestMessage(HttpMethod.Post, GetChunkUriForStandardUploads());
                     var multipartFormContent = new MultipartFormDataContent(boundaryGuid);
 
-                    multipartFormContent.Add(new StreamContent(File.OpenRead(), MaxBufferLength), "File1", File.Name);
+                    var streamContent = new StreamContent(File.OpenRead(), MaxBufferLength);
+                    streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                    multipartFormContent.Add(streamContent, "File1", File.Name);
                     requestMessage.Content = multipartFormContent;
 
                     var responseMessage = await httpClient.SendAsync(requestMessage, CancellationToken ?? System.Threading.CancellationToken.None);

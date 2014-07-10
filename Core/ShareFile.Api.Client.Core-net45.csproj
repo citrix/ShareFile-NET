@@ -261,9 +261,13 @@
     <Compile Include="Transfers\TransferEventArgs.cs" />
     <Compile Include="Transfers\TransferProgress.cs" />
     <Compile Include="Transfers\Uploaders\AsyncSemaphone.cs" />
+    <Compile Include="Transfers\Uploaders\AsyncStandardFileUploader.cs" />
     <Compile Include="Transfers\Uploaders\AsyncThreadedFileUploader.cs" />
+    <Compile Include="Transfers\Uploaders\AsyncUploaderBase.cs" />
     <Compile Include="Transfers\Uploaders\FilePart.cs" />
     <Compile Include="Transfers\Uploaders\FileUploaderConfig.cs" />
+    <Compile Include="Transfers\Uploaders\StandardFileUploader.cs" />
+    <Compile Include="Transfers\Uploaders\SyncUploaderBase.cs" />
     <Compile Include="Transfers\Uploaders\ThreadedFileUploader.cs" />
     <Compile Include="Transfers\Uploaders\UploaderBase.cs" />
     <Compile Include="Transfers\UploadResponse.cs" />

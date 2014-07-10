@@ -5,7 +5,15 @@ namespace ShareFile.Api.Client.Transfers
 {
     public class UploadResponse : List<UploadedFile>
     {
-
+        /// <summary>
+        /// Not all supported upload methods will return upload information.
+        /// Use this member to see if upload was successful, but no metadata is returned
+        /// from the server.
+        /// </summary>
+        public static UploadResponse SuccessWithoutInformation = new UploadResponse
+        {
+            new UploadedFile()
+        };
     }
 
     public class UploadedFile

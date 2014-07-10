@@ -46,9 +46,13 @@ namespace ShareFile.Api.Client.Requests.Providers
             var handler = new HttpClientHandler
             {
                 AllowAutoRedirect = true,
-                Credentials = shareFileClient.CredentialCache,
-                AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip
+                Credentials = shareFileClient.CredentialCache
             };
+
+            if (handler.SupportsAutomaticDecompression)
+            {
+                handler.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
+            }
 
             if (!RuntimeRequiresCustomCookieHandling)
             {

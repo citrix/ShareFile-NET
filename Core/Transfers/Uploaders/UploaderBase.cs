@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
+using Newtonsoft.Json;
+using ShareFile.Api.Client.Exceptions;
+using ShareFile.Api.Client.Extensions.Tasks;
 using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Security.Cryptography;
-using ShareFile.Api.Client.Transfers;
 using ShareFile.Api.Models;
 
-namespace ShareFile.Api.Client.Core.Transfers.Uploaders
+namespace ShareFile.Api.Client.Transfers.Uploaders
 {
     public abstract class UploaderBase : TransfererBase
     {
@@ -32,6 +35,8 @@ namespace ShareFile.Api.Client.Core.Transfers.Uploaders
 
         public ShareFileClient Client { get; protected set; }
         public IMD5HashProvider HashProvider { get; protected set; }
+
+        protected const int MaxBufferLength = 65536;
 
         protected virtual void NotifyProgress(TransferProgress progress)
         {

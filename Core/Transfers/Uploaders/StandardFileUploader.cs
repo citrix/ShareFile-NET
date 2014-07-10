@@ -13,6 +13,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         public StandardFileUploader(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null) 
             : base(client, uploadSpecificationRequest, file, config, expirationDays)
         {
+            UploadSpecificationRequest.Raw = false;
         }
 
         public override UploadResponse Upload(Dictionary<string, object> transferMetadata = null)

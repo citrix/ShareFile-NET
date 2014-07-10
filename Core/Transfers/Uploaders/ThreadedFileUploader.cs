@@ -144,23 +144,8 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             message.Headers.Add("Accept", "application/json");
 
             var response = client.SendAsync(message).WaitForTask();
-            if (response.IsSuccessStatusCode)
-            {
-                using (var responseStream = response.Content.ReadAsStreamAsync().WaitForTask())
-                using (var textReader = new JsonTextReader(new StreamReader(responseStream)))
-                {
-                    var uploadResponse = new JsonSerializer().Deserialize<ShareFileApiResponse<UploadResponse>>(textReader);
 
-                    if (uploadResponse.Error)
-                    {
-                        throw new UploadException(uploadResponse.ErrorMessage, uploadResponse.ErrorCode);
-                    }
-
-                    return uploadResponse.Value;
-                }
-            }
-
-            throw new UploadException("Error completing upload.", -1);
+            return GetUploadResponse(response);
         }
 
         private string GetComposedFinishUri()

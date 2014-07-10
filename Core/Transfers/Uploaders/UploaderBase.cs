@@ -84,5 +84,23 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         {
             return new HttpClient(GetHttpClientHandler());
         }
+
+        /// <summary>
+        /// Use specifically for Standard Uploads. The API call isn't guaranteed to include fmt=json on the query string
+        /// this is necessary to get file metadata back as part of the upload response.
+        /// </summary>
+        /// <returns></returns>
+        protected Uri GetChunkUriForStandardUploads()
+        {
+            var uploadUri = UploadSpecification.ChunkUri;
+
+            // Only add fmt=json if it does not already exist, just in case there is an API update to correct this.
+            if (UploadSpecification.ChunkUri.AbsoluteUri.IndexOf("&fmt=json", StringComparison.OrdinalIgnoreCase) == -1)
+            {
+                uploadUri = new Uri(UploadSpecification.ChunkUri.AbsoluteUri + "&fmt=json");
+            }
+
+            return uploadUri;
+        }
     }
 }

@@ -40,22 +40,16 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 {
                     var httpClient = GetHttpClient();
                     var boundaryGuid = "upload-" + Guid.NewGuid().ToString("N");
-                    var requestMessage = new HttpRequestMessage(HttpMethod.Post, UploadSpecification.ChunkUri);
+                    
+                    var requestMessage = new HttpRequestMessage(HttpMethod.Post, GetChunkUriForStandardUploads());
                     var multipartFormContent = new MultipartFormDataContent(boundaryGuid);
 
                     multipartFormContent.Add(new StreamContent(File.OpenRead(), MaxBufferLength), "File1", File.Name);
                     requestMessage.Content = multipartFormContent;
 
                     var responseMessage = await httpClient.SendAsync(requestMessage, CancellationToken ?? System.Threading.CancellationToken.None);
-
-                    if (responseMessage.IsSuccessStatusCode)
-                    {
-                        var responseString = await responseMessage.Content.ReadAsStringAsync();
-                        if (responseString == "OK")
-                        {
-                            return UploadResponse.SuccessWithoutInformation;
-                        }
-                    }
+                    
+                    return await GetUploadResponseAsync(responseMessage);
                 }
                 catch (Exception exception)
                 {

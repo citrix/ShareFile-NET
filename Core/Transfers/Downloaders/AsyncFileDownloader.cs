@@ -41,7 +41,7 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
 
                     do
                     {
-                        bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
+                        bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken ?? CancellationToken.None);
                         if (bytesRead > 0)
                         {
                             fileStream.Write(buffer, 0, bytesRead);
@@ -51,7 +51,7 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
 
                             NotifyProgress(progress);
 
-                            await TryPause(cancellationToken);
+                            await TryPauseAsync(cancellationToken);
                         }
                         else
                         {

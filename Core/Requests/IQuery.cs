@@ -9,7 +9,9 @@ namespace ShareFile.Api.Client.Requests
     public interface IQuery
     {
         void Execute();
+#if Async
         Task ExecuteAsync(CancellationToken? token = null);
+#endif
 
         Query AddHeader(string key, string value);
         Query WithBaseUri(Uri uri);
@@ -19,7 +21,9 @@ namespace ShareFile.Api.Client.Requests
         where T : class
     {
         T Execute();
+#if Async
         Task<T> ExecuteAsync(CancellationToken? token = null);
+#endif
 
         Query<T> Filter(IFilter filter);
         Query<T> Expand(string expandProperty);

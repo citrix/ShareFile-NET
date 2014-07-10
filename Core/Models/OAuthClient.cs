@@ -53,6 +53,10 @@ namespace ShareFile.Api.Models
 
 		public bool? DeviceRegistration { get; set; }
 
+		public bool? CanCreateFreemiumAccount { get; set; }
+
+		public bool? IsInternalAdmin { get; set; }
+
 		public SafeEnum<OAuthClientPermissions> AccessFilesFolders { get; set; }
 
 		public SafeEnum<OAuthClientPermissions> ModifyFilesFolders { get; set; }
@@ -94,6 +98,8 @@ namespace ShareFile.Api.Models
 				IsQA = typedSource.IsQA;
 				Impersonation = typedSource.Impersonation;
 				DeviceRegistration = typedSource.DeviceRegistration;
+				CanCreateFreemiumAccount = typedSource.CanCreateFreemiumAccount;
+				IsInternalAdmin = typedSource.IsInternalAdmin;
 				AccessFilesFolders = typedSource.AccessFilesFolders;
 				ModifyFilesFolders = typedSource.ModifyFilesFolders;
 				AdminUsers = typedSource.AdminUsers;
@@ -173,6 +179,14 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("DeviceRegistration", out token) && token.Type != JTokenType.Null)
 				{
 					DeviceRegistration = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanCreateFreemiumAccount", out token) && token.Type != JTokenType.Null)
+				{
+					CanCreateFreemiumAccount = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IsInternalAdmin", out token) && token.Type != JTokenType.Null)
+				{
+					IsInternalAdmin = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("AccessFilesFolders", out token) && token.Type != JTokenType.Null)
 				{

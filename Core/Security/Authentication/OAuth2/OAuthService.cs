@@ -10,9 +10,21 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
     {
         string ClientId { get; set; }
         string ClientSecret { get; set; }
+
+        FormQuery<OAuthToken> GetAuthorizationCodeForTokenQuery(OAuthAuthorizationCode code);
+        FormQuery<OAuthToken> GetRefreshOAuthTokenQuery(OAuthToken token);
+        FormQuery<OAuthToken> GetExchangeSamlAssertionForOAuthTokenQuery(string samlAssertion, string subdomain,
+            string applicationControlPlane);
+        FormQuery<OAuthToken> GetPasswordGrantRequestQuery(string username, string password, string subdomain,
+            string applicationControlPlane);
+
+#if Async
         Task<OAuthToken> ExchangeAuthorizationCodeAsync(OAuthAuthorizationCode code);
         Task<OAuthToken> RefreshOAuthTokenAsync(OAuthToken token);
         Task<OAuthToken> ExchangeSamlAssertionAsync(string samlAssertion, string subdomain, string applicationControlPlane);
+        Task<OAuthToken> PasswordGrantAsync(string username, string password, string subdomain,
+            string applicationControlPlane);
+#endif
         string GetAuthorizationUrl(string tld, string responseType, string clientId, string redirectUri, string state, Dictionary<string, string> additionalQueryStringParams = null, string subdomain = "secure");
     }
 
@@ -28,10 +40,10 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
             ClientSecret = clientSecret;
             ShareFileClient = shareFileClient;
         }
-        
-        public Task<OAuthToken> ExchangeAuthorizationCodeAsync(OAuthAuthorizationCode code)
+
+        public FormQuery<OAuthToken> GetAuthorizationCodeForTokenQuery(OAuthAuthorizationCode code)
         {
-            return RequestOAuthTokenAsync(code.ApplicationControlPlane,
+            return CreateOAuthTokenRequestQuery(code.ApplicationControlPlane,
                 new Dictionary<string, string>
                 {
                     {"client_id", ClientId},
@@ -41,9 +53,9 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
                 }, code.Subdomain);
         }
 
-        public Task<OAuthToken> RefreshOAuthTokenAsync(OAuthToken token)
+        public FormQuery<OAuthToken> GetRefreshOAuthTokenQuery(OAuthToken token)
         {
-            return RequestOAuthTokenAsync(token.ApplicationControlPlane,
+            return CreateOAuthTokenRequestQuery(token.ApplicationControlPlane,
                 new Dictionary<string, string>
                 {
                     {"client_id", ClientId},
@@ -53,9 +65,9 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
                 }, token.Subdomain);
         }
 
-        public Task<OAuthToken> ExchangeSamlAssertionAsync(string samlAssertion, string subdomain, string applicationControlPlane)
+        public FormQuery<OAuthToken> GetExchangeSamlAssertionForOAuthTokenQuery(string samlAssertion, string subdomain, string applicationControlPlane)
         {
-            return RequestOAuthTokenAsync(applicationControlPlane,
+            return CreateOAuthTokenRequestQuery(applicationControlPlane,
                 new Dictionary<string, string>
                 {
                     {"client_id", ClientId},
@@ -65,10 +77,10 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
                 }, subdomain);
         }
 
-        public Task<OAuthToken> PasswordGrantAsync(string username, string password, string subdomain,
+        public FormQuery<OAuthToken> GetPasswordGrantRequestQuery(string username, string password, string subdomain,
             string applicationControlPlane)
         {
-            return RequestOAuthTokenAsync(applicationControlPlane,
+            return CreateOAuthTokenRequestQuery(applicationControlPlane,
                 new Dictionary<string, string>
                 {
                     {"client_id", ClientId},
@@ -79,18 +91,36 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
                 }, subdomain);
         }
 
-        private Task<OAuthToken> RequestOAuthTokenAsync(string applicationControlPlane, IEnumerable<KeyValuePair<string, string>> requestFormData, string subdomain = "secure")
+#if Async
+        public Task<OAuthToken> ExchangeAuthorizationCodeAsync(OAuthAuthorizationCode code)
+        {
+            return RequestOAuthTokenAsync(GetAuthorizationCodeForTokenQuery(code));
+        }
+
+        public Task<OAuthToken> RefreshOAuthTokenAsync(OAuthToken token)
+        {
+            return RequestOAuthTokenAsync(GetRefreshOAuthTokenQuery(token));
+        }
+
+        public Task<OAuthToken> ExchangeSamlAssertionAsync(string samlAssertion, string subdomain, string applicationControlPlane)
+        {
+            return
+                RequestOAuthTokenAsync(GetExchangeSamlAssertionForOAuthTokenQuery(samlAssertion, subdomain,
+                    applicationControlPlane));
+        }
+
+        public Task<OAuthToken> PasswordGrantAsync(string username, string password, string subdomain,
+            string applicationControlPlane)
+        {
+            return
+                RequestOAuthTokenAsync(GetPasswordGrantRequestQuery(username, password, subdomain,
+                    applicationControlPlane));
+        }
+
+        private Task<OAuthToken> RequestOAuthTokenAsync(FormQuery<OAuthToken> oauthTokenQuery)
         {
             for (int i = 0; i < 2; i++)
             {
-                var url = string.Format("https://{0}.{1}/oauth/token", subdomain, applicationControlPlane);
-                var oauthTokenQuery = new FormQuery<OAuthToken>(ShareFileClient)
-                    .Ids(url)
-                    .QueryString("requirev3", "true");
-
-                oauthTokenQuery.Body = requestFormData;
-                oauthTokenQuery.HttpMethod = "POST";
-
                 try
                 {
                     return oauthTokenQuery.ExecuteAsync();
@@ -109,6 +139,21 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
             }
 
             throw new Exception();
+        }
+#endif
+
+        private FormQuery<OAuthToken> CreateOAuthTokenRequestQuery(string applicationControlPlane,
+            IEnumerable<KeyValuePair<string, string>> requestFormData, string subdomain = "secure")
+        {
+            var url = string.Format("https://{0}.{1}/oauth/token", subdomain, applicationControlPlane);
+            var oauthTokenQuery = new FormQuery<OAuthToken>(ShareFileClient)
+                .Ids(url)
+                .QueryString("requirev3", "true") as FormQuery<OAuthToken>;
+
+            oauthTokenQuery.Body = requestFormData;
+            oauthTokenQuery.HttpMethod = "POST";
+
+            return oauthTokenQuery;
         }
 
         public string GetAuthorizationUrl(string tld, string responseType, string clientId, string redirectUri, string state, Dictionary<string, string> additionalQueryStringParams = null, string subdomain = "secure")

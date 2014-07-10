@@ -1,5 +1,6 @@
 ﻿#if !Async
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using ShareFile.Api.Client.Extensions.Tasks;
 using ShareFile.Api.Client.FileSystem;

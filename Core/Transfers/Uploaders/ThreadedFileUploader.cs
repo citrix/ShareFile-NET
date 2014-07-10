@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using Newtonsoft.Json;
-using ShareFile.Api.Client.Core.Transfers.Uploaders;
+using ShareFile.Api.Client.Transfers.Uploaders;
 using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Security.Cryptography;
@@ -17,29 +17,16 @@ using ShareFile.Api.Client.Extensions.Tasks;
 
 namespace ShareFile.Api.Client.Transfers.Uploaders
 {
-    public class ThreadedFileUploader : SyncUploaderBase, IDisposable
+    public class ThreadedFileUploader : SyncUploaderBase
     {
         public ThreadedFileUploader(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
-            : base(client, uploadSpecificationRequest, file, expirationDays)
+            : base(client, uploadSpecificationRequest, file, config, expirationDays)
         {
             _itemsToUpload = new Queue<FilePart>();
             _activeFileParts = new List<FilePart>();
 
-            Config = config ?? new FileUploaderConfig();
-
             _effectivePartSize = Config.PartSize;
-            HashProvider = MD5HashProviderFactory.GetHashProvider().CreateHash();
-            Progress = new TransferProgress
-            {
-                TransferId = Guid.NewGuid().ToString(),
-                BytesTransferred = 0,
-                BytesRemaining = uploadSpecificationRequest.FileSize,
-                TotalBytes = uploadSpecificationRequest.FileSize
-            };
         }
-
-        public FileUploaderConfig Config { get; private set; }
-        public TransferProgress Progress { get; set; }
 
         private readonly List<FilePart> _activeFileParts;
         private readonly Queue<FilePart> _itemsToUpload;
@@ -157,23 +144,8 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             message.Headers.Add("Accept", "application/json");
 
             var response = client.SendAsync(message).WaitForTask();
-            if (response.IsSuccessStatusCode)
-            {
-                using (var responseStream = response.Content.ReadAsStreamAsync().WaitForTask())
-                using (var textReader = new JsonTextReader(new StreamReader(responseStream)))
-                {
-                    var uploadResponse = new JsonSerializer().Deserialize<ShareFileApiResponse<UploadResponse>>(textReader);
 
-                    if (uploadResponse.Error)
-                    {
-                        throw new UploadException(uploadResponse.ErrorMessage, uploadResponse.ErrorCode);
-                    }
-
-                    return uploadResponse.Value;
-                }
-            }
-
-            throw new UploadException("Error completing upload.", -1);
+            return GetUploadResponse(response);
         }
 
         private string GetComposedFinishUri()
@@ -242,12 +214,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             }
 
             return HashProvider.GetComputedHashAsString();
-        }
-
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
         }
 
         public void EnqueueFilePart(FilePart filePart)
@@ -325,11 +291,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             }
         }
 
-        public void FilePartException()
-        {
-            throw new NotImplementedException();
-        }
-
         public List<FilePart> GetActiveFileParts()
         {
             lock (QueueAccessLock)
@@ -371,14 +332,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             Progress.BytesTransferred += bytesTransferred;
 
             NotifyProgress(Progress);
-        }
-
-        protected internal override HttpClient GetHttpClient()
-        {
-            return new HttpClient(GetHttpClientHandler())
-            {
-                Timeout = new TimeSpan(0, 0, 0, 0, Config.HttpTimeout)
-            };
         }
     }
 
@@ -499,18 +452,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         public void Shutdown()
         {
             _shutdown = true;
-        }
-    }
-
-    public abstract class SyncUploaderBase : UploaderBase
-    {
-        public abstract UploadResponse Upload(Dictionary<string, object> transferMetadata = null);
-        public abstract void Prepare();
-
-        protected SyncUploaderBase(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, int? expirationDays)
-            : base(client, uploadSpecificationRequest, file, expirationDays)
-        {
-
         }
     }
 }

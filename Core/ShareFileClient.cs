@@ -62,16 +62,16 @@ namespace ShareFile.Api.Client
 
 #if Async
 #if ShareFile
-        AsyncThreadedFileUploader GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null);
+        AsyncUploaderBase GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null);
 #else
-        AsyncThreadedFileUploader GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null);
+        AsyncUploaderBase GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null);
 #endif
         AsyncFileDownloader GetAsyncFileDownloader(Item itemToDownload, DownloaderConfig config = null);
 #else
 #if ShareFile
-        ThreadedFileUploader GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null);
+        SyncUploaderBase GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null);
 #else
-        ThreadedFileUploader GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null);
+        SyncUploaderBase GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null);
 #endif
         FileDownloader GetFileDownloader(Item itemToDownload, DownloaderConfig config = null);
 #endif
@@ -286,18 +286,34 @@ namespace ShareFile.Api.Client
 
 #if Async
 #if ShareFile
-        public AsyncThreadedFileUploader GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
+        public AsyncUploaderBase GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
         {
-            uploadSpecificationRequest.Method = UploadMethod.Threaded;
+            switch (uploadSpecificationRequest.Method)
+            {
+                case UploadMethod.Standard:
+                    return new AsyncStandardFileUploader(this, uploadSpecificationRequest, file, config, expirationDays);
+                    break;
+                case UploadMethod.Threaded:
+                    return new AsyncThreadedFileUploader(this, uploadSpecificationRequest, file, config, expirationDays);
+                    break;
+            }
 
-            return new AsyncThreadedFileUploader(this, uploadSpecificationRequest, file, config, expirationDays);
+            throw new NotSupportedException(uploadSpecificationRequest.Method + " is not supported.");
         }
 #else
-        public AsyncThreadedFileUploader GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null)
+        public AsyncUploaderBase GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null)
         {
-            uploadSpecificationRequest.Method = UploadMethod.Threaded;
+            switch (uploadSpecificationRequest.Method)
+            {
+                case UploadMethod.Standard:
+                    return new AsyncStandardFileUploader(this, uploadSpecificationRequest, file, config);
+                    break;
+                case UploadMethod.Threaded:
+                    return new AsyncThreadedFileUploader(this, uploadSpecificationRequest, file, config);
+                    break;
+            }
 
-            return new AsyncThreadedFileUploader(this, uploadSpecificationRequest, file, config);
+            throw new NotSupportedException(uploadSpecificationRequest.Method + " is not supported.");
         }
 #endif
         public AsyncFileDownloader GetAsyncFileDownloader(Item itemToDownload, DownloaderConfig config = null)
@@ -308,18 +324,34 @@ namespace ShareFile.Api.Client
 
 
 #if ShareFile
-        public ThreadedFileUploader GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
+        public SyncUploaderBase GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
         {
-            uploadSpecificationRequest.Method = UploadMethod.Threaded;
+            switch (uploadSpecificationRequest.Method)
+            {
+                case UploadMethod.Standard:
+                    return new StandardFileUploader(this, uploadSpecificationRequest, file, config, expirationDays);
+                    break;
+                case UploadMethod.Threaded:
+                    return new ThreadedFileUploader(this, uploadSpecificationRequest, file, config, expirationDays);
+                    break;
+            }
 
-            return new ThreadedFileUploader(this, uploadSpecificationRequest, file, config, expirationDays);
+            throw new NotSupportedException(uploadSpecificationRequest.Method + " is not supported.");
         }
 #else        
         public ThreadedFileUploader GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null)
         {
-            uploadSpecificationRequest.Method = UploadMethod.Threaded;
+            switch (uploadSpecificationRequest.Method)
+            {
+                case UploadMethod.Standard:
+                    return new StandardFileUploader(this, uploadSpecificationRequest, file, config);
+                    break;
+                case UploadMethod.Threaded:
+                    return new ThreadedFileUploader(this, uploadSpecificationRequest, file, config);
+                    break;
+            }
 
-            return new ThreadedFileUploader(this, uploadSpecificationRequest, file, config);
+            throw new NotSupportedException(uploadSpecificationRequest.Method + " is not supported.");
         }
 #endif
 

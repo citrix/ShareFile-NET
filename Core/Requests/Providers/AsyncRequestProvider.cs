@@ -248,7 +248,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                             return await HandleTypedResponse<T>(authenticatedResponse, request, retryCount, false);
                         }
 
-                        Response.CreateAction<T>(await HandleNonSuccess(authenticatedResponse, retryCount, typeof(T)).ConfigureAwait(false));
+                        return Response.CreateAction<T>(await HandleNonSuccess(authenticatedResponse, retryCount, typeof(T)).ConfigureAwait(false));
                     }
                 }
             }

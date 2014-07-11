@@ -197,7 +197,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                             return HandleResponse(authenticatedResponse, parseSuccessResponse, request, retryCount, false);
                         }
 
-                        Response.CreateAction(HandleNonSuccess(authenticatedResponse, retryCount));
+                        return Response.CreateAction(HandleNonSuccess(authenticatedResponse, retryCount));
                     }
                 }
             }

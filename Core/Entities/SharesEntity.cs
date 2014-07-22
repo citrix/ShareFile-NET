@@ -208,6 +208,14 @@ namespace ShareFile.Api.Client.Entities
 		/// <param name="parameters"></param>
 		IQuery CreateRequest(ShareRequestParams parameters);
 		/// <summary>
+		/// Deliver an existing share link to one or more recipients
+		/// </summary>
+		/// <remarks>
+		/// Sends an Email to the specified list of addresses, containing a link to a download or an upload.
+		/// </remarks>
+		/// <param name="parameters"></param>
+		IQuery Resend(ShareResendParams parameters);
+		/// <summary>
 		/// Upload File to Request Share
 		/// </summary>
 		/// <remarks>
@@ -570,6 +578,23 @@ namespace ShareFile.Api.Client.Entities
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 			sfApiQuery.From("Shares");
 			sfApiQuery.Action("Request");
+			sfApiQuery.Body = parameters;
+			sfApiQuery.HttpMethod = "POST";
+			return sfApiQuery;
+		}
+
+		/// <summary>
+		/// Deliver an existing share link to one or more recipients
+		/// </summary>
+		/// <remarks>
+		/// Sends an Email to the specified list of addresses, containing a link to a download or an upload.
+		/// </remarks>
+		/// <param name="parameters"></param>
+		public IQuery Resend(ShareResendParams parameters)
+		{
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+			sfApiQuery.From("Shares");
+			sfApiQuery.Action("Resend");
 			sfApiQuery.Body = parameters;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;

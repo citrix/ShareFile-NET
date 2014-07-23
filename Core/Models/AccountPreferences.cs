@@ -191,6 +191,8 @@ namespace ShareFile.Api.Models
 
 		public string TrustedDomains { get; set; }
 
+		public bool? EnableEncryptedEmailForOutlookPlugin { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -285,6 +287,7 @@ namespace ShareFile.Api.Models
 				ENSFailSafePollingCount = typedSource.ENSFailSafePollingCount;
 				ENSMaxNotificationSyncWaitCount = typedSource.ENSMaxNotificationSyncWaitCount;
 				TrustedDomains = typedSource.TrustedDomains;
+				EnableEncryptedEmailForOutlookPlugin = typedSource.EnableEncryptedEmailForOutlookPlugin;
 			}
 			else
 			{
@@ -632,6 +635,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("TrustedDomains", out token) && token.Type != JTokenType.Null)
 				{
 					TrustedDomains = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("EnableEncryptedEmailForOutlookPlugin", out token) && token.Type != JTokenType.Null)
+				{
+					EnableEncryptedEmailForOutlookPlugin = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 			}
 		}

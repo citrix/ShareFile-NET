@@ -1,18 +1,18 @@
 ﻿namespace ShareFile.Api.Client.Requests.Filters
 {
-    public abstract class BinaryFilter : IFilter
+    public abstract class BooleanFilter : IFilter
     {
         protected readonly string binaryOperator;
         public IFilter Left { get; private set; }
         public IFilter Right { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BinaryFilter"/> class.
+        /// Initializes a new instance of the <see cref="BooleanFilter"/> class.
         /// </summary>
         /// <param name="left">Filter for the left hand side of binaryOperation</param>
         /// <param name="right">Filter for the right hand side of binaryOperation</param>
         /// <param name="binaryOperator">Desired binary operator</param>
-        protected BinaryFilter(IFilter left, IFilter right, string binaryOperator)
+        protected BooleanFilter(IFilter left, IFilter right, string binaryOperator)
         {
             this.Left = left;
             this.Right = right;

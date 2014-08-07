@@ -79,7 +79,7 @@
     <Compile Include="Extensions\ODataObjectExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Requests\ApiRequestTests.cs" />
-    <Compile Include="Requests\Filters\BinaryFilterTests.cs" />
+    <Compile Include="Requests\Filters\BooleanFilterTests.cs" />
     <Compile Include="Requests\Providers\RequestProviderTests.cs" />
   </ItemGroup>
   <ItemGroup>

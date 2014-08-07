@@ -3,7 +3,7 @@
     /// <summary>
     /// OData Filter for ORing two filters
     /// </summary>
-    public class OrFilter : BinaryFilter
+    public class OrFilter : BooleanFilter
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="OrFilter"/> class.

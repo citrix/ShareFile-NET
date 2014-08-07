@@ -3,7 +3,7 @@
     /// <summary>
     /// OData Filter for ANDing two filters
     /// </summary>
-    public class AndFilter : BinaryFilter
+    public class AndFilter : BooleanFilter
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AndFilter"/> class.

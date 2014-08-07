@@ -4,7 +4,7 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Filters
 {
     using FluentAssertions;
 
-    public class BinaryFilterTests
+    public class BooleanFilterTests
     {
         [Test]
         public void VerifyAndBinaryOperator()

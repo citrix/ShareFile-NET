@@ -340,7 +340,6 @@ namespace ShareFile.Api.Client.Entities
 		/// SSOInfo
 		/// </returns>
 		IQuery<SSOInfo> GetSSOInfo(string subdomain);
-		IQuery<Account> Update(Account account);
 	}
 
 	public class AccountsEntity : EntityBase, IAccountsEntity
@@ -906,15 +905,6 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.Action("SSOInfo");
 			sfApiQuery.QueryString("subdomain", subdomain);
 			sfApiQuery.HttpMethod = "GET";
-			return sfApiQuery;
-		}
-
-		public IQuery<Account> Update(Account account)
-		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Account>(Client);
-			sfApiQuery.From("Accounts");
-			sfApiQuery.Body = account;
-			sfApiQuery.HttpMethod = "PATCH";
 			return sfApiQuery;
 		}
 

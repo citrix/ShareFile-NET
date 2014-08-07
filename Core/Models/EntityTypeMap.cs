@@ -43,6 +43,7 @@ namespace ShareFile.Api.Models
 				_entityTypeMap.Add("ConnectorGroupZones", typeof(ConnectorGroupZone));
 				_entityTypeMap.Add("ConnectorGroupAccessControl", typeof(ConnectorGroupAccessControl));
 				_entityTypeMap.Add("ConnectorGroupAccessControls", typeof(ConnectorGroupAccessControl));
+				_entityTypeMap.Add("ShareResendParams", typeof(ShareResendParams));
 				_entityTypeMap.Add("ToolInformation", typeof(ToolInformation));
 				_entityTypeMap.Add("ToolInformations", typeof(ToolInformation));
 				_entityTypeMap.Add("AccessControl", typeof(AccessControl));

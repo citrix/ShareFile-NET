@@ -30,6 +30,8 @@ namespace ShareFile.Api.Client.Entities
 		/// OutlookInformation
 		/// </returns>
 		IQuery<OutlookInformation> GetOutlookInformation();
+		IQuery<Account> Update(Account account);
+		IQuery CreateAssignSubdomain(string subdomain);
 	}
 
 	public class AccountsEntityInternal : AccountsEntity, IAccountsEntityInternal
@@ -53,6 +55,25 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.From("Accounts");
 			sfApiQuery.Action("OutlookInformation");
 			sfApiQuery.HttpMethod = "GET";
+			return sfApiQuery;
+		}
+
+		public IQuery<Account> Update(Account account)
+		{
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Account>(Client);
+			sfApiQuery.From("Accounts");
+			sfApiQuery.Body = account;
+			sfApiQuery.HttpMethod = "PATCH";
+			return sfApiQuery;
+		}
+
+		public IQuery CreateAssignSubdomain(string subdomain)
+		{
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+			sfApiQuery.From("Accounts");
+			sfApiQuery.Action("AssignSubdomain");
+			sfApiQuery.QueryString("subdomain", subdomain);
+			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}
 

@@ -11,17 +11,17 @@ let authors = ["Citrix ShareFile"]
 let buildDir = "./build/"
 let packagingRoot = "./packaging/"
 let packagingDir = packagingRoot @@ "sharefile"
-let nugetVersion = getBuildParamOrDefault "nugetVersion" "3.0.1"
+let nugetVersion = getBuildParamOrDefault "nugetVersion" "3.0.2"
 // DO NOT INCREMENT THIS VALUE -- Will cause issues with PowerShell and StrongNamed versions of the assembly
 let assemblyVersion = getBuildParamOrDefault "assemblyVersion" "3.0.0"
-let assemblyFileVersion = getBuildParamOrDefault "assemblyFileVersion" "3.0.1"
+let assemblyFileVersion = getBuildParamOrDefault "assemblyFileVersion" "3.0.2"
 let nugetAccessKey = getBuildParamOrDefault "nugetkey" ""
 let nugetDestination = getBuildParamOrDefault "nugetserver" ""
 let title = "ShareFile Client SDK"
-let signedTitle = "ShareFile Client SDK - Signed"
+let signedTitle = "ShareFile Client SDK - StrongName"
 
 let projectName = "ShareFile.Api.Client"
-let signedProjectName = "ShareFile.Api.Client.Signed"
+let signedProjectName = "ShareFile.Api.Client.StrongName"
 let projectDescription = "A ShareFile API client library for .NET"
 let projectSummary = projectDescription
 
@@ -100,6 +100,7 @@ Target "CreateNuGetPackage" (fun () ->
     let netCore45Dir = packagingDir @@ "lib/netcore45/"
     let net45Dir = packagingDir @@ "lib/net45/"
     let net40Dir = packagingDir @@ "lib/net40/"
+    let net40ClientDir = packagingDir @@ "lib/net40-client/"
     let portableDir = packagingDir @@ "lib/portable-net45+wp80+win8+wpa81/"
     
     let nugetTitle =
@@ -109,11 +110,12 @@ Target "CreateNuGetPackage" (fun () ->
         if signRequested = "true" then signedProjectName
         else projectName
 
-    CleanDirs [net45Dir; net40Dir; portableDir; netCore45Dir]
+    CleanDirs [net45Dir; net40Dir; net40ClientDir; portableDir; netCore45Dir]
     
     CopyFile net45Dir (buildDir @@ "Net45/ShareFile.Api.Client.Core.dll")
     CopyFile net45Dir (buildDir @@ "Net45/ShareFile.Api.Client.Net45.dll")
     CopyFile net40Dir (buildDir @@ "Net40/ShareFile.Api.Client.Core.dll")
+    CopyFile net40ClientDir (buildDir @@ "Net40/ShareFile.Api.Client.Core.dll")
     CopyFile portableDir (buildDir @@ "Portable/ShareFile.Api.Client.Core.dll")
     CopyFile netCore45Dir (buildDir @@ "NetCore45/ShareFile.Api.Client.Core.dll")
     

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -95,10 +95,14 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             var uploadUri = UploadSpecification.ChunkUri;
 
             // Only add fmt=json if it does not already exist, just in case there is an API update to correct this.
-            if (UploadSpecification.ChunkUri.AbsoluteUri.IndexOf("&fmt=json", StringComparison.OrdinalIgnoreCase) == -1)
+            if (uploadUri.AbsoluteUri.IndexOf("&fmt=json", StringComparison.OrdinalIgnoreCase) == -1)
             {
-                uploadUri = new Uri(UploadSpecification.ChunkUri.AbsoluteUri + "&fmt=json");
+                uploadUri = new Uri(uploadUri.AbsoluteUri + "&fmt=json");
             }
+			if (UploadSpecificationRequest.ForceUnique)
+			{
+				uploadUri = new Uri(uploadUri.AbsoluteUri + "&forceunique=1");
+			}
 
             return uploadUri;
         }

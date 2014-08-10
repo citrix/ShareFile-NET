@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -263,9 +263,17 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             }
 
             if (!string.IsNullOrEmpty(UploadSpecificationRequest.Details))
-                finishUri.AppendFormat("&details={0}", Uri.EscapeDataString(UploadSpecificationRequest.Details));
+			{
+				finishUri.AppendFormat("&details={0}", Uri.EscapeDataString(UploadSpecificationRequest.Details));
+			}
             if (!string.IsNullOrEmpty(UploadSpecificationRequest.Title))
-                finishUri.AppendFormat("&title={0}", Uri.EscapeDataString(UploadSpecificationRequest.Title));
+            {
+			    finishUri.AppendFormat("&title={0}", Uri.EscapeDataString(UploadSpecificationRequest.Title));
+			}
+			if (UploadSpecificationRequest.ForceUnique)
+			{
+				finishUri.Append("&forceunique=1");
+			}
 
             return finishUri.ToString();
         }

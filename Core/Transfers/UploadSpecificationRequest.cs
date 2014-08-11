@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using ShareFile.Api.Client.Extensions;
@@ -29,6 +29,13 @@ namespace ShareFile.Api.Client.Transfers
         public string ResponseFormat { get; private set; }
         public DateTime? ClientCreatedDateUtc { get; set; }
         public DateTime? ClientModifiedDateUtc { get; set; }
+		
+		/// <summary>
+		/// Will make a best effort to ensure a file is uploaded by modifying 
+		/// FileName if it encounters a collision.  This is NOT supported on all
+		/// providers.
+		/// </summary>
+		public bool ForceUnique { get; set; }
 
         public UploadSpecificationRequest()
         {

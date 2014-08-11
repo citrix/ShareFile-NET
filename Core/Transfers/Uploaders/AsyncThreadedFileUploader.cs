@@ -241,41 +241,14 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         private async Task<UploadResponse> FinishUploadAsync()
         {
             var client = GetHttpClient();
-
-            var finishUri = GetComposedFinishUri();
-
+            var finishUri = this.GetFinishUriForThreadedUploads();
             var message = new HttpRequestMessage(HttpMethod.Get, finishUri);
+
             message.Headers.Add("Accept", "application/json");
 
             var response = await client.SendAsync(message);
 
             return await GetUploadResponseAsync(response);
-        }
-
-        private string GetComposedFinishUri()
-        {
-            var finishUri = new StringBuilder(string.Format("{0}&respformat=json", UploadSpecification.FinishUri.AbsoluteUri));
-
-            if (File.Length > 0)
-            {
-                HashProvider.Finalize(new byte[1], 0, 0);
-                finishUri.AppendFormat("&filehash={0}", HashProvider.GetComputedHashAsString());
-            }
-
-            if (!string.IsNullOrEmpty(UploadSpecificationRequest.Details))
-			{
-				finishUri.AppendFormat("&details={0}", Uri.EscapeDataString(UploadSpecificationRequest.Details));
-			}
-            if (!string.IsNullOrEmpty(UploadSpecificationRequest.Title))
-            {
-			    finishUri.AppendFormat("&title={0}", Uri.EscapeDataString(UploadSpecificationRequest.Title));
-			}
-			if (UploadSpecificationRequest.ForceUnique)
-			{
-				finishUri.Append("&forceunique=1");
-			}
-
-            return finishUri.ToString();
         }
 
         private async Task<FilePart> FillFilePartAsync(FilePart filePart)

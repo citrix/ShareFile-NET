@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Text;
 using Newtonsoft.Json;
 using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.Extensions.Tasks;
@@ -105,6 +106,32 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 			}
 
             return uploadUri;
+        }
+
+        protected Uri GetFinishUriForThreadedUploads()
+        {
+            var finishUri = new StringBuilder(string.Format("{0}&respformat=json", UploadSpecification.FinishUri.AbsoluteUri));
+
+            if (File.Length > 0)
+            {
+                HashProvider.Finalize(new byte[1], 0, 0);
+                finishUri.AppendFormat("&filehash={0}", HashProvider.GetComputedHashAsString());
+            }
+
+            if (!string.IsNullOrEmpty(UploadSpecificationRequest.Details))
+            {
+                finishUri.AppendFormat("&details={0}", Uri.EscapeDataString(UploadSpecificationRequest.Details));
+            }
+            if (!string.IsNullOrEmpty(UploadSpecificationRequest.Title))
+            {
+                finishUri.AppendFormat("&title={0}", Uri.EscapeDataString(UploadSpecificationRequest.Title));
+            }
+            if (UploadSpecificationRequest.ForceUnique)
+            {
+                finishUri.Append("&forceunique=1");
+            }
+
+            return new Uri(finishUri.ToString());
         }
     }
 }

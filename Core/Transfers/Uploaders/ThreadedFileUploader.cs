@@ -137,7 +137,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         private UploadResponse FinishUpload()
         {
-            var finishUri = GetComposedFinishUri();
+            var finishUri = this.GetFinishUriForThreadedUploads();
             var client = GetHttpClient();
 
             var message = new HttpRequestMessage(HttpMethod.Get, finishUri);
@@ -146,31 +146,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             var response = client.SendAsync(message).WaitForTask();
 
             return GetUploadResponse(response);
-        }
-
-        private string GetComposedFinishUri()
-        {
-            var finishUri = new StringBuilder(string.Format("{0}&respformat=json", UploadSpecification.FinishUri.AbsoluteUri));
-
-            if (File.Length > 0)
-            {
-                finishUri.AppendFormat("&filehash={0}", HashProvider.GetComputedHashAsString());
-            }
-
-            if (!string.IsNullOrEmpty(UploadSpecificationRequest.Details))
-            {
-			    finishUri.AppendFormat("&details={0}", Uri.EscapeDataString(UploadSpecificationRequest.Details));
-			}
-            if (!string.IsNullOrEmpty(UploadSpecificationRequest.Title))
-			{
-				finishUri.AppendFormat("&title={0}", Uri.EscapeDataString(UploadSpecificationRequest.Title));
-			}
-			if (UploadSpecificationRequest.ForceUnique)
-			{
-				finishUri.Append("&forceunique=1");
-			}
-
-            return finishUri.ToString();
         }
 
         private void WaitPauseTime()

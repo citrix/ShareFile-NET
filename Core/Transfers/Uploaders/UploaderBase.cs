@@ -58,7 +58,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 uploadSpecificationRequest.Details, uploadSpecificationRequest.IsSend,
                 uploadSpecificationRequest.SendGuid, null, uploadSpecificationRequest.ThreadCount,
                 uploadSpecificationRequest.ResponseFormat, uploadSpecificationRequest.Notify,
-                uploadSpecificationRequest.ClientCreatedDateUtc, uploadSpecificationRequest.ClientModifiedDateUtc);
+                uploadSpecificationRequest.ClientCreatedDateUtc, uploadSpecificationRequest.ClientModifiedDateUtc, ExpirationDays);
 
             return query;
         }

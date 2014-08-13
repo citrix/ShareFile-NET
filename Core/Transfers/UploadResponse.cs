@@ -12,11 +12,12 @@ namespace ShareFile.Api.Client.Transfers
     {
         public string DisplayName { get; set; }
         public string Filename { get; set; }
-        [JsonProperty("ID")]
         public string Id { get; set; }
+        public string ParentId { get; set; }
+
+        [JsonProperty("md5")]
         public string Hash { get; set; }
         public long Size { get; set; }
-        [JsonProperty("UploadID")]
         public string UploadId { get; set; }
     }
 }

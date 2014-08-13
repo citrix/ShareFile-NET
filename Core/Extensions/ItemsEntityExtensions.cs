@@ -14,7 +14,21 @@ namespace ShareFile.Api.Client.Extensions
         /// <returns></returns>
         public static Uri GetAlias(this IItemsEntity items, ItemAlias alias)
         {
-            return items.GetAlias(alias.ToString().ToLower());
+            string aliasString;
+            switch (alias)
+            {
+                case ItemAlias.NetworkShareConnectors:
+                    aliasString = "c-cifs";
+                    break;
+                case ItemAlias.SharepointConnectors:
+                    aliasString = "c-sp";
+                    break;
+                default:
+                    aliasString = alias.ToString().ToLower();
+                    break;
+            }
+
+            return items.GetAlias(aliasString);
         }
 
         /// <summary>

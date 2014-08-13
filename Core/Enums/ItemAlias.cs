@@ -7,7 +7,6 @@
         Home,
         Root,
         Box,
-        MyFolders,
         Favorites,
         SharepointConnectors,
         NetworkShareConnectors

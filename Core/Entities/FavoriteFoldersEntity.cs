@@ -46,6 +46,17 @@ namespace ShareFile.Api.Client.Entities
 		/// </returns>
 		IQuery<FavoriteFolder> GetByUser(Uri itemUrl, string userid);
 		/// <summary>
+		/// Get Item as Favorite Folder
+		/// </summary>
+		/// <remarks>
+		/// Retrieves a Favorite Folder representation of a given parent Item
+		/// </remarks>
+		/// <param name="parentUrl"></param>
+		/// <returns>
+		/// The specified Favorite Folder if it belongs to the specified parent Item
+		/// </returns>
+		IQuery<FavoriteFolder> GetFavoriteFolderByItem(Uri parentUrl);
+		/// <summary>
 		/// Get FavoriteFolder
 		/// </summary>
 		/// <remarks>
@@ -130,6 +141,25 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.Action("FavoriteFolders");
 			sfApiQuery.Uri(itemUrl);
 			sfApiQuery.ActionIds(userid);
+			sfApiQuery.HttpMethod = "GET";
+			return sfApiQuery;
+		}
+
+		/// <summary>
+		/// Get Item as Favorite Folder
+		/// </summary>
+		/// <remarks>
+		/// Retrieves a Favorite Folder representation of a given parent Item
+		/// </remarks>
+		/// <param name="parentUrl"></param>
+		/// <returns>
+		/// The specified Favorite Folder if it belongs to the specified parent Item
+		/// </returns>
+		public IQuery<FavoriteFolder> GetFavoriteFolderByItem(Uri parentUrl)
+		{
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<FavoriteFolder>(Client);
+			sfApiQuery.Action("FavoriteFolder");
+			sfApiQuery.Uri(parentUrl);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}

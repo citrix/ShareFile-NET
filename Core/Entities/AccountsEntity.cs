@@ -122,7 +122,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <param name="provider"></param>
 		IQuery<SSOAccountProvider> UpdateSSO(SSOAccountProvider sso, string provider = "saml");
 		/// <summary>
-		/// Email List of Accounts to User
+		/// Get List of Accounts for User
 		/// </summary>
 		/// <example>
 		/// {
@@ -535,7 +535,7 @@ namespace ShareFile.Api.Client.Entities
 		}
 
 		/// <summary>
-		/// Email List of Accounts to User
+		/// Get List of Accounts for User
 		/// </summary>
 		/// <example>
 		/// {

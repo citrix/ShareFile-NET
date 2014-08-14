@@ -59,6 +59,34 @@ namespace ShareFile.Api.Client.Entities
 		/// </returns>
 		IQuery<ODataFeed<ShareAlias>> GetRecipients(Uri url);
 		/// <summary>
+		/// Get Recipient of a Share
+		/// </summary>
+		/// <remarks>
+		/// Retrieve a single Share Recipient identified by the alias id.
+		/// </remarks>
+		/// <param name="parentUrl"></param>
+		/// <param name="id"></param>
+		/// <returns>
+		/// A Share Alias representing a single recipient of the Share
+		/// </returns>
+		IQuery<ShareAlias> GetRecipients(Uri parentUrl, string id);
+		/// <summary>
+		/// Create Recipient for a Share
+		/// </summary>
+		/// <remarks>
+		/// To create a Recipient for Shares that require user informaion ( Email, First Name, Last Name and Company), make sure
+		/// pass those parameters
+		/// </remarks>
+		/// <param name="parentUrl"></param>
+		/// <param name="Email"></param>
+		/// <param name="FirstName"></param>
+		/// <param name="LastName"></param>
+		/// <param name="Company"></param>
+		/// <returns>
+		/// A Share Alias representing a single recipient of the Share
+		/// </returns>
+		IQuery<ShareAlias> CreateRecipients(Uri parentUrl, string Email = null, string FirstName = null, string LastName = null, string Company = null);
+		/// <summary>
 		/// Get Items of a Share
 		/// </summary>
 		/// <remarks>
@@ -95,6 +123,7 @@ namespace ShareFile.Api.Client.Entities
 		/// a shared folder.
 		/// </remarks>
 		/// <param name="shareUrl"></param>
+		/// <param name="itemId"></param>
 		/// <param name="Name"></param>
 		/// <param name="Email"></param>
 		/// <param name="Company"></param>
@@ -102,7 +131,52 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// Redirects the caller (302) to the download address for the share contents.
 		/// </returns>
-		IQuery<Stream> Download(Uri shareUrl, string id, string Name = null, string Email = null, string Company = null, bool redirect = true);
+		IQuery<Stream> Download(Uri shareUrl, string id = null, string Name = null, string Email = null, string Company = null, bool redirect = true);
+		/// <summary>
+		/// Download Items from a Share for a Recipient
+		/// </summary>
+		/// <example>
+		/// GET https://account.sf-api.com/sf/v3/Shares(shareid)/Recipients(aliasid)/Download?id=itemid
+		/// GET https://account.sf-api.com/sf/v3/Shares(shareid)/Recipients(aliasid)/Download(itemid)
+		/// </example>
+		/// <remarks>
+		/// Downloads items from the Share. The default action will download all Items in the Share.
+		/// If a Share has a single item, the download attachment name
+		/// will use the item name. Otherwise, the download will contain a ZIP archive containing all
+		/// files and folders in the share, named Files.zip.To download Shares that require user informaion ( Email, First Name, Last Name and Company), make sure
+		/// to create an Recipient (alias)To download Shares that require authentication, make sure this request is authenticated.
+		/// Anyone can download files from anonymous shares.You can also download individual Items in the Share. Use the Shares(id)/Recipients(aliasid)/Download action. The
+		/// item ID must be a top-level item in the Share - i.e., you cannot download or address files contained inside
+		/// a shared folder.
+		/// </remarks>
+		/// <param name="shareUrl"></param>
+		/// <param name="aliasid"></param>
+		/// <param name="itemId"></param>
+		/// <param name="redirect"></param>
+		/// <returns>
+		/// Redirects the caller (302) to the download address for the share contents.
+		/// </returns>
+		IQuery<Stream> Download(Uri shareUrl, string aliasid, string id = null, bool redirect = true);
+		/// <summary>
+		/// Download Multiple Items from a Share for a Recipient
+		/// </summary>
+		/// <example>
+		/// ["id1","id2",...]
+		/// </example>
+		/// <remarks>
+		/// Download Multiple Items from a Share for a Recipient. The download will contain a ZIP archive containing all
+		/// files and folders in the share, named Files.zip.To download Shares that require user informaion ( Email, First Name, Last Name and Company), make sure
+		/// to create an Recipient (alias) and pass in the alaisId.To download Shares that require authentication, make sure this request is authenticated.
+		/// Anyone can download files from anonymous shares.
+		/// </remarks>
+		/// <param name="shareUrl"></param>
+		/// <param name="aliasid"></param>
+		/// <param name="ids"></param>
+		/// <param name="redirect"></param>
+		/// <returns>
+		/// Redirects the caller (302) to the download address for the share contents.
+		/// </returns>
+		IQuery BulkDownload(Uri shareUrl, string aliasid, IEnumerable<string> ids, bool redirect = true);
 		/// <summary>
 		/// Create Share
 		/// </summary>
@@ -283,6 +357,17 @@ namespace ShareFile.Api.Client.Entities
 		/// negotiate the resume upload.
 		/// </returns>
 		IQuery<UploadSpecification> Upload(Uri url, UploadMethod method = UploadMethod.Standard, bool raw = false, string fileName = null, long fileSize = 0, string batchId = null, bool batchLast = false, bool canResume = false, bool startOver = false, bool unzip = false, string tool = "apiv3", bool overwrite = false, string title = null, string details = null, bool isSend = false, string sendGuid = null, string opid = null, int threadCount = 4, string responseFormat = "json", bool notify = false, DateTime? clientCreatedDateUTC = null, DateTime? clientModifiedDateUTC = null, int? expirationDays = null);
+		/// <summary>
+		/// Get Redirection endpoint Information
+		/// </summary>
+		/// <remarks>
+		/// Returns the redirection endpoint for this Share.
+		/// </remarks>
+		/// <param name="url"></param>
+		/// <returns>
+		/// The Redirection endpoint Information
+		/// </returns>
+		IQuery<Redirection> GetRedirection(Uri url);
 	}
 
 	public class SharesEntity : EntityBase, ISharesEntity
@@ -353,6 +438,55 @@ namespace ShareFile.Api.Client.Entities
 		}
 
 		/// <summary>
+		/// Get Recipient of a Share
+		/// </summary>
+		/// <remarks>
+		/// Retrieve a single Share Recipient identified by the alias id.
+		/// </remarks>
+		/// <param name="parentUrl"></param>
+		/// <param name="id"></param>
+		/// <returns>
+		/// A Share Alias representing a single recipient of the Share
+		/// </returns>
+		public IQuery<ShareAlias> GetRecipients(Uri parentUrl, string id)
+		{
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ShareAlias>(Client);
+			sfApiQuery.Action("Recipients");
+			sfApiQuery.Uri(parentUrl);
+			sfApiQuery.ActionIds(id);
+			sfApiQuery.HttpMethod = "GET";
+			return sfApiQuery;
+		}
+
+		/// <summary>
+		/// Create Recipient for a Share
+		/// </summary>
+		/// <remarks>
+		/// To create a Recipient for Shares that require user informaion ( Email, First Name, Last Name and Company), make sure
+		/// pass those parameters
+		/// </remarks>
+		/// <param name="parentUrl"></param>
+		/// <param name="Email"></param>
+		/// <param name="FirstName"></param>
+		/// <param name="LastName"></param>
+		/// <param name="Company"></param>
+		/// <returns>
+		/// A Share Alias representing a single recipient of the Share
+		/// </returns>
+		public IQuery<ShareAlias> CreateRecipients(Uri parentUrl, string Email = null, string FirstName = null, string LastName = null, string Company = null)
+		{
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ShareAlias>(Client);
+			sfApiQuery.Action("Recipients");
+			sfApiQuery.Uri(parentUrl);
+			sfApiQuery.QueryString("Email", Email);
+			sfApiQuery.QueryString("FirstName", FirstName);
+			sfApiQuery.QueryString("LastName", LastName);
+			sfApiQuery.QueryString("Company", Company);
+			sfApiQuery.HttpMethod = "POST";
+			return sfApiQuery;
+		}
+
+		/// <summary>
 		/// Get Items of a Share
 		/// </summary>
 		/// <remarks>
@@ -406,6 +540,7 @@ namespace ShareFile.Api.Client.Entities
 		/// a shared folder.
 		/// </remarks>
 		/// <param name="shareUrl"></param>
+		/// <param name="itemId"></param>
 		/// <param name="Name"></param>
 		/// <param name="Email"></param>
 		/// <param name="Company"></param>
@@ -413,16 +548,85 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// Redirects the caller (302) to the download address for the share contents.
 		/// </returns>
-		public IQuery<Stream> Download(Uri shareUrl, string id, string Name = null, string Email = null, string Company = null, bool redirect = true)
+		public IQuery<Stream> Download(Uri shareUrl, string id = null, string Name = null, string Email = null, string Company = null, bool redirect = true)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
 			sfApiQuery.Action("Download");
 			sfApiQuery.Uri(shareUrl);
-			sfApiQuery.QueryString("id", id);
+			sfApiQuery.QueryString("itemId", id);
 			sfApiQuery.QueryString("Name", Name);
 			sfApiQuery.QueryString("Email", Email);
 			sfApiQuery.QueryString("Company", Company);
 			sfApiQuery.QueryString("redirect", redirect);
+			sfApiQuery.HttpMethod = "GET";
+			return sfApiQuery;
+		}
+
+		/// <summary>
+		/// Download Items from a Share for a Recipient
+		/// </summary>
+		/// <example>
+		/// GET https://account.sf-api.com/sf/v3/Shares(shareid)/Recipients(aliasid)/Download?id=itemid
+		/// GET https://account.sf-api.com/sf/v3/Shares(shareid)/Recipients(aliasid)/Download(itemid)
+		/// </example>
+		/// <remarks>
+		/// Downloads items from the Share. The default action will download all Items in the Share.
+		/// If a Share has a single item, the download attachment name
+		/// will use the item name. Otherwise, the download will contain a ZIP archive containing all
+		/// files and folders in the share, named Files.zip.To download Shares that require user informaion ( Email, First Name, Last Name and Company), make sure
+		/// to create an Recipient (alias)To download Shares that require authentication, make sure this request is authenticated.
+		/// Anyone can download files from anonymous shares.You can also download individual Items in the Share. Use the Shares(id)/Recipients(aliasid)/Download action. The
+		/// item ID must be a top-level item in the Share - i.e., you cannot download or address files contained inside
+		/// a shared folder.
+		/// </remarks>
+		/// <param name="shareUrl"></param>
+		/// <param name="aliasid"></param>
+		/// <param name="itemId"></param>
+		/// <param name="redirect"></param>
+		/// <returns>
+		/// Redirects the caller (302) to the download address for the share contents.
+		/// </returns>
+		public IQuery<Stream> Download(Uri shareUrl, string aliasid, string id = null, bool redirect = true)
+		{
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
+			sfApiQuery.Action("Recipients");
+			sfApiQuery.Uri(shareUrl);
+			sfApiQuery.ActionIds(aliasid);
+			sfApiQuery.SubAction("Download");
+			sfApiQuery.QueryString("itemId", id);
+			sfApiQuery.QueryString("redirect", redirect);
+			sfApiQuery.HttpMethod = "GET";
+			return sfApiQuery;
+		}
+
+		/// <summary>
+		/// Download Multiple Items from a Share for a Recipient
+		/// </summary>
+		/// <example>
+		/// ["id1","id2",...]
+		/// </example>
+		/// <remarks>
+		/// Download Multiple Items from a Share for a Recipient. The download will contain a ZIP archive containing all
+		/// files and folders in the share, named Files.zip.To download Shares that require user informaion ( Email, First Name, Last Name and Company), make sure
+		/// to create an Recipient (alias) and pass in the alaisId.To download Shares that require authentication, make sure this request is authenticated.
+		/// Anyone can download files from anonymous shares.
+		/// </remarks>
+		/// <param name="shareUrl"></param>
+		/// <param name="aliasid"></param>
+		/// <param name="ids"></param>
+		/// <param name="redirect"></param>
+		/// <returns>
+		/// Redirects the caller (302) to the download address for the share contents.
+		/// </returns>
+		public IQuery BulkDownload(Uri shareUrl, string aliasid, IEnumerable<string> ids, bool redirect = true)
+		{
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+			sfApiQuery.Action("Recipients");
+			sfApiQuery.Uri(shareUrl);
+			sfApiQuery.ActionIds(aliasid);
+			sfApiQuery.SubAction("BulkDownload");
+			sfApiQuery.QueryString("redirect", redirect);
+			sfApiQuery.Body = ids;
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -695,6 +899,25 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.QueryString("clientModifiedDateUTC", clientModifiedDateUTC);
 			sfApiQuery.QueryString("expirationDays", expirationDays);
 			sfApiQuery.HttpMethod = "POST";
+			return sfApiQuery;
+		}
+
+		/// <summary>
+		/// Get Redirection endpoint Information
+		/// </summary>
+		/// <remarks>
+		/// Returns the redirection endpoint for this Share.
+		/// </remarks>
+		/// <param name="url"></param>
+		/// <returns>
+		/// The Redirection endpoint Information
+		/// </returns>
+		public IQuery<Redirection> GetRedirection(Uri url)
+		{
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Redirection>(Client);
+			sfApiQuery.Action("Redirection");
+			sfApiQuery.Uri(url);
+			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
 

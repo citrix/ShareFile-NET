@@ -22,12 +22,27 @@ namespace ShareFile.Api.Client.Entities
 
 	public interface IItemsEntity : IEntityBase
 	{
+		/// <summary>
+		/// Get HomeFolder for Current User
+		/// </summary>
+		/// <remarks>
+		/// Returns home folder for current user.
+		/// Note that home folders are not available for client users, or if the account doesn't have the "My Files & Folders" feature enabled.
+		/// </remarks>
+		/// <returns>
+		/// home folder for current user
+		/// </returns>
 		IQuery<Item> Get();
 		/// <summary>
 		/// Get Item by ID
 		/// </summary>
 		/// <remarks>
-		/// Returns a single Item
+		/// Returns a single Item.
+		/// Special Id's:home, favorites, allshared, connectors, box, top. home - Return home folder.
+		/// favorites - Return parent favorite item; use .../Items(favorites)/Children to get the favorite folders.
+		/// allshared - Return parent Shared Folders item; use .../Items(allshared)/Children to get the shared folders.
+		/// connectors - Return parent Connectors item; use .../Items(connectors)/Children to get indiviual connectors.
+		/// box - Return the FileBox folder. top - Returns the Top item; use .../Items(top)/Children to get the home, favorites, and shared folders as well as the connectors
 		/// </remarks>
 		/// <param name="url"></param>
 		/// <param name="includeDeleted"></param>
@@ -55,16 +70,30 @@ namespace ShareFile.Api.Client.Entities
 		/// A tree root element.
 		/// </returns>
 		IQuery<Item> Get(Uri url, TreeMode treeMode, string sourceId, bool canCreateRootFolder = false, bool fileBox = false);
-		IQuery<ODataFeed<Item>> GetChildrenByConnectorGroup(Uri url);
+		/// <summary>
+		/// Get Symbolic Links of a Connector Group
+		/// </summary>
+		/// <remarks>
+		/// Retrieves the Symbolic Links of the provided Connector Group type. Connector Groups define
+		/// classes of external data connectors - such as SharePoint, Network Shares. Symbolic Links
+		/// represent a single Connector point to such classes - for example, a single SharePoint site,
+		/// or a network share drive.
+		/// </remarks>
+		/// <param name="parentUrl"></param>
+		/// <returns>
+		/// The list of Symbolic Links associated with the given connector group.
+		/// </returns>
+		IQuery<ODataFeed<Item>> GetChildrenByConnectorGroup(Uri parentUrl);
 		/// <summary>
 		/// Get Stream
 		/// </summary>
 		/// <remarks>
-		/// Retrieves the versions of a given Stream.
-		/// An Item represents a single version of a file system object. The stream identifies
-		/// all versions of the same file system object. For example, when users upload or modify an existing file, a new Item
+		/// Retrieves the versions of a given Stream. The ID parameter must be a StreamID, otherwise an empty list is returned.
+		/// StreamID is a property of all Items, representing the "Stream", ie., the collection of all versions of a file. In
+		/// contrast, an Item ID represents a single version of a file.
+		/// For example, when users upload or modify an existing file, a new Item
 		/// is created with the same StreamID. All default Item enumerations return only the latest version of a given stream.
-		/// Use this method to retrieve previous versions of a given stream
+		/// Use this method to retrieve previous versions of a given stream.
 		/// </remarks>
 		/// <param name="url"></param>
 		/// <param name="includeDeleted"></param>
@@ -148,6 +177,23 @@ namespace ShareFile.Api.Client.Entities
 		/// the download link for the provided item content.
 		/// </returns>
 		IQuery<Stream> Download(Uri url, bool redirect = true);
+		/// <summary>
+		/// Download Multiple Items
+		/// </summary>
+		/// <example>
+		/// ["id1","id2",...]
+		/// </example>
+		/// <remarks>
+		/// Initiate the download operation for items. It will return 302 redirection to the
+		/// actual download link.
+		/// </remarks>
+		/// <param name="parentUrl"></param>
+		/// <param name="ids"></param>
+		/// <param name="redirect"></param>
+		/// <returns>
+		/// the download link for the provided item content.
+		/// </returns>
+		IQuery BulkDownload(Uri parentUrl, IEnumerable<string> ids, bool redirect = true);
 		/// <summary>
 		/// Create Folder
 		/// </summary>
@@ -345,8 +391,42 @@ namespace ShareFile.Api.Client.Entities
 		/// The modified SymbolicLink object
 		/// </returns>
 		IQuery<SymbolicLink> UpdateSymbolicLink(Uri url, SymbolicLink symlink);
+		/// <summary>
+		/// Delete Item
+		/// </summary>
+		/// <remarks>
+		/// Removes an item
+		/// </remarks>
+		/// <param name="url"></param>
+		/// <param name="singleversion"></param>
+		/// <param name="forceSync"></param>
 		IQuery Delete(Uri url, bool singleversion = false, bool forceSync = false);
+		/// <summary>
+		/// Delete Multiple Items
+		/// </summary>
+		/// <example>
+		/// ["id1","id2",...]
+		/// </example>
+		/// <remarks>
+		/// All items in bulk delete must be children of the same parent, identified in the URI
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <param name="body"></param>
+		/// <param name="forceSync"></param>
+		/// <param name="deletePermanently"></param>
 		IQuery BulkDelete(Uri url, IEnumerable<string> ids, bool forceSync = false, bool deletePermanently = false);
+		/// <summary>
+		/// Get Thumbnail
+		/// </summary>
+		/// <remarks>
+		/// Retrieve a thumbnail link from the specified Item.
+		/// </remarks>
+		/// <param name="url"></param>
+		/// <param name="size"></param>
+		/// <param name="redirect"></param>
+		/// <returns>
+		/// A 302 redirection to the Thumbnail link
+		/// </returns>
 		IQuery<Stream> GetThumbnail(Uri url, int size = 75, bool redirect = false);
 		/// <summary>
 		/// Get Breadcrumbs
@@ -613,6 +693,16 @@ namespace ShareFile.Api.Client.Entities
 
 		}
 
+		/// <summary>
+		/// Get HomeFolder for Current User
+		/// </summary>
+		/// <remarks>
+		/// Returns home folder for current user.
+		/// Note that home folders are not available for client users, or if the account doesn't have the "My Files & Folders" feature enabled.
+		/// </remarks>
+		/// <returns>
+		/// home folder for current user
+		/// </returns>
 		public IQuery<Item> Get()
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
@@ -625,7 +715,12 @@ namespace ShareFile.Api.Client.Entities
 		/// Get Item by ID
 		/// </summary>
 		/// <remarks>
-		/// Returns a single Item
+		/// Returns a single Item.
+		/// Special Id's:home, favorites, allshared, connectors, box, top. home - Return home folder.
+		/// favorites - Return parent favorite item; use .../Items(favorites)/Children to get the favorite folders.
+		/// allshared - Return parent Shared Folders item; use .../Items(allshared)/Children to get the shared folders.
+		/// connectors - Return parent Connectors item; use .../Items(connectors)/Children to get indiviual connectors.
+		/// box - Return the FileBox folder. top - Returns the Top item; use .../Items(top)/Children to get the home, favorites, and shared folders as well as the connectors
 		/// </remarks>
 		/// <param name="url"></param>
 		/// <param name="includeDeleted"></param>
@@ -672,11 +767,24 @@ namespace ShareFile.Api.Client.Entities
 			return sfApiQuery;
 		}
 
-		public IQuery<ODataFeed<Item>> GetChildrenByConnectorGroup(Uri url)
+		/// <summary>
+		/// Get Symbolic Links of a Connector Group
+		/// </summary>
+		/// <remarks>
+		/// Retrieves the Symbolic Links of the provided Connector Group type. Connector Groups define
+		/// classes of external data connectors - such as SharePoint, Network Shares. Symbolic Links
+		/// represent a single Connector point to such classes - for example, a single SharePoint site,
+		/// or a network share drive.
+		/// </remarks>
+		/// <param name="parentUrl"></param>
+		/// <returns>
+		/// The list of Symbolic Links associated with the given connector group.
+		/// </returns>
+		public IQuery<ODataFeed<Item>> GetChildrenByConnectorGroup(Uri parentUrl)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
 			sfApiQuery.Action("Children");
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(parentUrl);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}
@@ -685,11 +793,12 @@ namespace ShareFile.Api.Client.Entities
 		/// Get Stream
 		/// </summary>
 		/// <remarks>
-		/// Retrieves the versions of a given Stream.
-		/// An Item represents a single version of a file system object. The stream identifies
-		/// all versions of the same file system object. For example, when users upload or modify an existing file, a new Item
+		/// Retrieves the versions of a given Stream. The ID parameter must be a StreamID, otherwise an empty list is returned.
+		/// StreamID is a property of all Items, representing the "Stream", ie., the collection of all versions of a file. In
+		/// contrast, an Item ID represents a single version of a file.
+		/// For example, when users upload or modify an existing file, a new Item
 		/// is created with the same StreamID. All default Item enumerations return only the latest version of a given stream.
-		/// Use this method to retrieve previous versions of a given stream
+		/// Use this method to retrieve previous versions of a given stream.
 		/// </remarks>
 		/// <param name="url"></param>
 		/// <param name="includeDeleted"></param>
@@ -831,6 +940,33 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("redirect", redirect);
 			sfApiQuery.HttpMethod = "GET";
+			return sfApiQuery;
+		}
+
+		/// <summary>
+		/// Download Multiple Items
+		/// </summary>
+		/// <example>
+		/// ["id1","id2",...]
+		/// </example>
+		/// <remarks>
+		/// Initiate the download operation for items. It will return 302 redirection to the
+		/// actual download link.
+		/// </remarks>
+		/// <param name="parentUrl"></param>
+		/// <param name="ids"></param>
+		/// <param name="redirect"></param>
+		/// <returns>
+		/// the download link for the provided item content.
+		/// </returns>
+		public IQuery BulkDownload(Uri parentUrl, IEnumerable<string> ids, bool redirect = true)
+		{
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+			sfApiQuery.Action("BulkDownload");
+			sfApiQuery.Uri(parentUrl);
+			sfApiQuery.QueryString("redirect", redirect);
+			sfApiQuery.Body = ids;
+			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}
 
@@ -1121,6 +1257,15 @@ namespace ShareFile.Api.Client.Entities
 			return sfApiQuery;
 		}
 
+		/// <summary>
+		/// Delete Item
+		/// </summary>
+		/// <remarks>
+		/// Removes an item
+		/// </remarks>
+		/// <param name="url"></param>
+		/// <param name="singleversion"></param>
+		/// <param name="forceSync"></param>
 		public IQuery Delete(Uri url, bool singleversion = false, bool forceSync = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
@@ -1131,18 +1276,43 @@ namespace ShareFile.Api.Client.Entities
 			return sfApiQuery;
 		}
 
+		/// <summary>
+		/// Delete Multiple Items
+		/// </summary>
+		/// <example>
+		/// ["id1","id2",...]
+		/// </example>
+		/// <remarks>
+		/// All items in bulk delete must be children of the same parent, identified in the URI
+		/// </remarks>
+		/// <param name="id"></param>
+		/// <param name="body"></param>
+		/// <param name="forceSync"></param>
+		/// <param name="deletePermanently"></param>
 		public IQuery BulkDelete(Uri url, IEnumerable<string> ids, bool forceSync = false, bool deletePermanently = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 			sfApiQuery.Action("BulkDelete");
 			sfApiQuery.Uri(url);
-			sfApiQuery.QueryString("ids", ids);
 			sfApiQuery.QueryString("forceSync", forceSync);
 			sfApiQuery.QueryString("deletePermanently", deletePermanently);
+			sfApiQuery.Body = ids;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}
 
+		/// <summary>
+		/// Get Thumbnail
+		/// </summary>
+		/// <remarks>
+		/// Retrieve a thumbnail link from the specified Item.
+		/// </remarks>
+		/// <param name="url"></param>
+		/// <param name="size"></param>
+		/// <param name="redirect"></param>
+		/// <returns>
+		/// A 302 redirection to the Thumbnail link
+		/// </returns>
 		public IQuery<Stream> GetThumbnail(Uri url, int size = 75, bool redirect = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);

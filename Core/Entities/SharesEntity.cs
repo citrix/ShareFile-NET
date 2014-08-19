@@ -627,7 +627,7 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.SubAction("BulkDownload");
 			sfApiQuery.QueryString("redirect", redirect);
 			sfApiQuery.Body = ids;
-			sfApiQuery.HttpMethod = "GET";
+			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}
 

@@ -345,13 +345,13 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Updates a Link object
 		/// </remarks>
-		/// <param name="url"></param>
+		/// <param name="id"></param>
 		/// <param name="link"></param>
 		/// <param name="notify"></param>
 		/// <returns>
 		/// A modified Link object
 		/// </returns>
-		IQuery<Link> UpdateLink(Uri url, Link link, bool notify = false);
+		IQuery<Link> UpdateLink(string id, Link link, bool notify = false);
 		/// <summary>
 		/// Update Note
 		/// </summary>
@@ -365,13 +365,13 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Updates a Note object
 		/// </remarks>
-		/// <param name="url"></param>
+		/// <param name="id"></param>
 		/// <param name="note"></param>
 		/// <param name="notify"></param>
 		/// <returns>
 		/// The modified Note object
 		/// </returns>
-		IQuery<Note> UpdateNote(Uri url, Note note, bool notify = false);
+		IQuery<Note> UpdateNote(string id, Note note, bool notify = false);
 		/// <summary>
 		/// Update SymbolicLink
 		/// </summary>
@@ -385,12 +385,12 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Updates a Symbolic Link object
 		/// </remarks>
-		/// <param name="url"></param>
+		/// <param name="id"></param>
 		/// <param name="symlink"></param>
 		/// <returns>
 		/// The modified SymbolicLink object
 		/// </returns>
-		IQuery<SymbolicLink> UpdateSymbolicLink(Uri url, SymbolicLink symlink);
+		IQuery<SymbolicLink> UpdateSymbolicLink(string id, SymbolicLink symlink);
 		/// <summary>
 		/// Delete Item
 		/// </summary>
@@ -1182,17 +1182,18 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Updates a Link object
 		/// </remarks>
-		/// <param name="url"></param>
+		/// <param name="id"></param>
 		/// <param name="link"></param>
 		/// <param name="notify"></param>
 		/// <returns>
 		/// A modified Link object
 		/// </returns>
-		public IQuery<Link> UpdateLink(Uri url, Link link, bool notify = false)
+		public IQuery<Link> UpdateLink(string id, Link link, bool notify = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Link>(Client);
+			sfApiQuery.From("Items");
 			sfApiQuery.Action("Link");
-			sfApiQuery.Uri(url);
+			sfApiQuery.ActionIds(id);
 			sfApiQuery.QueryString("notify", notify);
 			sfApiQuery.Body = link;
 			sfApiQuery.HttpMethod = "PATCH";
@@ -1212,17 +1213,18 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Updates a Note object
 		/// </remarks>
-		/// <param name="url"></param>
+		/// <param name="id"></param>
 		/// <param name="note"></param>
 		/// <param name="notify"></param>
 		/// <returns>
 		/// The modified Note object
 		/// </returns>
-		public IQuery<Note> UpdateNote(Uri url, Note note, bool notify = false)
+		public IQuery<Note> UpdateNote(string id, Note note, bool notify = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Note>(Client);
+			sfApiQuery.From("Items");
 			sfApiQuery.Action("Note");
-			sfApiQuery.Uri(url);
+			sfApiQuery.ActionIds(id);
 			sfApiQuery.QueryString("notify", notify);
 			sfApiQuery.Body = note;
 			sfApiQuery.HttpMethod = "PATCH";
@@ -1242,16 +1244,17 @@ namespace ShareFile.Api.Client.Entities
 		/// <remarks>
 		/// Updates a Symbolic Link object
 		/// </remarks>
-		/// <param name="url"></param>
+		/// <param name="id"></param>
 		/// <param name="symlink"></param>
 		/// <returns>
 		/// The modified SymbolicLink object
 		/// </returns>
-		public IQuery<SymbolicLink> UpdateSymbolicLink(Uri url, SymbolicLink symlink)
+		public IQuery<SymbolicLink> UpdateSymbolicLink(string id, SymbolicLink symlink)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<SymbolicLink>(Client);
+			sfApiQuery.From("Items");
 			sfApiQuery.Action("SymbolicLink");
-			sfApiQuery.Uri(url);
+			sfApiQuery.ActionIds(id);
 			sfApiQuery.Body = symlink;
 			sfApiQuery.HttpMethod = "PATCH";
 			return sfApiQuery;

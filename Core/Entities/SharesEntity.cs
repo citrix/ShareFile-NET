@@ -131,7 +131,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// Redirects the caller (302) to the download address for the share contents.
 		/// </returns>
-		IQuery<Stream> Download(Uri shareUrl, string id = null, string Name = null, string Email = null, string Company = null, bool redirect = true);
+		IQuery<Stream> Download(Uri shareUrl, string itemId = null, string Name = null, string Email = null, string Company = null, bool redirect = true);
 		/// <summary>
 		/// Download Items from a Share for a Recipient
 		/// </summary>
@@ -156,7 +156,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// Redirects the caller (302) to the download address for the share contents.
 		/// </returns>
-		IQuery<Stream> Download(Uri shareUrl, string aliasid, string id = null, bool redirect = true);
+		IQuery<Stream> Download(Uri shareUrl, string aliasid, string itemId = null, bool redirect = true);
 		/// <summary>
 		/// Download Multiple Items from a Share for a Recipient
 		/// </summary>
@@ -548,12 +548,12 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// Redirects the caller (302) to the download address for the share contents.
 		/// </returns>
-		public IQuery<Stream> Download(Uri shareUrl, string id = null, string Name = null, string Email = null, string Company = null, bool redirect = true)
+		public IQuery<Stream> Download(Uri shareUrl, string itemId = null, string Name = null, string Email = null, string Company = null, bool redirect = true)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
 			sfApiQuery.Action("Download");
 			sfApiQuery.Uri(shareUrl);
-			sfApiQuery.QueryString("itemId", id);
+			sfApiQuery.QueryString("id", itemId);
 			sfApiQuery.QueryString("Name", Name);
 			sfApiQuery.QueryString("Email", Email);
 			sfApiQuery.QueryString("Company", Company);
@@ -586,14 +586,14 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// Redirects the caller (302) to the download address for the share contents.
 		/// </returns>
-		public IQuery<Stream> Download(Uri shareUrl, string aliasid, string id = null, bool redirect = true)
+		public IQuery<Stream> Download(Uri shareUrl, string aliasid, string itemId = null, bool redirect = true)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
 			sfApiQuery.Action("Recipients");
 			sfApiQuery.Uri(shareUrl);
 			sfApiQuery.ActionIds(aliasid);
 			sfApiQuery.SubAction("Download");
-			sfApiQuery.QueryString("itemId", id);
+			sfApiQuery.QueryString("id", itemId);
 			sfApiQuery.QueryString("redirect", redirect);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;

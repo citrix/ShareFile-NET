@@ -136,8 +136,8 @@ namespace ShareFile.Api.Client.Entities
 		/// Download Items from a Share for a Recipient
 		/// </summary>
 		/// <example>
-		/// GET https://account.sf-api.com/sf/v3/Shares(shareid)/Recipients(aliasid)/Download?id=itemid
-		/// GET https://account.sf-api.com/sf/v3/Shares(shareid)/Recipients(aliasid)/Download(itemid)
+		/// GET https://account.sf-api.com/sf/v3/Shares(shareid)/Recipients(aliasid)/DownloadWithAlias?id=itemid
+		/// GET https://account.sf-api.com/sf/v3/Shares(shareid)/Recipients(aliasid)/DownloadWithAlias(itemid)
 		/// </example>
 		/// <remarks>
 		/// Downloads items from the Share. The default action will download all Items in the Share.
@@ -156,7 +156,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// Redirects the caller (302) to the download address for the share contents.
 		/// </returns>
-		IQuery<Stream> Download(Uri shareUrl, string aliasid, string itemId = null, bool redirect = true);
+		IQuery<Stream> DownloadWithAlias(Uri shareUrl, string aliasid, string itemId = null, bool redirect = true);
 		/// <summary>
 		/// Download Multiple Items from a Share for a Recipient
 		/// </summary>
@@ -566,8 +566,8 @@ namespace ShareFile.Api.Client.Entities
 		/// Download Items from a Share for a Recipient
 		/// </summary>
 		/// <example>
-		/// GET https://account.sf-api.com/sf/v3/Shares(shareid)/Recipients(aliasid)/Download?id=itemid
-		/// GET https://account.sf-api.com/sf/v3/Shares(shareid)/Recipients(aliasid)/Download(itemid)
+		/// GET https://account.sf-api.com/sf/v3/Shares(shareid)/Recipients(aliasid)/DownloadWithAlias?id=itemid
+		/// GET https://account.sf-api.com/sf/v3/Shares(shareid)/Recipients(aliasid)/DownloadWithAlias(itemid)
 		/// </example>
 		/// <remarks>
 		/// Downloads items from the Share. The default action will download all Items in the Share.
@@ -586,7 +586,7 @@ namespace ShareFile.Api.Client.Entities
 		/// <returns>
 		/// Redirects the caller (302) to the download address for the share contents.
 		/// </returns>
-		public IQuery<Stream> Download(Uri shareUrl, string aliasid, string itemId = null, bool redirect = true)
+		public IQuery<Stream> DownloadWithAlias(Uri shareUrl, string aliasid, string itemId = null, bool redirect = true)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
 			sfApiQuery.Action("Recipients");

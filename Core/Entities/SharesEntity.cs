@@ -592,7 +592,7 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.Action("Recipients");
 			sfApiQuery.Uri(shareUrl);
 			sfApiQuery.ActionIds(aliasid);
-			sfApiQuery.SubAction("Download");
+			sfApiQuery.SubAction("DownloadWithAlias");
 			sfApiQuery.QueryString("id", itemId);
 			sfApiQuery.QueryString("redirect", redirect);
 			sfApiQuery.HttpMethod = "GET";

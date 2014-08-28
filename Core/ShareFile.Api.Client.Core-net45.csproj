@@ -223,8 +223,10 @@
     <Compile Include="Requests\Filters\AndFilter.cs" />
     <Compile Include="Requests\Filters\BooleanFilter.cs" />
     <Compile Include="Requests\Filters\EndsWithFilter.cs" />
+    <Compile Include="Requests\Filters\NotEqualToFilter.cs" />
     <Compile Include="Requests\Filters\EqualToFilter.cs" />
     <Compile Include="Requests\Filters\Filter.cs" />
+    <Compile Include="Requests\Filters\FunctionEqualityFilter.cs" />
     <Compile Include="Requests\Filters\OrFilter.cs" />
     <Compile Include="Requests\Filters\StartsWithFilter.cs" />
     <Compile Include="Requests\Filters\SubstringFilter.cs" />

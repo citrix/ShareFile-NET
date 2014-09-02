@@ -361,11 +361,12 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
         {
             return new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StringContent(JsonConvert.SerializeObject(new Item
+                Content = new StringContent(JsonConvert.SerializeObject(new 
                 {
                     Id = GetId(),
-                    Name = "Test Item"
-                }), Encoding.UTF8, "application/json"),
+                    Name = "Test Item",
+                    odatatype = "ShareFile.Api.Models.Item"
+                }).Replace("odatatype", "odata.type"), Encoding.UTF8, "application/json"),
                 RequestMessage = requestMessage
             };
         }

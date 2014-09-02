@@ -25,15 +25,15 @@ namespace ShareFile.Api.Client.Converters
         }
 
         private static ODataFactory _instance = null;
+        private readonly static Type ODataObjectType = typeof(ODataObject);
 
         private ODataFactory()
         {
             _constructorCache = new Dictionary<Type, ConstructorInfo>();
             _typeMap = new Dictionary<Type, Type>();
-            var odataObjectType = typeof(ODataObject);
-            var types = odataObjectType.GetAssembly().GetTypes();
+            var types = ODataObjectType.GetAssembly().GetTypes();
 
-            foreach (var t in types.Where(odataObjectType.IsAssignableFrom))
+            foreach (var t in types.Where(ODataObjectType.IsAssignableFrom))
             {
                 TryAddType(t);
             }
@@ -146,13 +146,24 @@ namespace ShareFile.Api.Client.Converters
             return InvokeConstructor(type, null, null);
         }
 
+        private static readonly Type ItemType = typeof(Item); 
+        private static readonly Type UserType = typeof(User);
+        private static readonly Type PrincipalType = typeof(Principal);
+        private static readonly Type FileType = typeof(File);
+        private static readonly Type SymbolicLinkType = typeof(SymbolicLink);
+        private static readonly Type NoteType = typeof(Note);
+        private static readonly Type LinkType = typeof(Link);
+        private static readonly Type FolderType = typeof(Folder);
+        private static readonly Type GroupType = typeof(Group);
+        private static readonly Type ODataFeedType = typeof(ODataFeed<>);
+
         public Type FindModelType(Type knownType, string cast, string id = null)
         {
             Type type = knownType;
             // Normalize cast, remove namespaces
             if (cast != null)
             {
-                string namesp = typeof(ODataObject).Namespace;
+                string namesp = ODataObjectType.Namespace;
                 if (cast.StartsWith(namesp)) cast = cast.Substring(namesp.Length + 1);
             }
             // If knownType is unknown, type to infer from the Cast string
@@ -166,7 +177,7 @@ namespace ShareFile.Api.Client.Converters
                 {
                     // Entities with subtypes
                     // Try the Cast string
-                    if (cast != null && (type == typeof(Item) || type == typeof(Principal)))
+                    if (cast != null && (type == ItemType || type == PrincipalType))
                     {
                         type = _entityTypeMap.ContainsKey(cast) ? _entityTypeMap[cast] : type;
                     }
@@ -176,23 +187,23 @@ namespace ShareFile.Api.Client.Converters
                     {
                         if (type == typeof (Item))
                         {
-                            if (id.StartsWith("fi")) type = typeof (File);
-                            else if (id.StartsWith("for")) type = typeof (SymbolicLink);
-                            else if (id.StartsWith("fo")) type = typeof (Folder);
-                            else if (id.StartsWith("n")) type = typeof (Note);
-                            else if (id.StartsWith("l")) type = typeof (Link);
-                            else if (id.StartsWith("a")) type = typeof (Folder);
-                            else if (id.StartsWith("g")) type = typeof (Group);
+                            if (id.StartsWith("fi")) type = FileType;
+                            else if (id.StartsWith("for")) type = SymbolicLinkType;
+                            else if (id.StartsWith("fo")) type = FolderType;
+                            else if (id.StartsWith("n")) type = NoteType;
+                            else if (id.StartsWith("l")) type = LinkType;
+                            else if (id.StartsWith("a")) type = FolderType;
+                            else if (id.StartsWith("g")) type = GroupType;
                         }
-                        else if (type == typeof (Principal))
+                        else if (type == PrincipalType)
                         {
                             // User has no prefix; so assume it's an user at this point (if superclass is Principal)
-                            type = typeof (User);
+                            type = UserType;
                         }
                     }
                 }
             }
-            else type = typeof(ODataObject);
+            else type = ODataObjectType;
 
             if (_typeMap.ContainsKey(type))
             {
@@ -263,11 +274,17 @@ namespace ShareFile.Api.Client.Converters
         internal class JsonLightMetadataParser
         {
             internal static char[] SplitChars = {'/'};
-            internal static string Namespace = typeof (ODataObject).Namespace + ".";
+            internal static string Namespace = ODataObjectType.Namespace + ".";
 
             internal JsonLightMetadataParserResult Parse(string metadataUri)
             {
                 var indexOfMetadataStart = metadataUri.IndexOf('$');
+
+                if (indexOfMetadataStart < 0 || !metadataUri.StartsWith("http"))
+                {
+                    return null;
+                }
+
                 var result = new JsonLightMetadataParserResult
                 {
                     MetadataBaseUri = metadataUri.Substring(0, indexOfMetadataStart)
@@ -320,41 +337,65 @@ namespace ShareFile.Api.Client.Converters
             internal bool HasFeedEntity { get { return FeedEntity != null; } }
         }
 
-        public ODataObject CreateFromMetadata(string metadata, Type knownType, ODataObject jObject, JsonSerializer serializer)
+        public ODataObject CreateFromMetadata(string metadata, Type knownType, ODataObject odataObject, JsonSerializer serializer)
         {
             var parser = new JsonLightMetadataParser();
             var result = parser.Parse(metadata);
+
+            if (result == null)
+            {
+                return null;
+            }
 
             ODataObject o = null;
             if (result.HasFeedEntity)
             {
                 var type = FindModelType(knownType, result.FeedEntity);
                 Type specificType;
-                if (type.IsGenericType() && type.GetGenericTypeDefinition() == typeof(ODataFeed<>))
+                if (type.IsGenericType() && type.GetGenericTypeDefinition() == ODataFeedType)
                 {
                     specificType = type;
                 }
-                else specificType = typeof(ODataFeed<>).MakeGenericType(new [] { type });
+                else specificType = ODataFeedType.MakeGenericType(new[] { type });
 
-                if (specificType == knownType) return jObject;
-                o = InvokeConstructor(specificType, jObject, serializer);
+                if (specificType == knownType) return odataObject;
+                o = InvokeConstructor(specificType, odataObject, serializer);
 
-                o.SetMetadata(new Uri(result.MetadataBaseUri), result.FeedEntity, null, ODataObjectType.ComplexType);
+                o.SetMetadata(new Uri(result.MetadataBaseUri), result.FeedEntity, null, Models.ODataObjectType.ComplexType);
             }
             else
             {
                 string metadataType = result.HasCast ? result.Cast : result.Entity;
-                o = Create(knownType, metadataType, jObject, serializer);
+                o = Create(knownType, metadataType, odataObject, serializer);
                 if (result.HasEntity)
                 {
-                    o.SetMetadata(new Uri(result.MetadataBaseUri), result.Entity, result.Cast, ODataObjectType.Entity);
+                    o.SetMetadata(new Uri(result.MetadataBaseUri), result.Entity, result.Cast, Models.ODataObjectType.Entity);
                 }
                 else
                 {
-                    o.SetMetadata(new Uri(result.MetadataBaseUri), null, o.GetType().FullName, ODataObjectType.ComplexType);
+                    o.SetMetadata(new Uri(result.MetadataBaseUri), null, o.GetType().FullName, Models.ODataObjectType.ComplexType);
                 }
             }
             return o;
+        }
+
+        public ODataObject CreateFromType(string type, Type knownType, ODataObject odataObject, JsonSerializer serializer)
+        {
+            if (type == null)
+            {
+                throw new ArgumentNullException("type");
+            }
+
+            if (type.StartsWith(ODataObjectType.Namespace, StringComparison.OrdinalIgnoreCase))
+            {
+                var typeWithoutNamespace = type.Substring(ODataObjectType.Namespace.Length + 1);
+                if (_entityTypeMap.ContainsKey(typeWithoutNamespace))
+                {
+                    return Create(knownType, typeWithoutNamespace, odataObject, serializer);
+                }
+            }
+
+            return null;
         }
     }
 }

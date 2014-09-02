@@ -66,6 +66,53 @@ namespace ShareFile.Api.Client.Core.Tests.Converters
         }
 
         [Test]
+        public void CreateFolder_OData_Type()
+        {
+            var folder = GetFolder();
+            folder.__type = "ShareFile.Api.Models.Folder";
+            folder.Children.First().__type =
+                "ShareFile.Api.Models.File";
+
+            var serializer = GetSerializer();
+
+            StringWriter writer = new StringWriter();
+            serializer.Serialize(writer, folder);
+
+            var jsonReader = new JsonTextReader(new StringReader(writer.ToString()));
+
+            var item = serializer.Deserialize<ODataObject>(jsonReader) as Item;
+            item.Should().NotBeNull();
+            item.GetType().Should().Be(typeof(Folder));
+            (item as Folder).Children.FirstOrDefault().GetType().Should().Be(typeof(File));
+        }
+
+        [Test]
+        public void CreateFolder_MalformedMetadata_ODataTypeFallback()
+        {
+            var folder = GetFolder();
+            folder.__type = "ShareFile.Api.Models.Folder";
+            folder.MetadataUrl =
+                "https://";
+            
+            folder.Children.First().__type =
+                "ShareFile.Api.Models.File";
+            folder.Children.First().MetadataUrl =
+                "https://";
+
+            var serializer = GetSerializer();
+
+            StringWriter writer = new StringWriter();
+            serializer.Serialize(writer, folder);
+
+            var jsonReader = new JsonTextReader(new StringReader(writer.ToString()));
+
+            var item = serializer.Deserialize<ODataObject>(jsonReader) as Item;
+            item.Should().NotBeNull();
+            item.GetType().Should().Be(typeof(Folder));
+            (item as Folder).Children.FirstOrDefault().GetType().Should().Be(typeof(File));
+        }
+
+        [Test]
         public void CreateFolder_Entity_Cast()
         {
             var folder = GetFolder();

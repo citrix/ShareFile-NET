@@ -25,7 +25,8 @@ namespace ShareFile.Api.Client.Converters
         }
 
         private static ODataFactory _instance = null;
-        private readonly static Type ODataObjectType = typeof(ODataObject);
+        private static readonly Type ODataObjectType = typeof(ODataObject);
+        private static readonly Type ODataFeedType = typeof(ODataFeed<>);
 
         private ODataFactory()
         {
@@ -145,17 +146,20 @@ namespace ShareFile.Api.Client.Converters
             var type = FindModelType(null, cast, id);
             return InvokeConstructor(type, null, null);
         }
-
-        private static readonly Type ItemType = typeof(Item); 
+                
         private static readonly Type UserType = typeof(User);
         private static readonly Type PrincipalType = typeof(Principal);
-        private static readonly Type FileType = typeof(File);
-        private static readonly Type SymbolicLinkType = typeof(SymbolicLink);
-        private static readonly Type NoteType = typeof(Note);
-        private static readonly Type LinkType = typeof(Link);
-        private static readonly Type FolderType = typeof(Folder);
-        private static readonly Type GroupType = typeof(Group);
-        private static readonly Type ODataFeedType = typeof(ODataFeed<>);
+        
+        private static readonly Type ItemType = typeof(Item);
+        private static readonly Dictionary<Type, Func<string, bool>> ItemSubTypes = new Dictionary<Type, Func<string, bool>>
+        {
+            { typeof(File), id => id.StartsWith("fi") },
+            { typeof(SymbolicLink), id => id.StartsWith("for") },
+            { typeof(Folder), id => id.StartsWith("fo") || id.StartsWith("a") },
+            { typeof(Note), id => id.StartsWith("n") },
+            { typeof(Link), id => id.StartsWith("l") },
+            { typeof(Group), id => id.StartsWith("g") }
+        };
 
         public Type FindModelType(Type knownType, string cast, string id = null)
         {
@@ -187,13 +191,7 @@ namespace ShareFile.Api.Client.Converters
                     {
                         if (type == typeof (Item))
                         {
-                            if (id.StartsWith("fi")) type = FileType;
-                            else if (id.StartsWith("for")) type = SymbolicLinkType;
-                            else if (id.StartsWith("fo")) type = FolderType;
-                            else if (id.StartsWith("n")) type = NoteType;
-                            else if (id.StartsWith("l")) type = LinkType;
-                            else if (id.StartsWith("a")) type = FolderType;
-                            else if (id.StartsWith("g")) type = GroupType;
+                            type = ItemSubTypes.SingleOrDefault(itemSubType => itemSubType.Value(id)).Key;
                         }
                         else if (type == PrincipalType)
                         {
@@ -229,7 +227,7 @@ namespace ShareFile.Api.Client.Converters
         /// <returns></returns>
         public ODataObject Create(Type type, string cast = null, ODataObject oDataObject = null, JsonSerializer serializer = null, string id = null)
         {
-            type = FindModelType(type, cast, null);
+            type = FindModelType(type, cast, id);
             if (oDataObject != null && type == oDataObject.GetType()) return oDataObject;
 
             var obj = InvokeConstructor(type, oDataObject, serializer);

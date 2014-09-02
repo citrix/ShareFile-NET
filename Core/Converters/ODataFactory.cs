@@ -191,7 +191,7 @@ namespace ShareFile.Api.Client.Converters
                     {
                         if (type == typeof (Item))
                         {
-                            type = ItemSubTypes.SingleOrDefault(itemSubType => itemSubType.Value(id)).Key;
+                            type = ItemSubTypes.SingleOrDefault(itemSubType => itemSubType.Value(id)).Key ?? type;
                         }
                         else if (type == PrincipalType)
                         {

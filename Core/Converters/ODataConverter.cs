@@ -33,7 +33,8 @@ namespace ShareFile.Api.Client.Converters
         /// <returns></returns>
         protected ODataObject Create(Type objectType, ODataObject oDataObject, JsonSerializer serializer)
         {
-            ODataObject result = oDataObject;
+            // Default result to null
+            ODataObject result = null;
 
             if (!string.IsNullOrEmpty(oDataObject.MetadataUrl))
             {
@@ -51,7 +52,9 @@ namespace ShareFile.Api.Client.Converters
             {
                 result = _factory.Create(objectType, oDataObject: oDataObject, serializer: serializer, id: oDataObject.Id);
             }
-            return result;
+
+            // if result still null, fallback to the provided oDataObject value
+            return result ?? oDataObject;
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

@@ -139,10 +139,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <param name="password"></param>
 		/// <param name="employeesonly"></param>
 		/// <param name="requirehomefolders"></param>
+		/// <param name="singleplane"></param>
 		/// <returns>
 		/// The list of Accounts associated with this username/password.
 		/// </returns>
-		IQuery<ODataFeed<Account>> GetByUser(ODataObject parameters, string username, bool employeesonly = false, bool requirehomefolders = false);
+		IQuery<ODataFeed<Account>> GetByUser(ODataObject parameters, string username, bool employeesonly = false, bool requirehomefolders = false, bool singleplane = false);
 		/// <summary>
 		/// Email List of Accounts to User
 		/// </summary>
@@ -552,10 +553,11 @@ namespace ShareFile.Api.Client.Entities
 		/// <param name="password"></param>
 		/// <param name="employeesonly"></param>
 		/// <param name="requirehomefolders"></param>
+		/// <param name="singleplane"></param>
 		/// <returns>
 		/// The list of Accounts associated with this username/password.
 		/// </returns>
-		public IQuery<ODataFeed<Account>> GetByUser(ODataObject parameters, string username, bool employeesonly = false, bool requirehomefolders = false)
+		public IQuery<ODataFeed<Account>> GetByUser(ODataObject parameters, string username, bool employeesonly = false, bool requirehomefolders = false, bool singleplane = false)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Account>>(Client);
 			sfApiQuery.From("Accounts");
@@ -563,6 +565,7 @@ namespace ShareFile.Api.Client.Entities
 			parameters.AddProperty("username", username);
 			parameters.AddProperty("employeesonly", employeesonly);
 			parameters.AddProperty("requirehomefolders", requirehomefolders);
+			parameters.AddProperty("singleplane", singleplane);
 			sfApiQuery.Body = parameters;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;

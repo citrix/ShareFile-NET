@@ -1382,7 +1382,7 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("targetid", targetid);
 			sfApiQuery.QueryString("overwrite", overwrite);
-			sfApiQuery.HttpMethod = "GET";
+			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}
 

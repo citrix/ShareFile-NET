@@ -306,6 +306,7 @@ namespace ShareFile.Api.Client.Entities
 		/// the new SymbolicLink
 		/// </returns>
 		IQuery<SymbolicLink> CreateChildrenByConnectorGroup(Uri url, SymbolicLink symlink, bool overwrite = false);
+		IQuery<EnsSubscriptionToken> Subscribe(Uri url, EnsSubscriptionRequest subreq);
 		/// <summary>
 		/// Update Item
 		/// </summary>
@@ -1127,6 +1128,16 @@ namespace ShareFile.Api.Client.Entities
 			sfApiQuery.Uri(url);
 			sfApiQuery.QueryString("overwrite", overwrite);
 			sfApiQuery.Body = symlink;
+			sfApiQuery.HttpMethod = "POST";
+			return sfApiQuery;
+		}
+
+		public IQuery<EnsSubscriptionToken> Subscribe(Uri url, EnsSubscriptionRequest subreq)
+		{
+			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<EnsSubscriptionToken>(Client);
+			sfApiQuery.Action("Subscribe");
+			sfApiQuery.Uri(url);
+			sfApiQuery.Body = subreq;
 			sfApiQuery.HttpMethod = "POST";
 			return sfApiQuery;
 		}

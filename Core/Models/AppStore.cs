@@ -13,8 +13,8 @@ namespace ShareFile.Api.Models
 {
 	public enum AppStore
     {
-        IOS = 0,
-        ANDROID = 1,
-        WEB = 2
+        iOS = 0,
+        Android = 1,
+        Web = 2
     }
 }

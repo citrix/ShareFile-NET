@@ -16,10 +16,12 @@ using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
-	public class PlanAddonUser : User 
+	public class PlanAddonUser : ODataObject 
 	{
 
-		public IEnumerable<string> SpecialUserRole { get; set; }
+		public User User { get; set; }
+
+		public IEnumerable<SafeEnum<MobileUserRole>> SpecialUserRole { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
@@ -29,14 +31,19 @@ namespace ShareFile.Api.Models
 			var typedSource = source as PlanAddonUser;
 			if(typedSource != null)
 			{
+				User = typedSource.User;
 				SpecialUserRole = typedSource.SpecialUserRole;
 			}
 			else
 			{
 				JToken token;
+				if(source.TryGetProperty("User", out token) && token.Type != JTokenType.Null)
+				{
+					User = (User)serializer.Deserialize(token.CreateReader(), typeof(User));
+				}
 				if(source.TryGetProperty("SpecialUserRole", out token) && token.Type != JTokenType.Null)
 				{
-					SpecialUserRole = (IEnumerable<string>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<string>));
+					SpecialUserRole = (IEnumerable<SafeEnum<MobileUserRole>>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<SafeEnum<MobileUserRole>>));
 				}
 			}
 		}

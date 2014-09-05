@@ -13,8 +13,8 @@ namespace ShareFile.Api.Models
 {
 	public enum MobileUserRole
     {
-        SINGLE_USER = 0,
-        TEAM_USER = 1,
-        TEAM_ADMIN = 2
+        SingleUser = 0,
+        TeamUser = 1,
+        TeamAdmin = 2
     }
 }

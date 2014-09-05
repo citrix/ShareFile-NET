@@ -35,10 +35,6 @@ namespace ShareFile.Api.Models
                 _entityTypeMap.Add("InAppPurchases", typeof(InAppPurchase));
                 _entityTypeMap.Add("TrialPeriod", typeof(TrialPeriod));
                 _entityTypeMap.Add("TrialPeriods", typeof(TrialPeriod));
-                _entityTypeMap.Add("Principal", typeof(Principal));
-                _entityTypeMap.Add("Principals", typeof(Principal));
-                _entityTypeMap.Add("User", typeof(User));
-                _entityTypeMap.Add("Users", typeof(User));
                 _entityTypeMap.Add("PlanAddonUser", typeof(PlanAddonUser));
                 _entityTypeMap.Add("PlanAddonUsers", typeof(PlanAddonUser));
                 _entityTypeMap.Add("OAuthClient", typeof(OAuthClient));
@@ -64,6 +60,10 @@ namespace ShareFile.Api.Models
                 _entityTypeMap.Add("Account", typeof(Account));
                 _entityTypeMap.Add("Accounts", typeof(Account));
                 _entityTypeMap.Add("AccountPreferences", typeof(AccountPreferences));
+                _entityTypeMap.Add("Principal", typeof(Principal));
+                _entityTypeMap.Add("Principals", typeof(Principal));
+                _entityTypeMap.Add("User", typeof(User));
+                _entityTypeMap.Add("Users", typeof(User));
                 _entityTypeMap.Add("AccountUser", typeof(AccountUser));
                 _entityTypeMap.Add("AccountUsers", typeof(AccountUser));
                 _entityTypeMap.Add("AsyncOperation", typeof(AsyncOperation));

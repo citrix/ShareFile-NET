@@ -23,9 +23,7 @@ namespace ShareFile.Api.Models
 
 		public string AppStore { get; set; }
 
-		public DateTime PurchaseDate { get; set; }
-
-		public DateTime ExpirationDate { get; set; }
+		public int DurationInDays { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
@@ -37,8 +35,7 @@ namespace ShareFile.Api.Models
 			{
 				ProductID = typedSource.ProductID;
 				AppStore = typedSource.AppStore;
-				PurchaseDate = typedSource.PurchaseDate;
-				ExpirationDate = typedSource.ExpirationDate;
+				DurationInDays = typedSource.DurationInDays;
 			}
 			else
 			{
@@ -51,13 +48,9 @@ namespace ShareFile.Api.Models
 				{
 					AppStore = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
-				if(source.TryGetProperty("PurchaseDate", out token) && token.Type != JTokenType.Null)
+				if(source.TryGetProperty("DurationInDays", out token) && token.Type != JTokenType.Null)
 				{
-					PurchaseDate = (DateTime)serializer.Deserialize(token.CreateReader(), typeof(DateTime));
-				}
-				if(source.TryGetProperty("ExpirationDate", out token) && token.Type != JTokenType.Null)
-				{
-					ExpirationDate = (DateTime)serializer.Deserialize(token.CreateReader(), typeof(DateTime));
+					DurationInDays = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
 				}
 			}
 		}

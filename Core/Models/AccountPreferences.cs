@@ -189,6 +189,8 @@ namespace ShareFile.Api.Models
 
 		public bool? EnableDocPreviews { get; set; }
 
+		public bool? EnableDesktopEditorForAccount { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -282,6 +284,7 @@ namespace ShareFile.Api.Models
 				TrustedDomains = typedSource.TrustedDomains;
 				EnableEncryptedEmailForOutlookPlugin = typedSource.EnableEncryptedEmailForOutlookPlugin;
 				EnableDocPreviews = typedSource.EnableDocPreviews;
+				EnableDesktopEditorForAccount = typedSource.EnableDesktopEditorForAccount;
 			}
 			else
 			{
@@ -625,6 +628,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("EnableDocPreviews", out token) && token.Type != JTokenType.Null)
 				{
 					EnableDocPreviews = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableDesktopEditorForAccount", out token) && token.Type != JTokenType.Null)
+				{
+					EnableDesktopEditorForAccount = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 			}
 		}

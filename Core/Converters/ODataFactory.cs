@@ -141,9 +141,9 @@ namespace ShareFile.Api.Client.Converters
         /// prefixes to handle superclasses (e.g., cast=Items and id=fi* instantiate a File instance)</param>
         /// <returns>A subtype of ODataObject, matching the requested type/id. Returns null if type doesnt
         /// match any known type</returns>
-        public ODataObject Create(string cast, string id = null)
+        public ODataObject Create(string cast)
         {
-            var type = FindModelType(null, cast, id);
+            var type = FindModelType(null, cast);
             return InvokeConstructor(type, null, null);
         }
                 
@@ -161,7 +161,7 @@ namespace ShareFile.Api.Client.Converters
             { typeof(Group), id => id.StartsWith("g") }
         };
 
-        public Type FindModelType(Type knownType, string cast, string id = null)
+        public Type FindModelType(Type knownType, string cast)
         {
             Type type = knownType;
             // Normalize cast, remove namespaces
@@ -177,28 +177,10 @@ namespace ShareFile.Api.Client.Converters
             }
             if (type != null && type != typeof(ODataObject))
             {
-                if (cast != null || id != null)
+                // Try the Cast string
+                if (cast != null && (type == ItemType || type == PrincipalType))
                 {
-                    // Entities with subtypes
-                    // Try the Cast string
-                    if (cast != null && (type == ItemType || type == PrincipalType))
-                    {
-                        type = _entityTypeMap.ContainsKey(cast) ? _entityTypeMap[cast] : type;
-                    }
-
-                    // Try the ID
-                    if (id != null)
-                    {
-                        if (type == typeof (Item))
-                        {
-                            type = ItemSubTypes.SingleOrDefault(itemSubType => itemSubType.Value(id)).Key ?? type;
-                        }
-                        else if (type == PrincipalType)
-                        {
-                            // User has no prefix; so assume it's an user at this point (if superclass is Principal)
-                            type = UserType;
-                        }
-                    }
+                    type = _entityTypeMap.ContainsKey(cast) ? _entityTypeMap[cast] : type;
                 }
             }
             else type = ODataObjectType;
@@ -225,16 +207,13 @@ namespace ShareFile.Api.Client.Converters
         /// <param name="cast"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public ODataObject Create(Type type, string cast = null, ODataObject oDataObject = null, JsonSerializer serializer = null, string id = null)
+        public ODataObject Create(Type type, string cast = null, ODataObject oDataObject = null, JsonSerializer serializer = null)
         {
-            type = FindModelType(type, cast, id);
+            type = FindModelType(type, cast);
             if (oDataObject != null && type == oDataObject.GetType()) return oDataObject;
 
             var obj = InvokeConstructor(type, oDataObject, serializer);
-            if (!string.IsNullOrEmpty(id))
-            {
-                obj.Id = id;
-            }
+            
             return obj;
         }
 
@@ -260,7 +239,11 @@ namespace ShareFile.Api.Client.Converters
 
             if (type != null)
             {
-                var o = Create(oDataObject.GetType(), type, oDataObject, serializer, id);
+                var o = Create(oDataObject.GetType(), type, oDataObject, serializer);
+                if (!string.IsNullOrEmpty(id))
+                {
+                    o.Id = id;
+                }
                 return o;
             }
 

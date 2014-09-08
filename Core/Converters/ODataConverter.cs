@@ -48,10 +48,6 @@ namespace ShareFile.Api.Client.Converters
             {
                 result = _factory.CreateFromUrl(oDataObject.url.ToString(), oDataObject, serializer);
             }
-            if (result == null && string.IsNullOrEmpty(oDataObject.Id))
-            {
-                result = _factory.Create(objectType, oDataObject: oDataObject, serializer: serializer, id: oDataObject.Id);
-            }
 
             // if result still null, fallback to the provided oDataObject value
             return result ?? oDataObject;

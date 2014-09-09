@@ -29,8 +29,10 @@ namespace ShareFile.Api.Models
                 _entityTypeMap.Add("AccessControlParams", typeof(AccessControlParam));
                 _entityTypeMap.Add("ESignature", typeof(ESignature));
                 _entityTypeMap.Add("ESignatures", typeof(ESignature));
-                _entityTypeMap.Add("OAuthClient", typeof(OAuthClient));
-                _entityTypeMap.Add("OAuthClients", typeof(OAuthClient));
+                _entityTypeMap.Add("Principal", typeof(Principal));
+                _entityTypeMap.Add("Principals", typeof(Principal));
+                _entityTypeMap.Add("User", typeof(User));
+                _entityTypeMap.Add("Users", typeof(User));
                 _entityTypeMap.Add("PowerTools", typeof(PowerTools));
                 _entityTypeMap.Add("PowerToolss", typeof(PowerTools));
                 _entityTypeMap.Add("Item", typeof(Item));
@@ -52,10 +54,6 @@ namespace ShareFile.Api.Models
                 _entityTypeMap.Add("Account", typeof(Account));
                 _entityTypeMap.Add("Accounts", typeof(Account));
                 _entityTypeMap.Add("AccountPreferences", typeof(AccountPreferences));
-                _entityTypeMap.Add("Principal", typeof(Principal));
-                _entityTypeMap.Add("Principals", typeof(Principal));
-                _entityTypeMap.Add("User", typeof(User));
-                _entityTypeMap.Add("Users", typeof(User));
                 _entityTypeMap.Add("AccountUser", typeof(AccountUser));
                 _entityTypeMap.Add("AccountUsers", typeof(AccountUser));
                 _entityTypeMap.Add("AsyncOperation", typeof(AsyncOperation));
@@ -112,14 +110,6 @@ namespace ShareFile.Api.Models
                 _entityTypeMap.Add("Notes", typeof(Note));
                 _entityTypeMap.Add("Notification", typeof(Notification));
                 _entityTypeMap.Add("Notifications", typeof(Notification));
-                _entityTypeMap.Add("OutlookInformation", typeof(OutlookInformation));
-                _entityTypeMap.Add("OutlookInformations", typeof(OutlookInformation));
-                _entityTypeMap.Add("OutlookInformationOptionBool", typeof(OutlookInformationOptionBool));
-                _entityTypeMap.Add("OutlookInformationOptionBools", typeof(OutlookInformationOptionBool));
-                _entityTypeMap.Add("OutlookInformationOptionString", typeof(OutlookInformationOptionString));
-                _entityTypeMap.Add("OutlookInformationOptionStrings", typeof(OutlookInformationOptionString));
-                _entityTypeMap.Add("OutlookInformationOptionInt", typeof(OutlookInformationOptionInt));
-                _entityTypeMap.Add("OutlookInformationOptionInts", typeof(OutlookInformationOptionInt));
                 _entityTypeMap.Add("ProductDefaults", typeof(ProductDefaults));
                 _entityTypeMap.Add("Redirection", typeof(Redirection));
                 _entityTypeMap.Add("Redirections", typeof(Redirection));
@@ -142,10 +132,6 @@ namespace ShareFile.Api.Models
                 _entityTypeMap.Add("SearchResults", typeof(SearchResults));
                 _entityTypeMap.Add("AdvancedSearchResults", typeof(AdvancedSearchResults));
                 _entityTypeMap.Add("SearchResult", typeof(SearchResult));
-                _entityTypeMap.Add("AzureSBTopicsEndPointInfo", typeof(AzureSBTopicsEndPointInfo));
-                _entityTypeMap.Add("AzureSBTopicsEndPointInfos", typeof(AzureSBTopicsEndPointInfo));
-                _entityTypeMap.Add("AzureSBTopicsResponse", typeof(AzureSBTopicsResponse));
-                _entityTypeMap.Add("AzureSBTopicsResponses", typeof(AzureSBTopicsResponse));
                 _entityTypeMap.Add("Session", typeof(Session));
                 _entityTypeMap.Add("Sessions", typeof(Session));
                 _entityTypeMap.Add("Share", typeof(Share));
@@ -179,5 +165,13 @@ namespace ShareFile.Api.Models
 
 			return _entityTypeMap;
 		}
-	}
+        
+        internal static void AddEntity(string key, Type value)
+        {
+            lock(_entityTypeMap)
+            {
+                _entityTypeMap.Add(key, value);
+            }
+        }
+    }
 }

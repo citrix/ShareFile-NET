@@ -11,10 +11,14 @@
 using System;
 namespace ShareFile.Api.Models 
 {
-	public enum OAuthState
+#if ShareFile
+	public enum QueueStatus
     {
-        Inactive = 0,
-        Authorized = 1,
-        Revoked = 2
+        Created = 0,
+        Scheduled = 1,
+        Success = 2,
+        Failed = 3,
+        Canceled = 4
     }
+#endif
 }

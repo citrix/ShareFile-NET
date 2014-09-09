@@ -16,29 +16,38 @@ using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
-	public class AzureSBTopicsResponse : ODataObject 
+#if ShareFile
+	public class OutlookInformationOptionBool : ODataObject 
 	{
 
-		public string Success { get; set; }
+		public bool Locked { get; set; }
+
+		public bool Value { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			var typedSource = source as AzureSBTopicsResponse;
+			var typedSource = source as OutlookInformationOptionBool;
 			if(typedSource != null)
 			{
-				Success = typedSource.Success;
+				Locked = typedSource.Locked;
+				Value = typedSource.Value;
 			}
 			else
 			{
 				JToken token;
-				if(source.TryGetProperty("Success", out token) && token.Type != JTokenType.Null)
+				if(source.TryGetProperty("Locked", out token) && token.Type != JTokenType.Null)
 				{
-					Success = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+					Locked = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("Value", out token) && token.Type != JTokenType.Null)
+				{
+					Value = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
 				}
 			}
 		}
 	}
+#endif
 }

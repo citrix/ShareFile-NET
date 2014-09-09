@@ -187,6 +187,8 @@ namespace ShareFile.Api.Models
 
 		public bool? EnableEncryptedEmailForOutlookPlugin { get; set; }
 
+		public bool? EnableDocPreviews { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -279,6 +281,7 @@ namespace ShareFile.Api.Models
 				ENSMaxNotificationSyncWaitCount = typedSource.ENSMaxNotificationSyncWaitCount;
 				TrustedDomains = typedSource.TrustedDomains;
 				EnableEncryptedEmailForOutlookPlugin = typedSource.EnableEncryptedEmailForOutlookPlugin;
+				EnableDocPreviews = typedSource.EnableDocPreviews;
 			}
 			else
 			{
@@ -618,6 +621,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("EnableEncryptedEmailForOutlookPlugin", out token) && token.Type != JTokenType.Null)
 				{
 					EnableEncryptedEmailForOutlookPlugin = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableDocPreviews", out token) && token.Type != JTokenType.Null)
+				{
+					EnableDocPreviews = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 			}
 		}

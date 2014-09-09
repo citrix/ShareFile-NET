@@ -16,22 +16,31 @@ using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
-	public class ServiceBusEndPointInfo : ODataObject 
+#if ShareFile
+	public class PlanAddonUser : User 
 	{
+
+		public IEnumerable<string> SpecialUserRole { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			var typedSource = source as ServiceBusEndPointInfo;
+			var typedSource = source as PlanAddonUser;
 			if(typedSource != null)
 			{
+				SpecialUserRole = typedSource.SpecialUserRole;
 			}
 			else
 			{
 				JToken token;
+				if(source.TryGetProperty("SpecialUserRole", out token) && token.Type != JTokenType.Null)
+				{
+					SpecialUserRole = (IEnumerable<string>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<string>));
+				}
 			}
 		}
 	}
+#endif
 }

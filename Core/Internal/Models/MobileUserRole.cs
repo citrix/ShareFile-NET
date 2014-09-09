@@ -11,10 +11,12 @@
 using System;
 namespace ShareFile.Api.Models 
 {
-	public enum OAuthClientPermissions
+#if ShareFile
+	public enum MobileUserRole
     {
-        NotWanted = 0,
-        Required = 1,
-        Optional = 2
+        SINGLE_USER = 0,
+        TEAM_USER = 1,
+        TEAM_ADMIN = 2
     }
+#endif
 }

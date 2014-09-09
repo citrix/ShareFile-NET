@@ -11,6 +11,7 @@
 using System;
 namespace ShareFile.Api.Models 
 {
+#if ShareFile
 	public enum AppCodes
     {
         _None = 0,
@@ -48,4 +49,5 @@ namespace ShareFile.Api.Models
         SF_FTP = 32,
         SF_SFTP = 33
     }
+#endif
 }

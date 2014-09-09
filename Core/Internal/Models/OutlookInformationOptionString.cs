@@ -16,43 +16,38 @@ using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
-	public class AzureSBTopicsEndPointInfo : ODataObject 
+#if ShareFile
+	public class OutlookInformationOptionString : ODataObject 
 	{
 
-		public string Key { get; set; }
+		public bool Locked { get; set; }
 
-		public string Secret { get; set; }
-
-		public string EndPoint { get; set; }
+		public string Value { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			var typedSource = source as AzureSBTopicsEndPointInfo;
+			var typedSource = source as OutlookInformationOptionString;
 			if(typedSource != null)
 			{
-				Key = typedSource.Key;
-				Secret = typedSource.Secret;
-				EndPoint = typedSource.EndPoint;
+				Locked = typedSource.Locked;
+				Value = typedSource.Value;
 			}
 			else
 			{
 				JToken token;
-				if(source.TryGetProperty("Key", out token) && token.Type != JTokenType.Null)
+				if(source.TryGetProperty("Locked", out token) && token.Type != JTokenType.Null)
 				{
-					Key = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+					Locked = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
 				}
-				if(source.TryGetProperty("Secret", out token) && token.Type != JTokenType.Null)
+				if(source.TryGetProperty("Value", out token) && token.Type != JTokenType.Null)
 				{
-					Secret = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
-				}
-				if(source.TryGetProperty("EndPoint", out token) && token.Type != JTokenType.Null)
-				{
-					EndPoint = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+					Value = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
 			}
 		}
 	}
+#endif
 }

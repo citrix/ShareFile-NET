@@ -27,6 +27,8 @@ namespace ShareFile.Api.Models
                 _entityTypeMap.Add("AccessControlsBulkParamss", typeof(AccessControlsBulkParams));
                 _entityTypeMap.Add("AccessControlParam", typeof(AccessControlParam));
                 _entityTypeMap.Add("AccessControlParams", typeof(AccessControlParam));
+                _entityTypeMap.Add("Billing", typeof(Billing));
+                _entityTypeMap.Add("Billings", typeof(Billing));
                 _entityTypeMap.Add("ESignature", typeof(ESignature));
                 _entityTypeMap.Add("ESignatures", typeof(ESignature));
                 _entityTypeMap.Add("PlanAddon", typeof(PlanAddon));

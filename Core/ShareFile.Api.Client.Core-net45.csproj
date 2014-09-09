@@ -63,6 +63,7 @@
     <Compile Include="Entities\MetadataEntity.cs" />
     <Compile Include="Entities\Private\AccountsEntityInternal.cs" />
     <Compile Include="Entities\Private\AzureSBTopicsEntityInternal.cs" />
+    <Compile Include="Entities\Private\BillingEntityInternal.cs" />
     <Compile Include="Entities\Private\OAuthClientsEntityInternal.cs" />
     <Compile Include="Entities\Private\PlanAddonsEntityInternal.cs" />
     <Compile Include="Entities\SessionsEntity.cs" />
@@ -116,6 +117,8 @@
     <Compile Include="Models\AsyncOperationType.cs" />
     <Compile Include="Models\AzureSBTopicsEndPointInfo.cs" />
     <Compile Include="Models\AzureSBTopicsResponse.cs" />
+    <Compile Include="Models\Billing.cs" />
+    <Compile Include="Models\BillingCycleMonths.cs" />
     <Compile Include="Models\Capability.cs" />
     <Compile Include="Models\CapabilityName.cs" />
     <Compile Include="Models\ConnectorGroup.cs" />

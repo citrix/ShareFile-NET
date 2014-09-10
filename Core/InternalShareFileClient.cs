@@ -14,6 +14,7 @@ namespace ShareFile.Api.Client
 {
     public interface IInternalShareFileClient : IShareFileClient
     {
+        IBillingEntityInternal Billing { get; }
         IOAuthClientsEntityInternal OAuthClients { get; }
         IPlanAddonsEntityInternal PlanAddons { get; }
         IAzureSBTopicsEntityInternal AzureSBTopics { get; }
@@ -24,11 +25,13 @@ namespace ShareFile.Api.Client
         public InternalShareFileClient(string baseUri, Configuration configuration = null)
             : base(baseUri, configuration)
         {
+            Billing = new BillingEntityInternal(this);
             OAuthClients = new OAuthClientsEntityInternal(this);
             PlanAddons = new PlanAddonsEntityInternal(this);
             AzureSBTopics = new AzureSBTopicsEntityInternal(this);
         }
 
+        public IBillingEntityInternal Billing { get; private set; }
         public IOAuthClientsEntityInternal OAuthClients { get; private set; }
         public IPlanAddonsEntityInternal PlanAddons { get; private set; }
         public IAzureSBTopicsEntityInternal AzureSBTopics { get; private set; }

@@ -40,14 +40,18 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InternalShareFileClient.cs" />
     <Compile Include="Internal\Entities\AccountsEntityInternal.cs" />
     <Compile Include="Internal\Entities\AzureSBTopicsEntityInternal.cs" />
+    <Compile Include="Internal\Entities\BillingEntityInternal.cs" />
     <Compile Include="Internal\Entities\OAuthClientsEntityInternal.cs" />
     <Compile Include="Internal\Entities\PlanAddonsEntityInternal.cs" />
     <Compile Include="Internal\Models\AppCodes.cs" />
     <Compile Include="Internal\Models\AppStore.cs" />
     <Compile Include="Internal\Models\AzureSBTopicsEndPointInfo.cs" />
     <Compile Include="Internal\Models\AzureSBTopicsResponse.cs" />
+    <Compile Include="Internal\Models\Billing.cs" />
+    <Compile Include="Internal\Models\BillingCycleMonths.cs" />
     <Compile Include="Internal\Models\EntityTypeMap.cs" />
     <Compile Include="Internal\Models\InAppPurchase.cs" />
     <Compile Include="Internal\Models\MobileUserRole.cs" />

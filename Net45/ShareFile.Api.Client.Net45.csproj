@@ -11,7 +11,7 @@
     <AssemblyName>ShareFile.Api.Client.Net45</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-	<SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,6 +47,10 @@
     <ProjectReference Include="..\Core\ShareFile.Api.Client.Core-net45.csproj">
       <Project>{5adb6950-d609-4847-a842-0bdd6cdbbfb9}</Project>
       <Name>ShareFile.Api.Client.Core-net45</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\ShareFile.Api.Client.Core.Internal-net45.csproj">
+      <Project>{2ba1aff0-53fe-4df9-96f9-338b3683b74e}</Project>
+      <Name>ShareFile.Api.Client.Core.Internal-net45</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

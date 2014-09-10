@@ -12,11 +12,11 @@ using System;
 namespace ShareFile.Api.Models 
 {
 #if ShareFile
-	public enum AppStore
+	public enum BillingCycleMonths
     {
-        iOS = 0,
-        Android = 1,
-        Web = 2
+        Month = 1,
+        Quarter = 3,
+        Year = 12
     }
 #endif
 }

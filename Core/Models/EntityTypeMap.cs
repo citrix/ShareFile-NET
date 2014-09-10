@@ -29,10 +29,6 @@ namespace ShareFile.Api.Models
                 _entityTypeMap.Add("AccessControlParams", typeof(AccessControlParam));
                 _entityTypeMap.Add("ESignature", typeof(ESignature));
                 _entityTypeMap.Add("ESignatures", typeof(ESignature));
-                _entityTypeMap.Add("Principal", typeof(Principal));
-                _entityTypeMap.Add("Principals", typeof(Principal));
-                _entityTypeMap.Add("User", typeof(User));
-                _entityTypeMap.Add("Users", typeof(User));
                 _entityTypeMap.Add("PowerTools", typeof(PowerTools));
                 _entityTypeMap.Add("PowerToolss", typeof(PowerTools));
                 _entityTypeMap.Add("Item", typeof(Item));
@@ -54,6 +50,10 @@ namespace ShareFile.Api.Models
                 _entityTypeMap.Add("Account", typeof(Account));
                 _entityTypeMap.Add("Accounts", typeof(Account));
                 _entityTypeMap.Add("AccountPreferences", typeof(AccountPreferences));
+                _entityTypeMap.Add("Principal", typeof(Principal));
+                _entityTypeMap.Add("Principals", typeof(Principal));
+                _entityTypeMap.Add("User", typeof(User));
+                _entityTypeMap.Add("Users", typeof(User));
                 _entityTypeMap.Add("AccountUser", typeof(AccountUser));
                 _entityTypeMap.Add("AccountUsers", typeof(AccountUser));
                 _entityTypeMap.Add("AsyncOperation", typeof(AsyncOperation));

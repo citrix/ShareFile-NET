@@ -22,6 +22,8 @@ namespace ShareFile.Api.Client.Internal.Models
 				return;
             }
 
+            EntityTypeMap.AddEntity("Billing", typeof(Billing));
+            EntityTypeMap.AddEntity("Billings", typeof(Billing));
             EntityTypeMap.AddEntity("PlanAddon", typeof(PlanAddon));
             EntityTypeMap.AddEntity("PlanAddons", typeof(PlanAddon));
             EntityTypeMap.AddEntity("InAppPurchase", typeof(InAppPurchase));

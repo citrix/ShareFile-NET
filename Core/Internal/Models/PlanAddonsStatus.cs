@@ -14,11 +14,11 @@ namespace ShareFile.Api.Models
 #if ShareFile
 	public enum PlanAddonsStatus
     {
-        TRIAL_NOT_STARTED = 0,
-        TRIAL = 1,
-        TRIAL_EXPIRED = 2,
-        PAID = 3,
-        PAID_EXPIRED = 4
+        TrialNotStarted = 0,
+        Trial = 1,
+        TrialExpired = 2,
+        Paid = 3,
+        PaidExpired = 4
     }
 #endif
 }

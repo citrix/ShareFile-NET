@@ -27,7 +27,7 @@ namespace ShareFile.Api.Client.Entities.Extensions
         /// <returns>
         /// OutlookInformation
         /// </returns>
-        public static IQuery<OutlookInformation> GetOutlookInformation(this AccountsEntity entity)
+        public static IQuery<OutlookInformation> GetOutlookInformation(this IAccountsEntity entity)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<OutlookInformation>(entity.Client);
 		    sfApiQuery.From("Accounts");
@@ -35,7 +35,7 @@ namespace ShareFile.Api.Client.Entities.Extensions
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
-        public static IQuery<Account> Update(this AccountsEntity entity, Account account)
+        public static IQuery<Account> Update(this IAccountsEntity entity, Account account)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Account>(entity.Client);
 		    sfApiQuery.From("Accounts");
@@ -43,7 +43,7 @@ namespace ShareFile.Api.Client.Entities.Extensions
             sfApiQuery.HttpMethod = "PATCH";	
 		    return sfApiQuery;
         }
-        public static IQuery CreateAssignSubdomain(this AccountsEntity entity, string subdomain)
+        public static IQuery CreateAssignSubdomain(this IAccountsEntity entity, string subdomain)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(entity.Client);
 		    sfApiQuery.From("Accounts");

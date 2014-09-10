@@ -80,6 +80,7 @@ Target "Build" (fun () ->
             "Configuration", buildMode
             "SignAssembly", signParameter
             "AssemblyOriginatorKeyFile", signKeyPath
+            "GenerateDocumentation", "True"
         ]
 
     let buildParams = List.append baseBuildParams ["DefineConstants", constants + ";Portable;Async"]
@@ -132,6 +133,12 @@ Target "CreateNuGetPackage" (fun () ->
     CopyFile net40ClientDir (buildDir @@ "Net40/ShareFile.Api.Client.Core.dll")
     CopyFile portableDir (buildDir @@ "Portable/ShareFile.Api.Client.Core.dll")
     CopyFile netCore45Dir (buildDir @@ "NetCore45/ShareFile.Api.Client.Core.dll")
+    CopyFile net45Dir (buildDir @@ "Net45/ShareFile.Api.Client.Core.xml")
+    CopyFile net45Dir (buildDir @@ "Net45/ShareFile.Api.Client.Net45.xml")
+    CopyFile net40Dir (buildDir @@ "Net40/ShareFile.Api.Client.Core.xml")
+    CopyFile net40ClientDir (buildDir @@ "Net40/ShareFile.Api.Client.Core.xml")
+    CopyFile portableDir (buildDir @@ "Portable/ShareFile.Api.Client.Core.xml")
+    CopyFile netCore45Dir (buildDir @@ "NetCore45/ShareFile.Api.Client.Core.xml")
     
     if buildType = "internal" then
         CopyFile net45Dir (buildDir @@ "Net45/ShareFile.Api.Client.Core.Internal.dll")
@@ -139,6 +146,11 @@ Target "CreateNuGetPackage" (fun () ->
         CopyFile net40ClientDir (buildDir @@ "Net40/ShareFile.Api.Client.Core.Internal.dll")
         CopyFile portableDir (buildDir @@ "Portable/ShareFile.Api.Client.Core.Internal.dll")
         CopyFile netCore45Dir (buildDir @@ "NetCore45/ShareFile.Api.Client.Core.Internal.dll")
+        CopyFile net45Dir (buildDir @@ "Net45/ShareFile.Api.Client.Core.Internal.xml")
+        CopyFile net40Dir (buildDir @@ "Net40/ShareFile.Api.Client.Core.Internal.xml")
+        CopyFile net40ClientDir (buildDir @@ "Net40/ShareFile.Api.Client.Core.Internal.xml")
+        CopyFile portableDir (buildDir @@ "Portable/ShareFile.Api.Client.Core.Internal.xml")
+        CopyFile netCore45Dir (buildDir @@ "NetCore45/ShareFile.Api.Client.Core.Internal.xml")
     
     NuGet (fun p ->
         {p with

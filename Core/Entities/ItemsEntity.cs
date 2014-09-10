@@ -658,11 +658,11 @@ namespace ShareFile.Api.Client.Entities
 		/// This method returns all alternate protocol links supported by ShareFile (such
 		/// as WOPI, FTP, WebDAV).
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="parentUrl"></param>
 		/// <returns>
 		/// A Feed containing all protocols links supported by the given item
 		/// </returns>
-		IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(Uri url);
+		IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(Uri parentUrl);
 		/// <summary>
 		/// Get an Item Protocol Link
 		/// </summary>
@@ -1676,15 +1676,15 @@ namespace ShareFile.Api.Client.Entities
 		/// This method returns all alternate protocol links supported by ShareFile (such
 		/// as WOPI, FTP, WebDAV).
 		/// </remarks>
-		/// <param name="id"></param>
+		/// <param name="parentUrl"></param>
 		/// <returns>
 		/// A Feed containing all protocols links supported by the given item
 		/// </returns>
-		public IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(Uri url)
+		public IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(Uri parentUrl)
 		{
 			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<ItemProtocolLink>>(Client);
 			sfApiQuery.Action("ProtocolLinks");
-			sfApiQuery.Uri(url);
+			sfApiQuery.Uri(parentUrl);
 			sfApiQuery.HttpMethod = "GET";
 			return sfApiQuery;
 		}

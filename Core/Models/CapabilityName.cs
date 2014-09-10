@@ -35,12 +35,6 @@ namespace ShareFile.Api.Models
         VersionMax = 19,
         VersionMin = 20,
         Favorites = 21,
-        ReusableItemId = 22,
-        StandardUploadRaw = 23,
-        StandardUploadForms = 24,
-        StreamedUploadRaw = 25,
-        StreamedUploadForms = 26,
-        ThreadedUploadRaw = 27,
-        ThreadedUploadForms = 28
+        ReusableItemId = 22
     }
 }

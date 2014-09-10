@@ -27,20 +27,8 @@ namespace ShareFile.Api.Models
                 _entityTypeMap.Add("AccessControlsBulkParamss", typeof(AccessControlsBulkParams));
                 _entityTypeMap.Add("AccessControlParam", typeof(AccessControlParam));
                 _entityTypeMap.Add("AccessControlParams", typeof(AccessControlParam));
-                _entityTypeMap.Add("Billing", typeof(Billing));
-                _entityTypeMap.Add("Billings", typeof(Billing));
                 _entityTypeMap.Add("ESignature", typeof(ESignature));
                 _entityTypeMap.Add("ESignatures", typeof(ESignature));
-                _entityTypeMap.Add("PlanAddon", typeof(PlanAddon));
-                _entityTypeMap.Add("PlanAddons", typeof(PlanAddon));
-                _entityTypeMap.Add("InAppPurchase", typeof(InAppPurchase));
-                _entityTypeMap.Add("InAppPurchases", typeof(InAppPurchase));
-                _entityTypeMap.Add("TrialPeriod", typeof(TrialPeriod));
-                _entityTypeMap.Add("TrialPeriods", typeof(TrialPeriod));
-                _entityTypeMap.Add("PlanAddonUser", typeof(PlanAddonUser));
-                _entityTypeMap.Add("PlanAddonUsers", typeof(PlanAddonUser));
-                _entityTypeMap.Add("OAuthClient", typeof(OAuthClient));
-                _entityTypeMap.Add("OAuthClients", typeof(OAuthClient));
                 _entityTypeMap.Add("PowerTools", typeof(PowerTools));
                 _entityTypeMap.Add("PowerToolss", typeof(PowerTools));
                 _entityTypeMap.Add("Item", typeof(Item));
@@ -122,14 +110,6 @@ namespace ShareFile.Api.Models
                 _entityTypeMap.Add("Notes", typeof(Note));
                 _entityTypeMap.Add("Notification", typeof(Notification));
                 _entityTypeMap.Add("Notifications", typeof(Notification));
-                _entityTypeMap.Add("OutlookInformation", typeof(OutlookInformation));
-                _entityTypeMap.Add("OutlookInformations", typeof(OutlookInformation));
-                _entityTypeMap.Add("OutlookInformationOptionBool", typeof(OutlookInformationOptionBool));
-                _entityTypeMap.Add("OutlookInformationOptionBools", typeof(OutlookInformationOptionBool));
-                _entityTypeMap.Add("OutlookInformationOptionString", typeof(OutlookInformationOptionString));
-                _entityTypeMap.Add("OutlookInformationOptionStrings", typeof(OutlookInformationOptionString));
-                _entityTypeMap.Add("OutlookInformationOptionInt", typeof(OutlookInformationOptionInt));
-                _entityTypeMap.Add("OutlookInformationOptionInts", typeof(OutlookInformationOptionInt));
                 _entityTypeMap.Add("ProductDefaults", typeof(ProductDefaults));
                 _entityTypeMap.Add("Redirection", typeof(Redirection));
                 _entityTypeMap.Add("Redirections", typeof(Redirection));
@@ -152,10 +132,6 @@ namespace ShareFile.Api.Models
                 _entityTypeMap.Add("SearchResults", typeof(SearchResults));
                 _entityTypeMap.Add("AdvancedSearchResults", typeof(AdvancedSearchResults));
                 _entityTypeMap.Add("SearchResult", typeof(SearchResult));
-                _entityTypeMap.Add("AzureSBTopicsEndPointInfo", typeof(AzureSBTopicsEndPointInfo));
-                _entityTypeMap.Add("AzureSBTopicsEndPointInfos", typeof(AzureSBTopicsEndPointInfo));
-                _entityTypeMap.Add("AzureSBTopicsResponse", typeof(AzureSBTopicsResponse));
-                _entityTypeMap.Add("AzureSBTopicsResponses", typeof(AzureSBTopicsResponse));
                 _entityTypeMap.Add("Session", typeof(Session));
                 _entityTypeMap.Add("Sessions", typeof(Session));
                 _entityTypeMap.Add("Share", typeof(Share));
@@ -189,5 +165,13 @@ namespace ShareFile.Api.Models
 
 			return _entityTypeMap;
 		}
-	}
+        
+        internal static void AddEntity(string key, Type value)
+        {
+            lock(_entityTypeMap)
+            {
+                _entityTypeMap.Add(key, value);
+            }
+        }
+    }
 }

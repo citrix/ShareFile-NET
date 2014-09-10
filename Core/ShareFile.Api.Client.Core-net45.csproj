@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -61,11 +61,6 @@
     <Compile Include="Entities\GroupsEntity.cs" />
     <Compile Include="Entities\ItemsEntity.cs" />
     <Compile Include="Entities\MetadataEntity.cs" />
-    <Compile Include="Entities\Private\AccountsEntityInternal.cs" />
-    <Compile Include="Entities\Private\AzureSBTopicsEntityInternal.cs" />
-    <Compile Include="Entities\Private\BillingEntityInternal.cs" />
-    <Compile Include="Entities\Private\OAuthClientsEntityInternal.cs" />
-    <Compile Include="Entities\Private\PlanAddonsEntityInternal.cs" />
     <Compile Include="Entities\SessionsEntity.cs" />
     <Compile Include="Entities\SharesEntity.cs" />
     <Compile Include="Entities\StorageCentersEntity.cs" />
@@ -108,17 +103,10 @@
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\AccountPreferences.cs" />
     <Compile Include="Models\AccountUser.cs" />
-    <Compile Include="Models\AddressListType.cs" />
     <Compile Include="Models\AdvancedSearchResults.cs" />
-    <Compile Include="Models\AppCodes.cs" />
-    <Compile Include="Models\AppStore.cs" />
     <Compile Include="Models\AsyncOperation.cs" />
     <Compile Include="Models\AsyncOperationState.cs" />
     <Compile Include="Models\AsyncOperationType.cs" />
-    <Compile Include="Models\AzureSBTopicsEndPointInfo.cs" />
-    <Compile Include="Models\AzureSBTopicsResponse.cs" />
-    <Compile Include="Models\Billing.cs" />
-    <Compile Include="Models\BillingCycleMonths.cs" />
     <Compile Include="Models\Capability.cs" />
     <Compile Include="Models\CapabilityName.cs" />
     <Compile Include="Models\ConnectorGroup.cs" />
@@ -151,7 +139,6 @@
     <Compile Include="Models\FreeTrialAccount.cs" />
     <Compile Include="Models\GenericConfig.cs" />
     <Compile Include="Models\Group.cs" />
-    <Compile Include="Models\InAppPurchase.cs" />
     <Compile Include="Models\Industry.cs" />
     <Compile Include="Models\IntegrationProvider.cs" />
     <Compile Include="Models\Item.cs" />
@@ -160,32 +147,20 @@
     <Compile Include="Models\Link.cs" />
     <Compile Include="Models\Metadata.cs" />
     <Compile Include="Models\MobileSecuritySettings.cs" />
-    <Compile Include="Models\MobileUserRole.cs" />
     <Compile Include="Models\Note.cs" />
     <Compile Include="Models\Notification.cs" />
-    <Compile Include="Models\OAuthClient.cs" />
-    <Compile Include="Models\OAuthClientPermissions.cs" />
-    <Compile Include="Models\OAuthState.cs" />
     <Compile Include="Models\ODataFeed.cs" />
     <Compile Include="Models\ODataObject.cs" />
     <Compile Include="Models\ODataObjectType.cs" />
     <Compile Include="Models\PinLockType.cs" />
-    <Compile Include="Models\PlanAddon.cs" />
-    <Compile Include="Models\PlanAddonsStatus.cs" />
-    <Compile Include="Models\PlanAddonUser.cs" />
     <Compile Include="Models\PlanFeatures.cs" />
     <Compile Include="Models\PowerTools.cs" />
     <Compile Include="Models\PreviewStatus.cs" />
     <Compile Include="Models\Principal.cs" />
-    <Compile Include="Models\Private\OutlookInformation.cs" />
-    <Compile Include="Models\Private\OutlookInformationOptionBool.cs" />
-    <Compile Include="Models\Private\OutlookInformationOptionInt.cs" />
-    <Compile Include="Models\Private\OutlookInformationOptionString.cs" />
     <Compile Include="Models\ProductDefaults.cs" />
     <Compile Include="Models\Query.cs" />
     <Compile Include="Models\QueryPaging.cs" />
     <Compile Include="Models\QuerySorting.cs" />
-    <Compile Include="Models\QueueStatus.cs" />
     <Compile Include="Models\Redirection.cs" />
     <Compile Include="Models\RequireSubdomainResult.cs" />
     <Compile Include="Models\RequireWebPopResult.cs" />
@@ -193,12 +168,10 @@
     <Compile Include="Models\SearchQuery.cs" />
     <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Models\SearchResults.cs" />
-    <Compile Include="Models\ServiceBusEndPointInfo.cs" />
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\SFTool.cs" />
     <Compile Include="Models\Share.cs" />
     <Compile Include="Models\ShareAlias.cs" />
-    <Compile Include="Models\ShareConnectAddonFeatureInfo.cs" />
     <Compile Include="Models\ShareRequestParams.cs" />
     <Compile Include="Models\ShareResendParams.cs" />
     <Compile Include="Models\ShareSendParams.cs" />
@@ -212,7 +185,6 @@
     <Compile Include="Models\SymbolicLink.cs" />
     <Compile Include="Models\ToolInformation.cs" />
     <Compile Include="Models\TreeMode.cs" />
-    <Compile Include="Models\TrialPeriod.cs" />
     <Compile Include="Models\UploadMethod.cs" />
     <Compile Include="Models\UploadSpecification.cs" />
     <Compile Include="Models\User.cs" />
@@ -269,6 +241,7 @@
     <Compile Include="Security\Cryptography\PortableMD5HashProvider.cs" />
     <Compile Include="Security\ZoneAuthentication.cs" />
     <Compile Include="ShareFileClient.cs" />
+    <Compile Include="ShareFileClient.Entities.cs" />
     <Compile Include="Transfers\Downloaders\AsyncFileDownloader.cs" />
     <Compile Include="Transfers\Downloaders\DownloaderBase.cs" />
     <Compile Include="Transfers\Downloaders\DownloaderConfig.cs" />

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -12,7 +11,6 @@ using ShareFile.Api.Client.Converters;
 using ShareFile.Api.Client.Credentials;
 using ShareFile.Api.Client.Entities;
 using ShareFile.Api.Client.Events;
-using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Logging;
 using ShareFile.Api.Client.Requests;
@@ -28,31 +26,8 @@ using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client
 {
-    public interface IShareFileClient
+    public partial interface IShareFileClient
     {
-#if ShareFile
-        IAccountsEntityInternal Accounts { get; }
-        IOAuthClientsEntityInternal OAuthClients { get; }
-#else
-        IAccountsEntity Accounts { get; }
-#endif
-
-        IAccessControlsEntity AccessControls { get; }
-        IAsyncOperationsEntity AsyncOperations { get; }
-        ICapabilitiesEntity Capabilities { get; }
-        IConnectorGroupsEntity ConnectorGroups { get; }
-        IConfigsEntity Configs { get; }
-        IFavoriteFoldersEntity FavoriteFolders { get; }
-        IGroupsEntity Groups { get; }
-        IMetadataEntity Metadata { get; }
-        ISessionsEntity Sessions { get; }
-        ISharesEntity Shares { get; }
-        IUsersEntity Users { get; }
-        IDevicesEntity Devices { get; }
-        IItemsEntity Items { get; }
-        IStorageCentersEntity StorageCenters { get; }
-        IZonesEntity Zones { get; }
-
         Uri BaseUri { get; set; }
         Configuration Configuration { get; set; }
 
@@ -61,23 +36,16 @@ namespace ShareFile.Api.Client
 #endif
 
 #if Async
-#if ShareFile
         AsyncUploaderBase GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null);
-#else
-        AsyncUploaderBase GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null);
-#endif
+
         AsyncFileDownloader GetAsyncFileDownloader(Item itemToDownload, DownloaderConfig config = null);
 #else
-#if ShareFile
         SyncUploaderBase GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null);
-#else
-        SyncUploaderBase GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null);
-#endif
+
         FileDownloader GetFileDownloader(Item itemToDownload, DownloaderConfig config = null);
 #endif
         void AddCookie(Uri host, Cookie cookie);
 
-#if ShareFile
         /// <summary>
         /// Use this method if you've previously acquired an AuthenticationId through other means.
         /// </summary>
@@ -86,7 +54,6 @@ namespace ShareFile.Api.Client
         /// <param name="path"></param>
         /// <param name="cookieName"></param>
         void AddAuthenticationId(Uri host, string authenticationId, string path = "", string cookieName = "SFAPI_AuthId");
-#endif
 
         void AddChangeDomainHandler(ChangeDomainCallback handler);
         void AddExceptionHandler(ExceptionCallback handler);
@@ -152,7 +119,7 @@ namespace ShareFile.Api.Client
         void Execute(IQuery query);
     }
 
-    public class ShareFileClient : IShareFileClient
+    public partial class ShareFileClient : IShareFileClient
     {
         private static readonly Dictionary<string, EntityBase> RegisteredEntities;
         static ShareFileClient()
@@ -161,6 +128,7 @@ namespace ShareFile.Api.Client
         }
 
         public ShareFileClient(string baseUri, Configuration configuration = null)
+            : this()
         {
             BaseUri = new Uri(baseUri);
 
@@ -173,54 +141,7 @@ namespace ShareFile.Api.Client
             LoggingSerializer = GetLoggingSerializer(this);
 
             RegisterRequestProviders();
-
-            // Add supported entities
-            AccessControls = new AccessControlsEntity(this);
-            AsyncOperations = new AsyncOperationsEntity(this);
-            Capabilities = new CapabilitiesEntity(this);
-            ConnectorGroups = new ConnectorGroupsEntity(this);
-            Configs = new ConfigsEntity(this);
-            FavoriteFolders = new FavoriteFoldersEntity(this);
-            Groups = new GroupsEntity(this);
-            Metadata = new MetadataEntity(this);
-            Sessions = new SessionsEntity(this);
-            Shares = new SharesEntity(this);
-            Users = new UsersEntity(this);
-            Items = new ItemsEntity(this);
-            Devices = new DevicesEntity(this);
-            StorageCenters = new StorageCentersEntity(this);
-            Zones = new ZonesEntity(this);
-
-#if ShareFile
-            Accounts = new AccountsEntityInternal(this);
-            OAuthClients = new OAuthClientsEntityInternal(this);
-#else
-            Accounts = new AccountsEntity(this);
-#endif
         }
-
-#if ShareFile
-        public IAccountsEntityInternal Accounts { get; private set; }
-        public IOAuthClientsEntityInternal OAuthClients { get; private set; }
-#else
-        public IAccountsEntity Accounts { get; private set; }
-        public IItemsEntity Items { get; private set; }
-#endif
-        public IDevicesEntity Devices { get; private set; }
-        public IItemsEntity Items { get; private set; }
-        public IStorageCentersEntity StorageCenters { get; private set; }
-        public IZonesEntity Zones { get; private set; }
-        public IAccessControlsEntity AccessControls { get; private set; }
-        public IAsyncOperationsEntity AsyncOperations { get; private set; }
-        public ICapabilitiesEntity Capabilities { get; private set; }
-        public IConnectorGroupsEntity ConnectorGroups { get; private set; }
-        public IConfigsEntity Configs { get; private set; }
-        public IFavoriteFoldersEntity FavoriteFolders { get; private set; }
-        public IGroupsEntity Groups { get; private set; }
-        public IMetadataEntity Metadata { get; private set; }
-        public ISessionsEntity Sessions { get; private set; }
-        public ISharesEntity Shares { get; private set; }
-        public IUsersEntity Users { get; private set; }
 
         public Uri BaseUri { get; set; }
 
@@ -285,7 +206,14 @@ namespace ShareFile.Api.Client
         }
 
 #if Async
-#if ShareFile
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="uploadSpecificationRequest"></param>
+        /// <param name="file"></param>
+        /// <param name="config"></param>
+        /// <param name="expirationDays">Will only be obeyed by ShareFile apps</param>
+        /// <returns></returns>
         public AsyncUploaderBase GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
         {
             switch (uploadSpecificationRequest.Method)
@@ -300,30 +228,20 @@ namespace ShareFile.Api.Client
 
             throw new NotSupportedException(uploadSpecificationRequest.Method + " is not supported.");
         }
-#else
-        public AsyncUploaderBase GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null)
-        {
-            switch (uploadSpecificationRequest.Method)
-            {
-                case UploadMethod.Standard:
-                    return new AsyncStandardFileUploader(this, uploadSpecificationRequest, file, config);
-                    break;
-                case UploadMethod.Threaded:
-                    return new AsyncThreadedFileUploader(this, uploadSpecificationRequest, file, config);
-                    break;
-            }
 
-            throw new NotSupportedException(uploadSpecificationRequest.Method + " is not supported.");
-        }
-#endif
         public AsyncFileDownloader GetAsyncFileDownloader(Item itemToDownload, DownloaderConfig config = null)
         {
             return new AsyncFileDownloader(itemToDownload, this, config);
         }
 #else
-
-
-#if ShareFile
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="uploadSpecificationRequest"></param>
+        /// <param name="file"></param>
+        /// <param name="config"></param>
+        /// <param name="expirationDays">Will only be obeyed by ShareFile apps</param>
+        /// <returns></returns>
         public SyncUploaderBase GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
         {
             switch (uploadSpecificationRequest.Method)
@@ -338,22 +256,6 @@ namespace ShareFile.Api.Client
 
             throw new NotSupportedException(uploadSpecificationRequest.Method + " is not supported.");
         }
-#else        
-        public ThreadedFileUploader GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null)
-        {
-            switch (uploadSpecificationRequest.Method)
-            {
-                case UploadMethod.Standard:
-                    return new StandardFileUploader(this, uploadSpecificationRequest, file, config);
-                    break;
-                case UploadMethod.Threaded:
-                    return new ThreadedFileUploader(this, uploadSpecificationRequest, file, config);
-                    break;
-            }
-
-            throw new NotSupportedException(uploadSpecificationRequest.Method + " is not supported.");
-        }
-#endif
 
         public FileDownloader GetFileDownloader(Item itemToDownload, DownloaderConfig config = null)
         {
@@ -369,7 +271,6 @@ namespace ShareFile.Api.Client
             CookieContainer.Add(host, cookie);
         }
 
-#if ShareFile
         /// <summary>
         /// Use this method if you've previously acquired an AuthenticationId through other means.
         /// </summary>
@@ -384,7 +285,6 @@ namespace ShareFile.Api.Client
 
             CookieContainer.Add(host, new Cookie(cookieName, authenticationId, path));
         }
-#endif
 
         public void ClearCredentialsAndCookies()
         {

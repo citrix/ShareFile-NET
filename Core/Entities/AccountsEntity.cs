@@ -45,6 +45,18 @@ namespace ShareFile.Api.Client.Entities
         IQuery<Account> GetBranding();
         
         /// <summary>
+        /// Modify the Branding for this account
+        /// </summary>
+        /// <remarks>
+        /// Modifies Branding information about the subdomain account.
+        /// This operation requires authentication.
+        /// </remarks>
+        /// <returns>
+        /// Branding information for a given sharefile account
+        /// </returns>
+        IQuery<Account> UpdateBranding(Account account);
+        
+        /// <summary>
         /// Get List of current Account Employees
         /// </summary>
         /// <remarks>
@@ -404,6 +416,26 @@ namespace ShareFile.Api.Client.Entities
 		    sfApiQuery.From("Accounts");
 		    sfApiQuery.Action("Branding");
             sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Modify the Branding for this account
+        /// </summary>
+        /// <remarks>
+        /// Modifies Branding information about the subdomain account.
+        /// This operation requires authentication.
+        /// </remarks>
+        /// <returns>
+        /// Branding information for a given sharefile account
+        /// </returns>
+        public IQuery<Account> UpdateBranding(Account account)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Account>(Client);
+		    sfApiQuery.From("Accounts");
+		    sfApiQuery.Action("Branding");
+            sfApiQuery.Body = account;
+            sfApiQuery.HttpMethod = "PATCH";	
 		    return sfApiQuery;
         }
         

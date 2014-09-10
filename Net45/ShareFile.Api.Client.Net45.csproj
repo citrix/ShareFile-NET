@@ -48,10 +48,6 @@
       <Project>{5adb6950-d609-4847-a842-0bdd6cdbbfb9}</Project>
       <Name>ShareFile.Api.Client.Core-net45</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Core\ShareFile.Api.Client.Core.Internal-net45.csproj">
-      <Project>{2ba1aff0-53fe-4df9-96f9-338b3683b74e}</Project>
-      <Name>ShareFile.Api.Client.Core.Internal-net45</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('$(SolutionDir)packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />

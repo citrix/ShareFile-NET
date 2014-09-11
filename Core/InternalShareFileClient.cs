@@ -9,6 +9,7 @@
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using ShareFile.Api.Client.Entities;
+using ShareFile.Api.Client.Internal.Models;
 
 namespace ShareFile.Api.Client
 {
@@ -29,6 +30,8 @@ namespace ShareFile.Api.Client
             OAuthClients = new OAuthClientsEntityInternal(this);
             PlanAddons = new PlanAddonsEntityInternal(this);
             AzureSBTopics = new AzureSBTopicsEntityInternal(this);
+
+            EntityTypeMapInternal.RegisterInternalModels();
         }
 
         public IBillingEntityInternal Billing { get; private set; }

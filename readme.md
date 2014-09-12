@@ -281,7 +281,7 @@ When working with `ODataFeed` responses, you can limit the size of the response
 by using `Top` and `Skip`.  The following `Query` will return up to 10 Children
 and skip the first 10.
 
-      var folderContents = (Folder) await sfClient.Items.GetChildren()
+      var folderContents = await sfClient.Items.GetChildren()
                             .Top(10)
                             .Skip(10)
                             .ExecuteAsync();

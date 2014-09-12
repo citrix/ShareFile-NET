@@ -45,10 +45,14 @@ namespace ShareFile.Api.Client.Requests.Providers
 
             var handler = new HttpClientHandler
             {
-                AllowAutoRedirect = false,
-                Credentials = shareFileClient.CredentialCache,
-                AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip
+                AllowAutoRedirect = true,
+                Credentials = shareFileClient.CredentialCache
             };
+
+            if (handler.SupportsAutomaticDecompression)
+            {
+                handler.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
+            }
 
             if (!RuntimeRequiresCustomCookieHandling)
             {
@@ -60,7 +64,8 @@ namespace ShareFile.Api.Client.Requests.Providers
                 handler.UseCookies = false;
             }
 
-            if (shareFileClient.Configuration.ProxyConfiguration != null)
+            // Not all platforms support proxy.
+            if (shareFileClient.Configuration.ProxyConfiguration != null && handler.SupportsProxy)
             {
                 handler.Proxy = shareFileClient.Configuration.ProxyConfiguration;
                 handler.UseProxy = true;

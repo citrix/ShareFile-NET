@@ -20,7 +20,7 @@ namespace ShareFile.Api.Client.Extensions
         public static TResult As<TCast, TResult>(this object obj, Func<TCast, TResult> map, TResult defaultValue)
         {
             //check assignable from instead?
-            if (typeof(TCast).IsInstanceOfType(obj))
+            if (obj is TCast)
             {
                 return map((TCast)obj);
             }

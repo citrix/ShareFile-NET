@@ -39,6 +39,8 @@ namespace ShareFile.Api.Models
 
 		public string Body { get; set; }
 
+		public bool Available { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -57,6 +59,7 @@ namespace ShareFile.Api.Models
 				TokenUri = typedSource.TokenUri;
 				SessionCheck = typedSource.SessionCheck;
 				Body = typedSource.Body;
+				Available = typedSource.Available;
 			}
 			else
 			{
@@ -100,6 +103,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("Body", out token) && token.Type != JTokenType.Null)
 				{
 					Body = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Available", out token) && token.Type != JTokenType.Null)
+				{
+					Available = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
 				}
 			}
 		}

@@ -295,10 +295,12 @@ namespace ShareFile.Api.Client.Requests
             Client.Execute(this);
         }
 
+#if Async
         public Task ExecuteAsync(CancellationToken? token = null)
         {
             return Client.ExecuteAsync(this, token);
         }
+#endif
 
         public Query AddHeader(string key, string value)
         {
@@ -320,7 +322,7 @@ namespace ShareFile.Api.Client.Requests
 // ReSharper disable InconsistentNaming
         protected readonly IList<string> _selectProperties;
         protected readonly IList<string> _expandProperties;
-        protected readonly IList<IFilter> _filterCriteria;
+        protected IFilter _filterCriteria;
         protected int _skip;
         protected int _top;
         protected string _orderBy;
@@ -331,7 +333,6 @@ namespace ShareFile.Api.Client.Requests
         {
             _selectProperties = new List<string>();
             _expandProperties = new List<string>();
-            _filterCriteria = new List<IFilter>();
             _skip = 0;
             _top = -1;
         }
@@ -414,10 +415,22 @@ namespace ShareFile.Api.Client.Requests
             return this;
         }
 
+        /// <summary>
+        /// If a Filter has already been added, it will implicitly converted to a <see cref="AndFilter"/> 
+        /// with the existing filter as Left and <param name="filter"></param> as Right.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
         public Query<T> Filter(IFilter filter)
         {
-            _filterCriteria.Clear();
-            _filterCriteria.Add(filter);
+            if (_filterCriteria != null)
+            {
+                _filterCriteria = new AndFilter(_filterCriteria, filter);
+            }
+            else
+            {
+                _filterCriteria = filter;
+            }
 
             return this;
         }
@@ -488,10 +501,12 @@ namespace ShareFile.Api.Client.Requests
             return Client.Execute(this);
         }
 
+#if Async
         public virtual Task<T> ExecuteAsync(CancellationToken? token = null)
         {
             return Client.ExecuteAsync(this, token);
         }
+#endif
 
         public int GetTop()
         {
@@ -515,7 +530,7 @@ namespace ShareFile.Api.Client.Requests
 
         public IFilter GetFilter()
         {
-            return _filterCriteria.FirstOrDefault();
+            return _filterCriteria;
         }
     }
 
@@ -550,10 +565,12 @@ namespace ShareFile.Api.Client.Requests
             return Client.Execute(this);
         }
 
+#if Async
         public override Task<Stream> ExecuteAsync(CancellationToken? token = null)
         {
             return Client.ExecuteAsync(this, token);
         }
+#endif
     }
 
     public class ApiRequest

@@ -87,6 +87,11 @@ namespace ShareFile.Api.Models
         {
             return safeEnum.Enum;
         }
+
+        public static implicit operator SafeEnum<TEnumSource>(TEnumSource source)
+        {
+            return Create(source);
+        }
         #endregion
     }
 }

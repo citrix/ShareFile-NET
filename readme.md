@@ -3,6 +3,14 @@
 Before continuing please familiarize yourself with the API and it's methodology
 at https://api.sharefile.com/rest
 
+If you would like to download the Nuget Package for this SDK, you can find it here
+https://www.nuget.org/packages/ShareFile.Api.Client/
+
+License
+----
+All code is licensed under the [MIT
+License](https://github.com/citrix/ShareFile-PowerShell/blob/master/ShareFileSnapIn/LICENSE.txt).
+
 ## Definitions ##
 
 * `applicationControlPlane` - Describes the domain that the ShareFile account is available on.  
@@ -77,28 +85,26 @@ which is not currently documented.  In order to complete this authentication
 the consumer will must know `username`, `password`, `subdomain`, and `applicationControlPlane`.  In the sample below,
 these are assumed to have been obtained already.
 
+        var sfClient = new ShareFileClient("https://secure.sf-api.com/sf/v3/");
+        var oauthService = new OAuthService(sfClient, "[clientid]", "[clientSecret]");
 
-      var sfClient = new ShareFileClient("https://secure.sf-api.com/sf/v3/");
-      var oauthService = new OAuthService(sfClient, "[clientid]", "[clientSecret]");
+        var oauthToken = await oauthService.PasswordGrantAsync(username,
+          password, subdomain, applicationControlPlane);
 
-      var oauthToken = await oauthService.PasswordGrantAsync(username,
-        password, subdomain, applicationControlPlane);
-
-      sfClient.AddOAuthCredentials(oauthToken);
-      sfClient.BaseUri = oauthToken.GetUri();
+        sfClient.AddOAuthCredentials(oauthToken);
+        sfClient.BaseUri = oauthToken.GetUri();
 
 * **SAML Authentication**:  This authentication support assumes you have a mechanism
 for obtaining a SAML assertion, `samlAssertion` from the user's IdP.
 
+        var sfClient = new ShareFileClient("https://secure.sf-api.com/sf/v3/");
+        var oauthService = new OAuthService(sfClient, "[clientid]", "[clientSecret]");
 
-      var sfClient = new ShareFileClient("https://secure.sf-api.com/sf/v3/");
-      var oauthService = new OAuthService(sfClient, "[clientid]", "[clientSecret]");
+        var oauthToken = await oauthService.ExchangeSamlAssertionAsync(samlAssertion,
+          subdomain, applicationControlPlane);
 
-      var oauthToken = await oauthService.ExchangeSamlAssertionAsync(samlAssertion,
-         subdomain, applicationControlPlane);
-
-      sfClient.AddOAuthCredentials(oauthToken);
-      sfClient.BaseUri = oauthToken.GetUri();
+        sfClient.AddOAuthCredentials(oauthToken);
+        sfClient.BaseUri = oauthToken.GetUri();
 
 * **Refreshing an OAuthToken**:  Any `OAuthToken` that is obtained using a `code`
 grant type can be refreshed.  This allows a consumer to silently reauthenticate
@@ -106,15 +112,14 @@ with the ShareFile API without needing to prompt the user.  This is useful if
 you plan on caching the `OAuthToken`.  The sample below assumes you have already
 pulled an instance of `OAuthToken` as `cachedOAuthToken` from some local cache.
 
+        var sfClient = new ShareFileClient(cachedOAuthToken.GetUri());
+        var oauthService = new OAuthService(sfClient, "[clientid]", "[clientSecret]");
 
-      var sfClient = new ShareFileClient(cachedOAuthToken.GetUri());
-      var oauthService = new OAuthService(sfClient, "[clientid]", "[clientSecret]");
+        var oauthToken = await oauthService.RefreshOAuthTokenAsync(samlAssertion,
+          subdomain, applicationControlPlane);
 
-      var oauthToken = await oauthService.RefreshOAuthTokenAsync(samlAssertion,
-        subdomain, applicationControlPlane);
-
-      sfClient.AddOAuthCredentials(oauthToken);
-      sfClient.BaseUri = oauthToken.GetUri();
+        sfClient.AddOAuthCredentials(oauthToken);
+        sfClient.BaseUri = oauthToken.GetUri();
 
 
 ## ShareFile Basics ##
@@ -276,7 +281,7 @@ When working with `ODataFeed` responses, you can limit the size of the response
 by using `Top` and `Skip`.  The following `Query` will return up to 10 Children
 and skip the first 10.
 
-      var folderContents = (Folder) await sfClient.Items.GetChildren()
+      var folderContents = await sfClient.Items.GetChildren()
                             .Top(10)
                             .Skip(10)
                             .ExecuteAsync();

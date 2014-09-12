@@ -10,6 +10,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>@description@</description>
     <releaseNotes></releaseNotes>
+	<projectUrl>https://github.com/citrix/ShareFile-NET/blob/master/README.md</projectUrl>
     <copyright>Copyright © Citrix ShareFile 2014</copyright>
     <tags>ShareFile API Client</tags>
     <dependencies>

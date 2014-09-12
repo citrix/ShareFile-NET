@@ -44,6 +44,11 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public Redirection Redirection { get; set; }
 
+		/// <summary>
+		/// Favorite Folder object associated to this item
+		/// </summary>
+		public FavoriteFolder FavoriteFolder { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -57,6 +62,7 @@ namespace ShareFile.Api.Models
 				HasRemoteChildren = typedSource.HasRemoteChildren;
 				Info = typedSource.Info;
 				Redirection = typedSource.Redirection;
+				FavoriteFolder = typedSource.FavoriteFolder;
 			}
 			else
 			{
@@ -80,6 +86,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("Redirection", out token) && token.Type != JTokenType.Null)
 				{
 					Redirection = (Redirection)serializer.Deserialize(token.CreateReader(), typeof(Redirection));
+				}
+				if(source.TryGetProperty("FavoriteFolder", out token) && token.Type != JTokenType.Null)
+				{
+					FavoriteFolder = (FavoriteFolder)serializer.Deserialize(token.CreateReader(), typeof(FavoriteFolder));
 				}
 			}
 		}

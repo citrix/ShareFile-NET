@@ -27,6 +27,18 @@ namespace ShareFile.Api.Client.Core.Tests.Extensions
             uri.ToString().Should().Be("https://secure.sf-api.com/sf/v3/Items(connectors)");
         }
 
+        [TestCase(ItemAlias.SharepointConnectors, "c-sp", TestName = "GetAliasWithMappedAlias_SharePoint")]
+        [TestCase(ItemAlias.NetworkShareConnectors, "c-cifs", TestName = "GetAliasWithMappedAlias_NetworkShares")]
+        public void GetAliasWithMappedAlias(ItemAlias alias, string expectedValue)
+        {
+            // Act
+            var sfClient = new ShareFileClient("https://secure.sf-api.com/sf/v3/");
+            var uri = sfClient.Items.GetAlias(alias);
+
+            // Assert
+            uri.ToString().Should().Be("https://secure.sf-api.com/sf/v3/Items(" + expectedValue + ")");
+        }
+
         [Test]
         public void GetAliasWithItemId()
         {

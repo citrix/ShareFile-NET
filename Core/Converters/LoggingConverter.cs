@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Security.Cryptography;
 using System.Text.RegularExpressions;
 
@@ -116,7 +117,7 @@ namespace ShareFile.Api.Client.Converters
             }
             else
             {
-                var properties = valueType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                var properties = valueType.GetPublicProperties();
 
                 writer.WriteStartObject();
                 foreach (var prop in properties)
@@ -157,7 +158,7 @@ namespace ShareFile.Api.Client.Converters
 
         private static bool IsSimpleType(Type type)
         {
-            return type.IsPrimitive || _primitives.Contains(type);
+            return type.IsPrimitive() || _primitives.Contains(type);
         }
 
         public static string GetHash(string value)

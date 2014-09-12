@@ -8,7 +8,6 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,28 +18,23 @@ using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Client.Entities
 {
+    public interface IConfigsEntity : IEntityBase
+    {
+        IQuery<ODataFeed<GenericConfig>> Get();
+    }
 
-	public interface IConfigsEntity : IEntityBase
-	{
-		IQuery<ODataFeed<GenericConfig>> Get();
-	}
-
-	public class ConfigsEntity : EntityBase, IConfigsEntity
-	{
-		public ConfigsEntity(IShareFileClient client)
-			: base (client, "Configs")
-			
-		{
-
-		}
-
-		public IQuery<ODataFeed<GenericConfig>> Get()
-		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<GenericConfig>>(Client);
-			sfApiQuery.From("Configs");
-			sfApiQuery.HttpMethod = "GET";
-			return sfApiQuery;
-		}
-
-	}
+    public class ConfigsEntity : EntityBase, IConfigsEntity
+    {
+        public ConfigsEntity (IShareFileClient client)
+            : base (client, "Configs")
+        { }
+        
+        public IQuery<ODataFeed<GenericConfig>> Get()
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<GenericConfig>>(Client);
+		    sfApiQuery.From("Configs");
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+    }
 }

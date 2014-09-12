@@ -33,15 +33,21 @@ namespace ShareFile.Api.Client.Transfers
             }
         }
 
+#if Async
         protected bool ShouldPause(CancellationToken? cancellationToken)
         {
             if (cancellationToken == null)
                 return GetState() == TransfererState.Paused;
             return GetState() == TransfererState.Paused && !cancellationToken.Value.IsCancellationRequested;
         }
+#endif
+        protected bool ShouldPause()
+        {
+            return GetState() == TransfererState.Paused;
+        }
 
 #if Async
-        protected async Task TryPause(CancellationToken? cancellationToken)
+        protected async Task TryPauseAsync(CancellationToken? cancellationToken)
         {
             while (ShouldPause(cancellationToken))
             {
@@ -53,6 +59,18 @@ namespace ShareFile.Api.Client.Transfers
             }
         }        
 #endif
+
+        protected void TryPause()
+        {
+            while (ShouldPause())
+            {
+#if Async
+                TryPauseAsync(null).Wait();
+#else
+                Thread.Sleep(1000);
+#endif
+            }
+        }
     }
 
     public enum TransfererState

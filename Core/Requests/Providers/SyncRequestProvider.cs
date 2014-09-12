@@ -87,9 +87,13 @@ namespace ShareFile.Api.Client.Requests.Providers
                             return Response.CreateAction<T>(EventHandlerResponse.Redirect(redirection));
                         }
                     }
-                    else
+                    else if(result is T)
                     {
                         return Response.CreateSuccess(result as T);
+                    }
+                    else
+                    {
+                        throw new InvalidApiResponseException(httpResponseMessage.StatusCode, "Unable to parse API return to desired type");
                     }
                 }
                 else
@@ -197,7 +201,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                             return HandleResponse(authenticatedResponse, parseSuccessResponse, request, retryCount, false);
                         }
 
-                        Response.CreateAction(HandleNonSuccess(authenticatedResponse, retryCount));
+                        return Response.CreateAction(HandleNonSuccess(authenticatedResponse, retryCount));
                     }
                 }
             }

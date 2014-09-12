@@ -45,7 +45,7 @@ namespace ShareFile.Api.Client.Extensions
         }
 #endif
 
-        private static IQuery<T> ApplySelectsAndExpands<T>(IQuery<T> query, LambdaExpression lambda) where T : class
+        public static IQuery<T> ApplySelectsAndExpands<T>(IQuery<T> query, LambdaExpression lambda) where T : class
         {
             var queryModifiers = ExpressionUtils.ExpandLambdaExpression(lambda).SelectMany(z => ExpressionUtils.ParseToQuery(lambda.Parameters[0], z)).ToList();
 
@@ -173,6 +173,7 @@ namespace ShareFile.Api.Client.Extensions
                         else
                         {
                             yield return new QueryModifier { ModType = QueryModifierType.Select, Property = prefix + prop.Name };
+                            break;
                         }
                     }
                     else if (propExpr.NodeType == ExpressionType.Convert
@@ -198,7 +199,6 @@ namespace ShareFile.Api.Client.Extensions
                             if (lambdaBaseParam != null)
                             {
                                 hasLambda = true;
-                                var x = ExpandLambdaExpression(lambda).ToList();
                                 foreach (var subModifier in ExpandLambdaExpression(lambda).SelectMany(z => ParseToQuery(lambdaBaseParam, z)))
                                 {
                                     yield return new QueryModifier { ModType = subModifier.ModType, Property = prefix + subModifier.Property };
@@ -352,7 +352,7 @@ namespace ShareFile.Api.Client.Extensions
                             foreach(var initArg in ExpandMemberBindings(((MemberMemberBinding)binding).Bindings))
                             {
                                 yield return initArg;
-                                //balrogs
+                                //yield return balrog;
                             }
                             break;
                     }

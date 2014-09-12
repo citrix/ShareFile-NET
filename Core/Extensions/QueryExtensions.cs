@@ -177,7 +177,8 @@ namespace ShareFile.Api.Client.Extensions
                     }
                     else if (propExpr.NodeType == ExpressionType.Convert
                         || propExpr.NodeType == ExpressionType.ConvertChecked
-                        || propExpr.NodeType == ExpressionType.TypeAs)
+                        || propExpr.NodeType == ExpressionType.TypeAs
+                        || propExpr.NodeType == ExpressionType.Coalesce)
                     {
                         //assume you know what you're doing..
                         continue;

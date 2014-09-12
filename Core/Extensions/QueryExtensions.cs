@@ -198,6 +198,7 @@ namespace ShareFile.Api.Client.Extensions
                             if (lambdaBaseParam != null)
                             {
                                 hasLambda = true;
+                                var x = ExpandLambdaExpression(lambda).ToList();
                                 foreach (var subModifier in ExpandLambdaExpression(lambda).SelectMany(z => ParseToQuery(lambdaBaseParam, z)))
                                 {
                                     yield return new QueryModifier { ModType = subModifier.ModType, Property = prefix + subModifier.Property };
@@ -315,7 +316,15 @@ namespace ShareFile.Api.Client.Extensions
             private static IEnumerable<Expression> ExpandListInit(ListInitExpression listInitExpression)
             {
                 yield return listInitExpression.NewExpression;
-                foreach (var init in listInitExpression.Initializers)
+                foreach (var initArg in ExpandCollectionInitializers(listInitExpression.Initializers))
+                {
+                    yield return initArg;
+                }
+            }
+
+            private static IEnumerable<Expression> ExpandCollectionInitializers(IEnumerable<ElementInit> initializers)
+            {
+                foreach (var init in initializers)
                 {
                     foreach (var initArg in init.Arguments)
                     {
@@ -324,9 +333,39 @@ namespace ShareFile.Api.Client.Extensions
                 }
             }
 
+            private static IEnumerable<Expression> ExpandMemberBindings(IEnumerable<MemberBinding> bindings)
+            {
+                foreach (var binding in bindings)
+                {
+                    switch (binding.BindingType)
+                    {
+                        case MemberBindingType.Assignment:
+                            yield return ((MemberAssignment)binding).Expression;
+                            break;
+                        case MemberBindingType.ListBinding:
+                            foreach (var initArg in ExpandCollectionInitializers(((MemberListBinding)binding).Initializers))
+                            {
+                                yield return initArg;
+                            }
+                            break;
+                        case MemberBindingType.MemberBinding:
+                            foreach(var initArg in ExpandMemberBindings(((MemberMemberBinding)binding).Bindings))
+                            {
+                                yield return initArg;
+                                //balrogs
+                            }
+                            break;
+                    }
+                }
+            }
+
             private static IEnumerable<Expression> ExpandMemberInit(MemberInitExpression memberInitExpression)
             {
                 yield return memberInitExpression.NewExpression;
+                foreach(var initArg in ExpandMemberBindings(memberInitExpression.Bindings))
+                {
+                    yield return initArg;
+                }
             }
 
             private static IEnumerable<Expression> ExpandInvocation(InvocationExpression invocationExpression)

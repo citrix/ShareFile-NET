@@ -264,6 +264,22 @@ namespace ShareFile.Api.Client.Entities
         IQuery<UserPreferences> GetPreferences(Uri url);
         
         /// <summary>
+        /// Update User Preferences
+        /// </summary>
+        /// <example>
+        /// {
+        /// "EnableFlashUpload":"true",
+        /// "EnableJavaUpload":"true"
+        /// .
+        /// .
+        /// .
+        /// }
+        /// </example>
+        /// <param name="parentUrl"></param>
+        /// <param name="preferences"></param>
+        IQuery<UserPreferences> UpdatePreferences(Uri parentUrl, UserPreferences preferences);
+        
+        /// <summary>
         /// Get User Security
         /// </summary>
         /// <remarks>
@@ -734,6 +750,30 @@ namespace ShareFile.Api.Client.Entities
 		    sfApiQuery.Action("Preferences");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Update User Preferences
+        /// </summary>
+        /// <example>
+        /// {
+        /// "EnableFlashUpload":"true",
+        /// "EnableJavaUpload":"true"
+        /// .
+        /// .
+        /// .
+        /// }
+        /// </example>
+        /// <param name="parentUrl"></param>
+        /// <param name="preferences"></param>
+        public IQuery<UserPreferences> UpdatePreferences(Uri parentUrl, UserPreferences preferences)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<UserPreferences>(Client);
+		    sfApiQuery.Action("Preferences");
+            sfApiQuery.Uri(parentUrl);
+            sfApiQuery.Body = preferences;
+            sfApiQuery.HttpMethod = "PATCH";	
 		    return sfApiQuery;
         }
         

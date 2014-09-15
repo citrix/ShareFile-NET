@@ -105,6 +105,7 @@
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\AccountPreferences.cs" />
     <Compile Include="Models\AccountUser.cs" />
+	<Compile Include="Models\AddressListType.cs" />
     <Compile Include="Models\AdvancedSearchResults.cs" />
     <Compile Include="Models\AsyncOperation.cs" />
     <Compile Include="Models\AsyncOperationState.cs" />

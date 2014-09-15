@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyProductAttribute("ShareFile.Api.Client")]
 [assembly: AssemblyTitleAttribute("ShareFile Client SDK")]
 [assembly: AssemblyVersionAttribute("3.0.0")]
-[assembly: AssemblyFileVersionAttribute("3.0.5")]
+[assembly: AssemblyFileVersionAttribute("3.0.6")]
 [assembly: AssemblyCopyrightAttribute("Copyright © Citrix ShareFile 2014")]
 [assembly: InternalsVisibleToAttribute("ShareFile.Api.Client.Core.Internal")]
 namespace System {

@@ -212,7 +212,7 @@ namespace ShareFile.Api.Client.Requests.Providers
         protected HttpResponseMessage ExecuteRequest(HttpRequestMessage requestMessage)
         {
             var responseMessage = RequestExecutorFactory.GetSyncRequestExecutor()
-                .Send(HttpClient, requestMessage, HttpCompletionOption.ResponseHeadersRead);
+                .Send(HttpClient, requestMessage, HttpCompletionOption.ResponseContentRead);
 
             ProcessCookiesForRuntime(responseMessage);
 

@@ -456,9 +456,9 @@ namespace ShareFile.Api.Client.Requests.Providers
             var requestExecutor = RequestExecutorFactory.GetAsyncRequestExecutor();
             if (token == null)
             {
-                responseMessage = await requestExecutor.SendAsync(HttpClient, requestMessage, HttpCompletionOption.ResponseHeadersRead, CancellationToken.None);
+                responseMessage = await requestExecutor.SendAsync(HttpClient, requestMessage, HttpCompletionOption.ResponseContentRead, CancellationToken.None);
             }
-            else responseMessage = await requestExecutor.SendAsync(HttpClient, requestMessage, HttpCompletionOption.ResponseHeadersRead, token.Value);
+            else responseMessage = await requestExecutor.SendAsync(HttpClient, requestMessage, HttpCompletionOption.ResponseContentRead, token.Value);
 
             ProcessCookiesForRuntime(responseMessage);
 

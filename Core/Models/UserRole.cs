@@ -32,6 +32,7 @@ namespace ShareFile.Api.Models
         CreateBoxConnectors = 40,
         CreateDropboxConnectors = 41,
         CreateGoogleDriveConnectors = 42,
+        CreateOneDriveBusinessConnectors = 43,
         AdminAccountPolicies = 50,
         AdminBilling = 51,
         AdminBranding = 52,

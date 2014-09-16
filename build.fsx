@@ -39,24 +39,17 @@ Target "Clean" (fun () ->
 )
 
 Target "AssemblyInfo" (fun () ->
-    
-    let assemblyInfo = 
-        if buildType = "internal" then
-           [  Attribute.Product projectName
-              Attribute.Title title
-              Attribute.Version assemblyVersion
-              Attribute.FileVersion assemblyFileVersion
-              Attribute.Copyright "Copyright © Citrix ShareFile 2014"
-              Attribute.InternalsVisibleTo "ShareFile.Api.Client.Core.Internal" ]
-        else 
-           [  Attribute.Product projectName
-              Attribute.Title title
-              Attribute.Version assemblyVersion
-              Attribute.FileVersion assemblyFileVersion
-              Attribute.Copyright "Copyright © Citrix ShareFile 2014" ]
 
-    CreateCSharpAssemblyInfo "./Core/Properties/AssemblyInfo.cs" assemblyInfo
-    CreateCSharpAssemblyInfo "./Net45/Properties/AssemblyInfo.cs" assemblyInfo
+    let assemblyInfo = 
+        [   Attribute.Product projectName
+            Attribute.Title title
+            Attribute.Version assemblyVersion
+            Attribute.FileVersion assemblyFileVersion
+            Attribute.Copyright "Copyright © Citrix ShareFile 2014" ]
+    let assemblyInfoInternal = [ Attribute.InternalsVisibleTo "ShareFile.Api.Client.Core.Internal" ]
+
+    let applyAssemblyInfo = fun assemblyInfoFile -> CreateCSharpAssemblyInfo assemblyInfoFile (if buildType = "internal" then assemblyInfo @ assemblyInfoInternal else assemblyInfo)
+    [ "./Core/Properties/AssemblyInfo.cs"; "./Net45/Properties/AssemblyInfo.cs" ] |> Seq.iter applyAssemblyInfo
 )
 
 Target "Build" (fun () ->

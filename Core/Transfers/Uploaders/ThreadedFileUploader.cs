@@ -378,22 +378,20 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     client.Timeout = backoffTimeout;
                 }
 
-                if (!result.Error)
-                {
-                    ThreadedFileUploader.OnProgress(part.Bytes.Length);
-                }
-
                 retryCount--;
-            } while (retryCount > 0 && result.Error);
+            } while (!_shutdown && retryCount > 0 && result.Error);
+            
+            if (!result.Error)
+            {
+                ThreadedFileUploader.OnProgress(part.Bytes.Length);
+                part.BytesUploaded = part.Bytes.Length;
+                part.Bytes = null;
+            }
 
             if (retryCount <= 0 || result.Error)
             {
                 _exception = new ApplicationException(string.Format("Chunk {0} failed after 3 retries{1}Response: {2}", part.Index, Environment.NewLine, result.ErrorMessage), requestException);
             }
-
-            part.BytesUploaded = part.Bytes.Length;
-
-            part.Bytes = null;
         }
 
         private ShareFileApiResponse<string> Send(HttpClient client, FilePart part)

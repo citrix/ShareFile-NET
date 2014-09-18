@@ -371,13 +371,14 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     result = new ShareFileApiResponse<string> { Error = true };
                 }
 
-                if(result.Error)
+                if(result.Error && requestException is TimeoutException)
                 {                    
                     var backoffTimeout = TimeSpan.FromMilliseconds(client.Timeout.TotalMilliseconds * ThreadedFileUploader.Config.HttpTimeoutBackoffFactor);
                     client = ThreadedFileUploader.GetHttpClient();
                     client.Timeout = backoffTimeout;
                 }
-                else 
+
+                if (!result.Error)
                 {
                     ThreadedFileUploader.OnProgress(part.Bytes.Length);
                 }

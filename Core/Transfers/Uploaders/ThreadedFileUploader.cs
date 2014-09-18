@@ -223,10 +223,17 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             {
                 if (_itemsToUpload.Count == 0) return null;
 
-                var filePart = FillFilePart(_itemsToUpload.Dequeue());
-                _activeFileParts.Add(filePart);
+                try
+                {
+                    var filePart = FillFilePart(_itemsToUpload.Dequeue());
+                    _activeFileParts.Add(filePart);
 
-                return filePart;
+                    return filePart;
+                }
+                catch
+                {
+                    return null;
+                }
             }
         }
 
@@ -338,7 +345,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         {
             FilePart currentPart;
 
-            while ((currentPart = ThreadedFileUploader.DequeueFilePart()) != null)
+            while (!_shutdown && (currentPart = ThreadedFileUploader.DequeueFilePart()) != null)
             {
                 UploadPart(currentPart);
                 ThreadedFileUploader.FilePartComplete(currentPart);
@@ -363,10 +370,9 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     result = new ShareFileApiResponse<string> { Error = true };
                 }
 
-                if (result.Error)
+                if (!result.Error)
                 {
-                    // subtract the progress made
-                    ThreadedFileUploader.OnProgress(-part.Bytes.Length);
+                    ThreadedFileUploader.OnProgress(part.Bytes.Length);
                 }
 
                 retryCount--;
@@ -390,8 +396,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             {
                 Content = new ByteArrayContent(part.Bytes, 0, part.Bytes.Length)
             };
-
-            ThreadedFileUploader.OnProgress(part.Bytes.Length);
 
             var response = client.SendAsync(message).WaitForTask();
             using(var responseStream = response.Content.ReadAsStreamAsync().WaitForTask())

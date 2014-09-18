@@ -357,12 +357,13 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             var retryCount = 4;
             ShareFileApiResponse<string> result;
             Exception requestException = null;
-
+            
+            var client = ThreadedFileUploader.GetHttpClient();
             do
             {
                 try
                 {
-                    result = Send(part);
+                    result = Send(client, part);
                 }
                 catch (Exception exception)
                 {
@@ -370,7 +371,13 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     result = new ShareFileApiResponse<string> { Error = true };
                 }
 
-                if (!result.Error)
+                if(result.Error)
+                {                    
+                    var backoffTimeout = TimeSpan.FromMilliseconds(client.Timeout.TotalMilliseconds * ThreadedFileUploader.Config.HttpTimeoutBackoffFactor);
+                    client = ThreadedFileUploader.GetHttpClient();
+                    client.Timeout = backoffTimeout;
+                }
+                else 
                 {
                     ThreadedFileUploader.OnProgress(part.Bytes.Length);
                 }
@@ -388,10 +395,8 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             part.Bytes = null;
         }
 
-        private ShareFileApiResponse<string> Send(FilePart part)
+        private ShareFileApiResponse<string> Send(HttpClient client, FilePart part)
         {
-            var client = ThreadedFileUploader.GetHttpClient();
-
             var message = new HttpRequestMessage(HttpMethod.Post, part.GetComposedUploadUrl())
             {
                 Content = new ByteArrayContent(part.Bytes, 0, part.Bytes.Length)

@@ -5,6 +5,7 @@
         public const int DefaultPartSize = 4*1024*1024;
         public const int DefaultNumberOfThreads = 4;
         public const int DefaultHttpTimeout = 60000;
+        public const int DefaultHttpTimeoutBackoffFactor = 2;
         public const int MaxNumberOfThreads = 4;
         public const int DefaultThreadStartPauseInMS = 100;
 
@@ -18,6 +19,7 @@
 
         public int PartSize { get; set; }
         public int HttpTimeout { get; set; }
+        public int HttpTimeoutBackoffFactor { get; set; }
         public int ThreadStartPauseInMS { get; set; }
         public bool UseRequestStreamBuffering { get; set; }
         public bool RequireChunksCompleteInOrder { get; set; }
@@ -29,6 +31,7 @@
             NumberOfThreads = DefaultNumberOfThreads;
             PartSize = DefaultPartSize;
             HttpTimeout = DefaultHttpTimeout;
+            HttpTimeoutBackoffFactor = DefaultHttpTimeoutBackoffFactor;
             ThreadStartPauseInMS = DefaultThreadStartPauseInMS;
             UseRequestStreamBuffering = true;
             RequireChunksCompleteInOrder = false;

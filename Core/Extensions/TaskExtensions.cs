@@ -23,5 +23,17 @@ namespace ShareFile.Api.Client.Extensions.Tasks
                 throw agg.Flatten().InnerExceptions.First();
             }
         }
+
+        public static System.Net.Http.HttpResponseMessage WaitForTask(this Task<System.Net.Http.HttpResponseMessage> task)
+        {
+            try
+            {
+                return WaitForTask<System.Net.Http.HttpResponseMessage>(task);
+            }
+            catch(TaskCanceledException cancel)
+            {
+                throw new TimeoutException("HttpRequest timed out", cancel);
+            }
+        }
     }
 }

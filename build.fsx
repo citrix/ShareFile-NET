@@ -39,76 +39,49 @@ Target "Clean" (fun () ->
 )
 
 Target "AssemblyInfo" (fun () ->
-    
     let assemblyInfo = 
-        if buildType = "internal" then
-           [  Attribute.Product projectName
-              Attribute.Title title
-              Attribute.Version assemblyVersion
-              Attribute.FileVersion assemblyFileVersion
-              Attribute.Copyright "Copyright © Citrix ShareFile 2014"
-              Attribute.InternalsVisibleTo "ShareFile.Api.Client.Core.Internal" ]
-        else 
-           [  Attribute.Product projectName
-              Attribute.Title title
-              Attribute.Version assemblyVersion
-              Attribute.FileVersion assemblyFileVersion
-              Attribute.Copyright "Copyright © Citrix ShareFile 2014" ]
+        [   Attribute.Product projectName
+            Attribute.Title title
+            Attribute.Version assemblyVersion
+            Attribute.FileVersion assemblyFileVersion
+            Attribute.Copyright "Copyright © Citrix ShareFile 2014" ]
+    let assemblyInfoInternal = [ Attribute.InternalsVisibleTo "ShareFile.Api.Client.Core.Internal" ]
 
-    CreateCSharpAssemblyInfo "./Core/Properties/AssemblyInfo.cs" assemblyInfo
-    CreateCSharpAssemblyInfo "./Net45/Properties/AssemblyInfo.cs" assemblyInfo
+    let applyAssemblyInfo assemblyInfoFile = CreateCSharpAssemblyInfo assemblyInfoFile (if buildType = "internal" then assemblyInfo @ assemblyInfoInternal else assemblyInfo)
+    [ "./Core/Properties/AssemblyInfo.cs"; "./Net45/Properties/AssemblyInfo.cs" ] |> Seq.iter applyAssemblyInfo
 )
 
-Target "Build" (fun () ->
-    let defaultConstants = "CODE_ANALYSIS"
-    let signParameter =
-        if signRequested = "true" then "True"
-        else "False"
+Target "Build" (fun () ->    
+    let composeConstants solutionConstants = 
+        [   [ "CODE_ANALYSIS" ] //default constants
+            (if signRequested = "true" then [ "SIGNED" ] else [])
+            (if buildType = "internal" then [ "ShareFile" ] else [])
+            solutionConstants
+        ] |> Seq.concat |> String.concat ";"
 
-    let constants =
-        if signRequested = "true" then defaultConstants + ";SIGNED"
-        else defaultConstants
-
-    let constants =
-        if buildType = "internal" then constants + ";ShareFile"
-        else constants
-    
-    let baseBuildParams = 
-        [
-            "Optimize", "True"
+    let composeBuildParams constants = 
+        [   "Optimize", "True"
             "DebugSymbols", "False"
             "Configuration", buildMode
-            "SignAssembly", signParameter
+            "SignAssembly", if signRequested = "true" then "True" else "False"
             "AssemblyOriginatorKeyFile", signKeyPath
             "GenerateDocumentation", "True"
-        ]
+            "DefineConstants", constants ]
 
-    let buildParams = List.append baseBuildParams ["DefineConstants", constants + ";Portable;Async"]
-    let net40PBuildParams = List.append baseBuildParams ["DefineConstants", constants + ";Net40"]
-    let net45BuildParams = List.append baseBuildParams ["DefineConstants", constants + ";Async"]
-    let net45CoreBuildParams = List.append baseBuildParams ["DefineConstants", constants + ";Async;NETFX_CORE"]
-    
-    let solutionProperties slnName =
-        if buildType = "internal" then slnName + ".Internal"
-        else slnName
+    let composeSolutionName solutionName = "./ShareFile.Api.Client." + (if buildType = "internal" then solutionName + ".Internal" else solutionName) + ".sln"
 
-    let coreSolutionName = solutionProperties "Core"
-    let net45SolutionName = solutionProperties "Net45"
-    let net40SolutionName = solutionProperties "Net40"
-    let net45CoreSolutionName = solutionProperties "Net45Core"
+    let solutions = //solution name, build subdirectory, compile constants
+        [   "Core", "Portable", [ "Portable"; "Async" ]
+            "Net40", "Net40", [ "Net40" ]
+            "Net45", "Net45", [ "Async" ]        
+            "Net45Core", "NetCore45", [ "Async"; "NETFX_CORE" ] ]
 
-    MSBuild (buildDir @@ "Portable") "Clean;Build" buildParams ["./ShareFile.Api.Client." + coreSolutionName + ".sln"]
-    |> Log "AppBuild-Output: "
-    CleanDirs ["./Core" @@ "obj"]
-    MSBuild (buildDir @@ "Net45") "Clean;Build" net45BuildParams ["./ShareFile.Api.Client." + net45SolutionName + ".sln"]
-    |> Log "AppBuild-Output: "
-    CleanDirs ["./Core" @@ "obj"]
-    MSBuild (buildDir @@ "Net40") "Clean;Build" net40PBuildParams ["./ShareFile.Api.Client." + net40SolutionName + ".sln"]
-    |> Log "AppBuild-Output: "
-    CleanDirs ["./Core" @@ "obj"]
-    MSBuild (buildDir @@ "NetCore45") "Clean;Build" net45CoreBuildParams ["./ShareFile.Api.Client." + net45CoreSolutionName + ".sln"]
-    |> Log "AppBuild-Output: "
-    CleanDirs ["./Core" @@ "obj"]
+    let build (solutionName, solutionBuildDir, solutionConstants) = 
+        MSBuild (buildDir @@ solutionBuildDir) "Clean;Build" (composeBuildParams <| composeConstants solutionConstants) [ composeSolutionName solutionName ]
+            |> Log "AppBuild-Output: "
+        CleanDirs ["./Core" @@ "obj"]
+
+    solutions |> Seq.iter build
 )
 
 Target "CreateNuGetPackage" (fun () ->

@@ -83,6 +83,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="InternalShareFileClient.cs" />
     <Compile Include="Internal\Entities\AccountsEntityInternal.cs" />
     <Compile Include="Internal\Entities\AzureSBTopicsEntityInternal.cs" />
     <Compile Include="Internal\Entities\BillingEntityInternal.cs" />

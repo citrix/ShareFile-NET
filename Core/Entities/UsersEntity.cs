@@ -56,6 +56,7 @@ namespace ShareFile.Api.Client.Entities
         /// }
         /// </example>
         /// <remarks>
+        /// Creates a new Customer User and associates it to an Account
         /// The following parameters from the input object are used: Email, FirstName, LastName, Company,
         /// DefaultZone, Password, Preferences.CanResetPassword and Preferences.CanViewMySettingsOther parameters are ignored
         /// </remarks>
@@ -65,7 +66,7 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="notify"></param>
         /// <param name="ifNecessary"></param>
         /// <returns>
-        /// The new user
+        /// The new User
         /// </returns>
         IQuery<User> Create(User user, bool pushCreatorDefaultSettings = false, bool addshared = false, bool notify = false, bool ifNecessary = false);
         
@@ -104,11 +105,11 @@ namespace ShareFile.Api.Client.Entities
         /// }
         /// </example>
         /// <remarks>
-        /// Create a new Employee user (AccountUser)
+        /// Creates a new Employee User (AccountUser) and associates it to an Account
         /// The following parameters from the input object are used: Email, FirstName, LastName, Company,
         /// DefaultZone, Password, IsEmployee, IsAdministrator, CanCreateFolders, CanUseFileBox, CanManageUsers,
         /// Preferences.CanResetPassword and Preferences.CanViewMySettings.
-        /// Other parameters are ignoredStorageQuotaLimitGB parameter is optional. If not specified or equal to -1 the account default storage quota value will be set for the user.
+        /// Other parameters are ignoredStorageQuotaLimitGB parameter is optional. If not specified or equal to -1 the account default storage quota value will be set for the User.
         /// </remarks>
         /// <param name="user"></param>
         /// <param name="pushCreatorDefaultSettings"></param>
@@ -116,7 +117,7 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="notify"></param>
         /// <param name="ifNecessary"></param>
         /// <returns>
-        /// The new employee user
+        /// The new employee User
         /// </returns>
         IQuery<User> CreateAccountUser(AccountUser user, bool pushCreatorDefaultSettings = false, bool addshared = false, bool notify = false, bool ifNecessary = false);
         
@@ -463,6 +464,7 @@ namespace ShareFile.Api.Client.Entities
         /// }
         /// </example>
         /// <remarks>
+        /// Creates a new Customer User and associates it to an Account
         /// The following parameters from the input object are used: Email, FirstName, LastName, Company,
         /// DefaultZone, Password, Preferences.CanResetPassword and Preferences.CanViewMySettingsOther parameters are ignored
         /// </remarks>
@@ -472,7 +474,7 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="notify"></param>
         /// <param name="ifNecessary"></param>
         /// <returns>
-        /// The new user
+        /// The new User
         /// </returns>
         public IQuery<User> Create(User user, bool pushCreatorDefaultSettings = false, bool addshared = false, bool notify = false, bool ifNecessary = false)
         {
@@ -522,11 +524,11 @@ namespace ShareFile.Api.Client.Entities
         /// }
         /// </example>
         /// <remarks>
-        /// Create a new Employee user (AccountUser)
+        /// Creates a new Employee User (AccountUser) and associates it to an Account
         /// The following parameters from the input object are used: Email, FirstName, LastName, Company,
         /// DefaultZone, Password, IsEmployee, IsAdministrator, CanCreateFolders, CanUseFileBox, CanManageUsers,
         /// Preferences.CanResetPassword and Preferences.CanViewMySettings.
-        /// Other parameters are ignoredStorageQuotaLimitGB parameter is optional. If not specified or equal to -1 the account default storage quota value will be set for the user.
+        /// Other parameters are ignoredStorageQuotaLimitGB parameter is optional. If not specified or equal to -1 the account default storage quota value will be set for the User.
         /// </remarks>
         /// <param name="user"></param>
         /// <param name="pushCreatorDefaultSettings"></param>
@@ -534,7 +536,7 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="notify"></param>
         /// <param name="ifNecessary"></param>
         /// <returns>
-        /// The new employee user
+        /// The new employee User
         /// </returns>
         public IQuery<User> CreateAccountUser(AccountUser user, bool pushCreatorDefaultSettings = false, bool addshared = false, bool notify = false, bool ifNecessary = false)
         {

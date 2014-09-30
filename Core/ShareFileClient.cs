@@ -250,7 +250,7 @@ namespace ShareFile.Api.Client
                     return new StandardFileUploader(this, uploadSpecificationRequest, file, config, expirationDays);
                     break;
                 case UploadMethod.Threaded:
-                    return new ThreadedFileUploader(this, uploadSpecificationRequest, file, config, expirationDays);
+                    return new ScalingFileUploader(this, uploadSpecificationRequest, file, config, expirationDays);
                     break;
             }
 

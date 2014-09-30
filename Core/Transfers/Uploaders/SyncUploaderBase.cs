@@ -84,21 +84,30 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         {
             if (responseMessage.IsSuccessStatusCode)
             {
-                using (var responseStream = responseMessage.Content.ReadAsStreamAsync().WaitForTask())
-                using (var textReader = new JsonTextReader(new StreamReader(responseStream)))
-                {
-                    var uploadResponse = new JsonSerializer().Deserialize<ShareFileApiResponse<UploadResponse>>(textReader);
-
-                    if (uploadResponse.Error)
-                    {
-                        throw new UploadException(uploadResponse.ErrorMessage, uploadResponse.ErrorCode);
-                    }
-
-                    return uploadResponse.Value;
-                }
+                return DeserializeShareFileApiResponse<UploadResponse>(responseMessage);
             }
 
             throw new UploadException("Error completing upload.", -1);
+        }
+
+        protected T DeserializeShareFileApiResponse<T>(HttpResponseMessage responseMessage)
+        {
+            string response = responseMessage.Content.ReadAsStringAsync().WaitForTask();
+            try
+            {
+                using (var rdr = new JsonTextReader(new StringReader(response)))
+                {
+                    var result = new JsonSerializer().Deserialize<ShareFileApiResponse<T>>(rdr);
+                    if (result.Error)
+                        throw new UploadException(result.ErrorMessage, result.ErrorCode);
+                    else
+                        return result.Value;
+                }
+            }
+            catch (JsonSerializationException jEx)
+            {
+                throw new UploadException("StorageCenter error: " + response, -1, jEx);
+            }
         }
 
         protected internal override HttpClient GetHttpClient()

@@ -36,8 +36,9 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         {
             SetUploadSpecification();
 
-            var workers = Dispatch(new FileChunkSource(File)).ToArray();
+            var workers = Dispatch(new FileChunkSource(File, HashProvider)).ToArray();
             Task.WaitAll(workers);
+
             var results = workers.Select(task => task.Result);
             if (!results.All(chunkResult => chunkResult.IsSuccess))
                 throw new UploadException("Chunk upload failed", -1, results.Select(result => result.Exception).FirstOrDefault(ex => ex != null));
@@ -60,7 +61,22 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         private void UploadChunk(FileChunk chunk)
         {
+            string uploadUri = string.Format("{0}&index={1}&byteOffset={2}&hash={3}", UploadSpecification.ChunkUri.AbsoluteUri, chunk.Index, chunk.Offset, chunk.Hash);
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, uploadUri) { Content = new ByteArrayContent(chunk.Content) };
+
+            using(var responseMessage = GetHttpClient().SendAsync(requestMessage).WaitForTask())
+            {
+                DeserializeShareFileApiResponse<string>(responseMessage);
+            }
+
+            UpdateProgress(chunk);
+        }
+
+        private void UpdateProgress(FileChunk chunk)
+        {
             Progress.BytesTransferred += chunk.Content.Length;
+            Progress.BytesRemaining -= chunk.Content.Length;
+            Progress.Complete = chunk.IsLast;
             NotifyProgress(Progress);
         }
 
@@ -156,6 +172,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
     internal class FileChunk
     {
         public byte[] Content { get; set; }
+        public string Hash { get; set; }
         public long Offset { get; set; }
         public int Index { get; set; }
         public bool IsLast { get; set; }
@@ -165,13 +182,15 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
     {
         public bool HasMore { get; private set; }
 
+        private IMD5HashProvider fileHash;
         private Stream stream; //the calling application instantiates IPlatformFile which controls the life of this stream
         private long fileLength;
         private long streamIndex;
         private int chunkCount;
 
-        public FileChunkSource(IPlatformFile file)
+        public FileChunkSource(IPlatformFile file, IMD5HashProvider hashProvider)
         {
+            fileHash = hashProvider;
             stream = file.OpenRead();
             fileLength = file.Length;
             streamIndex = 0;
@@ -188,12 +207,18 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 stream.Read(content, 0, chunkSize);
 
                 bool isLast = streamIndex + chunkSize >= fileLength;
-                var chunk = new FileChunk { Content = content, Index = chunkCount, Offset = streamIndex, IsLast = isLast };
+                string hash = MD5HashProviderFactory.GetHashProvider().CreateHash().ComputeHash(content);
+                var chunk = new FileChunk { Content = content, Hash = hash, Index = chunkCount, Offset = streamIndex, IsLast = isLast };
 
                 streamIndex += chunkSize;
                 chunkCount += 1;
                 if (isLast)
+                {
                     HasMore = false;
+                    fileHash.Finalize(content, 0, content.Length);
+                }   
+                else
+                    fileHash.Append(content, 0, content.Length);
 
                 return chunk;
             }

@@ -85,7 +85,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         {
             int currentChunkSize = Config.ScalingPartSize; //do not make this a long, needs to be atomic or have a lock
 
-            Func<FileChunk, ChunkUploadResult> attemptChunkUpload = workerChunk =>
+            Action<FileChunk> attemptChunkUpload = workerChunk =>
                 {
                     var started = DateTime.Now;
                     UploadChunk(workerChunk);
@@ -93,14 +93,13 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     int chunkIncrement = CalculateChunkIncrement(workerChunk.Content.Length, targetChunkUploadTime, elapsed, Config.NumberOfThreads);
                     //this increment isn't thread-safe, but nothing horrible should happen if it gets clobbered
                     currentChunkSize = Math.Min(currentChunkSize + chunkIncrement, maxChunkSize); 
-                    return ChunkUploadResult.Success;
                 };
 
             var workers = new SemaphoreSlim(Config.NumberOfThreads);
             bool giveUp = false;
             while (!giveUp && chunkSource.HasMore)
             {
-                workers.Wait(); //deadlock timeout here?
+                workers.Wait(); 
                 var chunk = chunkSource.GetNextChunk(currentChunkSize);
                 if (chunk == null || giveUp)
                     break; //stream is busted
@@ -120,15 +119,15 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             yield break;
         }
 
-        private ChunkUploadResult AttemptChunkUploadWithRetry(Func<FileChunk, ChunkUploadResult> attemptUpload, FileChunk chunk, int retryCount)
+        private ChunkUploadResult AttemptChunkUploadWithRetry(Action<FileChunk> attemptUpload, FileChunk chunk, int retryCount)
         {
             if (retryCount < 0)
                 return ChunkUploadResult.Error(null);
 
             try
             {
-                var result = attemptUpload(chunk);
-                return result;
+                attemptUpload(chunk);
+                return ChunkUploadResult.Success;
             }
             catch(Exception ex)
             {
@@ -180,7 +179,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         private IMD5HashProvider fileHash;
         private Stream stream; //the calling application instantiates IPlatformFile which controls the life of this stream
         private long fileLength;
-        private long streamIndex;
+        private long streamPosition;
         private int chunkCount;
 
         public FileChunkSource(IPlatformFile file, IMD5HashProvider hashProvider)
@@ -188,7 +187,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             fileHash = hashProvider;
             stream = file.OpenRead();
             fileLength = file.Length;
-            streamIndex = 0;
+            streamPosition = 0;
             chunkCount = 0;
             HasMore = true;
         }
@@ -197,15 +196,15 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         {
             try
             {
-                int chunkSize = (int)Math.Min(requestedChunkSize, fileLength - streamIndex);
+                int chunkSize = (int)Math.Min(requestedChunkSize, fileLength - streamPosition);
                 byte[] content = new byte[chunkSize];
                 stream.Read(content, 0, chunkSize);
 
-                bool isLast = streamIndex + chunkSize >= fileLength;
+                bool isLast = streamPosition + chunkSize >= fileLength;
                 string hash = MD5HashProviderFactory.GetHashProvider().CreateHash().ComputeHash(content);
-                var chunk = new FileChunk { Content = content, Hash = hash, Index = chunkCount, Offset = streamIndex, IsLast = isLast };
+                var chunk = new FileChunk { Content = content, Hash = hash, Index = chunkCount, Offset = streamPosition, IsLast = isLast };
 
-                streamIndex += chunkSize;
+                streamPosition += chunkSize;
                 chunkCount += 1;
                 if (isLast)
                 {

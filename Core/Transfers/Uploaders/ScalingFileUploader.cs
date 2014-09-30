@@ -78,12 +78,12 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         private int CalculateChunkIncrement(long chunkSize, TimeSpan targetTime, TimeSpan elapsedTime, int concurrentWorkers)
         {
             //TODO: logic!
-            return 0;
+            return 512;
         }
 
         private IEnumerable<Task<ChunkUploadResult>> Dispatch(FileChunkSource chunkSource)
         {
-            int currentChunkSize = Config.PartSize; //do not make this a long, needs to be atomic or have a lock
+            int currentChunkSize = Config.ScalingPartSize; //do not make this a long, needs to be atomic or have a lock
 
             Func<FileChunk, ChunkUploadResult> attemptChunkUpload = workerChunk =>
                 {
@@ -92,7 +92,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     var elapsed = DateTime.Now - started; //is there a better way to calculate this? stopwatch?
                     int chunkIncrement = CalculateChunkIncrement(workerChunk.Content.Length, targetChunkUploadTime, elapsed, Config.NumberOfThreads);
                     //this increment isn't thread-safe, but nothing horrible should happen if it gets clobbered
-                    currentChunkSize = Math.Max(currentChunkSize + chunkIncrement, maxChunkSize); 
+                    currentChunkSize = Math.Min(currentChunkSize + chunkIncrement, maxChunkSize); 
                     return ChunkUploadResult.Success;
                 };
 

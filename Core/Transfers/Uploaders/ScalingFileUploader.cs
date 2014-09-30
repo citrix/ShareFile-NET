@@ -1,21 +1,16 @@
 ﻿#if !Async
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using ShareFile.Api.Client.Transfers.Uploaders;
 using ShareFile.Api.Client.Exceptions;
+using ShareFile.Api.Client.Extensions.Tasks;
 using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Security.Cryptography;
 using ShareFile.Api.Models;
-using ShareFile.Api.Client.Requests;
-using ShareFile.Api.Client.Extensions.Tasks;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 
 
 namespace ShareFile.Api.Client.Transfers.Uploaders
@@ -29,7 +24,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             : base(client, uploadSpecificationRequest, file, config, expirationDays)
         {
             targetChunkUploadTime = TimeSpan.FromSeconds(30);
-            maxChunkSize = 4 * 1024 * 1024;
+            maxChunkSize = FileUploaderConfig.DefaultPartSize;
         }
 
         public override UploadResponse Upload(Dictionary<string, object> transferMetadata = null)

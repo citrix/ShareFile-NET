@@ -2,6 +2,7 @@
 {
     public class FileUploaderConfig
     {
+        public const int DefaultScalingPartSize = 512 * 1024;
         public const int DefaultPartSize = 4*1024*1024;
         public const int DefaultNumberOfThreads = 4;
         public const int DefaultHttpTimeout = 60000;
@@ -17,6 +18,7 @@
             set { _numberOfThreads = value > MaxNumberOfThreads ? MaxNumberOfThreads : value; }
         }
 
+        public int ScalingPartSize { get; set; }
         public int PartSize { get; set; }
         public int HttpTimeout { get; set; }
         public int HttpTimeoutBackoffFactor { get; set; }
@@ -29,6 +31,7 @@
         public FileUploaderConfig()
         {
             NumberOfThreads = DefaultNumberOfThreads;
+            ScalingPartSize = DefaultScalingPartSize;
             PartSize = DefaultPartSize;
             HttpTimeout = DefaultHttpTimeout;
             HttpTimeoutBackoffFactor = DefaultHttpTimeoutBackoffFactor;

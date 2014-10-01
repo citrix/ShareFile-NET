@@ -94,13 +94,13 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             double estimatedConnectionSpeed = chunkSize / elapsedTime.TotalSeconds;
             double targetChunkSize = estimatedConnectionSpeed * targetTime.TotalSeconds;
             double chunkSizeDelta = targetChunkSize - chunkSize;
-            
-            //bound the delta in case of extreme result
-            chunkSizeDelta = Bound(chunkSizeDelta, chunkSize * 3.0, chunkSize * -0.75);
 
             //initial batch of workers will all calculate ~same delta; penalize for >1
             chunkSizeDelta = chunkSizeDelta / concurrentWorkers; 
             
+            //bound the delta in case of extreme result
+            chunkSizeDelta = Bound(chunkSizeDelta, chunkSize * 3.0, chunkSize * -0.75);
+
             return Convert.ToInt32(chunkSizeDelta);
         }
         

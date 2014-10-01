@@ -6,6 +6,7 @@ using ShareFile.Api.Client.Security.Cryptography;
 using ShareFile.Api.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -108,10 +109,10 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
             Action<FileChunk> attemptChunkUpload = workerChunk =>
                 {
-                    var started = DateTime.Now;
+                    var timer = Stopwatch.StartNew();
                     UploadChunk(workerChunk);
-                    var elapsed = DateTime.Now - started; //is there a better way to calculate this? stopwatch?
-                    int chunkIncrement = CalculateChunkIncrement(workerChunk.Content.Length, targetChunkUploadTime, elapsed, Config.NumberOfThreads);
+                    timer.Stop();
+                    int chunkIncrement = CalculateChunkIncrement(workerChunk.Content.Length, targetChunkUploadTime, timer.Elapsed, Config.NumberOfThreads);
                     //this increment isn't thread-safe, but nothing horrible should happen if it gets clobbered
                     currentChunkSize = ValidateChunkSize(currentChunkSize + chunkIncrement);
                 };

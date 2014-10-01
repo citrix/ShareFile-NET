@@ -77,15 +77,15 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             Progress.Complete = chunk.IsLast;
             NotifyProgress(Progress);
         }
-                
-        private int ValidateChunkSize(int newChunkSize)
+         
+        private T Bound<T>(T value, T upperBound, T lowerBound) where T : IComparable
         {
-            if (newChunkSize > maxChunkSize)
-                return maxChunkSize;
-            else if (newChunkSize < minChunkSize)
-                return minChunkSize;
+            if (value.CompareTo(upperBound) == 1)
+                return upperBound;
+            else if (value.CompareTo(lowerBound) == -1)
+                return lowerBound;
             else
-                return newChunkSize;
+                return value;
         }
 
         private int CalculateChunkIncrement(long chunkSize, TimeSpan targetTime, TimeSpan elapsedTime, int concurrentWorkers)
@@ -98,7 +98,8 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             double concurrencyFactor = Math.Sqrt(concurrentWorkers);
             chunkSizeDelta = chunkSizeDelta / concurrencyFactor; //initial batch of workers will all calculate ~same delta; penalize for >1
             
-            //fudge factor? shrink the delta a bit in case of extreme result?
+            //bound the delta in case of extreme result
+            chunkSizeDelta = Bound(chunkSizeDelta, chunkSize * 3.0, chunkSize * -0.75);
 
             return Convert.ToInt32(chunkSizeDelta); //do something smart on overflowexception
         }
@@ -114,7 +115,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     timer.Stop();
                     int chunkIncrement = CalculateChunkIncrement(workerChunk.Content.Length, targetChunkUploadTime, timer.Elapsed, Config.NumberOfThreads);
                     //this increment isn't thread-safe, but nothing horrible should happen if it gets clobbered
-                    currentChunkSize = ValidateChunkSize(currentChunkSize + chunkIncrement);
+                    currentChunkSize = Bound(currentChunkSize + chunkIncrement, maxChunkSize, minChunkSize);
                 };
 
             var workers = new SemaphoreSlim(Config.NumberOfThreads);

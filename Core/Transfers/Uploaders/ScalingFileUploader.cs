@@ -24,7 +24,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         public ScalingFileUploader(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
             : base(client, uploadSpecificationRequest, file, config, expirationDays)
         {
-            targetChunkUploadTime = TimeSpan.FromSeconds(30);
+            targetChunkUploadTime = TimeSpan.FromSeconds(15);
             maxChunkSize = FileUploaderConfig.DefaultPartSize;
             minChunkSize = 100 * 1024;
         }
@@ -89,8 +89,17 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         private int CalculateChunkIncrement(long chunkSize, TimeSpan targetTime, TimeSpan elapsedTime, int concurrentWorkers)
         {
-            //TODO: logic!
-            return 512;
+            //connection speed values are bytes/second
+            double estimatedConnectionSpeed = chunkSize / elapsedTime.TotalSeconds;
+            double targetChunkSize = estimatedConnectionSpeed * targetTime.TotalSeconds;
+            double chunkSizeDelta = targetChunkSize - chunkSize;
+
+            double concurrencyFactor = Math.Sqrt(concurrentWorkers);
+            chunkSizeDelta = chunkSizeDelta / concurrencyFactor; //initial batch of workers will all calculate ~same delta; penalize for >1
+            
+            //fudge factor? shrink the delta a bit in case of extreme result?
+
+            return Convert.ToInt32(chunkSizeDelta); //do something smart on overflowexception
         }
         
         private IEnumerable<Task<ChunkUploadResult>> Dispatch(FileChunkSource chunkSource)

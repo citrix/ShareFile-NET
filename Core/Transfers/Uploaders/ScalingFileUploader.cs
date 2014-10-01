@@ -18,16 +18,12 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 {
     public class ScalingFileUploader : SyncUploaderBase
     {
-        private TimeSpan targetChunkUploadTime;
-        private int maxChunkSize;
-        private int minChunkSize;
+        private FileChunkConfig chunkConfig;
 
         public ScalingFileUploader(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
             : base(client, uploadSpecificationRequest, file, config, expirationDays)
         {
-            targetChunkUploadTime = TimeSpan.FromSeconds(15);
-            maxChunkSize = FileUploaderConfig.DefaultPartSize;
-            minChunkSize = 5 * 1024;
+            chunkConfig = config != null ? config.ChunkConfig : new FileChunkConfig();
         }
 
         public override UploadResponse Upload(Dictionary<string, object> transferMetadata = null)
@@ -88,34 +84,36 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 return value;
         }
 
-        private int CalculateChunkIncrement(long chunkSize, TimeSpan targetTime, TimeSpan elapsedTime, int concurrentWorkers)
+        private int CalculateChunkIncrement(long chunkSize, TimeSpan elapsedTime)
         {
             //connection speed values are bytes/second
             double estimatedConnectionSpeed = chunkSize / elapsedTime.TotalSeconds;
-            double targetChunkSize = estimatedConnectionSpeed * targetTime.TotalSeconds;
+            double targetChunkSize = estimatedConnectionSpeed * chunkConfig.TargetChunkUploadTime.TotalSeconds;
             double chunkSizeDelta = targetChunkSize - chunkSize;
 
             //initial batch of workers will all calculate ~same delta; penalize for >1
-            chunkSizeDelta = chunkSizeDelta / concurrentWorkers; 
+            chunkSizeDelta = chunkSizeDelta / Config.NumberOfThreads; 
             
             //bound the delta in case of extreme result
-            chunkSizeDelta = Bound(chunkSizeDelta, chunkSize * 3.0, chunkSize * -0.75);
+            chunkSizeDelta = Bound(chunkSizeDelta, 
+                chunkSize * (chunkConfig.MaxChunkIncreaseFactor - 1.0), 
+                chunkSize * (-1.0 * (chunkConfig.MaxChunkDecreaseFactor - 1.0) / chunkConfig.MaxChunkDecreaseFactor));
 
             return Convert.ToInt32(chunkSizeDelta);
         }
         
         private IEnumerable<Task<ChunkUploadResult>> Dispatch(FileChunkSource chunkSource)
         {
-            int currentChunkSize = Config.ScalingPartSize; //do not make this a long, needs to be atomic or have a lock
+            int currentChunkSize = chunkConfig.InitialChunkSize; //do not make this a long, needs to be atomic or have a lock
 
             Action<FileChunk> attemptChunkUpload = workerChunk =>
                 {
                     var timer = Stopwatch.StartNew();
                     UploadChunk(workerChunk);
                     timer.Stop();
-                    int chunkIncrement = CalculateChunkIncrement(workerChunk.Content.Length, targetChunkUploadTime, timer.Elapsed, Config.NumberOfThreads);
+                    int chunkIncrement = CalculateChunkIncrement(workerChunk.Content.Length, timer.Elapsed);
                     //this increment isn't thread-safe, but nothing horrible should happen if it gets clobbered
-                    currentChunkSize = Bound(currentChunkSize + chunkIncrement, maxChunkSize, minChunkSize);
+                    currentChunkSize = Bound(currentChunkSize + chunkIncrement, chunkConfig.MaxChunkSize, chunkConfig.MinChunkSize);
                 };
 
             var workers = new SemaphoreSlim(Config.NumberOfThreads);
@@ -131,7 +129,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     {
                         if (giveUp)
                             return ChunkUploadResult.Error(null);
-                        var chunkResult = AttemptChunkUploadWithRetry(attemptChunkUpload, (FileChunk)workerChunk, 1);
+                        var chunkResult = AttemptChunkUploadWithRetry(attemptChunkUpload, (FileChunk)workerChunk, chunkConfig.ChunkRetryCount);
                         if (!chunkResult.IsSuccess)
                             giveUp = true;
                         workers.Release();

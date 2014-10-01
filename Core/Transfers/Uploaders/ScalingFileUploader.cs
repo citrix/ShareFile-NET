@@ -27,7 +27,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         {
             targetChunkUploadTime = TimeSpan.FromSeconds(15);
             maxChunkSize = FileUploaderConfig.DefaultPartSize;
-            minChunkSize = 100 * 1024;
+            minChunkSize = 5 * 1024;
         }
 
         public override UploadResponse Upload(Dictionary<string, object> transferMetadata = null)
@@ -94,14 +94,14 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             double estimatedConnectionSpeed = chunkSize / elapsedTime.TotalSeconds;
             double targetChunkSize = estimatedConnectionSpeed * targetTime.TotalSeconds;
             double chunkSizeDelta = targetChunkSize - chunkSize;
-
-            double concurrencyFactor = Math.Sqrt(concurrentWorkers);
-            chunkSizeDelta = chunkSizeDelta / concurrencyFactor; //initial batch of workers will all calculate ~same delta; penalize for >1
             
             //bound the delta in case of extreme result
             chunkSizeDelta = Bound(chunkSizeDelta, chunkSize * 3.0, chunkSize * -0.75);
 
-            return Convert.ToInt32(chunkSizeDelta); //do something smart on overflowexception
+            //initial batch of workers will all calculate ~same delta; penalize for >1
+            chunkSizeDelta = chunkSizeDelta / concurrentWorkers; 
+            
+            return Convert.ToInt32(chunkSizeDelta);
         }
         
         private IEnumerable<Task<ChunkUploadResult>> Dispatch(FileChunkSource chunkSource)
@@ -219,7 +219,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         {
             try
             {
-                int chunkSize = (int)Math.Min(requestedChunkSize, fileLength - streamPosition);
+                int chunkSize = Convert.ToInt32(Math.Min(requestedChunkSize, fileLength - streamPosition));
                 byte[] content = new byte[chunkSize];
                 stream.Read(content, 0, chunkSize);
 

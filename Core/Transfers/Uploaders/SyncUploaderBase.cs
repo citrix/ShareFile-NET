@@ -120,12 +120,18 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             }
         }
 
+        private HttpClient httpClient;
+
         protected internal override HttpClient GetHttpClient()
         {
-            return new HttpClient(GetHttpClientHandler())
+            if(httpClient == null)
             {
-                Timeout = new TimeSpan(0, 0, 0, 0, Config.HttpTimeout)
-            };
+                httpClient = new HttpClient(GetHttpClientHandler())
+                {
+                    Timeout = new TimeSpan(0, 0, 0, 0, Config.HttpTimeout)
+                };
+            }
+            return httpClient;
         }
     }
 }

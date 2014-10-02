@@ -70,7 +70,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 if (chunk == null || giveUp)
                     break; //stream is busted
 
-                var task = AttemptChunkUploadWithRetry(attemptChunkUpload, (FileChunk)chunk, chunkConfig.ChunkRetryCount)
+                var task = AttemptChunkUploadWithRetry(attemptChunkUpload, chunk, chunkConfig.ChunkRetryCount)
                     .ContinueWith(chunkUploadTask =>
                     {
                         var chunkResult = chunkUploadTask.Result;

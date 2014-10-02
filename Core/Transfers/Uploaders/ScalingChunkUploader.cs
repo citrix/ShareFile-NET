@@ -2,11 +2,11 @@
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Extensions.Tasks;
 using ShareFile.Api.Client.FileSystem;
+using ShareFile.Api.Client.Logging;
 using ShareFile.Api.Client.Security.Cryptography;
 using ShareFile.Api.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -51,21 +51,21 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
             Func<FileChunk, Task> attemptChunkUpload = workerChunk =>
             {
-                var timer = Stopwatch.StartNew();
+                var timer = ShareFile.Api.Client.Logging.Stopwatch.StartNew();
                 return UploadChunk(chunkUploadUrl, workerChunk).ContinueWith(workerTask =>
                 {
                     timer.Stop();
-                    int chunkIncrement = CalculateChunkIncrement(workerChunk.Content.Length, timer.Elapsed);
+                    int chunkIncrement = CalculateChunkIncrement(workerChunk.Content.Length, TimeSpan.FromMilliseconds(timer.ElapsedMilliseconds));
                     //this increment isn't thread-safe, but nothing horrible should happen if it gets clobbered
                     currentChunkSize = (currentChunkSize + chunkIncrement).Bound(chunkConfig.MaxChunkSize, chunkConfig.MinChunkSize);
                 });
             };
 
-            var workers = new SemaphoreSlim(concurrentWorkers);
+            var workers = new AsyncSemaphore(concurrentWorkers);
             bool giveUp = false;
             while (!giveUp && chunkSource.HasMore)
             {
-                workers.Wait();
+                workers.WaitAsync().Wait();
                 var chunk = chunkSource.GetNextChunk(currentChunkSize);
                 if (chunk == null || giveUp)
                     break; //stream is busted

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
+using ShareFile.Api.Models;
 using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.Extensions.Tasks;
 using ShareFile.Api.Client.FileSystem;
@@ -78,6 +79,15 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             }
 
             return HashProvider.GetComputedHashAsString();
+        }
+        
+        protected UploadSpecification SetUploadSpecification()
+        {
+            if (UploadSpecification == null)
+            {
+                UploadSpecification = CreateUploadSpecificationQuery(UploadSpecificationRequest).Execute();
+            }
+            return UploadSpecification;
         }
 
         protected UploadResponse GetUploadResponse(HttpResponseMessage responseMessage)

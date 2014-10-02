@@ -301,6 +301,7 @@
     <Compile Include="Transfers\Uploaders\AsyncUploaderBase.cs" />
     <Compile Include="Transfers\Uploaders\FilePart.cs" />
     <Compile Include="Transfers\Uploaders\FileUploaderConfig.cs" />
+    <Compile Include="Transfers\Uploaders\ScalingChunkUploader.cs" />
     <Compile Include="Transfers\Uploaders\ScalingFileUploader.cs" />
     <Compile Include="Transfers\Uploaders\StandardFileUploader.cs" />
     <Compile Include="Transfers\Uploaders\SyncUploaderBase.cs" />

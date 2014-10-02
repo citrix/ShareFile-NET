@@ -59,8 +59,8 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             MaxChunkSize = 8 * 1024 * 1024;
             MinChunkSize = 4 * 1024;
             TargetChunkUploadTime = TimeSpan.FromSeconds(15);
-            MaxChunkIncreaseFactor = 4;
-            MaxChunkDecreaseFactor = 4;
+            MaxChunkIncreaseFactor = 8;
+            MaxChunkDecreaseFactor = 2;
             ChunkRetryCount = 1;
         }
     }

@@ -1,5 +1,4 @@
-﻿#if !Async
-using ShareFile.Api.Client.Exceptions;
+﻿using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.Extensions.Tasks;
 using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Security.Cryptography;
@@ -53,17 +52,20 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             return GetUploadResponse(response);
         }
 
-        private void UploadChunk(FileChunk chunk)
+        private Task UploadChunk(FileChunk chunk)
         {
-            string uploadUri = string.Format("{0}&index={1}&byteOffset={2}&hash={3}", UploadSpecification.ChunkUri.AbsoluteUri, chunk.Index, chunk.Offset, chunk.Hash);
-            var requestMessage = new HttpRequestMessage(HttpMethod.Post, uploadUri) { Content = new ByteArrayContent(chunk.Content) };
-
-            using(var responseMessage = GetHttpClient().SendAsync(requestMessage).WaitForTask())
+            return Task.Factory.StartNew(() =>
             {
-                DeserializeShareFileApiResponse<string>(responseMessage);
-            }
+                string uploadUri = string.Format("{0}&index={1}&byteOffset={2}&hash={3}", UploadSpecification.ChunkUri.AbsoluteUri, chunk.Index, chunk.Offset, chunk.Hash);
+                var requestMessage = new HttpRequestMessage(HttpMethod.Post, uploadUri) { Content = new ByteArrayContent(chunk.Content) };
 
-            UpdateProgress(chunk);
+                using (var responseMessage = GetHttpClient().SendAsync(requestMessage).WaitForTask())
+                {
+                    DeserializeShareFileApiResponse<string>(responseMessage);
+                }
+
+                UpdateProgress(chunk);
+            });
         }
 
         private void UpdateProgress(FileChunk chunk)
@@ -106,15 +108,17 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         {
             int currentChunkSize = chunkConfig.InitialChunkSize; //do not make this a long, needs to be atomic or have a lock
 
-            Action<FileChunk> attemptChunkUpload = workerChunk =>
-                {
-                    var timer = Stopwatch.StartNew();
-                    UploadChunk(workerChunk);
-                    timer.Stop();
-                    int chunkIncrement = CalculateChunkIncrement(workerChunk.Content.Length, timer.Elapsed);
-                    //this increment isn't thread-safe, but nothing horrible should happen if it gets clobbered
-                    currentChunkSize = Bound(currentChunkSize + chunkIncrement, chunkConfig.MaxChunkSize, chunkConfig.MinChunkSize);
-                };
+            Func<FileChunk, Task> attemptChunkUpload = workerChunk =>
+            {
+                var timer = Stopwatch.StartNew();
+                return UploadChunk(workerChunk).ContinueWith(workerTask =>
+                    {
+                        timer.Stop();
+                        int chunkIncrement = CalculateChunkIncrement(workerChunk.Content.Length, timer.Elapsed);
+                        //this increment isn't thread-safe, but nothing horrible should happen if it gets clobbered
+                        currentChunkSize = Bound(currentChunkSize + chunkIncrement, chunkConfig.MaxChunkSize, chunkConfig.MinChunkSize);
+                    });
+            };
 
             var workers = new SemaphoreSlim(Config.NumberOfThreads);
             bool giveUp = false;
@@ -125,30 +129,28 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 if (chunk == null || giveUp)
                     break; //stream is busted
 
-                var task = Task.Factory.StartNew(workerChunk =>
+                var task = AttemptChunkUploadWithRetry(attemptChunkUpload, (FileChunk)chunk, chunkConfig.ChunkRetryCount)
+                    .ContinueWith(chunkUploadTask =>
                     {
-                        if (giveUp)
-                            return ChunkUploadResult.Error(null);
-                        var chunkResult = AttemptChunkUploadWithRetry(attemptChunkUpload, (FileChunk)workerChunk, chunkConfig.ChunkRetryCount);
+                        var chunkResult = chunkUploadTask.Result;
                         if (!chunkResult.IsSuccess)
                             giveUp = true;
                         workers.Release();
                         return chunkResult;
-                    }, chunk);
+                    });
                 yield return task;
             }
             yield break;
         }
 
-        private ChunkUploadResult AttemptChunkUploadWithRetry(Action<FileChunk> attemptUpload, FileChunk chunk, int retryCount)
+        private Task<ChunkUploadResult> AttemptChunkUploadWithRetry(Func<FileChunk, Task> attemptUpload, FileChunk chunk, int retryCount)
         {
             if (retryCount < 0)
-                return ChunkUploadResult.Error(null);
+                return TaskFromResult(ChunkUploadResult.Error(null));
 
             try
             {
-                attemptUpload(chunk);
-                return ChunkUploadResult.Success;
+                return attemptUpload(chunk).ContinueWith(uploadTask => ChunkUploadResult.Success);
             }
             catch(Exception ex)
             {
@@ -156,8 +158,16 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 if (retryCount > 0)
                     return AttemptChunkUploadWithRetry(attemptUpload, chunk, retryCount - 1);
                 else
-                    return ChunkUploadResult.Error(ex);
+                    return TaskFromResult(ChunkUploadResult.Error(ex));
             }
+        }
+
+        //in .NET 4.5, Task.FromResult
+        private Task<T> TaskFromResult<T>(T value)
+        {
+            var tcs = new TaskCompletionSource<T>();
+            tcs.SetResult(value);
+            return tcs.Task;
         }
 
         public override void Prepare()
@@ -246,4 +256,3 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         }
     }
 }
-#endif

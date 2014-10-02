@@ -12,9 +12,6 @@ namespace ShareFile.Api.Client.Extensions.Tasks
         {
             try
             {
-                if (task.Status == TaskStatus.Created)
-                    task.Start();
-
                 task.Wait();
                 return task.Result;
             }

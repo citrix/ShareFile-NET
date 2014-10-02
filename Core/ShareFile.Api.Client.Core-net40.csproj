@@ -295,6 +295,7 @@
     <Compile Include="Transfers\TransfererBase.cs" />
     <Compile Include="Transfers\TransferEventArgs.cs" />
     <Compile Include="Transfers\TransferProgress.cs" />
+    <Compile Include="Transfers\Uploaders\AsyncScalingFileUploader.cs" />
     <Compile Include="Transfers\Uploaders\AsyncSemaphone.cs" />
     <Compile Include="Transfers\Uploaders\AsyncStandardFileUploader.cs" />
     <Compile Include="Transfers\Uploaders\AsyncThreadedFileUploader.cs" />

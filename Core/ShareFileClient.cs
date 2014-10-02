@@ -222,7 +222,7 @@ namespace ShareFile.Api.Client
                     return new AsyncStandardFileUploader(this, uploadSpecificationRequest, file, config, expirationDays);
                     break;
                 case UploadMethod.Threaded:
-                    return new AsyncThreadedFileUploader(this, uploadSpecificationRequest, file, config, expirationDays);
+                    return new AsyncScalingFileUploader(this, uploadSpecificationRequest, file, config, expirationDays);
                     break;
             }
 

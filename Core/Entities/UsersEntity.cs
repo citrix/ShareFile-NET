@@ -66,7 +66,7 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="notify"></param>
         /// <param name="ifNecessary"></param>
         /// <returns>
-        /// The new User
+        /// The new user
         /// </returns>
         IQuery<User> Create(User user, bool pushCreatorDefaultSettings = false, bool addshared = false, bool notify = false, bool ifNecessary = false);
         
@@ -117,7 +117,7 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="notify"></param>
         /// <param name="ifNecessary"></param>
         /// <returns>
-        /// The new employee User
+        /// The new employee user
         /// </returns>
         IQuery<User> CreateAccountUser(AccountUser user, bool pushCreatorDefaultSettings = false, bool addshared = false, bool notify = false, bool ifNecessary = false);
         
@@ -319,6 +319,16 @@ namespace ShareFile.Api.Client.Entities
         IQuery<User> ResetPassword(Uri url, ODataObject properties, bool notify = false);
         
         /// <summary>
+        /// Forgot Password
+        /// </summary>
+        /// <remarks>
+        /// Triggers a reset password email
+        /// </remarks>
+        /// <param name="email"></param>
+        /// <param name="resetOnMobile"></param>
+        IQuery ForgotPassword(string email, bool resetOnMobile);
+        
+        /// <summary>
         /// Send Welcome Email
         /// </summary>
         /// <remarks>
@@ -474,7 +484,7 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="notify"></param>
         /// <param name="ifNecessary"></param>
         /// <returns>
-        /// The new User
+        /// The new user
         /// </returns>
         public IQuery<User> Create(User user, bool pushCreatorDefaultSettings = false, bool addshared = false, bool notify = false, bool ifNecessary = false)
         {
@@ -536,7 +546,7 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="notify"></param>
         /// <param name="ifNecessary"></param>
         /// <returns>
-        /// The new employee User
+        /// The new employee user
         /// </returns>
         public IQuery<User> CreateAccountUser(AccountUser user, bool pushCreatorDefaultSettings = false, bool addshared = false, bool notify = false, bool ifNecessary = false)
         {
@@ -829,6 +839,25 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("notify", notify);
             sfApiQuery.Body = properties;
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Forgot Password
+        /// </summary>
+        /// <remarks>
+        /// Triggers a reset password email
+        /// </remarks>
+        /// <param name="email"></param>
+        /// <param name="resetOnMobile"></param>
+        public IQuery ForgotPassword(string email, bool resetOnMobile)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+		    sfApiQuery.From("Users");
+		    sfApiQuery.Action("ForgotPassword");
+            sfApiQuery.QueryString("email", email);
+            sfApiQuery.QueryString("resetOnMobile", resetOnMobile);
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }

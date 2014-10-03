@@ -20,9 +20,51 @@ namespace ShareFile.Api.Client.Entities
 {
     public interface IPlanAddonsEntityInternal : IEntityBase
     {
+        
+        /// <summary>
+        /// Get Plan add-ons
+        /// </summary>
+        /// <param name="productCode"></param>
+        /// <returns>
+        /// PlanAddons
+        /// </returns>
         IQuery<PlanAddon> Get(string productCode);
+        
+        /// <summary>
+        /// Create inApp Purchase
+        /// </summary>
+        /// <example>
+        /// {
+        /// "ProductId": "productId"
+        /// }
+        /// </example>
+        /// <param name="inAppPurchase"></param>
+        /// <returns>
+        /// inAppPurchase created
+        /// </returns>
         IQuery<PlanAddon> CreateInAppPurchase(InAppPurchase inAppPurchase);
+        
+        /// <summary>
+        /// Create Trial Period
+        /// </summary>
+        /// <example>
+        /// {
+        /// "ProductId": "productId"
+        /// }
+        /// </example>
+        /// <param name="trialPeriod"></param>
+        /// <returns>
+        /// TrialPeriod created
+        /// </returns>
         IQuery<PlanAddon> CreateTrialPeriod(TrialPeriod trialPeriod);
+        
+        /// <summary>
+        /// Get User Info
+        /// </summary>
+        /// <param name="productCode"></param>
+        /// <returns>
+        /// PlanAddonUser with info
+        /// </returns>
         IQuery<PlanAddonUser> GetUserInfo(string productCode);
     }
 
@@ -32,6 +74,14 @@ namespace ShareFile.Api.Client.Entities
             : base (client, "PlanAddons")
         { }
         
+        
+        /// <summary>
+        /// Get Plan add-ons
+        /// </summary>
+        /// <param name="productCode"></param>
+        /// <returns>
+        /// PlanAddons
+        /// </returns>
         public IQuery<PlanAddon> Get(string productCode)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<PlanAddon>(Client);
@@ -40,6 +90,19 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
+        
+        /// <summary>
+        /// Create inApp Purchase
+        /// </summary>
+        /// <example>
+        /// {
+        /// "ProductId": "productId"
+        /// }
+        /// </example>
+        /// <param name="inAppPurchase"></param>
+        /// <returns>
+        /// inAppPurchase created
+        /// </returns>
         public IQuery<PlanAddon> CreateInAppPurchase(InAppPurchase inAppPurchase)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<PlanAddon>(Client);
@@ -49,6 +112,19 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
+        
+        /// <summary>
+        /// Create Trial Period
+        /// </summary>
+        /// <example>
+        /// {
+        /// "ProductId": "productId"
+        /// }
+        /// </example>
+        /// <param name="trialPeriod"></param>
+        /// <returns>
+        /// TrialPeriod created
+        /// </returns>
         public IQuery<PlanAddon> CreateTrialPeriod(TrialPeriod trialPeriod)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<PlanAddon>(Client);
@@ -58,6 +134,14 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
+        
+        /// <summary>
+        /// Get User Info
+        /// </summary>
+        /// <param name="productCode"></param>
+        /// <returns>
+        /// PlanAddonUser with info
+        /// </returns>
         public IQuery<PlanAddonUser> GetUserInfo(string productCode)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<PlanAddonUser>(Client);

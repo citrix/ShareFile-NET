@@ -20,11 +20,72 @@ namespace ShareFile.Api.Client.Entities
 {
     public interface IOAuthClientsEntityInternal : IEntityBase
     {
+        
+        /// <summary>
+        /// Get List of OAuthClients for the Current Account
+        /// </summary>
+        /// <returns>
+        /// List of OAuthClients
+        /// </returns>
         IQuery<ODataFeed<OAuthClient>> Get();
+        
+        /// <summary>
+        /// Get OAuthClient
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns>
+        /// a single OAuthClient
+        /// </returns>
         IQuery<OAuthClient> Get(Uri url);
+        
+        /// <summary>
+        /// Get List of OAuthClients for the Specified Account
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns>
+        /// List of OAuthClients
+        /// </returns>
         IQuery<ODataFeed<OAuthClient>> ByAccount(string accountId);
+        
+        /// <summary>
+        /// Create OAuthClient
+        /// </summary>
+        /// <example>
+        /// {
+        /// "Name":"App Name",
+        /// "RedirectUrls":["https:///redirectUrl1", "https:///redirectUrl2"],
+        /// "ToolUrl":"https:///toolUrl"
+        /// }
+        /// </example>
+        /// <param name="oauthClient"></param>
+        /// <returns>
+        /// created OAuthClient
+        /// </returns>
         IQuery<OAuthClient> Create(OAuthClient oauthClient, bool singlePlane = false);
+        
+        /// <summary>
+        /// Update OAuthClient
+        /// </summary>
+        /// <example>
+        /// {
+        /// "State":"Revoked",
+        /// "Name":"Updated App Name",
+        /// "RedirectUrls":["https:///redirectUrl1", "https:///redirectUrl2"],
+        /// "ToolUrl":"https:///toolUrl"
+        /// }
+        /// </example>
+        /// <param name="url"></param>
+        /// <returns>
+        /// updated OAuthClient
+        /// </returns>
         IQuery<OAuthClient> Update(Uri url, OAuthClient oauthClient, bool singlePlane = false);
+        
+        /// <summary>
+        /// Delete OAuthClient
+        /// </summary>
+        /// <returns>
+        /// no data
+        /// </returns>
         IQuery Delete(Uri url, bool singlePlane = false);
     }
 
@@ -34,6 +95,13 @@ namespace ShareFile.Api.Client.Entities
             : base (client, "OAuthClients")
         { }
         
+        
+        /// <summary>
+        /// Get List of OAuthClients for the Current Account
+        /// </summary>
+        /// <returns>
+        /// List of OAuthClients
+        /// </returns>
         public IQuery<ODataFeed<OAuthClient>> Get()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<OAuthClient>>(Client);
@@ -41,6 +109,14 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
+        
+        /// <summary>
+        /// Get OAuthClient
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns>
+        /// a single OAuthClient
+        /// </returns>
         public IQuery<OAuthClient> Get(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<OAuthClient>(Client);
@@ -48,6 +124,14 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
+        
+        /// <summary>
+        /// Get List of OAuthClients for the Specified Account
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns>
+        /// List of OAuthClients
+        /// </returns>
         public IQuery<ODataFeed<OAuthClient>> ByAccount(string accountId)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<OAuthClient>>(Client);
@@ -57,6 +141,21 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
+        
+        /// <summary>
+        /// Create OAuthClient
+        /// </summary>
+        /// <example>
+        /// {
+        /// "Name":"App Name",
+        /// "RedirectUrls":["https:///redirectUrl1", "https:///redirectUrl2"],
+        /// "ToolUrl":"https:///toolUrl"
+        /// }
+        /// </example>
+        /// <param name="oauthClient"></param>
+        /// <returns>
+        /// created OAuthClient
+        /// </returns>
         public IQuery<OAuthClient> Create(OAuthClient oauthClient, bool singlePlane = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<OAuthClient>(Client);
@@ -66,6 +165,22 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
+        
+        /// <summary>
+        /// Update OAuthClient
+        /// </summary>
+        /// <example>
+        /// {
+        /// "State":"Revoked",
+        /// "Name":"Updated App Name",
+        /// "RedirectUrls":["https:///redirectUrl1", "https:///redirectUrl2"],
+        /// "ToolUrl":"https:///toolUrl"
+        /// }
+        /// </example>
+        /// <param name="url"></param>
+        /// <returns>
+        /// updated OAuthClient
+        /// </returns>
         public IQuery<OAuthClient> Update(Uri url, OAuthClient oauthClient, bool singlePlane = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<OAuthClient>(Client);
@@ -75,6 +190,13 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
+        
+        /// <summary>
+        /// Delete OAuthClient
+        /// </summary>
+        /// <returns>
+        /// no data
+        /// </returns>
         public IQuery Delete(Uri url, bool singlePlane = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);

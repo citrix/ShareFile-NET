@@ -70,6 +70,10 @@ namespace ShareFile.Api.Client.Entities
         /// A Session object, if authentication is successful
         /// </returns>
         IQuery<Session> Login(string authmethod = null, string authcomparison = null);
+        
+        /// <summary>
+        /// Get Assertion Consumer Service. This is the IDP callback endpoint in SAML authentication
+        /// </summary>
         IQuery<Session> Acs();
     }
 
@@ -150,6 +154,10 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
+        
+        /// <summary>
+        /// Get Assertion Consumer Service. This is the IDP callback endpoint in SAML authentication
+        /// </summary>
         public IQuery<Session> Acs()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Session>(Client);

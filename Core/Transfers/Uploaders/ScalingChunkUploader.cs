@@ -41,7 +41,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
                 var results = workers.Select(task => task.Result);
                 if (!results.All(chunkResult => chunkResult.IsSuccess))
-                    throw new UploadException("Chunk upload failed", -1, results.Select(result => result.Exception).FirstOrDefault(ex => ex != null));
+                    throw new UploadException("Chunk upload failed", -1, results.Select(result => result.ChunkException).FirstOrDefault(ex => ex != null));
             });
         }
 
@@ -68,7 +68,10 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 workers.WaitAsync().Wait();
                 var chunk = chunkSource.GetNextChunk(currentChunkSize);
                 if (chunk == null || giveUp)
+                {
+                    yield return TaskFromResult(ChunkUploadResult.Error);
                     break; //stream is busted
+                }
 
                 var task = AttemptChunkUploadWithRetry(attemptChunkUpload, chunk, chunkConfig.ChunkRetryCount)
                     .ContinueWith(chunkUploadTask =>
@@ -118,7 +121,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         private Task<ChunkUploadResult> AttemptChunkUploadWithRetry(Func<FileChunk, Task> attemptUpload, FileChunk chunk, int retryCount)
         {
             if (retryCount < 0)
-                return TaskFromResult(ChunkUploadResult.Error(null));
+                return TaskFromResult(ChunkUploadResult.Error);
 
             try
             {
@@ -130,7 +133,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 if (retryCount > 0)
                     return AttemptChunkUploadWithRetry(attemptUpload, chunk, retryCount - 1);
                 else
-                    return TaskFromResult(ChunkUploadResult.Error(ex));
+                    return TaskFromResult(ChunkUploadResult.Exception(ex));
             }
         }
 
@@ -146,10 +149,11 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         internal class ChunkUploadResult
         {
             public bool IsSuccess { get; set; }
-            public Exception Exception { get; set; }
+            public Exception ChunkException { get; set; }
 
             public static ChunkUploadResult Success = new ChunkUploadResult { IsSuccess = true };
-            public static ChunkUploadResult Error(Exception ex) { return new ChunkUploadResult { IsSuccess = false, Exception = ex }; }
+            public static ChunkUploadResult Error = new ChunkUploadResult { IsSuccess = false };
+            public static ChunkUploadResult Exception(Exception ex) { return new ChunkUploadResult { IsSuccess = false, ChunkException = ex }; }
         }
 
         internal class FileChunk

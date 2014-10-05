@@ -12,7 +12,6 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-
 namespace ShareFile.Api.Client.Transfers.Uploaders
 {
     public class ScalingFileUploader : SyncUploaderBase
@@ -22,8 +21,8 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         public ScalingFileUploader(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
             : base(client, uploadSpecificationRequest, file, config, expirationDays)
         {
-            var chunkConfig = config != null ? config.PartConfig : new FilePartConfig();
-            partUploader = new ScalingPartUploader(chunkConfig, Config.NumberOfThreads,
+            var partConfig = config != null ? config.PartConfig : new FilePartConfig();
+            partUploader = new ScalingPartUploader(partConfig, Config.NumberOfThreads,
                 requestMessage => Task.Factory.StartNew(() => ExecuteChunkUploadMessage(requestMessage)),
                 UpdateProgress);
         }

@@ -8,7 +8,6 @@
         public int Length { get; set; }
         public string UploadUrl { get; set; }
         public string Hash { get; internal set; }
-        public long BytesUploaded { get; internal set; }
         public bool IsLastPart { get; set; }
 
         public string GetComposedUploadUrl()

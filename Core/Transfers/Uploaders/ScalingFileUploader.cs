@@ -17,13 +17,13 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 {
     public class ScalingFileUploader : SyncUploaderBase
     {
-        private ScalingChunkUploader chunkUploader;
+        private ScalingPartUploader partUploader;
 
         public ScalingFileUploader(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
             : base(client, uploadSpecificationRequest, file, config, expirationDays)
         {
-            var chunkConfig = config != null ? config.ChunkConfig : new FileChunkConfig();
-            chunkUploader = new ScalingChunkUploader(chunkConfig, Config.NumberOfThreads,
+            var chunkConfig = config != null ? config.PartConfig : new FilePartConfig();
+            partUploader = new ScalingPartUploader(chunkConfig, Config.NumberOfThreads,
                 requestMessage => Task.Factory.StartNew(() => ExecuteChunkUploadMessage(requestMessage)),
                 UpdateProgress);
         }
@@ -31,7 +31,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         public override UploadResponse Upload(Dictionary<string, object> transferMetadata = null)
         {
             SetUploadSpecification();
-            var uploads = chunkUploader.Upload(File, HashProvider, UploadSpecification.ChunkUri.AbsoluteUri);
+            var uploads = partUploader.Upload(File, HashProvider, UploadSpecification.ChunkUri.AbsoluteUri);
             uploads.Wait();
             return FinishUpload();
         }

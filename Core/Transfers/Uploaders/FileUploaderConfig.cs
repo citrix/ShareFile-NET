@@ -28,7 +28,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         public int? WriteTimeout { get; set; }
         public int? ReadTimeout { get; set; }
 
-        public FileChunkConfig ChunkConfig { get; set; }
+        public FilePartConfig PartConfig { get; set; }
 
         public FileUploaderConfig()
         {
@@ -39,29 +39,29 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             ThreadStartPauseInMS = DefaultThreadStartPauseInMS;
             UseRequestStreamBuffering = true;
             RequireChunksCompleteInOrder = false;
-            ChunkConfig = new FileChunkConfig();
+            PartConfig = new FilePartConfig();
         }
     }
 
-    public class FileChunkConfig
+    public class FilePartConfig
     {
-        public int InitialChunkSize { get; set; }
-        public int MaxChunkSize { get; set; }
-        public int MinChunkSize { get; set; }
-        public TimeSpan TargetChunkUploadTime { get; set; }
-        public int MaxChunkIncreaseFactor { get; set; }
-        public int MaxChunkDecreaseFactor { get; set; }
-        public int ChunkRetryCount { get; set; }
+        public int InitialPartSize { get; set; }
+        public int MaxPartSize { get; set; }
+        public int MinPartSize { get; set; }
+        public TimeSpan TargetPartUploadTime { get; set; }
+        public int MaxPartSizeIncreaseFactor { get; set; }
+        public int MaxPartSizeDecreaseFactor { get; set; }
+        public int PartRetryCount { get; set; }
 
-        public FileChunkConfig()
+        public FilePartConfig()
         {
-            InitialChunkSize = 160 * 1024;
-            MaxChunkSize = 8 * 1024 * 1024;
-            MinChunkSize = 4 * 1024;
-            TargetChunkUploadTime = TimeSpan.FromSeconds(15);
-            MaxChunkIncreaseFactor = 4;
-            MaxChunkDecreaseFactor = 2;
-            ChunkRetryCount = 1;
+            InitialPartSize = 160 * 1024;
+            MaxPartSize = 8 * 1024 * 1024;
+            MinPartSize = 4 * 1024;
+            TargetPartUploadTime = TimeSpan.FromSeconds(15);
+            MaxPartSizeIncreaseFactor = 4;
+            MaxPartSizeDecreaseFactor = 2;
+            PartRetryCount = 1;
         }
     }
 }

@@ -384,7 +384,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             if (!result.Error)
             {
                 ThreadedFileUploader.OnProgress(part.Bytes.Length);
-                part.BytesUploaded = part.Bytes.Length;
                 part.Bytes = null;
             }
 

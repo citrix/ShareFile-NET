@@ -15,20 +15,20 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 #if Async
     public class AsyncScalingFileUploader : AsyncUploaderBase
     {
-        private ScalingChunkUploader chunkUploader;
+        private ScalingPartUploader partUploader;
 
         public AsyncScalingFileUploader(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
             : base(client, uploadSpecificationRequest, file, config, expirationDays)
         {
-            var chunkConfig = config != null ? config.ChunkConfig : new FileChunkConfig();
-            chunkUploader = new ScalingChunkUploader(chunkConfig, Config.NumberOfThreads,
+            var chunkConfig = config != null ? config.PartConfig : new FilePartConfig();
+            partUploader = new ScalingPartUploader(chunkConfig, Config.NumberOfThreads,
                 ExecuteChunkUploadMessage,
                 (bytesTransferred, finished) => OnProgress(bytesTransferred));        
         }
 
         protected override async Task<UploadResponse> InternalUploadAsync()
         {
-            await chunkUploader.Upload(File, HashProvider, UploadSpecification.ChunkUri.AbsoluteUri);
+            await partUploader.Upload(File, HashProvider, UploadSpecification.ChunkUri.AbsoluteUri);
             return await FinishUploadAsync();
         }
 

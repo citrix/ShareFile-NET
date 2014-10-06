@@ -66,7 +66,7 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="notify"></param>
         /// <param name="ifNecessary"></param>
         /// <returns>
-        /// The new User
+        /// The new user
         /// </returns>
         IQuery<User> Create(User user, bool pushCreatorDefaultSettings = false, bool addshared = false, bool notify = false, bool ifNecessary = false);
         
@@ -117,7 +117,7 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="notify"></param>
         /// <param name="ifNecessary"></param>
         /// <returns>
-        /// The new employee User
+        /// The new employee user
         /// </returns>
         IQuery<User> CreateAccountUser(AccountUser user, bool pushCreatorDefaultSettings = false, bool addshared = false, bool notify = false, bool ifNecessary = false);
         
@@ -248,7 +248,23 @@ namespace ShareFile.Api.Client.Entities
         /// A folder record representing the requesting user home folder
         /// </returns>
         IQuery<Item> GetHomeFolder(Uri url);
+        
+        /// <summary>
+        /// Get User's top Folder
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns>
+        /// User's Top Folders
+        /// </returns>
         IQuery<ODataFeed<Item>> TopFolders(Uri url);
+        
+        /// <summary>
+        /// Get User's FileBox folder
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns>
+        /// User's FileBox
+        /// </returns>
         IQuery<ODataFeed<Item>> Box(Uri url);
         
         /// <summary>
@@ -317,6 +333,16 @@ namespace ShareFile.Api.Client.Entities
         /// The modified user record
         /// </returns>
         IQuery<User> ResetPassword(Uri url, ODataObject properties, bool notify = false);
+        
+        /// <summary>
+        /// Forgot Password
+        /// </summary>
+        /// <remarks>
+        /// Triggers a reset password email
+        /// </remarks>
+        /// <param name="email"></param>
+        /// <param name="resetOnMobile"></param>
+        IQuery ForgotPassword(string email, bool resetOnMobile);
         
         /// <summary>
         /// Send Welcome Email
@@ -474,7 +500,7 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="notify"></param>
         /// <param name="ifNecessary"></param>
         /// <returns>
-        /// The new User
+        /// The new user
         /// </returns>
         public IQuery<User> Create(User user, bool pushCreatorDefaultSettings = false, bool addshared = false, bool notify = false, bool ifNecessary = false)
         {
@@ -536,7 +562,7 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="notify"></param>
         /// <param name="ifNecessary"></param>
         /// <returns>
-        /// The new employee User
+        /// The new employee user
         /// </returns>
         public IQuery<User> CreateAccountUser(AccountUser user, bool pushCreatorDefaultSettings = false, bool addshared = false, bool notify = false, bool ifNecessary = false)
         {
@@ -718,6 +744,14 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
+        
+        /// <summary>
+        /// Get User's top Folder
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns>
+        /// User's Top Folders
+        /// </returns>
         public IQuery<ODataFeed<Item>> TopFolders(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
@@ -726,6 +760,14 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
+        
+        /// <summary>
+        /// Get User's FileBox folder
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns>
+        /// User's FileBox
+        /// </returns>
         public IQuery<ODataFeed<Item>> Box(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
@@ -829,6 +871,25 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("notify", notify);
             sfApiQuery.Body = properties;
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Forgot Password
+        /// </summary>
+        /// <remarks>
+        /// Triggers a reset password email
+        /// </remarks>
+        /// <param name="email"></param>
+        /// <param name="resetOnMobile"></param>
+        public IQuery ForgotPassword(string email, bool resetOnMobile)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+		    sfApiQuery.From("Users");
+		    sfApiQuery.Action("ForgotPassword");
+            sfApiQuery.QueryString("email", email);
+            sfApiQuery.QueryString("resetOnMobile", resetOnMobile);
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }

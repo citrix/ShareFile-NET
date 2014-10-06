@@ -13,11 +13,11 @@ using System.Collections.Generic;
 
 namespace ShareFile.Api.Models
 {
-	internal class EntityTypeMap
+	public static class EntityTypeMap
 	{
 		private static Dictionary<string, Type> _entityTypeMap;
 
-		internal static Dictionary<string, Type> GetEntityTypeMap()
+		public static Dictionary<string, Type> GetEntityTypeMap()
 		{
 			if(_entityTypeMap == null)
 			{
@@ -166,7 +166,10 @@ namespace ShareFile.Api.Models
 			return _entityTypeMap;
 		}
         
-        internal static void AddEntity(string key, Type value)
+        /// <summary>
+        /// Add additional models to the type map.
+        /// </summary>
+        public static void AddEntity(string key, Type value)
         {
             lock(_entityTypeMap)
             {

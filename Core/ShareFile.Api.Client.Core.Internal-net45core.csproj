@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -108,10 +108,12 @@
     <DocumentationFile>$(OutputPath)\ShareFile.Api.Client.Core.Internal.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-	<Compile Include="InternalShareFileClient.cs" />
     <Compile Include="Internal\Entities\AccountsEntityInternal.cs" />
     <Compile Include="Internal\Entities\AzureSBTopicsEntityInternal.cs" />
     <Compile Include="Internal\Entities\BillingEntityInternal.cs" />
+    <Compile Include="Internal\Entities\ConfigsEntityInternal.cs" />
+    <Compile Include="Internal\Entities\DevicesEntityInternal.cs" />
+    <Compile Include="Internal\Entities\ItemsEntityInternal.cs" />
     <Compile Include="Internal\Entities\OAuthClientsEntityInternal.cs" />
     <Compile Include="Internal\Entities\PlanAddonsEntityInternal.cs" />
     <Compile Include="Internal\Models\AppCodes.cs" />
@@ -120,7 +122,7 @@
     <Compile Include="Internal\Models\AzureSBTopicsResponse.cs" />
     <Compile Include="Internal\Models\Billing.cs" />
     <Compile Include="Internal\Models\BillingCycleMonths.cs" />
-    <Compile Include="Internal\Models\EntityTypeMap.cs" />
+    <Compile Include="Internal\Models\EntityTypeMapInternal.cs" />
     <Compile Include="Internal\Models\InAppPurchase.cs" />
     <Compile Include="Internal\Models\MobileUserRole.cs" />
     <Compile Include="Internal\Models\OAuthClient.cs" />
@@ -134,8 +136,8 @@
     <Compile Include="Internal\Models\PlanAddonsStatus.cs" />
     <Compile Include="Internal\Models\PlanAddonUser.cs" />
     <Compile Include="Internal\Models\QueueStatus.cs" />
-    <Compile Include="Internal\Models\ShareConnectAddonFeatureInfo.cs" />
     <Compile Include="Internal\Models\TrialPeriod.cs" />
+    <Compile Include="InternalShareFileClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

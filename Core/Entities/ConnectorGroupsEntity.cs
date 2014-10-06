@@ -33,6 +33,14 @@ namespace ShareFile.Api.Client.Entities
         /// A single ConnectorGroup object matching the query
         /// </returns>
         IQuery<ConnectorGroup> Get(Uri url);
+        
+        /// <summary>
+        /// Get the Connector Group by Provider
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <returns>
+        /// A single ConnectorGroup matching the query
+        /// </returns>
         IQuery<ConnectorGroup> ByProvider(string provider);
         
         /// <summary>
@@ -257,6 +265,14 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
+        
+        /// <summary>
+        /// Get the Connector Group by Provider
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <returns>
+        /// A single ConnectorGroup matching the query
+        /// </returns>
         public IQuery<ConnectorGroup> ByProvider(string provider)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroup>(Client);

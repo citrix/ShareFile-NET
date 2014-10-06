@@ -12,7 +12,12 @@
 
         public string GetComposedUploadUrl()
         {
-            return string.Format("{0}&index={1}&byteOffset={2}&hash={3}", UploadUrl, Index, Offset, Hash);
+            return GetComposedUploadUrl(this.UploadUrl);
+        }
+
+        public string GetComposedUploadUrl(string uploadUrl)
+        {
+            return string.Format("{0}&index={1}&byteOffset={2}&hash={3}", uploadUrl, Index, Offset, Hash);
         }
     }
 }

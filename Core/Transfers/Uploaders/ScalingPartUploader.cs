@@ -107,7 +107,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         private HttpRequestMessage ComposePartUpload(string chunkUploadUrl, FilePart part)
         {
-            string uploadUri = string.Format("{0}&index={1}&byteOffset={2}&hash={3}", chunkUploadUrl, part.Index, part.Offset, part.Hash);
+            string uploadUri = part.GetComposedUploadUrl(chunkUploadUrl);
             var requestMessage = new HttpRequestMessage(HttpMethod.Post, uploadUri) { Content = new ByteArrayContent(part.Bytes) };
             return requestMessage;
         }

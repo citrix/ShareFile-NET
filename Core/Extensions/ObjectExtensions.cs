@@ -29,5 +29,16 @@ namespace ShareFile.Api.Client.Extensions
                 return defaultValue;
             }
         }
+
+        public static T Bound<T>(this T value, T upperBound, T lowerBound) where T : IComparable
+        {
+            if (value.CompareTo(upperBound) == 1)
+                return upperBound;
+            else if (value.CompareTo(lowerBound) == -1)
+                return lowerBound;
+            else
+                return value;
+        }
+
     }
 }

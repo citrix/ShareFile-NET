@@ -18,6 +18,8 @@ using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
 {
+    using ShareFile.Api.Client.Requests.Filters;
+
     public class RequestProviderTests : BaseTests
     {
         [TestCase(true, TestName = "Query_ItemNotFound_Async")]
@@ -184,6 +186,27 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
             Assert.Fail();
         }
 
+        [TestCase]
+        public void EnsureImplicitAndFilter()
+        {
+            // Arrange
+            var client = this.GetShareFileClient(true);
+            var query = client.Items.GetChildren(client.Items.GetAlias("fileId"));
+            
+            // Act
+            var endsWithFilter = new EndsWithFilter("Property", "value");
+            var startsWithFilter = new StartsWithFilter("Property", "value");
+            query = query.Filter(endsWithFilter).Filter(startsWithFilter);
+
+            var odataQuery = query as Query<ODataFeed<Item>>;
+            var filter = odataQuery.GetFilter();
+
+            // Assert
+            filter.Should().BeOfType<AndFilter>();
+            (filter as AndFilter).Left.Should().Be(endsWithFilter);
+            (filter as AndFilter).Right.Should().Be(startsWithFilter);
+        }
+
         protected IQuery GetItemDeleteQuery()
         {
             var client = GetShareFileClient(true);
@@ -338,11 +361,12 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
         {
             return new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StringContent(JsonConvert.SerializeObject(new Item
+                Content = new StringContent(JsonConvert.SerializeObject(new 
                 {
                     Id = GetId(),
-                    Name = "Test Item"
-                }), Encoding.UTF8, "application/json"),
+                    Name = "Test Item",
+                    odatatype = "ShareFile.Api.Models.Item"
+                }).Replace("odatatype", "odata.type"), Encoding.UTF8, "application/json"),
                 RequestMessage = requestMessage
             };
         }

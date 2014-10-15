@@ -219,14 +219,7 @@ namespace ShareFile.Api.Client.Requests.Providers
             {
                 try
                 {
-                    var stringWriter = new StringWriter();
-                    using (var textWriter = new JsonTextWriter(stringWriter))
-                    {
-                        ShareFileClient.LoggingSerializer.Serialize(textWriter, obj);
-
-                        tcs.SetResult(stringWriter.ToString());
-                    }
-
+                    tcs.SetResult(SerializeObject(obj));
                 }
                 catch (Exception)
                 {
@@ -326,6 +319,10 @@ namespace ShareFile.Api.Client.Requests.Providers
 
         protected string SerializeObject(object obj)
         {
+            if (obj is HttpResponseMessage)
+            {
+                return obj.ToString();
+            }
             try
             {
                 var stringWriter = new StringWriter();

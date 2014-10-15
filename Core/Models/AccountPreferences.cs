@@ -105,8 +105,6 @@ namespace ShareFile.Api.Models
 
 		public bool? EnableWatermarkedDownloads { get; set; }
 
-		public bool? EnableCaseSensitivePasswords { get; set; }
-
 		public bool? EnableTwoFactorAuth { get; set; }
 
 		public int? LoginFailMaxAttempts { get; set; }
@@ -145,13 +143,9 @@ namespace ShareFile.Api.Models
 
 		public int MinimumLength { get; set; }
 
-		public bool AlphaRequired { get; set; }
+		public int MinimumSpecialCharacters { get; set; }
 
-		public bool CaseRequired { get; set; }
-
-		public bool NumericRequired { get; set; }
-
-		public bool SpecialRequired { get; set; }
+		public int MinimumNumeric { get; set; }
 
 		public string AllowedSpecialCharacters { get; set; }
 
@@ -190,6 +184,12 @@ namespace ShareFile.Api.Models
 		public int? ENSMaxNotificationSyncWaitCount { get; set; }
 
 		public string TrustedDomains { get; set; }
+
+		public bool? EnableEncryptedEmailForOutlookPlugin { get; set; }
+
+		public bool? EnableDocPreviews { get; set; }
+
+		public bool? EnableDesktopEditorForAccount { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
@@ -242,7 +242,6 @@ namespace ShareFile.Api.Models
 				ViewOnlyWatermarkText = typedSource.ViewOnlyWatermarkText;
 				EnableDocViewerPrinting = typedSource.EnableDocViewerPrinting;
 				EnableWatermarkedDownloads = typedSource.EnableWatermarkedDownloads;
-				EnableCaseSensitivePasswords = typedSource.EnableCaseSensitivePasswords;
 				EnableTwoFactorAuth = typedSource.EnableTwoFactorAuth;
 				LoginFailMaxAttempts = typedSource.LoginFailMaxAttempts;
 				LoginFailLockoutSecs = typedSource.LoginFailLockoutSecs;
@@ -262,10 +261,8 @@ namespace ShareFile.Api.Models
 				PasswordMaxAgeDays = typedSource.PasswordMaxAgeDays;
 				PasswordHistoryCount = typedSource.PasswordHistoryCount;
 				MinimumLength = typedSource.MinimumLength;
-				AlphaRequired = typedSource.AlphaRequired;
-				CaseRequired = typedSource.CaseRequired;
-				NumericRequired = typedSource.NumericRequired;
-				SpecialRequired = typedSource.SpecialRequired;
+				MinimumSpecialCharacters = typedSource.MinimumSpecialCharacters;
+				MinimumNumeric = typedSource.MinimumNumeric;
 				AllowedSpecialCharacters = typedSource.AllowedSpecialCharacters;
 				EnableWebDAV = typedSource.EnableWebDAV;
 				EnableFTP = typedSource.EnableFTP;
@@ -285,6 +282,9 @@ namespace ShareFile.Api.Models
 				ENSFailSafePollingCount = typedSource.ENSFailSafePollingCount;
 				ENSMaxNotificationSyncWaitCount = typedSource.ENSMaxNotificationSyncWaitCount;
 				TrustedDomains = typedSource.TrustedDomains;
+				EnableEncryptedEmailForOutlookPlugin = typedSource.EnableEncryptedEmailForOutlookPlugin;
+				EnableDocPreviews = typedSource.EnableDocPreviews;
+				EnableDesktopEditorForAccount = typedSource.EnableDesktopEditorForAccount;
 			}
 			else
 			{
@@ -461,10 +461,6 @@ namespace ShareFile.Api.Models
 				{
 					EnableWatermarkedDownloads = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
-				if(source.TryGetProperty("EnableCaseSensitivePasswords", out token) && token.Type != JTokenType.Null)
-				{
-					EnableCaseSensitivePasswords = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
-				}
 				if(source.TryGetProperty("EnableTwoFactorAuth", out token) && token.Type != JTokenType.Null)
 				{
 					EnableTwoFactorAuth = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
@@ -541,21 +537,13 @@ namespace ShareFile.Api.Models
 				{
 					MinimumLength = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
 				}
-				if(source.TryGetProperty("AlphaRequired", out token) && token.Type != JTokenType.Null)
+				if(source.TryGetProperty("MinimumSpecialCharacters", out token) && token.Type != JTokenType.Null)
 				{
-					AlphaRequired = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+					MinimumSpecialCharacters = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
 				}
-				if(source.TryGetProperty("CaseRequired", out token) && token.Type != JTokenType.Null)
+				if(source.TryGetProperty("MinimumNumeric", out token) && token.Type != JTokenType.Null)
 				{
-					CaseRequired = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
-				}
-				if(source.TryGetProperty("NumericRequired", out token) && token.Type != JTokenType.Null)
-				{
-					NumericRequired = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
-				}
-				if(source.TryGetProperty("SpecialRequired", out token) && token.Type != JTokenType.Null)
-				{
-					SpecialRequired = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+					MinimumNumeric = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
 				}
 				if(source.TryGetProperty("AllowedSpecialCharacters", out token) && token.Type != JTokenType.Null)
 				{
@@ -632,6 +620,18 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("TrustedDomains", out token) && token.Type != JTokenType.Null)
 				{
 					TrustedDomains = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("EnableEncryptedEmailForOutlookPlugin", out token) && token.Type != JTokenType.Null)
+				{
+					EnableEncryptedEmailForOutlookPlugin = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableDocPreviews", out token) && token.Type != JTokenType.Null)
+				{
+					EnableDocPreviews = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableDesktopEditorForAccount", out token) && token.Type != JTokenType.Null)
+				{
+					EnableDesktopEditorForAccount = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 			}
 		}

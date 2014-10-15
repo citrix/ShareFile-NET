@@ -149,6 +149,16 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public string Signature { get; set; }
 
+		/// <summary>
+		/// Defines whether the request to retrieve Share Items is to be navigated to a remote endpoint.
+		/// </summary>
+		public bool? HasRemoteChildren { get; set; }
+
+		/// <summary>
+		/// Redirection endpoint for this Item.
+		/// </summary>
+		public Redirection Redirection { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -187,6 +197,8 @@ namespace ShareFile.Api.Models
 				Recipients = typedSource.Recipients;
 				Zone = typedSource.Zone;
 				Signature = typedSource.Signature;
+				HasRemoteChildren = typedSource.HasRemoteChildren;
+				Redirection = typedSource.Redirection;
 			}
 			else
 			{
@@ -310,6 +322,14 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("Signature", out token) && token.Type != JTokenType.Null)
 				{
 					Signature = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("HasRemoteChildren", out token) && token.Type != JTokenType.Null)
+				{
+					HasRemoteChildren = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("Redirection", out token) && token.Type != JTokenType.Null)
+				{
+					Redirection = (Redirection)serializer.Deserialize(token.CreateReader(), typeof(Redirection));
 				}
 			}
 		}

@@ -24,7 +24,13 @@ namespace ShareFile.Api.Client.Requests
 #if Async
         Task<T> ExecuteAsync(CancellationToken? token = null);
 #endif
-
+        
+        /// <summary>
+        /// If a Filter has already been added, it will implicitly converted to a <see cref="AndFilter"/> 
+        /// with the existing filter as Left and <param name="filter"></param> as Right.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
         Query<T> Filter(IFilter filter);
         Query<T> Expand(string expandProperty);
         Query<T> Expand(IEnumerable<string> expandProperties);

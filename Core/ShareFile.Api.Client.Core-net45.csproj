@@ -55,9 +55,7 @@
     <Compile Include="Entities\AccountsEntity.cs" />
     <Compile Include="Entities\AsyncOperationsEntity.cs" />
     <Compile Include="Entities\CapabilitiesEntity.cs" />
-    <Compile Include="Entities\ConfigsEntity.cs" />
     <Compile Include="Entities\ConnectorGroupsEntity.cs" />
-    <Compile Include="Entities\DevicesEntity.cs" />
     <Compile Include="Entities\EntityBase.cs" />
     <Compile Include="Entities\FavoriteFoldersEntity.cs" />
     <Compile Include="Entities\GroupsEntity.cs" />

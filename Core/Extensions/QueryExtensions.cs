@@ -45,7 +45,7 @@ namespace ShareFile.Api.Client.Extensions
         }
 #endif
 
-        private static IQuery<T> ApplySelectsAndExpands<T>(IQuery<T> query, LambdaExpression lambda) where T : class
+        public static IQuery<T> ApplySelectsAndExpands<T>(IQuery<T> query, LambdaExpression lambda) where T : class
         {
             var queryModifiers = ExpressionUtils.ExpandLambdaExpression(lambda).SelectMany(z => ExpressionUtils.ParseToQuery(lambda.Parameters[0], z)).ToList();
 
@@ -173,11 +173,13 @@ namespace ShareFile.Api.Client.Extensions
                         else
                         {
                             yield return new QueryModifier { ModType = QueryModifierType.Select, Property = prefix + prop.Name };
+                            break;
                         }
                     }
                     else if (propExpr.NodeType == ExpressionType.Convert
                         || propExpr.NodeType == ExpressionType.ConvertChecked
-                        || propExpr.NodeType == ExpressionType.TypeAs)
+                        || propExpr.NodeType == ExpressionType.TypeAs
+                        || propExpr.NodeType == ExpressionType.Coalesce)
                     {
                         //assume you know what you're doing..
                         continue;
@@ -314,7 +316,15 @@ namespace ShareFile.Api.Client.Extensions
             private static IEnumerable<Expression> ExpandListInit(ListInitExpression listInitExpression)
             {
                 yield return listInitExpression.NewExpression;
-                foreach (var init in listInitExpression.Initializers)
+                foreach (var initArg in ExpandCollectionInitializers(listInitExpression.Initializers))
+                {
+                    yield return initArg;
+                }
+            }
+
+            private static IEnumerable<Expression> ExpandCollectionInitializers(IEnumerable<ElementInit> initializers)
+            {
+                foreach (var init in initializers)
                 {
                     foreach (var initArg in init.Arguments)
                     {
@@ -323,9 +333,39 @@ namespace ShareFile.Api.Client.Extensions
                 }
             }
 
+            private static IEnumerable<Expression> ExpandMemberBindings(IEnumerable<MemberBinding> bindings)
+            {
+                foreach (var binding in bindings)
+                {
+                    switch (binding.BindingType)
+                    {
+                        case MemberBindingType.Assignment:
+                            yield return ((MemberAssignment)binding).Expression;
+                            break;
+                        case MemberBindingType.ListBinding:
+                            foreach (var initArg in ExpandCollectionInitializers(((MemberListBinding)binding).Initializers))
+                            {
+                                yield return initArg;
+                            }
+                            break;
+                        case MemberBindingType.MemberBinding:
+                            foreach(var initArg in ExpandMemberBindings(((MemberMemberBinding)binding).Bindings))
+                            {
+                                yield return initArg;
+                                //yield return balrog;
+                            }
+                            break;
+                    }
+                }
+            }
+
             private static IEnumerable<Expression> ExpandMemberInit(MemberInitExpression memberInitExpression)
             {
                 yield return memberInitExpression.NewExpression;
+                foreach(var initArg in ExpandMemberBindings(memberInitExpression.Bindings))
+                {
+                    yield return initArg;
+                }
             }
 
             private static IEnumerable<Expression> ExpandInvocation(InvocationExpression invocationExpression)

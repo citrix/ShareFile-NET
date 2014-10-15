@@ -8,7 +8,6 @@
 //	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,533 +18,556 @@ using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Client.Entities
 {
+    public interface IConnectorGroupsEntity : IEntityBase
+    {
+        IQuery<ODataFeed<ConnectorGroup>> Get();
+        
+        /// <summary>
+        /// Get all Connector Groups in the account
+        /// </summary>
+        /// <remarks>
+        /// Retrieves a Connector Group
+        /// </remarks>
+        /// <param name="serviceid"></param>
+        /// <returns>
+        /// A single ConnectorGroup object matching the query
+        /// </returns>
+        IQuery<ConnectorGroup> Get(Uri url);
+        
+        /// <summary>
+        /// Get the Connector Group by Provider
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <returns>
+        /// A single ConnectorGroup matching the query
+        /// </returns>
+        IQuery<ConnectorGroup> ByProvider(string provider);
+        
+        /// <summary>
+        /// Get the Connector Group by Service ID
+        /// </summary>
+        /// <remarks>
+        /// Retrieves a Connector Group
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <returns>
+        /// A single ConnectorGroup object matching the query
+        /// </returns>
+        IQuery<ConnectorGroupZone> GetZones(Uri url, string id);
+        
+        /// <summary>
+        /// Get an Access Control element
+        /// </summary>
+        /// <remarks>
+        /// Retrieves a Connector Group Access Control of a given user
+        /// </remarks>
+        /// <param name="parentUrl"></param>
+        /// <param name="id"></param>
+        /// <returns>
+        /// A single ConnectorGroup ACL object matching the query
+        /// </returns>
+        IQuery<ConnectorGroupAccessControl> GetAccessControls(Uri parentUrl, string id);
+        
+        /// <summary>
+        /// Get Connector Groups in a Zone
+        /// </summary>
+        /// <remarks>
+        /// Retrieves the Connector Groups defined in a Zone.
+        /// </remarks>
+        /// <param name="zoneid"></param>
+        /// <returns>
+        /// Access Control List of the given object ID.
+        /// </returns>
+        IQuery<ODataFeed<ConnectorGroup>> GetByZone(string zoneid);
+        
+        /// <summary>
+        /// Create a Connector Group associated with a Zone
+        /// </summary>
+        /// <example>
+        /// {
+        /// "Zones":[
+        /// "Zone": {"Id":"ZoneId"},
+        /// "StorageCenter": [ { "Id":"StorageCenterId" }, { ... } ],
+        /// "ApiVersionMin":"v3",
+        /// "ApiVersionMax":"v3",
+        /// "IconUrl":"https://domain/icons",
+        /// "FormUrl":"https://domain/forms"
+        /// ],
+        /// "Id":"ServiceId",
+        /// "Name":""Name,
+        /// "Provider":"svc"
+        /// }
+        /// </example>
+        /// <remarks>
+        /// Creates a new Connector Group, or adds a Zone to an existing Connector Group if the Group is already associated
+        /// with another Zone. The caller doesn't have to check if the group exists or not - just call this API passing
+        /// the Service ID and the associated Zone information.
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <param name="connectorGroup"></param>
+        /// <returns>
+        /// the created or modified AccessControl instance
+        /// </returns>
+        IQuery<ConnectorGroup> Create(ConnectorGroup connectorGroup);
+        
+        /// <summary>
+        /// Associates a Zone to an existing Connecto Group
+        /// </summary>
+        /// <example>
+        /// {
+        /// "Zone": {"Id":"ZoneId"},
+        /// "StorageCenter": [ { "Id":"StorageCenterId" }, { ... } ],
+        /// "ApiVersionMin":"v3",
+        /// "ApiVersionMax":"v3",
+        /// "IconUrl":"https://domain/icons",
+        /// "FormUrl":"https://domain/forms"
+        /// }
+        /// </example>
+        /// <remarks>
+        /// Adds a Zone to an existing Connector Group.
+        /// </remarks>
+        /// <param name="url"></param>
+        /// <param name="connectorGroupZone"></param>
+        /// <returns>
+        /// the created or modified AccessControl instance
+        /// </returns>
+        IQuery<ConnectorGroupZone> CreateZones(Uri url, ConnectorGroupZone connectorGroupZone);
+        
+        /// <summary>
+        /// Adds a new principal to the Connector Group Access Control List
+        /// </summary>
+        /// <example>
+        /// {
+        /// "Principal": {"Id":"PrincipalId"},
+        /// "CanCreate":"true",
+        /// "CanManage":"true"
+        /// }
+        /// </example>
+        /// <param name="url"></param>
+        /// <param name="connectorGroupAcl"></param>
+        /// <returns>
+        /// The created access control list object
+        /// </returns>
+        IQuery<ConnectorGroupAccessControl> CreateAccessControls(Uri url, ConnectorGroupAccessControl connectorGroupAcl);
+        
+        /// <summary>
+        /// Modifies the parameters of a Connector Group in associated with a Zone
+        /// </summary>
+        /// <example>
+        /// {
+        /// "Zone": {"Id":"ZoneId"},
+        /// "ApiVersionMin":"v3",
+        /// "ApiVersionMax":"v3",
+        /// "IconUrl":"https://domain/icons",
+        /// "FormUrl":"https://domain/forms"
+        /// }
+        /// </example>
+        /// <param name="url"></param>
+        /// <param name="zoneId"></param>
+        /// <param name="connectorGroupZone"></param>
+        /// <returns>
+        /// the created or modified AccessControl instance
+        /// </returns>
+        IQuery<ConnectorGroupZone> UpdateZones(Uri url, string zoneId, ConnectorGroupZone connectorGroupZone);
+        
+        /// <summary>
+        /// Removes a Connector Group
+        /// </summary>
+        /// <remarks>
+        /// Removes a Connector Group and all associations from Zones
+        /// </remarks>
+        /// <param name="url"></param>
+        IQuery Delete(Uri url);
+        
+        /// <summary>
+        /// Removes a Connector Group association with a Zone
+        /// </summary>
+        /// <remarks>
+        /// Removes a Connector Group association with a Zone. Connector Groups are automatically removed
+        /// once the groups is removed from all the Zones.
+        /// </remarks>
+        /// <param name="serviceUrl"></param>
+        /// <param name="zoneid"></param>
+        IQuery DeleteZones(Uri serviceUrl, string zoneid);
+        
+        /// <summary>
+        /// Removes a Connector Group Access Control object
+        /// </summary>
+        /// <remarks>
+        /// Removes an Access Control object from the Connector Group ACL. This removes the permissions of
+        /// the affected principal to use the Connector Group.
+        /// </remarks>
+        /// <param name="serviceUrl"></param>
+        /// <param name="zoneid"></param>
+        IQuery DeleteAccessControls(Uri serviceUrl, string zoneid);
+        
+        /// <summary>
+        /// Retrieve the list of Storage Centers associated with a Connector Group
+        /// </summary>
+        /// <remarks>
+        /// Retrieve the list of storage centers associated with a Connector Group.
+        /// </remarks>
+        /// <param name="url"></param>
+        /// <param name="zoneid"></param>
+        /// <returns>
+        /// The modified Connector Group
+        /// </returns>
+        IQuery<ODataFeed<StorageCenter>> GetStorageCenters(Uri url, string zoneid);
+        
+        /// <summary>
+        /// Adds a Connector Group to a Storage Center
+        /// </summary>
+        /// <example>
+        /// {
+        /// "Id":"storageCenterId"
+        /// }
+        /// </example>
+        /// <remarks>
+        /// Associate a Connector Group with a Storage Center. The Connector Group has to be
+        /// associated with the Storage Center Zone.
+        /// </remarks>
+        /// <param name="url"></param>
+        /// <param name="zoneid"></param>
+        /// <returns>
+        /// The modified Connector Group
+        /// </returns>
+        IQuery<ODataFeed<StorageCenter>> CreateStorageCenters(Uri url, string zoneid, StorageCenter storageCenter);
+    }
 
-	public interface IConnectorGroupsEntity : IEntityBase
-	{
-		IQuery<ODataFeed<ConnectorGroup>> Get();
-		/// <summary>
-		/// Get all Connector Groups in the account
-		/// </summary>
-		/// <remarks>
-		/// Retrieves a Connector Group
-		/// </remarks>
-		/// <param name="serviceid"></param>
-		/// <returns>
-		/// A single ConnectorGroup object matching the query
-		/// </returns>
-		IQuery<ConnectorGroup> Get(Uri url);
-		IQuery<ConnectorGroup> ByProvider(string provider);
-		/// <summary>
-		/// Get the Connector Group by Service ID
-		/// </summary>
-		/// <remarks>
-		/// Retrieves a Connector Group
-		/// </remarks>
-		/// <param name="id"></param>
-		/// <returns>
-		/// A single ConnectorGroup object matching the query
-		/// </returns>
-		IQuery<ConnectorGroupZone> GetZones(Uri url, string id);
-		/// <summary>
-		/// Get an Access Control element
-		/// </summary>
-		/// <remarks>
-		/// Retrieves a Connector Group Access Control of a given user
-		/// </remarks>
-		/// <param name="parentUrl"></param>
-		/// <param name="id"></param>
-		/// <returns>
-		/// A single ConnectorGroup ACL object matching the query
-		/// </returns>
-		IQuery<ConnectorGroupAccessControl> GetAccessControls(Uri parentUrl, string id);
-		/// <summary>
-		/// Get Connector Groups in a Zone
-		/// </summary>
-		/// <remarks>
-		/// Retrieves the Connector Groups defined in a Zone.
-		/// </remarks>
-		/// <param name="zoneid"></param>
-		/// <returns>
-		/// Access Control List of the given object ID.
-		/// </returns>
-		IQuery<ODataFeed<ConnectorGroup>> GetByZone(string zoneid);
-		/// <summary>
-		/// Create a Connector Group associated with a Zone
-		/// </summary>
-		/// <example>
-		/// {
-		/// "Zones":[
-		/// "Zone": {"Id":"ZoneId"},
-		/// "StorageCenter": [ { "Id":"StorageCenterId" }, { ... } ],
-		/// "ApiVersionMin":"v3",
-		/// "ApiVersionMax":"v3",
-		/// "IconUrl":"https://domain/icons",
-		/// "FormUrl":"https://domain/forms"
-		/// ],
-		/// "Id":"ServiceId",
-		/// "Name":""Name,
-		/// "Provider":"svc"
-		/// }
-		/// </example>
-		/// <remarks>
-		/// Creates a new Connector Group, or adds a Zone to an existing Connector Group if the Group is already associated
-		/// with another Zone. The caller doesn't have to check if the group exists or not - just call this API passing
-		/// the Service ID and the associated Zone information.
-		/// </remarks>
-		/// <param name="id"></param>
-		/// <param name="connectorGroup"></param>
-		/// <returns>
-		/// the created or modified AccessControl instance
-		/// </returns>
-		IQuery<ConnectorGroup> Create(ConnectorGroup connectorGroup);
-		/// <summary>
-		/// Associates a Zone to an existing Connecto Group
-		/// </summary>
-		/// <example>
-		/// {
-		/// "Zone": {"Id":"ZoneId"},
-		/// "StorageCenter": [ { "Id":"StorageCenterId" }, { ... } ],
-		/// "ApiVersionMin":"v3",
-		/// "ApiVersionMax":"v3",
-		/// "IconUrl":"https://domain/icons",
-		/// "FormUrl":"https://domain/forms"
-		/// }
-		/// </example>
-		/// <remarks>
-		/// Adds a Zone to an existing Connector Group.
-		/// </remarks>
-		/// <param name="url"></param>
-		/// <param name="connectorGroupZone"></param>
-		/// <returns>
-		/// the created or modified AccessControl instance
-		/// </returns>
-		IQuery<ConnectorGroupZone> CreateZones(Uri url, ConnectorGroupZone connectorGroupZone);
-		/// <summary>
-		/// Adds a new principal to the Connector Group Access Control List
-		/// </summary>
-		/// <example>
-		/// {
-		/// "Principal": {"Id":"PrincipalId"},
-		/// "CanCreate":"true",
-		/// "CanManage":"true"
-		/// }
-		/// </example>
-		/// <param name="url"></param>
-		/// <param name="connectorGroupAcl"></param>
-		/// <returns>
-		/// The created access control list object
-		/// </returns>
-		IQuery<ConnectorGroupAccessControl> CreateAccessControls(Uri url, ConnectorGroupAccessControl connectorGroupAcl);
-		/// <summary>
-		/// Modifies the parameters of a Connector Group in associated with a Zone
-		/// </summary>
-		/// <example>
-		/// {
-		/// "Zone": {"Id":"ZoneId"},
-		/// "ApiVersionMin":"v3",
-		/// "ApiVersionMax":"v3",
-		/// "IconUrl":"https://domain/icons",
-		/// "FormUrl":"https://domain/forms"
-		/// }
-		/// </example>
-		/// <param name="url"></param>
-		/// <param name="zoneId"></param>
-		/// <param name="connectorGroupZone"></param>
-		/// <returns>
-		/// the created or modified AccessControl instance
-		/// </returns>
-		IQuery<ConnectorGroupZone> UpdateZones(Uri url, string zoneId, ConnectorGroupZone connectorGroupZone);
-		/// <summary>
-		/// Removes a Connector Group
-		/// </summary>
-		/// <remarks>
-		/// Removes a Connector Group and all associations from Zones
-		/// </remarks>
-		/// <param name="url"></param>
-		IQuery Delete(Uri url);
-		/// <summary>
-		/// Removes a Connector Group association with a Zone
-		/// </summary>
-		/// <remarks>
-		/// Removes a Connector Group association with a Zone. Connector Groups are automatically removed
-		/// once the groups is removed from all the Zones.
-		/// </remarks>
-		/// <param name="serviceUrl"></param>
-		/// <param name="zoneid"></param>
-		IQuery DeleteZones(Uri serviceUrl, string zoneid);
-		/// <summary>
-		/// Removes a Connector Group Access Control object
-		/// </summary>
-		/// <remarks>
-		/// Removes an Access Control object from the Connector Group ACL. This removes the permissions of
-		/// the affected principal to use the Connector Group.
-		/// </remarks>
-		/// <param name="serviceUrl"></param>
-		/// <param name="zoneid"></param>
-		IQuery DeleteAccessControls(Uri serviceUrl, string zoneid);
-		/// <summary>
-		/// Retrieve the list of Storage Centers associated with a Connector Group
-		/// </summary>
-		/// <remarks>
-		/// Retrieve the list of storage centers associated with a Connector Group.
-		/// </remarks>
-		/// <param name="url"></param>
-		/// <param name="zoneid"></param>
-		/// <returns>
-		/// The modified Connector Group
-		/// </returns>
-		IQuery<ODataFeed<StorageCenter>> GetStorageCenters(Uri url, string zoneid);
-		/// <summary>
-		/// Adds a Connector Group to a Storage Center
-		/// </summary>
-		/// <example>
-		/// {
-		/// "Id":"storageCenterId"
-		/// }
-		/// </example>
-		/// <remarks>
-		/// Associate a Connector Group with a Storage Center. The Connector Group has to be
-		/// associated with the Storage Center Zone.
-		/// </remarks>
-		/// <param name="url"></param>
-		/// <param name="zoneid"></param>
-		/// <returns>
-		/// The modified Connector Group
-		/// </returns>
-		IQuery<ODataFeed<StorageCenter>> CreateStorageCenters(Uri url, string zoneid, StorageCenter storageCenter);
-	}
-
-	public class ConnectorGroupsEntity : EntityBase, IConnectorGroupsEntity
-	{
-		public ConnectorGroupsEntity(IShareFileClient client)
-			: base (client, "ConnectorGroups")
-			
-		{
-
-		}
-
-		public IQuery<ODataFeed<ConnectorGroup>> Get()
-		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<ConnectorGroup>>(Client);
-			sfApiQuery.From("ConnectorGroups");
-			sfApiQuery.HttpMethod = "GET";
-			return sfApiQuery;
-		}
-
-		/// <summary>
-		/// Get all Connector Groups in the account
-		/// </summary>
-		/// <remarks>
-		/// Retrieves a Connector Group
-		/// </remarks>
-		/// <param name="serviceid"></param>
-		/// <returns>
-		/// A single ConnectorGroup object matching the query
-		/// </returns>
-		public IQuery<ConnectorGroup> Get(Uri url)
-		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroup>(Client);
-			sfApiQuery.Uri(url);
-			sfApiQuery.HttpMethod = "GET";
-			return sfApiQuery;
-		}
-
-		public IQuery<ConnectorGroup> ByProvider(string provider)
-		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroup>(Client);
-			sfApiQuery.From("ConnectorGroups");
-			sfApiQuery.Action("ByProvider");
-			sfApiQuery.QueryString("provider", provider);
-			sfApiQuery.HttpMethod = "GET";
-			return sfApiQuery;
-		}
-
-		/// <summary>
-		/// Get the Connector Group by Service ID
-		/// </summary>
-		/// <remarks>
-		/// Retrieves a Connector Group
-		/// </remarks>
-		/// <param name="id"></param>
-		/// <returns>
-		/// A single ConnectorGroup object matching the query
-		/// </returns>
-		public IQuery<ConnectorGroupZone> GetZones(Uri url, string id)
-		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroupZone>(Client);
-			sfApiQuery.Action("Zones");
-			sfApiQuery.Uri(url);
-			sfApiQuery.ActionIds(id);
-			sfApiQuery.HttpMethod = "GET";
-			return sfApiQuery;
-		}
-
-		/// <summary>
-		/// Get an Access Control element
-		/// </summary>
-		/// <remarks>
-		/// Retrieves a Connector Group Access Control of a given user
-		/// </remarks>
-		/// <param name="parentUrl"></param>
-		/// <param name="id"></param>
-		/// <returns>
-		/// A single ConnectorGroup ACL object matching the query
-		/// </returns>
-		public IQuery<ConnectorGroupAccessControl> GetAccessControls(Uri parentUrl, string id)
-		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroupAccessControl>(Client);
-			sfApiQuery.Action("AccessControls");
-			sfApiQuery.Uri(parentUrl);
-			sfApiQuery.ActionIds(id);
-			sfApiQuery.HttpMethod = "GET";
-			return sfApiQuery;
-		}
-
-		/// <summary>
-		/// Get Connector Groups in a Zone
-		/// </summary>
-		/// <remarks>
-		/// Retrieves the Connector Groups defined in a Zone.
-		/// </remarks>
-		/// <param name="zoneid"></param>
-		/// <returns>
-		/// Access Control List of the given object ID.
-		/// </returns>
-		public IQuery<ODataFeed<ConnectorGroup>> GetByZone(string zoneid)
-		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<ConnectorGroup>>(Client);
-			sfApiQuery.From("ConnectorGroups");
-			sfApiQuery.Action("GetByZone");
-			sfApiQuery.ActionIds(zoneid);
-			sfApiQuery.HttpMethod = "GET";
-			return sfApiQuery;
-		}
-
-		/// <summary>
-		/// Create a Connector Group associated with a Zone
-		/// </summary>
-		/// <example>
-		/// {
-		/// "Zones":[
-		/// "Zone": {"Id":"ZoneId"},
-		/// "StorageCenter": [ { "Id":"StorageCenterId" }, { ... } ],
-		/// "ApiVersionMin":"v3",
-		/// "ApiVersionMax":"v3",
-		/// "IconUrl":"https://domain/icons",
-		/// "FormUrl":"https://domain/forms"
-		/// ],
-		/// "Id":"ServiceId",
-		/// "Name":""Name,
-		/// "Provider":"svc"
-		/// }
-		/// </example>
-		/// <remarks>
-		/// Creates a new Connector Group, or adds a Zone to an existing Connector Group if the Group is already associated
-		/// with another Zone. The caller doesn't have to check if the group exists or not - just call this API passing
-		/// the Service ID and the associated Zone information.
-		/// </remarks>
-		/// <param name="id"></param>
-		/// <param name="connectorGroup"></param>
-		/// <returns>
-		/// the created or modified AccessControl instance
-		/// </returns>
-		public IQuery<ConnectorGroup> Create(ConnectorGroup connectorGroup)
-		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroup>(Client);
-			sfApiQuery.From("ConnectorGroups");
-			sfApiQuery.Body = connectorGroup;
-			sfApiQuery.HttpMethod = "POST";
-			return sfApiQuery;
-		}
-
-		/// <summary>
-		/// Associates a Zone to an existing Connecto Group
-		/// </summary>
-		/// <example>
-		/// {
-		/// "Zone": {"Id":"ZoneId"},
-		/// "StorageCenter": [ { "Id":"StorageCenterId" }, { ... } ],
-		/// "ApiVersionMin":"v3",
-		/// "ApiVersionMax":"v3",
-		/// "IconUrl":"https://domain/icons",
-		/// "FormUrl":"https://domain/forms"
-		/// }
-		/// </example>
-		/// <remarks>
-		/// Adds a Zone to an existing Connector Group.
-		/// </remarks>
-		/// <param name="url"></param>
-		/// <param name="connectorGroupZone"></param>
-		/// <returns>
-		/// the created or modified AccessControl instance
-		/// </returns>
-		public IQuery<ConnectorGroupZone> CreateZones(Uri url, ConnectorGroupZone connectorGroupZone)
-		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroupZone>(Client);
-			sfApiQuery.Action("Zones");
-			sfApiQuery.Uri(url);
-			sfApiQuery.Body = connectorGroupZone;
-			sfApiQuery.HttpMethod = "POST";
-			return sfApiQuery;
-		}
-
-		/// <summary>
-		/// Adds a new principal to the Connector Group Access Control List
-		/// </summary>
-		/// <example>
-		/// {
-		/// "Principal": {"Id":"PrincipalId"},
-		/// "CanCreate":"true",
-		/// "CanManage":"true"
-		/// }
-		/// </example>
-		/// <param name="url"></param>
-		/// <param name="connectorGroupAcl"></param>
-		/// <returns>
-		/// The created access control list object
-		/// </returns>
-		public IQuery<ConnectorGroupAccessControl> CreateAccessControls(Uri url, ConnectorGroupAccessControl connectorGroupAcl)
-		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroupAccessControl>(Client);
-			sfApiQuery.Action("AccessControls");
-			sfApiQuery.Uri(url);
-			sfApiQuery.Body = connectorGroupAcl;
-			sfApiQuery.HttpMethod = "POST";
-			return sfApiQuery;
-		}
-
-		/// <summary>
-		/// Modifies the parameters of a Connector Group in associated with a Zone
-		/// </summary>
-		/// <example>
-		/// {
-		/// "Zone": {"Id":"ZoneId"},
-		/// "ApiVersionMin":"v3",
-		/// "ApiVersionMax":"v3",
-		/// "IconUrl":"https://domain/icons",
-		/// "FormUrl":"https://domain/forms"
-		/// }
-		/// </example>
-		/// <param name="url"></param>
-		/// <param name="zoneId"></param>
-		/// <param name="connectorGroupZone"></param>
-		/// <returns>
-		/// the created or modified AccessControl instance
-		/// </returns>
-		public IQuery<ConnectorGroupZone> UpdateZones(Uri url, string zoneId, ConnectorGroupZone connectorGroupZone)
-		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroupZone>(Client);
-			sfApiQuery.Action("Zones");
-			sfApiQuery.Uri(url);
-			sfApiQuery.ActionIds(zoneId);
-			sfApiQuery.Body = connectorGroupZone;
-			sfApiQuery.HttpMethod = "PATCH";
-			return sfApiQuery;
-		}
-
-		/// <summary>
-		/// Removes a Connector Group
-		/// </summary>
-		/// <remarks>
-		/// Removes a Connector Group and all associations from Zones
-		/// </remarks>
-		/// <param name="url"></param>
-		public IQuery Delete(Uri url)
-		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.Uri(url);
-			sfApiQuery.HttpMethod = "DELETE";
-			return sfApiQuery;
-		}
-
-		/// <summary>
-		/// Removes a Connector Group association with a Zone
-		/// </summary>
-		/// <remarks>
-		/// Removes a Connector Group association with a Zone. Connector Groups are automatically removed
-		/// once the groups is removed from all the Zones.
-		/// </remarks>
-		/// <param name="serviceUrl"></param>
-		/// <param name="zoneid"></param>
-		public IQuery DeleteZones(Uri serviceUrl, string zoneid)
-		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.Action("Zones");
-			sfApiQuery.Uri(serviceUrl);
-			sfApiQuery.ActionIds(zoneid);
-			sfApiQuery.HttpMethod = "DELETE";
-			return sfApiQuery;
-		}
-
-		/// <summary>
-		/// Removes a Connector Group Access Control object
-		/// </summary>
-		/// <remarks>
-		/// Removes an Access Control object from the Connector Group ACL. This removes the permissions of
-		/// the affected principal to use the Connector Group.
-		/// </remarks>
-		/// <param name="serviceUrl"></param>
-		/// <param name="zoneid"></param>
-		public IQuery DeleteAccessControls(Uri serviceUrl, string zoneid)
-		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-			sfApiQuery.Action("AccessControls");
-			sfApiQuery.Uri(serviceUrl);
-			sfApiQuery.ActionIds(zoneid);
-			sfApiQuery.HttpMethod = "DELETE";
-			return sfApiQuery;
-		}
-
-		/// <summary>
-		/// Retrieve the list of Storage Centers associated with a Connector Group
-		/// </summary>
-		/// <remarks>
-		/// Retrieve the list of storage centers associated with a Connector Group.
-		/// </remarks>
-		/// <param name="url"></param>
-		/// <param name="zoneid"></param>
-		/// <returns>
-		/// The modified Connector Group
-		/// </returns>
-		public IQuery<ODataFeed<StorageCenter>> GetStorageCenters(Uri url, string zoneid)
-		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<StorageCenter>>(Client);
-			sfApiQuery.Action("Zones");
-			sfApiQuery.Uri(url);
-			sfApiQuery.ActionIds(zoneid);
-			sfApiQuery.SubAction("StorageCenters");
-			sfApiQuery.HttpMethod = "GET";
-			return sfApiQuery;
-		}
-
-		/// <summary>
-		/// Adds a Connector Group to a Storage Center
-		/// </summary>
-		/// <example>
-		/// {
-		/// "Id":"storageCenterId"
-		/// }
-		/// </example>
-		/// <remarks>
-		/// Associate a Connector Group with a Storage Center. The Connector Group has to be
-		/// associated with the Storage Center Zone.
-		/// </remarks>
-		/// <param name="url"></param>
-		/// <param name="zoneid"></param>
-		/// <returns>
-		/// The modified Connector Group
-		/// </returns>
-		public IQuery<ODataFeed<StorageCenter>> CreateStorageCenters(Uri url, string zoneid, StorageCenter storageCenter)
-		{
-			var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<StorageCenter>>(Client);
-			sfApiQuery.Action("Zones");
-			sfApiQuery.Uri(url);
-			sfApiQuery.ActionIds(zoneid);
-			sfApiQuery.SubAction("StorageCenters");
-			sfApiQuery.Body = storageCenter;
-			sfApiQuery.HttpMethod = "POST";
-			return sfApiQuery;
-		}
-
-	}
+    public class ConnectorGroupsEntity : EntityBase, IConnectorGroupsEntity
+    {
+        public ConnectorGroupsEntity (IShareFileClient client)
+            : base (client, "ConnectorGroups")
+        { }
+        
+        public IQuery<ODataFeed<ConnectorGroup>> Get()
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<ConnectorGroup>>(Client);
+		    sfApiQuery.From("ConnectorGroups");
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get all Connector Groups in the account
+        /// </summary>
+        /// <remarks>
+        /// Retrieves a Connector Group
+        /// </remarks>
+        /// <param name="serviceid"></param>
+        /// <returns>
+        /// A single ConnectorGroup object matching the query
+        /// </returns>
+        public IQuery<ConnectorGroup> Get(Uri url)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroup>(Client);
+            sfApiQuery.Uri(url);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get the Connector Group by Provider
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <returns>
+        /// A single ConnectorGroup matching the query
+        /// </returns>
+        public IQuery<ConnectorGroup> ByProvider(string provider)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroup>(Client);
+		    sfApiQuery.From("ConnectorGroups");
+		    sfApiQuery.Action("ByProvider");
+            sfApiQuery.QueryString("provider", provider);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get the Connector Group by Service ID
+        /// </summary>
+        /// <remarks>
+        /// Retrieves a Connector Group
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <returns>
+        /// A single ConnectorGroup object matching the query
+        /// </returns>
+        public IQuery<ConnectorGroupZone> GetZones(Uri url, string id)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroupZone>(Client);
+		    sfApiQuery.Action("Zones");
+            sfApiQuery.Uri(url);
+            sfApiQuery.ActionIds(id);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get an Access Control element
+        /// </summary>
+        /// <remarks>
+        /// Retrieves a Connector Group Access Control of a given user
+        /// </remarks>
+        /// <param name="parentUrl"></param>
+        /// <param name="id"></param>
+        /// <returns>
+        /// A single ConnectorGroup ACL object matching the query
+        /// </returns>
+        public IQuery<ConnectorGroupAccessControl> GetAccessControls(Uri parentUrl, string id)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroupAccessControl>(Client);
+		    sfApiQuery.Action("AccessControls");
+            sfApiQuery.Uri(parentUrl);
+            sfApiQuery.ActionIds(id);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get Connector Groups in a Zone
+        /// </summary>
+        /// <remarks>
+        /// Retrieves the Connector Groups defined in a Zone.
+        /// </remarks>
+        /// <param name="zoneid"></param>
+        /// <returns>
+        /// Access Control List of the given object ID.
+        /// </returns>
+        public IQuery<ODataFeed<ConnectorGroup>> GetByZone(string zoneid)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<ConnectorGroup>>(Client);
+		    sfApiQuery.From("ConnectorGroups");
+		    sfApiQuery.Action("GetByZone");
+            sfApiQuery.ActionIds(zoneid);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Create a Connector Group associated with a Zone
+        /// </summary>
+        /// <example>
+        /// {
+        /// "Zones":[
+        /// "Zone": {"Id":"ZoneId"},
+        /// "StorageCenter": [ { "Id":"StorageCenterId" }, { ... } ],
+        /// "ApiVersionMin":"v3",
+        /// "ApiVersionMax":"v3",
+        /// "IconUrl":"https://domain/icons",
+        /// "FormUrl":"https://domain/forms"
+        /// ],
+        /// "Id":"ServiceId",
+        /// "Name":""Name,
+        /// "Provider":"svc"
+        /// }
+        /// </example>
+        /// <remarks>
+        /// Creates a new Connector Group, or adds a Zone to an existing Connector Group if the Group is already associated
+        /// with another Zone. The caller doesn't have to check if the group exists or not - just call this API passing
+        /// the Service ID and the associated Zone information.
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <param name="connectorGroup"></param>
+        /// <returns>
+        /// the created or modified AccessControl instance
+        /// </returns>
+        public IQuery<ConnectorGroup> Create(ConnectorGroup connectorGroup)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroup>(Client);
+		    sfApiQuery.From("ConnectorGroups");
+            sfApiQuery.Body = connectorGroup;
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Associates a Zone to an existing Connecto Group
+        /// </summary>
+        /// <example>
+        /// {
+        /// "Zone": {"Id":"ZoneId"},
+        /// "StorageCenter": [ { "Id":"StorageCenterId" }, { ... } ],
+        /// "ApiVersionMin":"v3",
+        /// "ApiVersionMax":"v3",
+        /// "IconUrl":"https://domain/icons",
+        /// "FormUrl":"https://domain/forms"
+        /// }
+        /// </example>
+        /// <remarks>
+        /// Adds a Zone to an existing Connector Group.
+        /// </remarks>
+        /// <param name="url"></param>
+        /// <param name="connectorGroupZone"></param>
+        /// <returns>
+        /// the created or modified AccessControl instance
+        /// </returns>
+        public IQuery<ConnectorGroupZone> CreateZones(Uri url, ConnectorGroupZone connectorGroupZone)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroupZone>(Client);
+		    sfApiQuery.Action("Zones");
+            sfApiQuery.Uri(url);
+            sfApiQuery.Body = connectorGroupZone;
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Adds a new principal to the Connector Group Access Control List
+        /// </summary>
+        /// <example>
+        /// {
+        /// "Principal": {"Id":"PrincipalId"},
+        /// "CanCreate":"true",
+        /// "CanManage":"true"
+        /// }
+        /// </example>
+        /// <param name="url"></param>
+        /// <param name="connectorGroupAcl"></param>
+        /// <returns>
+        /// The created access control list object
+        /// </returns>
+        public IQuery<ConnectorGroupAccessControl> CreateAccessControls(Uri url, ConnectorGroupAccessControl connectorGroupAcl)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroupAccessControl>(Client);
+		    sfApiQuery.Action("AccessControls");
+            sfApiQuery.Uri(url);
+            sfApiQuery.Body = connectorGroupAcl;
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Modifies the parameters of a Connector Group in associated with a Zone
+        /// </summary>
+        /// <example>
+        /// {
+        /// "Zone": {"Id":"ZoneId"},
+        /// "ApiVersionMin":"v3",
+        /// "ApiVersionMax":"v3",
+        /// "IconUrl":"https://domain/icons",
+        /// "FormUrl":"https://domain/forms"
+        /// }
+        /// </example>
+        /// <param name="url"></param>
+        /// <param name="zoneId"></param>
+        /// <param name="connectorGroupZone"></param>
+        /// <returns>
+        /// the created or modified AccessControl instance
+        /// </returns>
+        public IQuery<ConnectorGroupZone> UpdateZones(Uri url, string zoneId, ConnectorGroupZone connectorGroupZone)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroupZone>(Client);
+		    sfApiQuery.Action("Zones");
+            sfApiQuery.Uri(url);
+            sfApiQuery.ActionIds(zoneId);
+            sfApiQuery.Body = connectorGroupZone;
+            sfApiQuery.HttpMethod = "PATCH";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Removes a Connector Group
+        /// </summary>
+        /// <remarks>
+        /// Removes a Connector Group and all associations from Zones
+        /// </remarks>
+        /// <param name="url"></param>
+        public IQuery Delete(Uri url)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+            sfApiQuery.Uri(url);
+            sfApiQuery.HttpMethod = "DELETE";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Removes a Connector Group association with a Zone
+        /// </summary>
+        /// <remarks>
+        /// Removes a Connector Group association with a Zone. Connector Groups are automatically removed
+        /// once the groups is removed from all the Zones.
+        /// </remarks>
+        /// <param name="serviceUrl"></param>
+        /// <param name="zoneid"></param>
+        public IQuery DeleteZones(Uri serviceUrl, string zoneid)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+		    sfApiQuery.Action("Zones");
+            sfApiQuery.Uri(serviceUrl);
+            sfApiQuery.ActionIds(zoneid);
+            sfApiQuery.HttpMethod = "DELETE";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Removes a Connector Group Access Control object
+        /// </summary>
+        /// <remarks>
+        /// Removes an Access Control object from the Connector Group ACL. This removes the permissions of
+        /// the affected principal to use the Connector Group.
+        /// </remarks>
+        /// <param name="serviceUrl"></param>
+        /// <param name="zoneid"></param>
+        public IQuery DeleteAccessControls(Uri serviceUrl, string zoneid)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+		    sfApiQuery.Action("AccessControls");
+            sfApiQuery.Uri(serviceUrl);
+            sfApiQuery.ActionIds(zoneid);
+            sfApiQuery.HttpMethod = "DELETE";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Retrieve the list of Storage Centers associated with a Connector Group
+        /// </summary>
+        /// <remarks>
+        /// Retrieve the list of storage centers associated with a Connector Group.
+        /// </remarks>
+        /// <param name="url"></param>
+        /// <param name="zoneid"></param>
+        /// <returns>
+        /// The modified Connector Group
+        /// </returns>
+        public IQuery<ODataFeed<StorageCenter>> GetStorageCenters(Uri url, string zoneid)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<StorageCenter>>(Client);
+		    sfApiQuery.Action("Zones");
+            sfApiQuery.Uri(url);
+            sfApiQuery.ActionIds(zoneid);
+            sfApiQuery.SubAction("StorageCenters");
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Adds a Connector Group to a Storage Center
+        /// </summary>
+        /// <example>
+        /// {
+        /// "Id":"storageCenterId"
+        /// }
+        /// </example>
+        /// <remarks>
+        /// Associate a Connector Group with a Storage Center. The Connector Group has to be
+        /// associated with the Storage Center Zone.
+        /// </remarks>
+        /// <param name="url"></param>
+        /// <param name="zoneid"></param>
+        /// <returns>
+        /// The modified Connector Group
+        /// </returns>
+        public IQuery<ODataFeed<StorageCenter>> CreateStorageCenters(Uri url, string zoneid, StorageCenter storageCenter)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<StorageCenter>>(Client);
+		    sfApiQuery.Action("Zones");
+            sfApiQuery.Uri(url);
+            sfApiQuery.ActionIds(zoneid);
+            sfApiQuery.SubAction("StorageCenters");
+            sfApiQuery.Body = storageCenter;
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+    }
 }

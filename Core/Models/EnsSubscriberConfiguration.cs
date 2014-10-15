@@ -25,9 +25,9 @@ namespace ShareFile.Api.Models
 
 		public string Version { get; set; }
 
-		public object RecommendedPollingSyncInterval { get; set; }
+		public TimeSpan RecommendedPollingSyncInterval { get; set; }
 
-		public object RecommendedNotificationSyncInterval { get; set; }
+		public TimeSpan RecommendedNotificationSyncInterval { get; set; }
 
 		public int NotificationConfigurationCount { get; set; }
 
@@ -69,11 +69,11 @@ namespace ShareFile.Api.Models
 				}
 				if(source.TryGetProperty("RecommendedPollingSyncInterval", out token) && token.Type != JTokenType.Null)
 				{
-					RecommendedPollingSyncInterval = (object)serializer.Deserialize(token.CreateReader(), typeof(object));
+					RecommendedPollingSyncInterval = (TimeSpan)serializer.Deserialize(token.CreateReader(), typeof(TimeSpan));
 				}
 				if(source.TryGetProperty("RecommendedNotificationSyncInterval", out token) && token.Type != JTokenType.Null)
 				{
-					RecommendedNotificationSyncInterval = (object)serializer.Deserialize(token.CreateReader(), typeof(object));
+					RecommendedNotificationSyncInterval = (TimeSpan)serializer.Deserialize(token.CreateReader(), typeof(TimeSpan));
 				}
 				if(source.TryGetProperty("NotificationConfigurationCount", out token) && token.Type != JTokenType.Null)
 				{

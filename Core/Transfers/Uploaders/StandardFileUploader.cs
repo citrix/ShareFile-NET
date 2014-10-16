@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using System.Threading;
 using ShareFile.Api.Client.Extensions.Tasks;
 using ShareFile.Api.Client.FileSystem;
+using ShareFile.Api.Client.Requests.Providers;
 using System;
 using System.Collections.Generic;
 

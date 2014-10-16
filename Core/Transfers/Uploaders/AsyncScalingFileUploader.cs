@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.FileSystem;
+using ShareFile.Api.Client.Requests.Providers;
 using ShareFile.Api.Client.Security.Cryptography;
 
 namespace ShareFile.Api.Client.Transfers.Uploaders
@@ -62,6 +63,8 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         private async Task ExecuteChunkUploadMessage(HttpRequestMessage requestMessage)
         {
+            BaseRequestProvider.TryAddCookies(Client, requestMessage);
+
             using(var responseMessage = await GetHttpClient().SendAsync(requestMessage))
             {
                 string response = await responseMessage.Content.ReadAsStringAsync();

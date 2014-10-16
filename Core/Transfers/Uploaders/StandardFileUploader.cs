@@ -29,6 +29,9 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     var httpClient = GetHttpClient();
                     var boundaryGuid = "upload-" + Guid.NewGuid().ToString("N");
                     var requestMessage = new HttpRequestMessage(HttpMethod.Post, GetChunkUriForStandardUploads());
+
+                    BaseRequestProvider.TryAddCookies(Client, requestMessage);
+
                     var multipartFormContent = new MultipartFormDataContent(boundaryGuid);
 
                     var streamContent = new StreamContent(File.OpenRead(), MaxBufferLength);

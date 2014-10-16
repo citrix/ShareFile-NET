@@ -1,6 +1,7 @@
 ﻿using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.Extensions.Tasks;
 using ShareFile.Api.Client.FileSystem;
+using ShareFile.Api.Client.Requests.Providers;
 using ShareFile.Api.Client.Security.Cryptography;
 using ShareFile.Api.Models;
 using System;
@@ -37,6 +38,8 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         
         private void ExecuteChunkUploadMessage(HttpRequestMessage requestMessage)
         {
+            BaseRequestProvider.TryAddCookies(Client, requestMessage);
+
             using (var responseMessage = GetHttpClient().SendAsync(requestMessage).WaitForTask())
             {
                 DeserializeShareFileApiResponse<string>(responseMessage);

@@ -131,9 +131,18 @@ namespace ShareFile.Api.Client.Requests.Providers
                 }
             }
 
+            TryAddCookies(ShareFileClient, requestMessage);
+
+            ShareFileClient.Logging.Trace(watch);
+
+            return requestMessage;
+        }
+
+        internal static void TryAddCookies(ShareFileClient client, HttpRequestMessage requestMessage)
+        {
             if (RuntimeRequiresCustomCookieHandling)
             {
-                var cookieHeader = ShareFileClient.CookieContainer.GetCookieHeader(
+                var cookieHeader = client.CookieContainer.GetCookieHeader(
                     new Uri("https://www." + requestMessage.RequestUri.Host + requestMessage.RequestUri.AbsolutePath));
 
                 if (!string.IsNullOrWhiteSpace(cookieHeader))
@@ -142,17 +151,13 @@ namespace ShareFile.Api.Client.Requests.Providers
                 }
                 else
                 {
-                    cookieHeader = ShareFileClient.CookieContainer.GetCookieHeader(requestMessage.RequestUri);
+                    cookieHeader = client.CookieContainer.GetCookieHeader(requestMessage.RequestUri);
                     if (!string.IsNullOrEmpty(cookieHeader))
                     {
                         requestMessage.Headers.Add("Cookie", cookieHeader);
                     }
                 }
             }
-
-            ShareFileClient.Logging.Trace(watch);
-
-            return requestMessage;
         }
 
         protected T DeserializeStream<T>(Stream stream)

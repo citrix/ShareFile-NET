@@ -65,6 +65,9 @@ namespace ShareFile.Api.Client.Requests.Providers
                 if (typeof(T).IsSubclassOf(typeof(ODataObject)))
                 {
                     var result = DeserializeStream<ODataObject>(responseStream);
+
+                    CheckAsyncOperationScheduled(result);
+
                     LogResponse(result, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode);
                     ShareFileClient.Logging.Trace(watch);
 
@@ -319,7 +322,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                     var responseStream = httpResponseMessage.Content.ReadAsStreamAsync().WaitForTask();
                     if (responseStream != null)
                     {
-                        var asyncOperation = DeserializeStream<AsyncOperation>(responseStream);
+                        var asyncOperation = DeserializeStream<ODataFeed<AsyncOperation>>(responseStream);
 
                         throw new AsyncOperationScheduledException(asyncOperation);
                     }

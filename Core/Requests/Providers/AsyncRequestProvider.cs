@@ -216,6 +216,8 @@ namespace ShareFile.Api.Client.Requests.Providers
                 {
                     var result = await DeserializeStreamAsync<T>(responseStream).ConfigureAwait(false);
 
+                    CheckAsyncOperationScheduled(result);
+
                     LogResponseAsync(result, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode).ConfigureAwait(false);
 
                     ShareFileClient.Logging.Trace(watch);
@@ -353,7 +355,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                     if (responseStream != null)
                     {
                         var asyncOperation =
-                            await DeserializeStreamAsync<AsyncOperation>(responseStream).ConfigureAwait(false);
+                            await DeserializeStreamAsync<ODataFeed<AsyncOperation>>(responseStream).ConfigureAwait(false);
 
                         throw new AsyncOperationScheduledException(asyncOperation);
                     }

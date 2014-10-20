@@ -328,15 +328,20 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
 
         protected HttpResponseMessage GenerateAsyncOperationScheduled()
         {
-            return new HttpResponseMessage(HttpStatusCode.Accepted)
+            var operations = new ODataFeed<AsyncOperation>();
+            operations.Feed = new List<AsyncOperation>
             {
-                Content = new StringContent(JsonConvert.SerializeObject(new AsyncOperation
+                new AsyncOperation
                 {
                     BatchID = GetId(10),
                     BatchSourceID = GetId(),
                     BatchProgress = 0,
-                    BatchState = SafeEnum<AsyncOperationState>.Create(AsyncOperationState.Scheduled)
-                }), Encoding.UTF8, "application/json")
+                    BatchState = AsyncOperationState.Scheduled
+                }
+            };
+            return new HttpResponseMessage(HttpStatusCode.Accepted)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(operations), Encoding.UTF8, "application/json")
             };
         }
 

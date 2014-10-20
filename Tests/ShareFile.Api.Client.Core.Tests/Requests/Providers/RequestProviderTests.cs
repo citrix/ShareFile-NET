@@ -14,12 +14,12 @@ using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Requests.Executors;
+using ShareFile.Api.Client.Requests.Filters;
 using ShareFile.Api.Models;
+using System.Collections.Generic;
 
 namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
 {
-    using ShareFile.Api.Client.Requests.Filters;
-
     public class RequestProviderTests : BaseTests
     {
         [TestCase(true, TestName = "Query_ItemNotFound_Async")]

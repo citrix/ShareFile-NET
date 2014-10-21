@@ -35,6 +35,59 @@ namespace ShareFile.Api.Client.Entities.Extensions
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
+        
+        /// <summary>
+        /// Get EnsSubscriber Configuration
+        /// </summary>
+        /// <returns>
+        /// EnsSubscriber Configuration
+        /// </returns>
+        public static IQuery<EnsSubscriberConfiguration> GetEnsSubscriberConfiguration(this IAccountsEntity entity)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<EnsSubscriberConfiguration>(entity.Client);
+		    sfApiQuery.From("Accounts");
+		    sfApiQuery.Action("GetEnsSubscriberConfiguration");
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Enable ENS for the Account
+        /// </summary>
+        public static IQuery EnableEns(this IAccountsEntity entity)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(entity.Client);
+		    sfApiQuery.From("Accounts");
+		    sfApiQuery.Action("EnableEns");
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Disable ENS for account
+        /// </summary>
+        public static IQuery DisableEns(this IAccountsEntity entity)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(entity.Client);
+		    sfApiQuery.From("Accounts");
+		    sfApiQuery.Action("DisableEns");
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Update Account Preferences
+        /// </summary>
+        /// <example>
+        /// {
+        /// "Preferences": {
+        /// "LoginFailLockoutSecs": 60,
+        /// }
+        /// }
+        /// </example>
+        /// <returns>
+        /// Account
+        /// </returns>
         public static IQuery<Account> Update(this IAccountsEntity entity, Account account)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Account>(entity.Client);
@@ -43,6 +96,16 @@ namespace ShareFile.Api.Client.Entities.Extensions
             sfApiQuery.HttpMethod = "PATCH";	
 		    return sfApiQuery;
         }
+        
+        /// <summary>
+        /// Assign Subdomain to Account
+        /// </summary>
+        /// <example>
+        /// {
+        /// "subdomain":"TheSubdomain"
+        /// }
+        /// </example>
+        /// <param name="subdomain"></param>
         public static IQuery CreateAssignSubdomain(this IAccountsEntity entity, string subdomain)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(entity.Client);

@@ -25,6 +25,7 @@ namespace ShareFile.Api.Models
         OneDriveConnector = 128,
         GoogleDriveConnector = 256,
         ExchangeConnector = 512,
-        GenericConnector = 1024
+        GenericConnector = 1024,
+        OneDriveBusinessConnector = 2048
     }
 }

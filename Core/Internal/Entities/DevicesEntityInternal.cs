@@ -18,7 +18,7 @@ using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Client.Entities
 {
-    public interface IDevicesEntity : IEntityBase
+    public interface IDevicesEntityInternal : IEntityBase
     {
         
         /// <summary>
@@ -37,7 +37,15 @@ namespace ShareFile.Api.Client.Entities
         /// Device
         /// </returns>
         IQuery<Device> Get(Uri url);
-        IQuery<ODataFeed<DeviceUser>> GetByUser(Uri url);
+        
+        /// <summary>
+        /// Get Devices for given User
+        /// </summary>
+        /// <param name="parentUrl"></param>
+        /// <returns>
+        /// List of Devices
+        /// </returns>
+        IQuery<ODataFeed<DeviceUser>> GetByUser(Uri parentUrl);
         
         /// <summary>
         /// Delete Device
@@ -47,8 +55,33 @@ namespace ShareFile.Api.Client.Entities
         /// no data on success
         /// </returns>
         IQuery Delete(Uri url);
-        IQuery DeleteByUser(Uri url, string deviceId);
-        IQuery<DeviceUser> CreateByUser(Uri url, DeviceUser du);
+        
+        /// <summary>
+        /// Delete specific Device for given User
+        /// </summary>
+        /// <param name="parentUrl"></param>
+        /// <param name="id"></param>
+        /// <returns>
+        /// No content
+        /// </returns>
+        IQuery DeleteByUser(Uri parentUrl, string id);
+        
+        /// <summary>
+        /// Create Device for User
+        /// </summary>
+        /// <example>
+        /// {
+        /// "Device":{"id":"deviceId"},
+        /// "FriendlyName":"fname",
+        /// "ToolRaw":"toolRaw",
+        /// "ToolVersion":"toolVersion"
+        /// }
+        /// </example>
+        /// <param name="parentUrl"></param>
+        /// <returns>
+        /// Created Device
+        /// </returns>
+        IQuery<DeviceUser> CreateByUser(Uri parentUrl, DeviceUser du);
         
         /// <summary>
         /// Wipe Device
@@ -107,9 +140,9 @@ namespace ShareFile.Api.Client.Entities
         IQuery<DeviceStatus> Status(Uri deviceUrl, bool singlePlane = false);
     }
 
-    public class DevicesEntity : EntityBase, IDevicesEntity
+    public class DevicesEntityInternal : EntityBase, IDevicesEntityInternal
     {
-        public DevicesEntity (IShareFileClient client)
+        public DevicesEntityInternal (IShareFileClient client)
             : base (client, "Devices")
         { }
         
@@ -142,11 +175,19 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
-        public IQuery<ODataFeed<DeviceUser>> GetByUser(Uri url)
+        
+        /// <summary>
+        /// Get Devices for given User
+        /// </summary>
+        /// <param name="parentUrl"></param>
+        /// <returns>
+        /// List of Devices
+        /// </returns>
+        public IQuery<ODataFeed<DeviceUser>> GetByUser(Uri parentUrl)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<DeviceUser>>(Client);
 		    sfApiQuery.Action("Devices");
-            sfApiQuery.Uri(url);
+            sfApiQuery.Uri(parentUrl);
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
@@ -165,20 +206,45 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "DELETE";	
 		    return sfApiQuery;
         }
-        public IQuery DeleteByUser(Uri url, string deviceId)
+        
+        /// <summary>
+        /// Delete specific Device for given User
+        /// </summary>
+        /// <param name="parentUrl"></param>
+        /// <param name="id"></param>
+        /// <returns>
+        /// No content
+        /// </returns>
+        public IQuery DeleteByUser(Uri parentUrl, string id)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 		    sfApiQuery.Action("Devices");
-            sfApiQuery.Uri(url);
-            sfApiQuery.ActionIds(deviceId);
+            sfApiQuery.Uri(parentUrl);
+            sfApiQuery.ActionIds(id);
             sfApiQuery.HttpMethod = "DELETE";	
 		    return sfApiQuery;
         }
-        public IQuery<DeviceUser> CreateByUser(Uri url, DeviceUser du)
+        
+        /// <summary>
+        /// Create Device for User
+        /// </summary>
+        /// <example>
+        /// {
+        /// "Device":{"id":"deviceId"},
+        /// "FriendlyName":"fname",
+        /// "ToolRaw":"toolRaw",
+        /// "ToolVersion":"toolVersion"
+        /// }
+        /// </example>
+        /// <param name="parentUrl"></param>
+        /// <returns>
+        /// Created Device
+        /// </returns>
+        public IQuery<DeviceUser> CreateByUser(Uri parentUrl, DeviceUser du)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<DeviceUser>(Client);
 		    sfApiQuery.Action("Devices");
-            sfApiQuery.Uri(url);
+            sfApiQuery.Uri(parentUrl);
             sfApiQuery.Body = du;
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;

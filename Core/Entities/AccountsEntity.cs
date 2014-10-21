@@ -106,7 +106,21 @@ namespace ShareFile.Api.Client.Entities
         /// The current mobile security configuration for this account
         /// </returns>
         IQuery<MobileSecuritySettings> GetMobileSecuritySettings();
+        
+        /// <summary>
+        /// Get Account Product Defaults
+        /// </summary>
+        /// <returns>
+        /// Account defaults
+        /// </returns>
         IQuery<ProductDefaults> GetProductDefaults();
+        
+        /// <summary>
+        /// Get Account Preferences
+        /// </summary>
+        /// <returns>
+        /// Account preferences
+        /// </returns>
         IQuery<AccountPreferences> GetPreferences();
         
         /// <summary>
@@ -360,13 +374,6 @@ namespace ShareFile.Api.Client.Entities
         IQuery<FindSubdomainResult> FindSubdomain(FindSubdomainParams findSubdomainParams, bool singlePlane = false);
         
         /// <summary>
-        /// Get ENS Subscriber Configuration
-        /// </summary>
-        IQuery<EnsSubscriberConfiguration> GetEnsSubscriberConfiguration();
-        IQuery EnableEns();
-        IQuery DisableEns();
-        
-        /// <summary>
         /// Get SSO Info
         /// </summary>
         /// <param name="subdomain"></param>
@@ -519,6 +526,13 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
+        
+        /// <summary>
+        /// Get Account Product Defaults
+        /// </summary>
+        /// <returns>
+        /// Account defaults
+        /// </returns>
         public IQuery<ProductDefaults> GetProductDefaults()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ProductDefaults>(Client);
@@ -527,6 +541,13 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
+        
+        /// <summary>
+        /// Get Account Preferences
+        /// </summary>
+        /// <returns>
+        /// Account preferences
+        /// </returns>
         public IQuery<AccountPreferences> GetPreferences()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AccountPreferences>(Client);
@@ -909,34 +930,6 @@ namespace ShareFile.Api.Client.Entities
 		    sfApiQuery.Action("FindSubdomain");
             sfApiQuery.QueryString("singlePlane", singlePlane);
             sfApiQuery.Body = findSubdomainParams;
-            sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
-        }
-        
-        /// <summary>
-        /// Get ENS Subscriber Configuration
-        /// </summary>
-        public IQuery<EnsSubscriberConfiguration> GetEnsSubscriberConfiguration()
-        {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<EnsSubscriberConfiguration>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("GetEnsSubscriberConfiguration");
-            sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
-        }
-        public IQuery EnableEns()
-        {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("EnableEns");
-            sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
-        }
-        public IQuery DisableEns()
-        {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("DisableEns");
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }

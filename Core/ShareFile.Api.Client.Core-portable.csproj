@@ -62,9 +62,7 @@
     <Compile Include="Entities\AccountsEntity.cs" />
     <Compile Include="Entities\AsyncOperationsEntity.cs" />
     <Compile Include="Entities\CapabilitiesEntity.cs" />
-    <Compile Include="Entities\ConfigsEntity.cs" />
     <Compile Include="Entities\ConnectorGroupsEntity.cs" />
-    <Compile Include="Entities\DevicesEntity.cs" />
     <Compile Include="Entities\EntityBase.cs" />
     <Compile Include="Entities\FavoriteFoldersEntity.cs" />
     <Compile Include="Entities\GroupsEntity.cs" />
@@ -112,6 +110,7 @@
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\AccountPreferences.cs" />
     <Compile Include="Models\AccountUser.cs" />
+    <Compile Include="Models\AddressListType.cs" />
     <Compile Include="Models\AdvancedSearchResults.cs" />
     <Compile Include="Models\AsyncOperation.cs" />
     <Compile Include="Models\AsyncOperationState.cs" />
@@ -260,12 +259,15 @@
     <Compile Include="Transfers\TransfererBase.cs" />
     <Compile Include="Transfers\TransferEventArgs.cs" />
     <Compile Include="Transfers\TransferProgress.cs" />
+    <Compile Include="Transfers\Uploaders\AsyncScalingFileUploader.cs" />
     <Compile Include="Transfers\Uploaders\AsyncSemaphone.cs" />
     <Compile Include="Transfers\Uploaders\AsyncStandardFileUploader.cs" />
     <Compile Include="Transfers\Uploaders\AsyncThreadedFileUploader.cs" />
     <Compile Include="Transfers\Uploaders\AsyncUploaderBase.cs" />
     <Compile Include="Transfers\Uploaders\FilePart.cs" />
     <Compile Include="Transfers\Uploaders\FileUploaderConfig.cs" />
+    <Compile Include="Transfers\Uploaders\ScalingFileUploader.cs" />
+    <Compile Include="Transfers\Uploaders\ScalingPartUploader.cs" />
     <Compile Include="Transfers\Uploaders\StandardFileUploader.cs" />
     <Compile Include="Transfers\Uploaders\SyncUploaderBase.cs" />
     <Compile Include="Transfers\Uploaders\ThreadedFileUploader.cs" />

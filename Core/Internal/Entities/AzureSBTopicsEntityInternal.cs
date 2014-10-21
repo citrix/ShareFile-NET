@@ -20,11 +20,48 @@ namespace ShareFile.Api.Client.Entities
 {
     public interface IAzureSBTopicsEntityInternal : IEntityBase
     {
-        IQuery<AzureSBTopicsResponse> CheckIfTopicExists(Uri url);
-        IQuery CreateTopic(Uri url);
-        IQuery<AzureSBTopicsEndPointInfo> GetTopicEndPoint(Uri url, string id);
-        IQuery RegenerateTopicCredentials(Uri url);
-        IQuery DeleteTopic(Uri url);
+        
+        /// <summary>
+        /// Check if Topic exists in namespace
+        /// </summary>
+        /// <param name="parentUrl"></param>
+        IQuery<AzureSBTopicsResponse> CheckIfTopicExists(Uri parentUrl);
+        
+        /// <summary>
+        /// Create Topic in namespace
+        /// During Topic creation, it creates Manager, Send and Listen access policies
+        /// Send policy will be used by Publishers and Listens policy will be used by Subscribers
+        /// </summary>
+        /// <param name="parentUrl"></param>
+        /// <returns>
+        /// True if creation successful, else returns false
+        /// </returns>
+        IQuery CreateTopic(Uri parentUrl);
+        
+        /// <summary>
+        /// Get restricted end-point credentials on Topic
+        /// </summary>
+        /// <param name="parentUrl"></param>
+        /// <param name="id"></param>
+        /// <returns>
+        /// Associate end-point credentials for specified policy
+        /// </returns>
+        IQuery<AzureSBTopicsEndPointInfo> GetTopicEndPoint(Uri parentUrl, string id);
+        
+        /// <summary>
+        /// Regenerate Topics Access policies
+        /// </summary>
+        /// <param name="parentUrl"></param>
+        /// <returns>
+        /// Returns true if succeed, else returns false
+        /// </returns>
+        IQuery RegenerateTopicCredentials(Uri parentUrl);
+        
+        /// <summary>
+        /// Delete Topic from namespace
+        /// </summary>
+        /// <param name="parentUrl"></param>
+        IQuery DeleteTopic(Uri parentUrl);
     }
 
     public class AzureSBTopicsEntityInternal : EntityBase, IAzureSBTopicsEntityInternal
@@ -33,44 +70,81 @@ namespace ShareFile.Api.Client.Entities
             : base (client, "AzureSBTopics")
         { }
         
-        public IQuery<AzureSBTopicsResponse> CheckIfTopicExists(Uri url)
+        
+        /// <summary>
+        /// Check if Topic exists in namespace
+        /// </summary>
+        /// <param name="parentUrl"></param>
+        public IQuery<AzureSBTopicsResponse> CheckIfTopicExists(Uri parentUrl)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AzureSBTopicsResponse>(Client);
 		    sfApiQuery.Action("CheckIfTopicExists");
-            sfApiQuery.Uri(url);
+            sfApiQuery.Uri(parentUrl);
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
-        public IQuery CreateTopic(Uri url)
+        
+        /// <summary>
+        /// Create Topic in namespace
+        /// During Topic creation, it creates Manager, Send and Listen access policies
+        /// Send policy will be used by Publishers and Listens policy will be used by Subscribers
+        /// </summary>
+        /// <param name="parentUrl"></param>
+        /// <returns>
+        /// True if creation successful, else returns false
+        /// </returns>
+        public IQuery CreateTopic(Uri parentUrl)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 		    sfApiQuery.Action("CreateTopic");
-            sfApiQuery.Uri(url);
+            sfApiQuery.Uri(parentUrl);
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
-        public IQuery<AzureSBTopicsEndPointInfo> GetTopicEndPoint(Uri url, string id)
+        
+        /// <summary>
+        /// Get restricted end-point credentials on Topic
+        /// </summary>
+        /// <param name="parentUrl"></param>
+        /// <param name="id"></param>
+        /// <returns>
+        /// Associate end-point credentials for specified policy
+        /// </returns>
+        public IQuery<AzureSBTopicsEndPointInfo> GetTopicEndPoint(Uri parentUrl, string id)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AzureSBTopicsEndPointInfo>(Client);
 		    sfApiQuery.Action("GetTopicEndPoint");
-            sfApiQuery.Uri(url);
+            sfApiQuery.Uri(parentUrl);
             sfApiQuery.ActionIds(id);
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
-        public IQuery RegenerateTopicCredentials(Uri url)
+        
+        /// <summary>
+        /// Regenerate Topics Access policies
+        /// </summary>
+        /// <param name="parentUrl"></param>
+        /// <returns>
+        /// Returns true if succeed, else returns false
+        /// </returns>
+        public IQuery RegenerateTopicCredentials(Uri parentUrl)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 		    sfApiQuery.Action("RegenerateTopicCredentials");
-            sfApiQuery.Uri(url);
+            sfApiQuery.Uri(parentUrl);
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
-        public IQuery DeleteTopic(Uri url)
+        
+        /// <summary>
+        /// Delete Topic from namespace
+        /// </summary>
+        /// <param name="parentUrl"></param>
+        public IQuery DeleteTopic(Uri parentUrl)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 		    sfApiQuery.Action("DeleteTopic");
-            sfApiQuery.Uri(url);
+            sfApiQuery.Uri(parentUrl);
             sfApiQuery.HttpMethod = "DELETE";	
 		    return sfApiQuery;
         }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
+using ShareFile.Api.Models;
 using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.Extensions.Tasks;
 using ShareFile.Api.Client.FileSystem;
@@ -79,34 +80,58 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
             return HashProvider.GetComputedHashAsString();
         }
+        
+        protected UploadSpecification SetUploadSpecification()
+        {
+            if (UploadSpecification == null)
+            {
+                UploadSpecification = CreateUploadSpecificationQuery(UploadSpecificationRequest).Execute();
+            }
+            return UploadSpecification;
+        }
 
         protected UploadResponse GetUploadResponse(HttpResponseMessage responseMessage)
         {
             if (responseMessage.IsSuccessStatusCode)
             {
-                using (var responseStream = responseMessage.Content.ReadAsStreamAsync().WaitForTask())
-                using (var textReader = new JsonTextReader(new StreamReader(responseStream)))
-                {
-                    var uploadResponse = new JsonSerializer().Deserialize<ShareFileApiResponse<UploadResponse>>(textReader);
-
-                    if (uploadResponse.Error)
-                    {
-                        throw new UploadException(uploadResponse.ErrorMessage, uploadResponse.ErrorCode);
-                    }
-
-                    return uploadResponse.Value;
-                }
+                return DeserializeShareFileApiResponse<UploadResponse>(responseMessage);
             }
 
             throw new UploadException("Error completing upload.", -1);
         }
 
+        protected T DeserializeShareFileApiResponse<T>(HttpResponseMessage responseMessage)
+        {
+            string response = responseMessage.Content.ReadAsStringAsync().WaitForTask();
+            try
+            {
+                using (var rdr = new JsonTextReader(new StringReader(response)))
+                {
+                    var result = new JsonSerializer().Deserialize<ShareFileApiResponse<T>>(rdr);
+                    if (result.Error)
+                        throw new UploadException(result.ErrorMessage, result.ErrorCode);
+                    else
+                        return result.Value;
+                }
+            }
+            catch (JsonSerializationException jEx)
+            {
+                throw new UploadException("StorageCenter error: " + response, -1, jEx);
+            }
+        }
+
+        private HttpClient httpClient;
+
         protected internal override HttpClient GetHttpClient()
         {
-            return new HttpClient(GetHttpClientHandler())
+            if(httpClient == null)
             {
-                Timeout = new TimeSpan(0, 0, 0, 0, Config.HttpTimeout)
-            };
+                httpClient = new HttpClient(GetHttpClientHandler())
+                {
+                    Timeout = new TimeSpan(0, 0, 0, 0, Config.HttpTimeout)
+                };
+            }
+            return httpClient;
         }
     }
 }

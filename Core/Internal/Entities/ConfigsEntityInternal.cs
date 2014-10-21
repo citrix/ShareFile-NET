@@ -18,35 +18,35 @@ using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Client.Entities
 {
-    public interface IBillingEntityInternal : IEntityBase
+    public interface IConfigsEntityInternal : IEntityBase
     {
         
         /// <summary>
-        /// Get Billing
+        /// Get Configs
         /// </summary>
         /// <returns>
-        /// Billing
+        /// List of GenericConfg
         /// </returns>
-        IQuery<Billing> Get();
+        IQuery<ODataFeed<GenericConfig>> Get();
     }
 
-    public class BillingEntityInternal : EntityBase, IBillingEntityInternal
+    public class ConfigsEntityInternal : EntityBase, IConfigsEntityInternal
     {
-        public BillingEntityInternal (IShareFileClient client)
-            : base (client, "Billing")
+        public ConfigsEntityInternal (IShareFileClient client)
+            : base (client, "Configs")
         { }
         
         
         /// <summary>
-        /// Get Billing
+        /// Get Configs
         /// </summary>
         /// <returns>
-        /// Billing
+        /// List of GenericConfg
         /// </returns>
-        public IQuery<Billing> Get()
+        public IQuery<ODataFeed<GenericConfig>> Get()
         {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Billing>(Client);
-		    sfApiQuery.From("Billing");
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<GenericConfig>>(Client);
+		    sfApiQuery.From("Configs");
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }

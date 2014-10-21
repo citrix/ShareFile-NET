@@ -56,6 +56,7 @@ namespace ShareFile.Api.Client.Entities
         /// }
         /// </example>
         /// <remarks>
+        /// Creates a new Customer User and associates it to an Account
         /// The following parameters from the input object are used: Email, FirstName, LastName, Company,
         /// DefaultZone, Password, Preferences.CanResetPassword and Preferences.CanViewMySettingsOther parameters are ignored
         /// </remarks>
@@ -104,11 +105,11 @@ namespace ShareFile.Api.Client.Entities
         /// }
         /// </example>
         /// <remarks>
-        /// Create a new Employee user (AccountUser)
+        /// Creates a new Employee User (AccountUser) and associates it to an Account
         /// The following parameters from the input object are used: Email, FirstName, LastName, Company,
         /// DefaultZone, Password, IsEmployee, IsAdministrator, CanCreateFolders, CanUseFileBox, CanManageUsers,
         /// Preferences.CanResetPassword and Preferences.CanViewMySettings.
-        /// Other parameters are ignoredStorageQuotaLimitGB parameter is optional. If not specified or equal to -1 the account default storage quota value will be set for the user.
+        /// Other parameters are ignoredStorageQuotaLimitGB parameter is optional. If not specified or equal to -1 the account default storage quota value will be set for the User.
         /// </remarks>
         /// <param name="user"></param>
         /// <param name="pushCreatorDefaultSettings"></param>
@@ -247,7 +248,23 @@ namespace ShareFile.Api.Client.Entities
         /// A folder record representing the requesting user home folder
         /// </returns>
         IQuery<Item> GetHomeFolder(Uri url);
+        
+        /// <summary>
+        /// Get User's top Folder
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns>
+        /// User's Top Folders
+        /// </returns>
         IQuery<ODataFeed<Item>> TopFolders(Uri url);
+        
+        /// <summary>
+        /// Get User's FileBox folder
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns>
+        /// User's FileBox
+        /// </returns>
         IQuery<ODataFeed<Item>> Box(Uri url);
         
         /// <summary>
@@ -262,6 +279,22 @@ namespace ShareFile.Api.Client.Entities
         /// the user selected preferences
         /// </returns>
         IQuery<UserPreferences> GetPreferences(Uri url);
+        
+        /// <summary>
+        /// Update User Preferences
+        /// </summary>
+        /// <example>
+        /// {
+        /// "EnableFlashUpload":"true",
+        /// "EnableJavaUpload":"true"
+        /// .
+        /// .
+        /// .
+        /// }
+        /// </example>
+        /// <param name="parentUrl"></param>
+        /// <param name="preferences"></param>
+        IQuery<UserPreferences> UpdatePreferences(Uri parentUrl, UserPreferences preferences);
         
         /// <summary>
         /// Get User Security
@@ -300,6 +333,16 @@ namespace ShareFile.Api.Client.Entities
         /// The modified user record
         /// </returns>
         IQuery<User> ResetPassword(Uri url, ODataObject properties, bool notify = false);
+        
+        /// <summary>
+        /// Forgot Password
+        /// </summary>
+        /// <remarks>
+        /// Triggers a reset password email
+        /// </remarks>
+        /// <param name="email"></param>
+        /// <param name="resetOnMobile"></param>
+        IQuery ForgotPassword(string email, bool resetOnMobile);
         
         /// <summary>
         /// Send Welcome Email
@@ -447,6 +490,7 @@ namespace ShareFile.Api.Client.Entities
         /// }
         /// </example>
         /// <remarks>
+        /// Creates a new Customer User and associates it to an Account
         /// The following parameters from the input object are used: Email, FirstName, LastName, Company,
         /// DefaultZone, Password, Preferences.CanResetPassword and Preferences.CanViewMySettingsOther parameters are ignored
         /// </remarks>
@@ -506,11 +550,11 @@ namespace ShareFile.Api.Client.Entities
         /// }
         /// </example>
         /// <remarks>
-        /// Create a new Employee user (AccountUser)
+        /// Creates a new Employee User (AccountUser) and associates it to an Account
         /// The following parameters from the input object are used: Email, FirstName, LastName, Company,
         /// DefaultZone, Password, IsEmployee, IsAdministrator, CanCreateFolders, CanUseFileBox, CanManageUsers,
         /// Preferences.CanResetPassword and Preferences.CanViewMySettings.
-        /// Other parameters are ignoredStorageQuotaLimitGB parameter is optional. If not specified or equal to -1 the account default storage quota value will be set for the user.
+        /// Other parameters are ignoredStorageQuotaLimitGB parameter is optional. If not specified or equal to -1 the account default storage quota value will be set for the User.
         /// </remarks>
         /// <param name="user"></param>
         /// <param name="pushCreatorDefaultSettings"></param>
@@ -700,6 +744,14 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
+        
+        /// <summary>
+        /// Get User's top Folder
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns>
+        /// User's Top Folders
+        /// </returns>
         public IQuery<ODataFeed<Item>> TopFolders(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
@@ -708,6 +760,14 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
+        
+        /// <summary>
+        /// Get User's FileBox folder
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns>
+        /// User's FileBox
+        /// </returns>
         public IQuery<ODataFeed<Item>> Box(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
@@ -734,6 +794,30 @@ namespace ShareFile.Api.Client.Entities
 		    sfApiQuery.Action("Preferences");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Update User Preferences
+        /// </summary>
+        /// <example>
+        /// {
+        /// "EnableFlashUpload":"true",
+        /// "EnableJavaUpload":"true"
+        /// .
+        /// .
+        /// .
+        /// }
+        /// </example>
+        /// <param name="parentUrl"></param>
+        /// <param name="preferences"></param>
+        public IQuery<UserPreferences> UpdatePreferences(Uri parentUrl, UserPreferences preferences)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<UserPreferences>(Client);
+		    sfApiQuery.Action("Preferences");
+            sfApiQuery.Uri(parentUrl);
+            sfApiQuery.Body = preferences;
+            sfApiQuery.HttpMethod = "PATCH";	
 		    return sfApiQuery;
         }
         
@@ -787,6 +871,25 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("notify", notify);
             sfApiQuery.Body = properties;
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Forgot Password
+        /// </summary>
+        /// <remarks>
+        /// Triggers a reset password email
+        /// </remarks>
+        /// <param name="email"></param>
+        /// <param name="resetOnMobile"></param>
+        public IQuery ForgotPassword(string email, bool resetOnMobile)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+		    sfApiQuery.From("Users");
+		    sfApiQuery.Action("ForgotPassword");
+            sfApiQuery.QueryString("email", email);
+            sfApiQuery.QueryString("resetOnMobile", resetOnMobile);
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }

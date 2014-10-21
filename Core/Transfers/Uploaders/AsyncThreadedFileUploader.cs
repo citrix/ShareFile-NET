@@ -208,7 +208,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 throw new ApplicationException(string.Format("Chunk {0} failed after 3 retries{1} Response: {2}", part.Index, Environment.NewLine, result.ErrorMessage), requestException);
             }
 
-            part.BytesUploaded = part.Bytes.Length;
             part.Bytes = null;
         }
 

@@ -18,7 +18,8 @@ namespace ShareFile.Api.Models
         Trial = 1,
         TrialExpired = 2,
         Paid = 3,
-        PaidExpired = 4
+        PaidExpired = 4,
+        Disabled = 5
     }
 #endif
 }

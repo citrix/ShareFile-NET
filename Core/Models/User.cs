@@ -46,6 +46,8 @@ namespace ShareFile.Api.Models
 
 		public string FullNameShort { get; set; }
 
+		public IEnumerable<string> Emails { get; set; }
+
 		public bool? IsConfirmed { get; set; }
 
 		public string Password { get; set; }
@@ -86,6 +88,7 @@ namespace ShareFile.Api.Models
 				LastName = typedSource.LastName;
 				DateCreated = typedSource.DateCreated;
 				FullNameShort = typedSource.FullNameShort;
+				Emails = typedSource.Emails;
 				IsConfirmed = typedSource.IsConfirmed;
 				Password = typedSource.Password;
 				Preferences = typedSource.Preferences;
@@ -147,6 +150,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("FullNameShort", out token) && token.Type != JTokenType.Null)
 				{
 					FullNameShort = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Emails", out token) && token.Type != JTokenType.Null)
+				{
+					Emails = (IEnumerable<string>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<string>));
 				}
 				if(source.TryGetProperty("IsConfirmed", out token) && token.Type != JTokenType.Null)
 				{

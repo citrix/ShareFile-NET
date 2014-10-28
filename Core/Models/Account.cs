@@ -211,6 +211,8 @@ namespace ShareFile.Api.Models
 
 		public IEnumerable<ToolInformation> ToolInformation { get; set; }
 
+		public BillingInfo BillingInformation { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -291,6 +293,7 @@ namespace ShareFile.Api.Models
 				MarketingOptIn = typedSource.MarketingOptIn;
 				CreditCardSecurityCode = typedSource.CreditCardSecurityCode;
 				ToolInformation = typedSource.ToolInformation;
+				BillingInformation = typedSource.BillingInformation;
 			}
 			else
 			{
@@ -582,6 +585,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("ToolInformation", out token) && token.Type != JTokenType.Null)
 				{
 					ToolInformation = (IEnumerable<ToolInformation>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<ToolInformation>));
+				}
+				if(source.TryGetProperty("BillingInformation", out token) && token.Type != JTokenType.Null)
+				{
+					BillingInformation = (BillingInfo)serializer.Deserialize(token.CreateReader(), typeof(BillingInfo));
 				}
 			}
 		}

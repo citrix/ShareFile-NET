@@ -342,7 +342,7 @@ namespace ShareFile.Api.Client.Entities
         /// </remarks>
         /// <param name="email"></param>
         /// <param name="resetOnMobile"></param>
-        IQuery ForgotPassword(string email, bool resetOnMobile);
+        IQuery ForgotPassword(string email, bool resetOnMobile = false);
         
         /// <summary>
         /// Send Welcome Email
@@ -883,7 +883,7 @@ namespace ShareFile.Api.Client.Entities
         /// </remarks>
         /// <param name="email"></param>
         /// <param name="resetOnMobile"></param>
-        public IQuery ForgotPassword(string email, bool resetOnMobile)
+        public IQuery ForgotPassword(string email, bool resetOnMobile = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 		    sfApiQuery.From("Users");

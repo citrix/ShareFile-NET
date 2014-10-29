@@ -345,6 +345,7 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
             var baseUri = "https://newhost.sharefile.com/sf/v3/";
             var redirection = new Redirection
             {
+                Available = true,
                 Uri = new Uri(baseUri)
             };
 

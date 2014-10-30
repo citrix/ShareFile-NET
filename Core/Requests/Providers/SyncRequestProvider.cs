@@ -80,10 +80,9 @@ namespace ShareFile.Api.Client.Requests.Providers
                         var redirection = result as Redirection;
 
                         if(!redirection.Available || redirection.Uri == null)
-                        {
                             throw new ZoneUnavailableException(httpResponseMessage.RequestMessage.RequestUri, "Destination zone is unavailable");
-                        }
-                        else if (httpResponseMessage.RequestMessage.RequestUri.GetAuthority() != redirection.Uri.GetAuthority())
+
+                        if (httpResponseMessage.RequestMessage.RequestUri.GetAuthority() != redirection.Uri.GetAuthority())
                         {
                             return Response.CreateAction<T>(ShareFileClient.OnChangeDomain(httpResponseMessage.RequestMessage, redirection));
                         }

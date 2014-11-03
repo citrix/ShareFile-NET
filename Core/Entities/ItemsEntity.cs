@@ -346,7 +346,7 @@ namespace ShareFile.Api.Client.Entities
         /// method will return an Asynchronous operation record instead. Note: the parameters listed in the
         /// body of the request are the only parameters that can be updated through this call.
         /// </returns>
-        IQuery<Item> Update(Uri url, Item item, string batchid = null, long batchSizeInBytes = 0, bool forceSync = false, bool scheduleAsync = true);
+        IQuery<Item> Update(Uri url, Item item, string batchid = null, long batchSizeInBytes = 0, bool forceSync = false, bool scheduleAsync = true, bool resolveFolderNameConflict = false);
         
         /// <summary>
         /// Update Link
@@ -1189,7 +1189,7 @@ namespace ShareFile.Api.Client.Entities
         /// method will return an Asynchronous operation record instead. Note: the parameters listed in the
         /// body of the request are the only parameters that can be updated through this call.
         /// </returns>
-        public IQuery<Item> Update(Uri url, Item item, string batchid = null, long batchSizeInBytes = 0, bool forceSync = false, bool scheduleAsync = true)
+        public IQuery<Item> Update(Uri url, Item item, string batchid = null, long batchSizeInBytes = 0, bool forceSync = false, bool scheduleAsync = true, bool resolveFolderNameConflict = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
             sfApiQuery.Uri(url);
@@ -1197,6 +1197,7 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.QueryString("batchSizeInBytes", batchSizeInBytes);
             sfApiQuery.QueryString("forceSync", forceSync);
             sfApiQuery.QueryString("scheduleAsync", scheduleAsync);
+            sfApiQuery.QueryString("resolveFolderNameConflict", resolveFolderNameConflict);
             sfApiQuery.Body = item;
             sfApiQuery.HttpMethod = "PATCH";	
 		    return sfApiQuery;

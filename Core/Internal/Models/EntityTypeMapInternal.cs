@@ -22,6 +22,8 @@ namespace ShareFile.Api.Client.Internal.Models
 				return;
             }
 
+            EntityTypeMap.AddEntity("AppliedPlanAddOns", typeof(AppliedPlanAddOns));
+            EntityTypeMap.AddEntity("AppliedPlanAddOnss", typeof(AppliedPlanAddOns));
             EntityTypeMap.AddEntity("Billing", typeof(Billing));
             EntityTypeMap.AddEntity("Billings", typeof(Billing));
             EntityTypeMap.AddEntity("PlanAddon", typeof(PlanAddon));
@@ -46,6 +48,10 @@ namespace ShareFile.Api.Client.Internal.Models
             EntityTypeMap.AddEntity("AzureSBTopicsEndPointInfos", typeof(AzureSBTopicsEndPointInfo));
             EntityTypeMap.AddEntity("AzureSBTopicsResponse", typeof(AzureSBTopicsResponse));
             EntityTypeMap.AddEntity("AzureSBTopicsResponses", typeof(AzureSBTopicsResponse));
+            EntityTypeMap.AddEntity("UsagePlan", typeof(UsagePlan));
+            EntityTypeMap.AddEntity("UsagePlans", typeof(UsagePlan));
+            EntityTypeMap.AddEntity("UsagePlanAddOn", typeof(UsagePlanAddOn));
+            EntityTypeMap.AddEntity("UsagePlanAddOns", typeof(UsagePlanAddOn));
 
             registered = true;
         }

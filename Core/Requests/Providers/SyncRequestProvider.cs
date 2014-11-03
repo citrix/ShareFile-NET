@@ -65,6 +65,9 @@ namespace ShareFile.Api.Client.Requests.Providers
                 if (typeof(T).IsSubclassOf(typeof(ODataObject)))
                 {
                     var result = DeserializeStream<ODataObject>(responseStream);
+
+                    CheckAsyncOperationScheduled(result);
+
                     LogResponse(result, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode);
                     ShareFileClient.Logging.Trace(watch);
 
@@ -78,6 +81,10 @@ namespace ShareFile.Api.Client.Requests.Providers
                     if (result is Redirection && typeof(T) != typeof(Redirection))
                     {
                         var redirection = result as Redirection;
+
+                        if(!redirection.Available || redirection.Uri == null)
+                            throw new ZoneUnavailableException(httpResponseMessage.RequestMessage.RequestUri, "Destination zone is unavailable");
+
                         if (httpResponseMessage.RequestMessage.RequestUri.GetAuthority() != redirection.Uri.GetAuthority())
                         {
                             return Response.CreateAction<T>(ShareFileClient.OnChangeDomain(httpResponseMessage.RequestMessage, redirection));
@@ -319,7 +326,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                     var responseStream = httpResponseMessage.Content.ReadAsStreamAsync().WaitForTask();
                     if (responseStream != null)
                     {
-                        var asyncOperation = DeserializeStream<AsyncOperation>(responseStream);
+                        var asyncOperation = DeserializeStream<ODataFeed<AsyncOperation>>(responseStream);
 
                         throw new AsyncOperationScheduledException(asyncOperation);
                     }

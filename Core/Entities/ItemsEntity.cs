@@ -346,7 +346,7 @@ namespace ShareFile.Api.Client.Entities
         /// method will return an Asynchronous operation record instead. Note: the parameters listed in the
         /// body of the request are the only parameters that can be updated through this call.
         /// </returns>
-        IQuery<Item> Update(Uri url, Item item, string batchid = null, long batchSizeInBytes = 0, bool forceSync = false, bool scheduleAsync = true);
+        IQuery<Item> Update(Uri url, Item item, string batchid = null, long batchSizeInBytes = 0, bool forceSync = false, bool scheduleAsync = true, bool resolveFolderNameConflict = false);
         
         /// <summary>
         /// Update Link
@@ -591,10 +591,13 @@ namespace ShareFile.Api.Client.Entities
         /// Search for Items matching the criteria of the query parameter
         /// </remarks>
         /// <param name="query"></param>
+        /// <param name="maxResults"></param>
+        /// <param name="skip"></param>
+        /// <param name="homeFolderOnly"></param>
         /// <returns>
         /// SearchResults
         /// </returns>
-        IQuery<SearchResults> Search(string query);
+        IQuery<SearchResults> Search(string query, int maxResults = 50, int skip = 0, bool homeFolderOnly = false);
         
         /// <summary>
         /// Advanced Simple Search
@@ -602,20 +605,19 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "Query":{
-        /// "AuthID":"",
         /// "ItemType":"",
         /// "ParentID":"",
         /// "CreatorID":"",
-        /// "LuceneQuery":"",
         /// "SearchQuery":"",
         /// "CreateStartDate":"",
         /// "CreateEndDate":"",
-        /// "ItemNameOnly":"",
+        /// "ItemNameOnly":false
         /// },
         /// "Paging":{
-        /// "Key":"",
-        /// "PageNumber":1,
-        /// "PageSize":10,
+        /// "PageNumber":1, (Deprecated)
+        /// "PageSize":10, (Deprecated)
+        /// "Count": 50
+        /// "Skip": 0
         /// },
         /// "Sort":{
         /// "SortBy":"",
@@ -639,20 +641,19 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "Query":{
-        /// "AuthIDs":["id1", "id2", ...],
         /// "ItemTypes":["type1", "type2", ...],
         /// "ParentID":["id1", "id2", ...],
         /// "CreatorID":["id1", "id2", ...],
-        /// "LuceneQuery":"",
         /// "SearchQuery":"",
         /// "CreateStartDate":"",
         /// "CreateEndDate":"",
-        /// "ItemNameOnly":"",
+        /// "ItemNameOnly":false
         /// },
         /// "Paging":{
-        /// "Key":"",
-        /// "PageNumber":1,
-        /// "PageSize":10,
+        /// "PageNumber":1, (deprecated)
+        /// "PageSize":10, (deprecated)
+        /// "Count":50,
+        /// "Skip":0
         /// },
         /// "Sort":{
         /// "SortBy":"",
@@ -1188,7 +1189,7 @@ namespace ShareFile.Api.Client.Entities
         /// method will return an Asynchronous operation record instead. Note: the parameters listed in the
         /// body of the request are the only parameters that can be updated through this call.
         /// </returns>
-        public IQuery<Item> Update(Uri url, Item item, string batchid = null, long batchSizeInBytes = 0, bool forceSync = false, bool scheduleAsync = true)
+        public IQuery<Item> Update(Uri url, Item item, string batchid = null, long batchSizeInBytes = 0, bool forceSync = false, bool scheduleAsync = true, bool resolveFolderNameConflict = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
             sfApiQuery.Uri(url);
@@ -1196,6 +1197,7 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.QueryString("batchSizeInBytes", batchSizeInBytes);
             sfApiQuery.QueryString("forceSync", forceSync);
             sfApiQuery.QueryString("scheduleAsync", scheduleAsync);
+            sfApiQuery.QueryString("resolveFolderNameConflict", resolveFolderNameConflict);
             sfApiQuery.Body = item;
             sfApiQuery.HttpMethod = "PATCH";	
 		    return sfApiQuery;
@@ -1568,15 +1570,21 @@ namespace ShareFile.Api.Client.Entities
         /// Search for Items matching the criteria of the query parameter
         /// </remarks>
         /// <param name="query"></param>
+        /// <param name="maxResults"></param>
+        /// <param name="skip"></param>
+        /// <param name="homeFolderOnly"></param>
         /// <returns>
         /// SearchResults
         /// </returns>
-        public IQuery<SearchResults> Search(string query)
+        public IQuery<SearchResults> Search(string query, int maxResults = 50, int skip = 0, bool homeFolderOnly = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<SearchResults>(Client);
 		    sfApiQuery.From("Items");
 		    sfApiQuery.Action("Search");
             sfApiQuery.QueryString("query", query);
+            sfApiQuery.QueryString("maxResults", maxResults);
+            sfApiQuery.QueryString("skip", skip);
+            sfApiQuery.QueryString("homeFolderOnly", homeFolderOnly);
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
@@ -1587,20 +1595,19 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "Query":{
-        /// "AuthID":"",
         /// "ItemType":"",
         /// "ParentID":"",
         /// "CreatorID":"",
-        /// "LuceneQuery":"",
         /// "SearchQuery":"",
         /// "CreateStartDate":"",
         /// "CreateEndDate":"",
-        /// "ItemNameOnly":"",
+        /// "ItemNameOnly":false
         /// },
         /// "Paging":{
-        /// "Key":"",
-        /// "PageNumber":1,
-        /// "PageSize":10,
+        /// "PageNumber":1, (Deprecated)
+        /// "PageSize":10, (Deprecated)
+        /// "Count": 50
+        /// "Skip": 0
         /// },
         /// "Sort":{
         /// "SortBy":"",
@@ -1632,20 +1639,19 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "Query":{
-        /// "AuthIDs":["id1", "id2", ...],
         /// "ItemTypes":["type1", "type2", ...],
         /// "ParentID":["id1", "id2", ...],
         /// "CreatorID":["id1", "id2", ...],
-        /// "LuceneQuery":"",
         /// "SearchQuery":"",
         /// "CreateStartDate":"",
         /// "CreateEndDate":"",
-        /// "ItemNameOnly":"",
+        /// "ItemNameOnly":false
         /// },
         /// "Paging":{
-        /// "Key":"",
-        /// "PageNumber":1,
-        /// "PageSize":10,
+        /// "PageNumber":1, (deprecated)
+        /// "PageSize":10, (deprecated)
+        /// "Count":50,
+        /// "Skip":0
         /// },
         /// "Sort":{
         /// "SortBy":"",

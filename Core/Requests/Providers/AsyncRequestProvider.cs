@@ -125,6 +125,10 @@ namespace ShareFile.Api.Client.Requests.Providers
                             if (response.Value is Redirection && typeof(T) != typeof(Redirection))
                             {
                                 var redirection = response.Value as Redirection;
+
+                                if (!redirection.Available || redirection.Uri == null)
+                                    throw new ZoneUnavailableException(responseMessage.RequestMessage.RequestUri, "Destination zone is unavailable");
+
                                 if (httpRequestMessage.RequestUri.GetAuthority() != redirection.Uri.GetAuthority())
                                 {
                                     action = ShareFileClient.OnChangeDomain(httpRequestMessage, redirection);
@@ -215,6 +219,8 @@ namespace ShareFile.Api.Client.Requests.Providers
                 if (responseStream != null)
                 {
                     var result = await DeserializeStreamAsync<T>(responseStream).ConfigureAwait(false);
+
+                    CheckAsyncOperationScheduled(result);
 
                     LogResponseAsync(result, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode).ConfigureAwait(false);
 
@@ -353,7 +359,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                     if (responseStream != null)
                     {
                         var asyncOperation =
-                            await DeserializeStreamAsync<AsyncOperation>(responseStream).ConfigureAwait(false);
+                            await DeserializeStreamAsync<ODataFeed<AsyncOperation>>(responseStream).ConfigureAwait(false);
 
                         throw new AsyncOperationScheduledException(asyncOperation);
                     }

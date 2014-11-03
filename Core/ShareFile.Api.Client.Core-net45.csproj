@@ -77,6 +77,7 @@
     <Compile Include="Exceptions\InvalidApiResponseException.cs" />
     <Compile Include="Exceptions\ODataRequestException.cs" />
     <Compile Include="Exceptions\UploadException.cs" />
+    <Compile Include="Exceptions\ZoneUnavailableException.cs" />
     <Compile Include="Extensions\BoolExtensions.cs" />
     <Compile Include="Extensions\ContactExtensions.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Models\AsyncOperation.cs" />
     <Compile Include="Models\AsyncOperationState.cs" />
     <Compile Include="Models\AsyncOperationType.cs" />
+    <Compile Include="Models\BillingInfo.cs" />
     <Compile Include="Models\Capability.cs" />
     <Compile Include="Models\CapabilityName.cs" />
     <Compile Include="Models\ConnectorGroup.cs" />
@@ -259,8 +261,8 @@
     <Compile Include="Transfers\Uploaders\AsyncUploaderBase.cs" />
     <Compile Include="Transfers\Uploaders\FilePart.cs" />
     <Compile Include="Transfers\Uploaders\FileUploaderConfig.cs" />
-    <Compile Include="Transfers\Uploaders\ScalingPartUploader.cs" />
     <Compile Include="Transfers\Uploaders\ScalingFileUploader.cs" />
+    <Compile Include="Transfers\Uploaders\ScalingPartUploader.cs" />
     <Compile Include="Transfers\Uploaders\StandardFileUploader.cs" />
     <Compile Include="Transfers\Uploaders\SyncUploaderBase.cs" />
     <Compile Include="Transfers\Uploaders\ThreadedFileUploader.cs" />

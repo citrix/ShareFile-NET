@@ -19,11 +19,20 @@ namespace ShareFile.Api.Models
 	public class AdvancedSearchResults : ODataObject 
 	{
 
+		/// <summary>
+		/// Are these only partial results?
+		/// </summary>
 		public bool PartialResults { get; set; }
 
+		/// <summary>
+		/// Collection of search result hits
+		/// </summary>
 		public IEnumerable<SearchResult> Results { get; set; }
 
-		public QueryPaging QueryPaging { get; set; }
+		/// <summary>
+		/// Did the search query timeout?
+		/// </summary>
+		public bool TimedOut { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
@@ -35,7 +44,7 @@ namespace ShareFile.Api.Models
 			{
 				PartialResults = typedSource.PartialResults;
 				Results = typedSource.Results;
-				QueryPaging = typedSource.QueryPaging;
+				TimedOut = typedSource.TimedOut;
 			}
 			else
 			{
@@ -48,9 +57,9 @@ namespace ShareFile.Api.Models
 				{
 					Results = (IEnumerable<SearchResult>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<SearchResult>));
 				}
-				if(source.TryGetProperty("QueryPaging", out token) && token.Type != JTokenType.Null)
+				if(source.TryGetProperty("TimedOut", out token) && token.Type != JTokenType.Null)
 				{
-					QueryPaging = (QueryPaging)serializer.Deserialize(token.CreateReader(), typeof(QueryPaging));
+					TimedOut = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
 				}
 			}
 		}

@@ -5,11 +5,11 @@ namespace ShareFile.Api.Client.Exceptions
 {
     public class AsyncOperationScheduledException : Exception
     {
-        public AsyncOperationScheduledException(AsyncOperation asyncOperation)
+        public AsyncOperationScheduledException(ODataFeed<AsyncOperation> asyncOperation)
         {
-            ScheduledOperation = asyncOperation;
+            ScheduledOperations = asyncOperation;
         }
 
-        public AsyncOperation ScheduledOperation { get; set; }
+        public ODataFeed<AsyncOperation> ScheduledOperations { get; set; }
     }
 }

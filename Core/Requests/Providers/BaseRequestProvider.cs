@@ -501,5 +501,13 @@ namespace ShareFile.Api.Client.Requests.Providers
                 }
             }
         }
+
+        protected void CheckAsyncOperationScheduled(object responseObject)
+        {
+            if (responseObject is ODataFeed<AsyncOperation>)
+            {
+                throw new AsyncOperationScheduledException(responseObject as ODataFeed<AsyncOperation>);
+            }
+        }
     }
 }

@@ -115,5 +115,45 @@ namespace ShareFile.Api.Client.Entities.Extensions
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
+        
+        /// <summary>
+        /// Request Plan Changes for this account
+        /// </summary>
+        /// <remarks>
+        /// Request Plan Changes for the account.
+        /// This operation requires authentication.
+        /// </remarks>
+        /// <returns>
+        /// Account object
+        /// </returns>
+        public static IQuery<Account> RequestPlanChanges(this IAccountsEntity entity, Account account)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Account>(entity.Client);
+		    sfApiQuery.From("Accounts");
+		    sfApiQuery.Action("RequestPlanChanges");
+            sfApiQuery.Body = account;
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Convert Account To Paid
+        /// </summary>
+        /// <remarks>
+        /// Convert Account To Paid.
+        /// This operation requires authentication.
+        /// </remarks>
+        /// <returns>
+        /// Account object
+        /// </returns>
+        public static IQuery<Account> UpgradeToPaid(this IAccountsEntity entity, Account account)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Account>(entity.Client);
+		    sfApiQuery.From("Accounts");
+		    sfApiQuery.Action("UpgradeToPaid");
+            sfApiQuery.Body = account;
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
     }
 }

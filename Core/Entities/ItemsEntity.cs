@@ -203,7 +203,7 @@ namespace ShareFile.Api.Client.Entities
         /// <returns>
         /// the download link for the provided item content.
         /// </returns>
-        IQuery BulkDownload(Uri parentUrl, IEnumerable<string> ids, bool redirect = true);
+        IQuery<Stream> BulkDownload(Uri parentUrl, IEnumerable<string> ids, bool redirect = true);
         
         /// <summary>
         /// Create Folder
@@ -993,9 +993,9 @@ namespace ShareFile.Api.Client.Entities
         /// <returns>
         /// the download link for the provided item content.
         /// </returns>
-        public IQuery BulkDownload(Uri parentUrl, IEnumerable<string> ids, bool redirect = true)
+        public IQuery<Stream> BulkDownload(Uri parentUrl, IEnumerable<string> ids, bool redirect = true)
         {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
 		    sfApiQuery.Action("BulkDownload");
             sfApiQuery.Uri(parentUrl);
             sfApiQuery.QueryString("redirect", redirect);

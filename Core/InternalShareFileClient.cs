@@ -18,6 +18,7 @@ namespace ShareFile.Api.Client
         IBillingEntityInternal Billing { get; }
         IOAuthClientsEntityInternal OAuthClients { get; }
         IPlanAddonsEntityInternal PlanAddons { get; }
+        IUsagePlansEntityInternal UsagePlans { get; }
         IAzureSBTopicsEntityInternal AzureSBTopics { get; }
         IConfigsEntityInternal Configs { get; }
         IDevicesEntityInternal Devices { get; }
@@ -31,6 +32,7 @@ namespace ShareFile.Api.Client
             Billing = new BillingEntityInternal(this);
             OAuthClients = new OAuthClientsEntityInternal(this);
             PlanAddons = new PlanAddonsEntityInternal(this);
+            UsagePlans = new UsagePlansEntityInternal(this);
             AzureSBTopics = new AzureSBTopicsEntityInternal(this);
             Configs = new ConfigsEntityInternal(this);
             Devices = new DevicesEntityInternal(this);
@@ -41,6 +43,7 @@ namespace ShareFile.Api.Client
         public IBillingEntityInternal Billing { get; private set; }
         public IOAuthClientsEntityInternal OAuthClients { get; private set; }
         public IPlanAddonsEntityInternal PlanAddons { get; private set; }
+        public IUsagePlansEntityInternal UsagePlans { get; private set; }
         public IAzureSBTopicsEntityInternal AzureSBTopics { get; private set; }
         public IConfigsEntityInternal Configs { get; private set; }
         public IDevicesEntityInternal Devices { get; private set; }

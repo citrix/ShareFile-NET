@@ -7,7 +7,7 @@ namespace ShareFile.Api.Client.Requests.Executors
     {
         public HttpResponseMessage Send(HttpClient httpClient, HttpRequestMessage requestMessage, HttpCompletionOption httpCompletionOption)
         {
-            return httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseContentRead).WaitForTask();
+            return httpClient.SendAsync(requestMessage, httpCompletionOption).WaitForTask();
         }
     }
 }

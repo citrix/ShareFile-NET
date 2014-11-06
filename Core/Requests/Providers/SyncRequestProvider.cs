@@ -149,7 +149,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                     }
                 }
 
-                var responseMessage = ExecuteRequest(httpRequestMessage);
+                var responseMessage = ExecuteRequest(httpRequestMessage, GetCompletionOptionFromResponse(typeof(TResponse)));
 
                 action = null;
 
@@ -198,7 +198,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 
                     LogRequest(request, authenticatedHttpRequestMessage.Headers.ToString());
 
-                    using (var authenticatedResponse = ExecuteRequest(authenticatedHttpRequestMessage))
+                    using (var authenticatedResponse = ExecuteRequest(authenticatedHttpRequestMessage, GetCompletionOptionFromResponse(typeof(TResponse))))
                     {
                         if (authenticatedResponse.IsSuccessStatusCode)
                         {
@@ -213,10 +213,10 @@ namespace ShareFile.Api.Client.Requests.Providers
             return Response.CreateAction(HandleNonSuccess(httpResponseMessage, retryCount));
         }
 
-        protected HttpResponseMessage ExecuteRequest(HttpRequestMessage requestMessage)
+        protected HttpResponseMessage ExecuteRequest(HttpRequestMessage requestMessage, HttpCompletionOption httpCompletionOption)
         {
             var responseMessage = RequestExecutorFactory.GetSyncRequestExecutor()
-                .Send(HttpClient, requestMessage, HttpCompletionOption.ResponseContentRead);
+                .Send(HttpClient, requestMessage, httpCompletionOption);
 
             ProcessCookiesForRuntime(responseMessage);
 
@@ -310,6 +310,14 @@ namespace ShareFile.Api.Client.Requests.Providers
             }
 
             return action;
+        }
+
+        protected HttpCompletionOption GetCompletionOptionFromResponse(Type responseType)
+        {
+            if (responseType.IsGenericType && responseType.IsGenericTypeOf(typeof(Response<>)) && responseType.GetGenericArguments().Length > 0)
+                return GetCompletionOptionForQuery(responseType.GetGenericArguments()[0]);
+            else
+                return GetCompletionOptionForQuery(responseType);
         }
 
         protected void CheckAsyncOperationScheduled(HttpResponseMessage httpResponseMessage)

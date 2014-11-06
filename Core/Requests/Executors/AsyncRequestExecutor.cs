@@ -10,7 +10,7 @@ namespace ShareFile.Api.Client.Requests.Executors
         public async Task<HttpResponseMessage> SendAsync(HttpClient httpClient, HttpRequestMessage requestMessage, HttpCompletionOption httpCompletionOption,
             CancellationToken cancellationToken)
         {
-            return await httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            return await httpClient.SendAsync(requestMessage, httpCompletionOption, cancellationToken);
         }
     }
 #endif

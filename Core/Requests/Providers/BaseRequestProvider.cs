@@ -155,6 +155,14 @@ namespace ShareFile.Api.Client.Requests.Providers
             return requestMessage;
         }
 
+        protected HttpCompletionOption GetCompletionOptionForQuery(Type queryTypeParameter)
+        {
+            if (queryTypeParameter.Equals(typeof(Stream)))
+                return HttpCompletionOption.ResponseHeadersRead;
+            else
+                return HttpCompletionOption.ResponseContentRead;
+        }
+
         protected T DeserializeStream<T>(Stream stream)
         {
             var watch = new ActionStopwatch("DeserializeStream", ShareFileClient.Logging);
@@ -210,7 +218,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 
             return task;
         }
-
+        
         protected Task<string> SerializeObjectAsync(object obj)
         {
             var tcs = new TaskCompletionSource<string>();

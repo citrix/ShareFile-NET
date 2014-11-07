@@ -381,18 +381,6 @@ namespace ShareFile.Api.Client.Entities
         /// SSOInfo
         /// </returns>
         IQuery<SSOInfo> GetSSOInfo(string subdomain);
-        
-        /// <summary>
-        /// Request Plan Changes for this account
-        /// </summary>
-        /// <remarks>
-        /// Request Plan Changes for the account.
-        /// This operation requires authentication.
-        /// </remarks>
-        /// <returns>
-        /// Account object
-        /// </returns>
-        IQuery<Account> RequestPlanChanges(Account account);
     }
 
     public class AccountsEntity : EntityBase, IAccountsEntity
@@ -959,26 +947,6 @@ namespace ShareFile.Api.Client.Entities
 		    sfApiQuery.From("Accounts");
 		    sfApiQuery.Action("SSOInfo");
             sfApiQuery.QueryString("subdomain", subdomain);
-            sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
-        }
-        
-        /// <summary>
-        /// Request Plan Changes for this account
-        /// </summary>
-        /// <remarks>
-        /// Request Plan Changes for the account.
-        /// This operation requires authentication.
-        /// </remarks>
-        /// <returns>
-        /// Account object
-        /// </returns>
-        public IQuery<Account> RequestPlanChanges(Account account)
-        {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Account>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("RequestPlanChanges");
-            sfApiQuery.Body = account;
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }

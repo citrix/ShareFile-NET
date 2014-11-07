@@ -1,6 +1,7 @@
 ﻿using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.Extensions.Tasks;
 using ShareFile.Api.Client.FileSystem;
+using ShareFile.Api.Client.Requests.Providers;
 using ShareFile.Api.Client.Security.Cryptography;
 using ShareFile.Api.Models;
 using System;
@@ -37,6 +38,8 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         
         private void ExecuteChunkUploadMessage(HttpRequestMessage requestMessage)
         {
+            BaseRequestProvider.TryAddCookies(Client, requestMessage);
+
             using (var responseMessage = GetHttpClient().SendAsync(requestMessage).WaitForTask())
             {
                 DeserializeShareFileApiResponse<string>(responseMessage);
@@ -49,10 +52,11 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             var finishUri = GetFinishUriForThreadedUploads();
             var client = GetHttpClient();
 
-            var message = new HttpRequestMessage(HttpMethod.Get, finishUri);
-            message.Headers.Add("Accept", "application/json");
+            var requestMessage = new HttpRequestMessage(HttpMethod.Get, finishUri);
+            requestMessage.Headers.Add("Accept", "application/json");
+            BaseRequestProvider.TryAddCookies(Client, requestMessage);
 
-            var response = client.SendAsync(message).WaitForTask();
+            var response = client.SendAsync(requestMessage).WaitForTask();
 
             return GetUploadResponse(response);
         }

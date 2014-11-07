@@ -52,10 +52,11 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             var finishUri = GetFinishUriForThreadedUploads();
             var client = GetHttpClient();
 
-            var message = new HttpRequestMessage(HttpMethod.Get, finishUri);
-            message.Headers.Add("Accept", "application/json");
+            var requestMessage = new HttpRequestMessage(HttpMethod.Get, finishUri);
+            requestMessage.Headers.Add("Accept", "application/json");
+            BaseRequestProvider.TryAddCookies(Client, requestMessage);
 
-            var response = client.SendAsync(message).WaitForTask();
+            var response = client.SendAsync(requestMessage).WaitForTask();
 
             return GetUploadResponse(response);
         }

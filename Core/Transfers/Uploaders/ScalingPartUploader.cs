@@ -133,10 +133,10 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             {
                 if(uploadTask.Exception != null)
                 {
-                    if (retryCount < 0)
-                        return PartUploadResult.Exception(uploadTask.Exception.Unwrap());
-                    else
+                    if (retryCount > 0)
                         return AttemptPartUploadWithRetry(attemptUpload, part, retryCount - 1).Result;
+                    else
+                        return PartUploadResult.Exception(uploadTask.Exception.Unwrap());
                 }
                 else
                 {

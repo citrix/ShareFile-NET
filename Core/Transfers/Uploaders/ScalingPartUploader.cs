@@ -55,6 +55,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 return UploadPart(chunkUploadUrl, part).ContinueWith(workerTask =>
                 {
                     timer.Stop();
+                    workerTask.Rethrow();
                     int partSizeIncrement = CalculatePartSizeIncrement(part.Bytes.Length, TimeSpan.FromMilliseconds(timer.ElapsedMilliseconds));
                     //this increment isn't thread-safe, but nothing horrible should happen if it gets clobbered
                     currentPartSize = (currentPartSize + partSizeIncrement).Bound(partConfig.MaxPartSize, partConfig.MinPartSize);
@@ -115,27 +116,34 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         private Task UploadPart(string chunkUploadUrl, FilePart part)
         {
             return executePartUploadRequest(ComposePartUpload(chunkUploadUrl, part))
-                .ContinueWith(task => updateProgress(part.Bytes.Length, part.IsLastPart));
+                .ContinueWith(task =>
+                {
+                    task.Rethrow();
+                    updateProgress(part.Bytes.Length, part.IsLastPart);
+                });
         }
 
+        //exception boundary: chunk upload exceptions should be propagated to here but no farther
         private Task<PartUploadResult> AttemptPartUploadWithRetry(Func<FilePart, Task> attemptUpload, FilePart part, int retryCount)
         {
             if (retryCount < 0)
                 return TaskFromResult(PartUploadResult.Error);
 
-            try
+            return attemptUpload(part).ContinueWith(uploadTask =>
             {
-                return attemptUpload(part).ContinueWith(uploadTask => PartUploadResult.Success);
-            }
-            catch (Exception ex)
-            {
-                //TODO: scope down to network errors and timeouts
-                if (retryCount > 0)
-                    return AttemptPartUploadWithRetry(attemptUpload, part, retryCount - 1);
+                if(uploadTask.Exception != null)
+                {
+                    if (retryCount < 0)
+                        return PartUploadResult.Exception(uploadTask.Exception.Unwrap());
+                    else
+                        return AttemptPartUploadWithRetry(attemptUpload, part, retryCount - 1).Result;
+                }
                 else
-                    return TaskFromResult(PartUploadResult.Exception(ex));
-            }
-        }
+                {
+                    return PartUploadResult.Success;
+                }
+            });
+        }        
 
         //in .NET 4.5, Task.FromResult
         private Task<T> TaskFromResult<T>(T value)

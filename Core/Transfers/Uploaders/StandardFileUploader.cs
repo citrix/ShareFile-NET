@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using System.Threading;
 using ShareFile.Api.Client.Extensions.Tasks;
 using ShareFile.Api.Client.FileSystem;
+using ShareFile.Api.Client.Requests.Providers;
 using System;
 using System.Collections.Generic;
 
@@ -29,6 +30,9 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     var httpClient = GetHttpClient();
                     var boundaryGuid = "upload-" + Guid.NewGuid().ToString("N");
                     var requestMessage = new HttpRequestMessage(HttpMethod.Post, GetChunkUriForStandardUploads());
+
+                    BaseRequestProvider.TryAddCookies(Client, requestMessage);
+
                     var multipartFormContent = new MultipartFormDataContent(boundaryGuid);
 
                     var streamContent = new StreamContent(File.OpenRead(), MaxBufferLength);

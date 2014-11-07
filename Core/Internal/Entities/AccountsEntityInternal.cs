@@ -132,7 +132,7 @@ namespace ShareFile.Api.Client.Entities.Extensions
 		    sfApiQuery.From("Accounts");
 		    sfApiQuery.Action("RequestPlanChanges");
             sfApiQuery.Body = account;
-            sfApiQuery.HttpMethod = "GET";	
+            sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
         
@@ -152,7 +152,7 @@ namespace ShareFile.Api.Client.Entities.Extensions
 		    sfApiQuery.From("Accounts");
 		    sfApiQuery.Action("UpgradeToPaid");
             sfApiQuery.Body = account;
-            sfApiQuery.HttpMethod = "GET";	
+            sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
     }

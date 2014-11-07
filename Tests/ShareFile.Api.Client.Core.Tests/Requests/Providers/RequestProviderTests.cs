@@ -14,12 +14,12 @@ using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Requests.Executors;
+using ShareFile.Api.Client.Requests.Filters;
 using ShareFile.Api.Models;
+using System.Collections.Generic;
 
 namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
 {
-    using ShareFile.Api.Client.Requests.Filters;
-
     public class RequestProviderTests : BaseTests
     {
         [TestCase(true, TestName = "Query_ItemNotFound_Async")]
@@ -365,15 +365,20 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
 
         protected HttpResponseMessage GenerateAsyncOperationScheduled()
         {
-            return new HttpResponseMessage(HttpStatusCode.Accepted)
+            var operations = new ODataFeed<AsyncOperation>();
+            operations.Feed = new List<AsyncOperation>
             {
-                Content = new StringContent(JsonConvert.SerializeObject(new AsyncOperation
+                new AsyncOperation
                 {
                     BatchID = GetId(10),
                     BatchSourceID = GetId(),
                     BatchProgress = 0,
-                    BatchState = SafeEnum<AsyncOperationState>.Create(AsyncOperationState.Scheduled)
-                }), Encoding.UTF8, "application/json")
+                    BatchState = AsyncOperationState.Scheduled
+                }
+            };
+            return new HttpResponseMessage(HttpStatusCode.Accepted)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(operations), Encoding.UTF8, "application/json")
             };
         }
 

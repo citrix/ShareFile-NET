@@ -66,10 +66,10 @@ namespace ShareFile.Api.Client.Requests.Providers
                 {
                     var result = DeserializeStream<ODataObject>(responseStream);
 
-                    CheckAsyncOperationScheduled(result);
-
                     LogResponse(result, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode);
                     ShareFileClient.Logging.Trace(watch);
+
+                    CheckAsyncOperationScheduled(result);
 
                     //workaround for metadata not returning on Redirections
                     string redirectUri;

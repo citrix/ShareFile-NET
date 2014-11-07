@@ -220,9 +220,9 @@ namespace ShareFile.Api.Client.Requests.Providers
                 {
                     var result = await DeserializeStreamAsync<T>(responseStream).ConfigureAwait(false);
 
-                    CheckAsyncOperationScheduled(result);
-
                     LogResponseAsync(result, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode).ConfigureAwait(false);
+
+                    CheckAsyncOperationScheduled(result);
 
                     ShareFileClient.Logging.Trace(watch);
                     return Response.CreateSuccess(result);

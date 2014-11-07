@@ -48,7 +48,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 }
 
                 var httpRequestMessage = BuildRequest(apiRequest);
-                var responseMessage = await ExecuteRequestAsync(httpRequestMessage, token).ConfigureAwait(false);
+                var responseMessage = await ExecuteRequestAsync(httpRequestMessage, HttpCompletionOption.ResponseContentRead, token).ConfigureAwait(false);
 
                 action = null;
 
@@ -101,7 +101,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                     }
                 }
 
-                var responseMessage = await ExecuteRequestAsync(httpRequestMessage, token);
+                var responseMessage = await ExecuteRequestAsync(httpRequestMessage, GetCompletionOptionForQuery(typeof(T)), token);
 
                 action = null;
 
@@ -189,7 +189,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 action = null;
 
                 var httpRequestMessage = BuildRequest(apiRequest);
-                var responseMessage = await ExecuteRequestAsync(httpRequestMessage, token).ConfigureAwait(false);
+                var responseMessage = await ExecuteRequestAsync(httpRequestMessage, GetCompletionOptionForQuery(typeof(Stream)), token).ConfigureAwait(false);
 
                 try
                 {
@@ -220,9 +220,9 @@ namespace ShareFile.Api.Client.Requests.Providers
                 {
                     var result = await DeserializeStreamAsync<T>(responseStream).ConfigureAwait(false);
 
-                    CheckAsyncOperationScheduled(result);
-
                     LogResponseAsync(result, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode).ConfigureAwait(false);
+
+                    CheckAsyncOperationScheduled(result);
 
                     ShareFileClient.Logging.Trace(watch);
                     return Response.CreateSuccess(result);
@@ -246,7 +246,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 
                     LogRequestAsync(request, authenticatedHttpRequestMessage.Headers.ToString()).ConfigureAwait(false);
 
-                    var requestTask = ExecuteRequestAsync(authenticatedHttpRequestMessage).ConfigureAwait(false);
+                    var requestTask = ExecuteRequestAsync(authenticatedHttpRequestMessage, GetCompletionOptionForQuery(typeof(T))).ConfigureAwait(false);
                     using (var authenticatedResponse = await requestTask)
                     {
                         if (authenticatedResponse.IsSuccessStatusCode)
@@ -458,15 +458,13 @@ namespace ShareFile.Api.Client.Requests.Providers
             return action;
         }
 
-        protected async Task<HttpResponseMessage> ExecuteRequestAsync(HttpRequestMessage requestMessage, CancellationToken? token = null)
+        protected async Task<HttpResponseMessage> ExecuteRequestAsync(HttpRequestMessage requestMessage, HttpCompletionOption httpCompletionOption,
+            CancellationToken? token = null)
         {
             HttpResponseMessage responseMessage;
             var requestExecutor = RequestExecutorFactory.GetAsyncRequestExecutor();
-            if (token == null)
-            {
-                responseMessage = await requestExecutor.SendAsync(HttpClient, requestMessage, HttpCompletionOption.ResponseContentRead, CancellationToken.None);
-            }
-            else responseMessage = await requestExecutor.SendAsync(HttpClient, requestMessage, HttpCompletionOption.ResponseContentRead, token.Value);
+
+            responseMessage = await requestExecutor.SendAsync(HttpClient, requestMessage, httpCompletionOption, token ?? CancellationToken.None);
 
             ProcessCookiesForRuntime(responseMessage);
 

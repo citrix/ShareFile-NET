@@ -138,6 +138,14 @@ namespace ShareFile.Api.Client.Requests.Providers
             return requestMessage;
         }
 
+        protected HttpCompletionOption GetCompletionOptionForQuery(Type queryTypeParameter)
+        {
+            if (queryTypeParameter.Equals(typeof(Stream)))
+                return HttpCompletionOption.ResponseHeadersRead;
+            else
+                return HttpCompletionOption.ResponseContentRead;
+        }
+
         internal static void TryAddCookies(ShareFileClient client, HttpRequestMessage requestMessage)
         {
             if (RuntimeRequiresCustomCookieHandling)
@@ -215,7 +223,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 
             return task;
         }
-
+        
         protected Task<string> SerializeObjectAsync(object obj)
         {
             var tcs = new TaskCompletionSource<string>();

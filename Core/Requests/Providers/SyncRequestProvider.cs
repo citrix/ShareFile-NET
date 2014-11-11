@@ -317,7 +317,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 
         protected HttpCompletionOption GetCompletionOptionFromResponse(Type responseType)
         {
-            if (responseType.IsGenericType && responseType.IsGenericTypeOf(typeof(Response<>)) && responseType.GetGenericArguments().Length > 0)
+            if (responseType.IsGenericType() && responseType.IsGenericTypeOf(typeof(Response<>)) && responseType.GetGenericArguments().Length > 0)
                 return GetCompletionOptionForQuery(responseType.GetGenericArguments()[0]);
             else
                 return GetCompletionOptionForQuery(responseType);

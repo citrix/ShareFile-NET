@@ -721,7 +721,7 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Share>(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.Body = share;
-            sfApiQuery.HttpMethod = "POST";	
+            sfApiQuery.HttpMethod = "PATCH";	
 		    return sfApiQuery;
         }
         

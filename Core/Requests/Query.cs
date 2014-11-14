@@ -498,12 +498,20 @@ namespace ShareFile.Api.Client.Requests
 
         public virtual T Execute()
         {
+            if (this is IQuery<Stream>)
+            {
+                return Client.Execute((IQuery<Stream>)this) as T;
+            }
             return Client.Execute(this);
         }
 
 #if Async
         public virtual Task<T> ExecuteAsync(CancellationToken? token = null)
         {
+            if (this is IQuery<Stream>)
+            {
+                return Client.ExecuteAsync((IQuery<Stream>)this, token) as Task<T>;
+            }
             return Client.ExecuteAsync(this, token);
         }
 #endif

@@ -35,6 +35,12 @@ namespace ShareFile.Api.Client.Requests.Providers
 
         public T Execute<T>(IQuery<T> query) where T : class
         {
+            var streamQuery = query as IQuery<Stream>;
+            if (streamQuery != null)
+            {
+                return this.Execute(streamQuery) as T;
+            }
+
             var response = Execute(query as QueryBase, responseMessage => ParseTypedResponse<T>(responseMessage));
             return response.As(
                 (Response<T> typedResponse) => typedResponse.Value,
@@ -46,12 +52,17 @@ namespace ShareFile.Api.Client.Requests.Providers
             return Execute(query as IQuery<T>);
         }
 
-        public Stream Execute(IStreamQuery query)
+        public Stream Execute(IQuery<Stream> query)
         {
             var response = Execute(query as QueryBase, responseMessage => Response.CreateSuccess(responseMessage.Content.ReadAsStreamAsync().WaitForTask()));
             return response.As(
                 (Response<Stream> streamResponse) => streamResponse.Value,
                 default(Stream));
+        }
+
+        public Stream Execute(IStreamQuery query)
+        {
+            return Execute((IQuery<Stream>)query);
         }
 
         private Response<T> ParseTypedResponse<T>(HttpResponseMessage httpResponseMessage)

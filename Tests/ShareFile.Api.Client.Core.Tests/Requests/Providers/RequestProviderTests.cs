@@ -44,12 +44,6 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
 
             // Assert
             Assert.IsNotNull(stream);
-
-            using (var sr = new StreamReader(stream))
-            {
-                var content = sr.ReadToEnd();
-                Assert.IsTrue(content == streamMessage);
-            }
         }
 
         [TestCase(true, TestName = "Query_ItemNotFound_Async")]

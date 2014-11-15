@@ -73,7 +73,7 @@ namespace ShareFile.Api.Client.Requests.Providers
             var streamQuery = query as IQuery<Stream>;
             if (streamQuery != null)
             {
-                return (await this.ExecuteAsync(streamQuery, token)) as T;
+                return await this.ExecuteAsync(streamQuery, token) as T;
             }
 
             EventHandlerResponse action = null;

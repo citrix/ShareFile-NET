@@ -31,6 +31,8 @@ namespace ShareFile.Api.Models
                 _entityTypeMap.Add("BillingInfos", typeof(BillingInfo));
                 _entityTypeMap.Add("ESignature", typeof(ESignature));
                 _entityTypeMap.Add("ESignatures", typeof(ESignature));
+                _entityTypeMap.Add("FileLock", typeof(FileLock));
+                _entityTypeMap.Add("FileLocks", typeof(FileLock));
                 _entityTypeMap.Add("PowerTools", typeof(PowerTools));
                 _entityTypeMap.Add("PowerToolss", typeof(PowerTools));
                 _entityTypeMap.Add("Item", typeof(Item));

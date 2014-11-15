@@ -562,16 +562,16 @@ namespace ShareFile.Api.Client.Entities
         /// </remarks>
         /// <param name="url"></param>
         /// <param name="message"></param>
-        IQuery CheckIn(Uri url, string message);
+        IQuery CheckIn(Uri url, string message = null);
         
         /// <summary>
         /// Lock File
         /// </summary>
         /// <remarks>
         /// Locks a file.
-        /// This operation is only implemented in Sharepoint providers (/sp)
         /// </remarks>
         /// <param name="url"></param>
+        /// <param name="lockdata"></param>
         IQuery CheckOut(Uri url);
         
         /// <summary>
@@ -579,7 +579,6 @@ namespace ShareFile.Api.Client.Entities
         /// </summary>
         /// <remarks>
         /// Discards the existing lock on the file
-        /// This operation is only implemented in Sharepoint providers (/sp)
         /// </remarks>
         /// <param name="url"></param>
         IQuery DiscardCheckOut(Uri url);
@@ -1519,7 +1518,7 @@ namespace ShareFile.Api.Client.Entities
         /// </remarks>
         /// <param name="url"></param>
         /// <param name="message"></param>
-        public IQuery CheckIn(Uri url, string message)
+        public IQuery CheckIn(Uri url, string message = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 		    sfApiQuery.Action("CheckIn");
@@ -1534,9 +1533,9 @@ namespace ShareFile.Api.Client.Entities
         /// </summary>
         /// <remarks>
         /// Locks a file.
-        /// This operation is only implemented in Sharepoint providers (/sp)
         /// </remarks>
         /// <param name="url"></param>
+        /// <param name="lockdata"></param>
         public IQuery CheckOut(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
@@ -1551,7 +1550,6 @@ namespace ShareFile.Api.Client.Entities
         /// </summary>
         /// <remarks>
         /// Discards the existing lock on the file
-        /// This operation is only implemented in Sharepoint providers (/sp)
         /// </remarks>
         /// <param name="url"></param>
         public IQuery DiscardCheckOut(Uri url)

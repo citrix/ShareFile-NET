@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -99,6 +99,7 @@
     <Compile Include="Entities\ConnectorGroupsEntity.cs" />
     <Compile Include="Entities\EntityBase.cs" />
     <Compile Include="Entities\FavoriteFoldersEntity.cs" />
+    <Compile Include="Entities\FileLockEntity.cs" />
     <Compile Include="Entities\GroupsEntity.cs" />
     <Compile Include="Entities\ItemsEntity.cs" />
     <Compile Include="Entities\MetadataEntity.cs" />
@@ -176,6 +177,7 @@
     <Compile Include="Models\ESignatureDocumentStatus.cs" />
     <Compile Include="Models\FavoriteFolder.cs" />
     <Compile Include="Models\File.cs" />
+    <Compile Include="Models\FileLock.cs" />
     <Compile Include="Models\FileVirusStatus.cs" />
     <Compile Include="Models\FindSubdomainParams.cs" />
     <Compile Include="Models\FindSubdomainResult.cs" />
@@ -189,6 +191,7 @@
     <Compile Include="Models\ItemInfo.cs" />
     <Compile Include="Models\ItemProtocolLink.cs" />
     <Compile Include="Models\Link.cs" />
+    <Compile Include="Models\LockType.cs" />
     <Compile Include="Models\Metadata.cs" />
     <Compile Include="Models\MobileSecuritySettings.cs" />
     <Compile Include="Models\Note.cs" />

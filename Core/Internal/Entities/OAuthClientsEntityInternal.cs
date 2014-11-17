@@ -87,6 +87,15 @@ namespace ShareFile.Api.Client.Entities
         /// no data
         /// </returns>
         IQuery Delete(Uri url, bool singlePlane = false);
+        
+        /// <summary>
+        /// get an OAuth code to be used to exchange for a OAuth token
+        /// </summary>
+        /// <param name="appCode"></param>
+        /// <returns>
+        /// OAuth code
+        /// </returns>
+        IQuery<OAuthCode> GetOAuthCode(AppCodes appCode);
     }
 
     public class OAuthClientsEntityInternal : EntityBase, IOAuthClientsEntityInternal
@@ -203,6 +212,23 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("singlePlane", singlePlane);
             sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// get an OAuth code to be used to exchange for a OAuth token
+        /// </summary>
+        /// <param name="appCode"></param>
+        /// <returns>
+        /// OAuth code
+        /// </returns>
+        public IQuery<OAuthCode> GetOAuthCode(AppCodes appCode)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<OAuthCode>(Client);
+		    sfApiQuery.From("OAuthClients");
+		    sfApiQuery.Action("GetOAuthCode");
+            sfApiQuery.QueryString("appCode", appCode);
+            sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
     }

@@ -107,6 +107,7 @@
     <Compile Include="Internal\Models\MobileUserRole.cs" />
     <Compile Include="Internal\Models\OAuthClient.cs" />
     <Compile Include="Internal\Models\OAuthClientPermissions.cs" />
+    <Compile Include="Internal\Models\OAuthCode.cs" />
     <Compile Include="Internal\Models\OAuthState.cs" />
     <Compile Include="Internal\Models\OutlookInformation.cs" />
     <Compile Include="Internal\Models\OutlookInformationOptionBool.cs" />

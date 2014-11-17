@@ -336,7 +336,9 @@ namespace ShareFile.Api.Client.Entities
         /// }
         /// </example>
         /// <remarks>
-        /// Updates an Item object
+        /// Updates an Item object. Please note that for a Folder, the Name and FileName properties must be consistent.
+        /// If a new Name is provided, the FileName will also be updated with the new name, and viceversa.
+        /// If both Name and FileName are provided, FileName is disregarded and Name will be used to update both properties.
         /// </remarks>
         /// <param name="url"></param>
         /// <param name="item"></param>
@@ -1178,7 +1180,9 @@ namespace ShareFile.Api.Client.Entities
         /// }
         /// </example>
         /// <remarks>
-        /// Updates an Item object
+        /// Updates an Item object. Please note that for a Folder, the Name and FileName properties must be consistent.
+        /// If a new Name is provided, the FileName will also be updated with the new name, and viceversa.
+        /// If both Name and FileName are provided, FileName is disregarded and Name will be used to update both properties.
         /// </remarks>
         /// <param name="url"></param>
         /// <param name="item"></param>

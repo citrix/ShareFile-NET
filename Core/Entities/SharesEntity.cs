@@ -94,7 +94,7 @@ namespace ShareFile.Api.Client.Entities
         /// Get Items of a Share
         /// </summary>
         /// <remarks>
-        /// Retrieve the list of Items (files and folders) in the Share.
+        /// Retrieve the list of Items (files and folders) in the Send Share.
         /// </remarks>
         /// <param name="url"></param>
         /// <returns>
@@ -103,10 +103,10 @@ namespace ShareFile.Api.Client.Entities
         IQuery<ODataFeed<Item>> GetItems(Uri url);
         
         /// <summary>
-        /// Get Items of a Share
+        /// Get Items of a Send Share
         /// </summary>
         /// <remarks>
-        /// Retrieve a single Item in the Share
+        /// Retrieve a single Item in the Send Share
         /// </remarks>
         /// <param name="shareUrl"></param>
         /// <param name="itemid"></param>
@@ -505,7 +505,7 @@ namespace ShareFile.Api.Client.Entities
         /// Get Items of a Share
         /// </summary>
         /// <remarks>
-        /// Retrieve the list of Items (files and folders) in the Share.
+        /// Retrieve the list of Items (files and folders) in the Send Share.
         /// </remarks>
         /// <param name="url"></param>
         /// <returns>
@@ -521,10 +521,10 @@ namespace ShareFile.Api.Client.Entities
         }
         
         /// <summary>
-        /// Get Items of a Share
+        /// Get Items of a Send Share
         /// </summary>
         /// <remarks>
-        /// Retrieve a single Item in the Share
+        /// Retrieve a single Item in the Send Share
         /// </remarks>
         /// <param name="shareUrl"></param>
         /// <param name="itemid"></param>

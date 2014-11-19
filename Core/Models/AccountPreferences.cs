@@ -195,6 +195,8 @@ namespace ShareFile.Api.Models
 
 		public bool? EnableWebAppConnectorBrowsing { get; set; }
 
+		public bool? EnableStrictCrossdomainPolicy { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -291,6 +293,7 @@ namespace ShareFile.Api.Models
 				EnableDesktopEditorForAccount = typedSource.EnableDesktopEditorForAccount;
 				DisableShareConnectForAccount = typedSource.DisableShareConnectForAccount;
 				EnableWebAppConnectorBrowsing = typedSource.EnableWebAppConnectorBrowsing;
+				EnableStrictCrossdomainPolicy = typedSource.EnableStrictCrossdomainPolicy;
 			}
 			else
 			{
@@ -646,6 +649,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("EnableWebAppConnectorBrowsing", out token) && token.Type != JTokenType.Null)
 				{
 					EnableWebAppConnectorBrowsing = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableStrictCrossdomainPolicy", out token) && token.Type != JTokenType.Null)
+				{
+					EnableStrictCrossdomainPolicy = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 			}
 		}

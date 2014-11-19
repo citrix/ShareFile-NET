@@ -193,6 +193,8 @@ namespace ShareFile.Api.Models
 
 		public bool? DisableShareConnectForAccount { get; set; }
 
+		public bool? EnableWebAppConnectorBrowsing { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -288,6 +290,7 @@ namespace ShareFile.Api.Models
 				EnableDocPreviews = typedSource.EnableDocPreviews;
 				EnableDesktopEditorForAccount = typedSource.EnableDesktopEditorForAccount;
 				DisableShareConnectForAccount = typedSource.DisableShareConnectForAccount;
+				EnableWebAppConnectorBrowsing = typedSource.EnableWebAppConnectorBrowsing;
 			}
 			else
 			{
@@ -639,6 +642,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("DisableShareConnectForAccount", out token) && token.Type != JTokenType.Null)
 				{
 					DisableShareConnectForAccount = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableWebAppConnectorBrowsing", out token) && token.Type != JTokenType.Null)
+				{
+					EnableWebAppConnectorBrowsing = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 			}
 		}

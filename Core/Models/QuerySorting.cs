@@ -19,8 +19,14 @@ namespace ShareFile.Api.Models
 	public class QuerySorting : ODataObject 
 	{
 
+		/// <summary>
+		/// What property to sort the search results by. Set to "" to not sort them
+		/// </summary>
 		public string SortBy { get; set; }
 
+		/// <summary>
+		/// Whether the sort order should be ascending or not
+		/// </summary>
 		public bool Ascending { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

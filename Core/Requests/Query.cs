@@ -211,6 +211,11 @@ namespace ShareFile.Api.Client.Requests
         {
             
         }
+        
+        public Query Id(object id)
+        {
+            return Id(id.ToString());
+        }
 
         public Query Id(string id)
         {
@@ -224,10 +229,20 @@ namespace ShareFile.Api.Client.Requests
             return this;
         }
 
+        public Query Ids(object id)
+        {
+            return Ids(id.ToString());
+        }
+
         public Query Ids(string id)
         {
             _Ids(id);
             return this;
+        }
+
+        public Query Ids(string key, object id)
+        {
+            return Ids(key, id.ToString());
         }
 
         public Query Ids(string key, string id)
@@ -248,10 +263,20 @@ namespace ShareFile.Api.Client.Requests
             return this;
         }
 
+        public Query ActionIds(object id)
+        {
+            return ActionIds(id.ToString());
+        }
+
         public Query ActionIds(string id)
         {
             _ActionIds(id);
             return this;
+        }
+
+        public Query ActionIds(string key, object id)
+        {
+            return ActionIds(key, id.ToString());
         }
 
         public Query ActionIds(string key, string id)
@@ -266,10 +291,20 @@ namespace ShareFile.Api.Client.Requests
             return this;
         }
 
+        public Query SubAction(string subAction, object id)
+        {
+            return SubAction(subAction, id.ToString());
+        }
+
         public Query SubAction(string subAction, string id)
         {
             _SubAction(subAction, id);
             return this;
+        }
+
+        public Query SubAction(string subAction, string key, object id)
+        {
+            return SubAction(subAction, key, id.ToString());
         }
 
         public Query SubAction(string subAction, string key, string id)
@@ -337,6 +372,11 @@ namespace ShareFile.Api.Client.Requests
             _top = -1;
         }
 
+        public Query<T> Id(object id)
+        {
+            return Id(id.ToString());
+        }
+
         public Query<T> Id(string id)
         {
             _Id(id);
@@ -349,10 +389,20 @@ namespace ShareFile.Api.Client.Requests
             return this;
         }
 
+        public Query<T> Ids(object id)
+        {
+            return Ids(id.ToString());
+        }
+
         public Query<T> Ids(string id)
         {
             _Ids(id);
             return this;
+        }
+
+        public Query<T> Ids(string key, object id)
+        {
+            return Ids(key, id.ToString());
         }
 
         public Query<T> Ids(string key, string id)
@@ -373,10 +423,20 @@ namespace ShareFile.Api.Client.Requests
             return this;
         }
 
+        public Query<T> ActionIds(object id)
+        {
+            return ActionIds(id.ToString());
+        }
+
         public Query<T> ActionIds(string id)
         {
             _ActionIds(id);
             return this;
+        }
+
+        public Query<T> ActionIds(string key, object id)
+        {
+            return ActionIds(key, id.ToString());
         }
 
         public Query<T> ActionIds(string key, string id)
@@ -391,10 +451,20 @@ namespace ShareFile.Api.Client.Requests
             return this;
         }
 
+        public Query<T> SubAction(string subAction, object id)
+        {
+            return SubAction(subAction, id.ToString());
+        }
+
         public Query<T> SubAction(string subAction, string id)
         {
             _SubAction(subAction, id);
             return this;
+        }
+
+        public Query<T> SubAction(string subAction, string key, object id)
+        {
+            return SubAction(subAction, key, id.ToString());
         }
 
         public Query<T> SubAction(string subAction, string key, string id)

@@ -19,12 +19,24 @@ namespace ShareFile.Api.Models
 	public class SimpleSearchQuery : ODataObject 
 	{
 
+		/// <summary>
+		/// Information about the query to run
+		/// </summary>
 		public SimpleQuery Query { get; set; }
 
+		/// <summary>
+		/// Paging info about the search results
+		/// </summary>
 		public QueryPaging Paging { get; set; }
 
+		/// <summary>
+		/// How the search results should be sorted
+		/// </summary>
 		public QuerySorting Sort { get; set; }
 
+		/// <summary>
+		/// Timeout for the search request in seconds
+		/// </summary>
 		public int TimeoutInSeconds { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

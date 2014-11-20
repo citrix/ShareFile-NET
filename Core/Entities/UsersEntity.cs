@@ -342,7 +342,7 @@ namespace ShareFile.Api.Client.Entities
         /// </remarks>
         /// <param name="email"></param>
         /// <param name="resetOnMobile"></param>
-        IQuery ForgotPassword(string email, bool resetOnMobile);
+        IQuery ForgotPassword(string email, bool resetOnMobile = false);
         
         /// <summary>
         /// Send Welcome Email
@@ -438,6 +438,33 @@ namespace ShareFile.Api.Client.Entities
         /// UserInfo
         /// </returns>
         IQuery<UserInfo> GetInfo();
+        
+        /// <summary>
+        /// delete the email address from user
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns>
+        /// User
+        /// </returns>
+        IQuery<User> DeleteEmailAddress(string email);
+        
+        /// <summary>
+        /// set email address as the primary email address for CURRENT user
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns>
+        /// User
+        /// </returns>
+        IQuery<User> MakePrimary(string email);
+        
+        /// <summary>
+        /// send notification email address to this email address for verification
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns>
+        /// User
+        /// </returns>
+        IQuery SendConfirmationEmail(string email);
     }
 
     public class UsersEntity : EntityBase, IUsersEntity
@@ -883,7 +910,7 @@ namespace ShareFile.Api.Client.Entities
         /// </remarks>
         /// <param name="email"></param>
         /// <param name="resetOnMobile"></param>
-        public IQuery ForgotPassword(string email, bool resetOnMobile)
+        public IQuery ForgotPassword(string email, bool resetOnMobile = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 		    sfApiQuery.From("Users");
@@ -1043,6 +1070,57 @@ namespace ShareFile.Api.Client.Entities
 		    sfApiQuery.From("Users");
 		    sfApiQuery.Action("Info");
             sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// delete the email address from user
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns>
+        /// User
+        /// </returns>
+        public IQuery<User> DeleteEmailAddress(string email)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<User>(Client);
+		    sfApiQuery.From("Users");
+		    sfApiQuery.Action("DeleteEmailAddress");
+            sfApiQuery.QueryString("email", email);
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// set email address as the primary email address for CURRENT user
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns>
+        /// User
+        /// </returns>
+        public IQuery<User> MakePrimary(string email)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<User>(Client);
+		    sfApiQuery.From("Users");
+		    sfApiQuery.Action("MakePrimary");
+            sfApiQuery.QueryString("email", email);
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// send notification email address to this email address for verification
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns>
+        /// User
+        /// </returns>
+        public IQuery SendConfirmationEmail(string email)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+		    sfApiQuery.From("Users");
+		    sfApiQuery.Action("SendConfirmationEmail");
+            sfApiQuery.QueryString("email", email);
+            sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
     }

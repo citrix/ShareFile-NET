@@ -19,22 +19,39 @@ namespace ShareFile.Api.Models
 	public class SimpleQuery : ODataObject 
 	{
 
-		public string AuthID { get; set; }
-
+		/// <summary>
+		/// Item type to search for (ex "File", "Folder", etc.)
+		/// </summary>
 		public string ItemType { get; set; }
 
+		/// <summary>
+		/// Parent id constraint on search results
+		/// </summary>
 		public string ParentID { get; set; }
 
+		/// <summary>
+		/// Creator id constraint on search results
+		/// </summary>
 		public string CreatorID { get; set; }
 
-		public string LuceneQuery { get; set; }
-
+		/// <summary>
+		/// Search term to search for
+		/// </summary>
 		public string SearchQuery { get; set; }
 
+		/// <summary>
+		/// Item creation date range constraint start date in UTC
+		/// </summary>
 		public string CreateStartDate { get; set; }
 
+		/// <summary>
+		/// Item creation date range constraint end date in UTC
+		/// </summary>
 		public string CreateEndDate { get; set; }
 
+		/// <summary>
+		/// Whether item content should be included in the search or not.
+		/// </summary>
 		public bool ItemNameOnly { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
@@ -45,11 +62,9 @@ namespace ShareFile.Api.Models
 			var typedSource = source as SimpleQuery;
 			if(typedSource != null)
 			{
-				AuthID = typedSource.AuthID;
 				ItemType = typedSource.ItemType;
 				ParentID = typedSource.ParentID;
 				CreatorID = typedSource.CreatorID;
-				LuceneQuery = typedSource.LuceneQuery;
 				SearchQuery = typedSource.SearchQuery;
 				CreateStartDate = typedSource.CreateStartDate;
 				CreateEndDate = typedSource.CreateEndDate;
@@ -58,10 +73,6 @@ namespace ShareFile.Api.Models
 			else
 			{
 				JToken token;
-				if(source.TryGetProperty("AuthID", out token) && token.Type != JTokenType.Null)
-				{
-					AuthID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
-				}
 				if(source.TryGetProperty("ItemType", out token) && token.Type != JTokenType.Null)
 				{
 					ItemType = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
@@ -73,10 +84,6 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("CreatorID", out token) && token.Type != JTokenType.Null)
 				{
 					CreatorID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
-				}
-				if(source.TryGetProperty("LuceneQuery", out token) && token.Type != JTokenType.Null)
-				{
-					LuceneQuery = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
 				if(source.TryGetProperty("SearchQuery", out token) && token.Type != JTokenType.Null)
 				{

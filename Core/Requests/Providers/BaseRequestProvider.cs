@@ -131,9 +131,26 @@ namespace ShareFile.Api.Client.Requests.Providers
                 }
             }
 
+            TryAddCookies(ShareFileClient, requestMessage);
+
+            ShareFileClient.Logging.Trace(watch);
+
+            return requestMessage;
+        }
+
+        protected HttpCompletionOption GetCompletionOptionForQuery(Type queryTypeParameter)
+        {
+            if (queryTypeParameter.Equals(typeof(Stream)))
+                return HttpCompletionOption.ResponseHeadersRead;
+            else
+                return HttpCompletionOption.ResponseContentRead;
+        }
+
+        internal static void TryAddCookies(ShareFileClient client, HttpRequestMessage requestMessage)
+        {
             if (RuntimeRequiresCustomCookieHandling)
             {
-                var cookieHeader = ShareFileClient.CookieContainer.GetCookieHeader(
+                var cookieHeader = client.CookieContainer.GetCookieHeader(
                     new Uri("https://www." + requestMessage.RequestUri.Host + requestMessage.RequestUri.AbsolutePath));
 
                 if (!string.IsNullOrWhiteSpace(cookieHeader))
@@ -142,17 +159,13 @@ namespace ShareFile.Api.Client.Requests.Providers
                 }
                 else
                 {
-                    cookieHeader = ShareFileClient.CookieContainer.GetCookieHeader(requestMessage.RequestUri);
+                    cookieHeader = client.CookieContainer.GetCookieHeader(requestMessage.RequestUri);
                     if (!string.IsNullOrEmpty(cookieHeader))
                     {
                         requestMessage.Headers.Add("Cookie", cookieHeader);
                     }
                 }
             }
-
-            ShareFileClient.Logging.Trace(watch);
-
-            return requestMessage;
         }
 
         protected T DeserializeStream<T>(Stream stream)
@@ -210,7 +223,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 
             return task;
         }
-
+        
         protected Task<string> SerializeObjectAsync(object obj)
         {
             var tcs = new TaskCompletionSource<string>();
@@ -494,6 +507,14 @@ namespace ShareFile.Api.Client.Requests.Providers
                         ShareFileClient.CookieContainer.SetCookies(responseMessage.RequestMessage.RequestUri, newCookie);
                     }
                 }
+            }
+        }
+
+        protected void CheckAsyncOperationScheduled(object responseObject)
+        {
+            if (responseObject is ODataFeed<AsyncOperation>)
+            {
+                throw new AsyncOperationScheduledException(responseObject as ODataFeed<AsyncOperation>);
             }
         }
     }

@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
-using System.Text;
-using System.Threading;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.FileSystem;
-using ShareFile.Api.Client.Security.Cryptography;
+using ShareFile.Api.Client.Requests.Providers;
 
 namespace ShareFile.Api.Client.Transfers.Uploaders
 {
 #if Async
     public class AsyncScalingFileUploader : AsyncUploaderBase
     {
-        private ScalingPartUploader partUploader;
+        private readonly ScalingPartUploader partUploader;
 
         public AsyncScalingFileUploader(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
             : base(client, uploadSpecificationRequest, file, config, expirationDays)
@@ -51,17 +46,20 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         {
             var client = GetHttpClient();
             var finishUri = this.GetFinishUriForThreadedUploads();
-            var message = new HttpRequestMessage(HttpMethod.Get, finishUri);
+            var requestMessage = new HttpRequestMessage(HttpMethod.Get, finishUri);
 
-            message.Headers.Add("Accept", "application/json");
+            requestMessage.Headers.Add("Accept", "application/json");
+            BaseRequestProvider.TryAddCookies(Client, requestMessage);
 
-            var response = await client.SendAsync(message);
+            var response = await client.SendAsync(requestMessage);
 
             return await GetUploadResponseAsync(response);
         }
 
         private async Task ExecuteChunkUploadMessage(HttpRequestMessage requestMessage)
         {
+            BaseRequestProvider.TryAddCookies(Client, requestMessage);
+
             using(var responseMessage = await GetHttpClient().SendAsync(requestMessage))
             {
                 string response = await responseMessage.Content.ReadAsStringAsync();

@@ -19,11 +19,25 @@ namespace ShareFile.Api.Models
 	public class QueryPaging : ODataObject 
 	{
 
-		public string Key { get; set; }
-
+		/// <summary>
+		/// Deprecated, use the Skip property to skip some number of results
+		/// </summary>
 		public int PageNumber { get; set; }
 
+		/// <summary>
+		/// Deprecated, use the Count property
+		/// </summary>
 		public int PageSize { get; set; }
+
+		/// <summary>
+		/// The number of search results to get
+		/// </summary>
+		public int Count { get; set; }
+
+		/// <summary>
+		/// How many results to skip before returning "Count" number results.
+		/// </summary>
+		public int Skip { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
@@ -33,17 +47,14 @@ namespace ShareFile.Api.Models
 			var typedSource = source as QueryPaging;
 			if(typedSource != null)
 			{
-				Key = typedSource.Key;
 				PageNumber = typedSource.PageNumber;
 				PageSize = typedSource.PageSize;
+				Count = typedSource.Count;
+				Skip = typedSource.Skip;
 			}
 			else
 			{
 				JToken token;
-				if(source.TryGetProperty("Key", out token) && token.Type != JTokenType.Null)
-				{
-					Key = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
-				}
 				if(source.TryGetProperty("PageNumber", out token) && token.Type != JTokenType.Null)
 				{
 					PageNumber = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
@@ -51,6 +62,14 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("PageSize", out token) && token.Type != JTokenType.Null)
 				{
 					PageSize = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
+				}
+				if(source.TryGetProperty("Count", out token) && token.Type != JTokenType.Null)
+				{
+					Count = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
+				}
+				if(source.TryGetProperty("Skip", out token) && token.Type != JTokenType.Null)
+				{
+					Skip = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
 				}
 			}
 		}

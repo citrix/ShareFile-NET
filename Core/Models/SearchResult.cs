@@ -63,6 +63,8 @@ namespace ShareFile.Api.Models
 
 		public string ParentSemanticPath { get; set; }
 
+		public string Path { get; set; }
+
 		public string StreamID { get; set; }
 
 		public string AccountID { get; set; }
@@ -97,6 +99,7 @@ namespace ShareFile.Api.Models
 				CanDownload = typedSource.CanDownload;
 				CanView = typedSource.CanView;
 				ParentSemanticPath = typedSource.ParentSemanticPath;
+				Path = typedSource.Path;
 				StreamID = typedSource.StreamID;
 				AccountID = typedSource.AccountID;
 			}
@@ -190,6 +193,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("ParentSemanticPath", out token) && token.Type != JTokenType.Null)
 				{
 					ParentSemanticPath = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Path", out token) && token.Type != JTokenType.Null)
+				{
+					Path = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
 				if(source.TryGetProperty("StreamID", out token) && token.Type != JTokenType.Null)
 				{

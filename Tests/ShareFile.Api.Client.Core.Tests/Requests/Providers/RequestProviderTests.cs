@@ -14,12 +14,12 @@ using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Requests.Executors;
+using ShareFile.Api.Client.Requests.Filters;
 using ShareFile.Api.Models;
+using System.Collections.Generic;
 
 namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
 {
-    using ShareFile.Api.Client.Requests.Filters;
-
     public class RequestProviderTests : BaseTests
     {
         [TestCase(true, TestName = "Query_ItemNotFound_Async")]
@@ -125,6 +125,29 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
             }
 
             Assert.Fail();
+        }
+
+        [TestCase(true, TestName="ZoneUnavailableThrown_Async")]
+        [TestCase(false, TestName="ZoneUnavailableThrown_Sync")]
+        public async void ZoneUnvailableThrown(bool async)
+        {
+            var shareFileClient = GetShareFileClient(true);
+            ConfigureZoneUnavailableResponse();
+
+            var query = shareFileClient.Items.Get(shareFileClient.Items.GetAlias(GetId()));
+
+            try
+            {
+                if (async)
+                    await query.ExecuteAsync();
+                else
+                    query.Execute();
+                Assert.Fail();
+            }
+            catch(ZoneUnavailableException)
+            {
+                Assert.Pass();
+            }
         }
 
         [TestCase(true, TestName = "OnDomainChangeRaise_Async")]
@@ -267,6 +290,20 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
                 .Returns(GenerateRedirectionResponse());
         }
 
+        protected void ConfigureZoneUnavailableResponse()
+        {
+            A.CallTo(() =>
+                    RequestExecutorFactory.GetAsyncRequestExecutor()
+                        .SendAsync(A<HttpClient>.Ignored, A<HttpRequestMessage>.Ignored, A<HttpCompletionOption>.Ignored,
+                            A<CancellationToken>.Ignored))
+                .Returns(GenerateRedirectionUnavailableResponse());
+
+            A.CallTo(() =>
+                    RequestExecutorFactory.GetSyncRequestExecutor()
+                        .Send(A<HttpClient>.Ignored, A<HttpRequestMessage>.Ignored, A<HttpCompletionOption>.Ignored))
+                .Returns(GenerateRedirectionUnavailableResponse());
+        }
+
         protected void ConfigureItemResponse()
         {
             HttpRequestMessage requestMessage = null;
@@ -328,15 +365,20 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
 
         protected HttpResponseMessage GenerateAsyncOperationScheduled()
         {
-            return new HttpResponseMessage(HttpStatusCode.Accepted)
+            var operations = new ODataFeed<AsyncOperation>();
+            operations.Feed = new List<AsyncOperation>
             {
-                Content = new StringContent(JsonConvert.SerializeObject(new AsyncOperation
+                new AsyncOperation
                 {
                     BatchID = GetId(10),
                     BatchSourceID = GetId(),
                     BatchProgress = 0,
-                    BatchState = SafeEnum<AsyncOperationState>.Create(AsyncOperationState.Scheduled)
-                }), Encoding.UTF8, "application/json")
+                    BatchState = AsyncOperationState.Scheduled
+                }
+            };
+            return new HttpResponseMessage(HttpStatusCode.Accepted)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(operations), Encoding.UTF8, "application/json")
             };
         }
 
@@ -345,6 +387,7 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
             var baseUri = "https://newhost.sharefile.com/sf/v3/";
             var redirection = new Redirection
             {
+                Available = true,
                 Uri = new Uri(baseUri)
             };
 
@@ -355,6 +398,23 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
                 Content = new StringContent(JsonConvert.SerializeObject(redirection), Encoding.UTF8, "application/json"),
                 RequestMessage = new HttpRequestMessage(HttpMethod.Get, new Uri("https://secure.sf-api.com/sf/v3/Items(" + GetId() + ")"))
             };
+        }
+
+        protected HttpResponseMessage GenerateRedirectionUnavailableResponse()
+        {
+            var redirection = new Redirection
+            {
+                Available = false
+            };
+
+            redirection.MetadataUrl = "https://newhost.sharefile.com/sf/v3/$metadata#ShareFile.Api.Models.Redirection@Element";
+
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(redirection), Encoding.UTF8, "application/json"),
+                RequestMessage = new HttpRequestMessage(HttpMethod.Get, new Uri("https://secure.sf-api.com/sf/v3/Items(" + GetId() + ")"))
+            };
+
         }
 
         protected HttpResponseMessage GenerateItemResponse(HttpRequestMessage requestMessage)

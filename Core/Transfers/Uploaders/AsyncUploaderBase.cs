@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.FileSystem;
+using ShareFile.Api.Client.Requests.Providers;
 using ShareFile.Api.Client.Security.Cryptography;
 using ShareFile.Api.Models;
 
@@ -129,7 +130,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 httpClient = new HttpClient(GetHttpClientHandler())
                 {
                     Timeout = new TimeSpan(0, 0, 0, 0, Config.HttpTimeout)
-                };                
+                };
             }
             return httpClient;
         }

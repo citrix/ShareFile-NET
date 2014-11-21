@@ -565,24 +565,7 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="url"></param>
         /// <param name="message"></param>
         IQuery CheckIn(Uri url, string message = null);
-        
-        /// <summary>
-        /// Lock File
-        /// </summary>
-        /// <remarks>
-        /// Locks a file.
-        /// </remarks>
-        /// <param name="url"></param>
-        /// <param name="lockdata"></param>
         IQuery CheckOut(Uri url);
-        
-        /// <summary>
-        /// Discard CheckOut
-        /// </summary>
-        /// <remarks>
-        /// Discards the existing lock on the file
-        /// </remarks>
-        /// <param name="url"></param>
         IQuery DiscardCheckOut(Uri url);
         
         /// <summary>
@@ -1531,15 +1514,6 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
-        
-        /// <summary>
-        /// Lock File
-        /// </summary>
-        /// <remarks>
-        /// Locks a file.
-        /// </remarks>
-        /// <param name="url"></param>
-        /// <param name="lockdata"></param>
         public IQuery CheckOut(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
@@ -1548,14 +1522,6 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
-        
-        /// <summary>
-        /// Discard CheckOut
-        /// </summary>
-        /// <remarks>
-        /// Discards the existing lock on the file
-        /// </remarks>
-        /// <param name="url"></param>
         public IQuery DiscardCheckOut(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);

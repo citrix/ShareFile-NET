@@ -47,6 +47,7 @@
     <Compile Include="Internal\Entities\BillingEntityInternal.cs" />
     <Compile Include="Internal\Entities\ConfigsEntityInternal.cs" />
     <Compile Include="Internal\Entities\DevicesEntityInternal.cs" />
+    <Compile Include="Internal\Entities\FileLockEntityInternal.cs" />
     <Compile Include="Internal\Entities\ItemsEntityInternal.cs" />
     <Compile Include="Internal\Entities\OAuthClientsEntityInternal.cs" />
     <Compile Include="Internal\Entities\PlanAddonsEntityInternal.cs" />

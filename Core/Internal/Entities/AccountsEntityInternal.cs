@@ -22,6 +22,23 @@ namespace ShareFile.Api.Client.Entities.Extensions
     {
         
         /// <summary>
+        /// Creates a new account
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns>
+        /// The new account created by the api
+        /// </returns>
+        public static IQuery<FreeTrialAccount> CreateFreeTrialAccount(this IAccountsEntity entity, FreeTrialAccount account)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<FreeTrialAccount>(entity.Client);
+		    sfApiQuery.From("Accounts");
+		    sfApiQuery.Action("CreateFreeTrialAccount");
+            sfApiQuery.Body = account;
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
         /// Get Outlook Information
         /// </summary>
         /// <returns>

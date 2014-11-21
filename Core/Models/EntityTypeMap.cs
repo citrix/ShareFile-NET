@@ -31,6 +31,8 @@ namespace ShareFile.Api.Models
                 _entityTypeMap.Add("BillingInfos", typeof(BillingInfo));
                 _entityTypeMap.Add("ESignature", typeof(ESignature));
                 _entityTypeMap.Add("ESignatures", typeof(ESignature));
+                _entityTypeMap.Add("MarketAnalytics", typeof(MarketAnalytics));
+                _entityTypeMap.Add("MarketAnalyticss", typeof(MarketAnalytics));
                 _entityTypeMap.Add("FileLock", typeof(FileLock));
                 _entityTypeMap.Add("FileLocks", typeof(FileLock));
                 _entityTypeMap.Add("PowerTools", typeof(PowerTools));
@@ -45,6 +47,8 @@ namespace ShareFile.Api.Models
                 _entityTypeMap.Add("ConnectorGroupZones", typeof(ConnectorGroupZone));
                 _entityTypeMap.Add("ConnectorGroupAccessControl", typeof(ConnectorGroupAccessControl));
                 _entityTypeMap.Add("ConnectorGroupAccessControls", typeof(ConnectorGroupAccessControl));
+                _entityTypeMap.Add("Principal", typeof(Principal));
+                _entityTypeMap.Add("Principals", typeof(Principal));
                 _entityTypeMap.Add("ShareResendParams", typeof(ShareResendParams));
                 _entityTypeMap.Add("ToolInformation", typeof(ToolInformation));
                 _entityTypeMap.Add("ToolInformations", typeof(ToolInformation));
@@ -54,8 +58,6 @@ namespace ShareFile.Api.Models
                 _entityTypeMap.Add("Account", typeof(Account));
                 _entityTypeMap.Add("Accounts", typeof(Account));
                 _entityTypeMap.Add("AccountPreferences", typeof(AccountPreferences));
-                _entityTypeMap.Add("Principal", typeof(Principal));
-                _entityTypeMap.Add("Principals", typeof(Principal));
                 _entityTypeMap.Add("User", typeof(User));
                 _entityTypeMap.Add("Users", typeof(User));
                 _entityTypeMap.Add("AccountUser", typeof(AccountUser));
@@ -87,8 +89,6 @@ namespace ShareFile.Api.Models
                 _entityTypeMap.Add("FindSubdomainParams", typeof(FindSubdomainParams));
                 _entityTypeMap.Add("FindSubdomainResult", typeof(FindSubdomainResult));
                 _entityTypeMap.Add("FindSubdomainResults", typeof(FindSubdomainResult));
-                _entityTypeMap.Add("FreeTrialAccount", typeof(FreeTrialAccount));
-                _entityTypeMap.Add("FreeTrialAccounts", typeof(FreeTrialAccount));
                 _entityTypeMap.Add("GenericConfig", typeof(GenericConfig));
                 _entityTypeMap.Add("GenericConfigs", typeof(GenericConfig));
                 _entityTypeMap.Add("Contact", typeof(Contact));

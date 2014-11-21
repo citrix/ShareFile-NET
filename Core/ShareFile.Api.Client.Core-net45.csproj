@@ -151,6 +151,7 @@
     <Compile Include="Models\ItemProtocolLink.cs" />
     <Compile Include="Models\Link.cs" />
     <Compile Include="Models\LockType.cs" />
+    <Compile Include="Models\MarketAnalytics.cs" />
     <Compile Include="Models\Metadata.cs" />
     <Compile Include="Models\MobileSecuritySettings.cs" />
     <Compile Include="Models\Note.cs" />

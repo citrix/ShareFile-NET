@@ -16,6 +16,7 @@ namespace ShareFile.Api.Client
     public interface IInternalShareFileClient : IShareFileClient
     {
         IBillingEntityInternal Billing { get; }
+        IFileLockEntityInternal FileLock { get; }
         IOAuthClientsEntityInternal OAuthClients { get; }
         IPlanAddonsEntityInternal PlanAddons { get; }
         IUsagePlansEntityInternal UsagePlans { get; }
@@ -30,6 +31,7 @@ namespace ShareFile.Api.Client
             : base(baseUri, configuration)
         {
             Billing = new BillingEntityInternal(this);
+            FileLock = new FileLockEntityInternal(this);
             OAuthClients = new OAuthClientsEntityInternal(this);
             PlanAddons = new PlanAddonsEntityInternal(this);
             UsagePlans = new UsagePlansEntityInternal(this);
@@ -41,6 +43,7 @@ namespace ShareFile.Api.Client
         }
 
         public IBillingEntityInternal Billing { get; private set; }
+        public IFileLockEntityInternal FileLock { get; private set; }
         public IOAuthClientsEntityInternal OAuthClients { get; private set; }
         public IPlanAddonsEntityInternal PlanAddons { get; private set; }
         public IUsagePlansEntityInternal UsagePlans { get; private set; }

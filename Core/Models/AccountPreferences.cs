@@ -191,6 +191,12 @@ namespace ShareFile.Api.Models
 
 		public bool? EnableDesktopEditorForAccount { get; set; }
 
+		public bool? UseStrictEmployeeDefinition { get; set; }
+
+		public string EmployeeEmailDomains { get; set; }
+
+		public bool? IsPremier { get; set; }
+
 		public bool? DisableShareConnectForAccount { get; set; }
 
 		public bool? EnableWebAppConnectorBrowsing { get; set; }
@@ -291,6 +297,9 @@ namespace ShareFile.Api.Models
 				EnableEncryptedEmailForOutlookPlugin = typedSource.EnableEncryptedEmailForOutlookPlugin;
 				EnableDocPreviews = typedSource.EnableDocPreviews;
 				EnableDesktopEditorForAccount = typedSource.EnableDesktopEditorForAccount;
+				UseStrictEmployeeDefinition = typedSource.UseStrictEmployeeDefinition;
+				EmployeeEmailDomains = typedSource.EmployeeEmailDomains;
+				IsPremier = typedSource.IsPremier;
 				DisableShareConnectForAccount = typedSource.DisableShareConnectForAccount;
 				EnableWebAppConnectorBrowsing = typedSource.EnableWebAppConnectorBrowsing;
 				EnableStrictCrossdomainPolicy = typedSource.EnableStrictCrossdomainPolicy;
@@ -641,6 +650,18 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("EnableDesktopEditorForAccount", out token) && token.Type != JTokenType.Null)
 				{
 					EnableDesktopEditorForAccount = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("UseStrictEmployeeDefinition", out token) && token.Type != JTokenType.Null)
+				{
+					UseStrictEmployeeDefinition = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EmployeeEmailDomains", out token) && token.Type != JTokenType.Null)
+				{
+					EmployeeEmailDomains = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("IsPremier", out token) && token.Type != JTokenType.Null)
+				{
+					IsPremier = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("DisableShareConnectForAccount", out token) && token.Type != JTokenType.Null)
 				{

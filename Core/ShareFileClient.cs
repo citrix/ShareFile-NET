@@ -104,6 +104,7 @@ namespace ShareFile.Api.Client
 
         T Entities<T>() where T : EntityBase;
 #if Async
+        Task<Stream> ExecuteAsync(IQuery<Stream> stream, CancellationToken? token = null);
         Task<Stream> ExecuteAsync(IStreamQuery stream, CancellationToken? token = null);
 
         Task<T> ExecuteAsync<T>(IQuery<T> query, CancellationToken? token = null)
@@ -112,6 +113,7 @@ namespace ShareFile.Api.Client
         Task ExecuteAsync(IQuery query, CancellationToken? token = null);
 #endif
 
+        Stream Execute(IQuery<Stream> stream);
         Stream Execute(IStreamQuery stream);
 
         T Execute<T>(IQuery<T> query)
@@ -498,6 +500,11 @@ namespace ShareFile.Api.Client
             return RequestProviderFactory.GetAsyncRequestProvider().ExecuteAsync(stream, token);
         }
 
+        public virtual Task<Stream> ExecuteAsync(IQuery<Stream> stream, CancellationToken? token = null)
+        {
+            return RequestProviderFactory.GetAsyncRequestProvider().ExecuteAsync(stream, token);
+        }
+
         public virtual Task<T> ExecuteAsync<T>(IQuery<T> query, CancellationToken? token = null)
             where T : class
         {
@@ -511,6 +518,11 @@ namespace ShareFile.Api.Client
 #endif
 
         public virtual Stream Execute(IStreamQuery stream)
+        {
+            return RequestProviderFactory.GetSyncRequestProvider().Execute(stream);
+        }
+
+        public virtual Stream Execute(IQuery<Stream> stream)
         {
             return RequestProviderFactory.GetSyncRequestProvider().Execute(stream);
         }

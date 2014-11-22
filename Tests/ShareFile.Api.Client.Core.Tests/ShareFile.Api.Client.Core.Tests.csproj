@@ -69,6 +69,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiRequestTests.cs" />
     <Compile Include="Authentication\OAuth2\OAuth2AuthenticationHelperTests.cs" />
     <Compile Include="Authentication\WebAuthenticationHelperTests.cs" />
     <Compile Include="BaseTests.cs" />

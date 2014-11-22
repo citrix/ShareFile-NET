@@ -798,7 +798,6 @@ namespace ShareFile.Api.Client.Requests
             }
 
             apiRequest.HeaderCollection = query.GetHeaders();
-            apiRequest.IsComposed = true;
 
             return apiRequest;
         }

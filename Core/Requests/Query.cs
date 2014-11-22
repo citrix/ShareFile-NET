@@ -663,7 +663,7 @@ namespace ShareFile.Api.Client.Requests
         /// <summary>
         /// Indicates whether or not the Uri has been composed.
         /// </summary>
-        public bool IsComposed { get; protected set; }
+        public bool IsComposed { get; set; }
 
         public ApiRequest()
         {

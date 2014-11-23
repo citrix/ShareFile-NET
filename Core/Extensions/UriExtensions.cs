@@ -58,11 +58,11 @@ namespace ShareFile.Api.Client.Extensions
                 var kvp = parameter.Split(EqualsChar);
                 if (kvp.Length == 1)
                 {
-                    yield return new ODataParameter(kvp[0]);
+                    yield return new ODataParameter(Uri.UnescapeDataString(kvp[0]));
                 }
                 else
                 {
-                    yield return new ODataParameter(kvp[0], kvp[1]);
+                    yield return new ODataParameter(Uri.UnescapeDataString(kvp[0]), Uri.UnescapeDataString(kvp[1]));
                 }
             }
         }

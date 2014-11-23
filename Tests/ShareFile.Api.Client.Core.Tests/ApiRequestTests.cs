@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+
 using NUnit.Framework;
 using ShareFile.Api.Client.Enums;
 using ShareFile.Api.Client.Extensions;
@@ -15,6 +17,24 @@ namespace ShareFile.Api.Client.Core.Tests
             var shareFileClient = GetShareFileClient();
             var initialUri = shareFileClient.Items.GetAlias(ItemAlias.Root);
             var uriWithQueryString = new Uri(initialUri + "?" + kvp);
+            var query = shareFileClient.Items.Get(uriWithQueryString)
+                .Expand("Children")
+                .Select("*")
+                .QueryString("anotherKey", "anotherValue");
+
+            var request = ApiRequest.FromQuery(query);
+            var uri = request.GetComposedUri();
+
+            Assert.IsTrue(uri.Query.Contains(kvp));
+        }
+
+        [TestCase("%24key=value")]
+        public void UriWithEncodedQueryString(string kvp)
+        {
+            var shareFileClient = GetShareFileClient();
+            var initialUri = shareFileClient.Items.GetAlias(ItemAlias.Root);
+            var uriWithQueryString = new Uri(initialUri + "?" + kvp);
+            
             var query = shareFileClient.Items.Get(uriWithQueryString)
                 .Expand("Children")
                 .Select("*")

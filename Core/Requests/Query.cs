@@ -679,7 +679,12 @@ namespace ShareFile.Api.Client.Requests
         /// <returns></returns>
         public static bool IsUri(string id, out Uri uri)
         {
-            return Uri.TryCreate(id, UriKind.RelativeOrAbsolute, out uri);
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                uri = null;
+                return false;
+            }
+            return Uri.TryCreate(id, UriKind.Absolute, out uri);
         }
 
         public static ApiRequest FromQuery(QueryBase query)

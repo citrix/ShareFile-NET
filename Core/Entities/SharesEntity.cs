@@ -116,6 +116,32 @@ namespace ShareFile.Api.Client.Entities
         IQuery<Item> GetItems(Uri shareUrl, string itemid);
         
         /// <summary>
+        /// Get Thumbnail of a Share Item
+        /// </summary>
+        /// <remarks>
+        /// Retrieve a thumbnail link for the specified Item in the Share.
+        /// </remarks>
+        /// <param name="shareUrl"></param>
+        /// <param name="itemid"></param>
+        /// <param name="size"></param>
+        /// <param name="redirect"></param>
+        /// <returns>
+        /// A 302 redirection to the Thumbnail link
+        /// </returns>
+        IQuery<Stream> Thumbnail(Uri shareUrl, string itemid, int size = 75, bool redirect = false);
+        
+        /// <summary>
+        /// Get List of Protocol Links of a Share item
+        /// </summary>
+        /// <param name="shareUrl"></param>
+        /// <param name="itemid"></param>
+        /// <param name="platform"></param>
+        /// <returns>
+        /// A list of protocol links depending on the input parameter 'platform', 404 (Not Found) if not supported by the item
+        /// </returns>
+        IQuery<ODataFeed<ItemProtocolLink>> ProtocolLinks(Uri shareUrl, string itemid, PreviewPlatform platform);
+        
+        /// <summary>
         /// Downloads Share Items
         /// </summary>
         /// <remarks>
@@ -537,6 +563,52 @@ namespace ShareFile.Api.Client.Entities
 		    sfApiQuery.Action("Items");
             sfApiQuery.Uri(shareUrl);
             sfApiQuery.ActionIds(itemid);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get Thumbnail of a Share Item
+        /// </summary>
+        /// <remarks>
+        /// Retrieve a thumbnail link for the specified Item in the Share.
+        /// </remarks>
+        /// <param name="shareUrl"></param>
+        /// <param name="itemid"></param>
+        /// <param name="size"></param>
+        /// <param name="redirect"></param>
+        /// <returns>
+        /// A 302 redirection to the Thumbnail link
+        /// </returns>
+        public IQuery<Stream> Thumbnail(Uri shareUrl, string itemid, int size = 75, bool redirect = false)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
+		    sfApiQuery.Action("Items");
+            sfApiQuery.Uri(shareUrl);
+            sfApiQuery.ActionIds(itemid);
+            sfApiQuery.SubAction("Thumbnail");
+            sfApiQuery.QueryString("size", size);
+            sfApiQuery.QueryString("redirect", redirect);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get List of Protocol Links of a Share item
+        /// </summary>
+        /// <param name="shareUrl"></param>
+        /// <param name="itemid"></param>
+        /// <param name="platform"></param>
+        /// <returns>
+        /// A list of protocol links depending on the input parameter 'platform', 404 (Not Found) if not supported by the item
+        /// </returns>
+        public IQuery<ODataFeed<ItemProtocolLink>> ProtocolLinks(Uri shareUrl, string itemid, PreviewPlatform platform)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<ItemProtocolLink>>(Client);
+		    sfApiQuery.Action("Items");
+            sfApiQuery.Uri(shareUrl);
+            sfApiQuery.ActionIds(itemid);
+            sfApiQuery.SubAction("ProtocolLinks", platform);
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }

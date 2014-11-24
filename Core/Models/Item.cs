@@ -156,6 +156,11 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public SafeEnum<PreviewStatus> PreviewStatus { get; set; }
 
+		/// <summary>
+		/// Indicates a list of PreviewPlatforms supported for this item.
+		/// </summary>
+		public IEnumerable<PreviewPlatformInfo> PreviewPlatformsSupported { get; set; }
+
 		public int? MaxPreviewSize { get; set; }
 
 		/// <summary>
@@ -247,6 +252,7 @@ namespace ShareFile.Api.Models
 				ExpirationDays = typedSource.ExpirationDays;
 				FileSizeBytes = typedSource.FileSizeBytes;
 				PreviewStatus = typedSource.PreviewStatus;
+				PreviewPlatformsSupported = typedSource.PreviewPlatformsSupported;
 				MaxPreviewSize = typedSource.MaxPreviewSize;
 				HasPendingDeletion = typedSource.HasPendingDeletion;
 				AssociatedFolderTemplateID = typedSource.AssociatedFolderTemplateID;
@@ -357,6 +363,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("PreviewStatus", out token) && token.Type != JTokenType.Null)
 				{
 					PreviewStatus = (SafeEnum<PreviewStatus>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<PreviewStatus>));
+				}
+				if(source.TryGetProperty("PreviewPlatformsSupported", out token) && token.Type != JTokenType.Null)
+				{
+					PreviewPlatformsSupported = (IEnumerable<PreviewPlatformInfo>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<PreviewPlatformInfo>));
 				}
 				if(source.TryGetProperty("MaxPreviewSize", out token) && token.Type != JTokenType.Null)
 				{

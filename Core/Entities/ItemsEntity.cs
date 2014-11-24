@@ -669,27 +669,14 @@ namespace ShareFile.Api.Client.Entities
         IQuery<Redirection> WebView(Uri url);
         
         /// <summary>
-        /// Get all Item Protocol Link
-        /// </summary>
-        /// <remarks>
-        /// This method returns all alternate protocol links supported by ShareFile (such
-        /// as WOPI, FTP, WebDAV).
-        /// </remarks>
-        /// <param name="parentUrl"></param>
-        /// <returns>
-        /// A Feed containing all protocols links supported by the given item
-        /// </returns>
-        IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(Uri parentUrl);
-        
-        /// <summary>
-        /// Get an Item Protocol Link
+        /// Get List of Item Protocol Links
         /// </summary>
         /// <param name="url"></param>
-        /// <param name="protocol"></param>
+        /// <param name="platform"></param>
         /// <returns>
-        /// A single protocol link if supported, 404 (Not Found) if not supported by the item
+        /// A list of protocol links depending on the input parameter 'platform', 404 (Not Found) if not supported by the item
         /// </returns>
-        IQuery<ItemProtocolLink> GetProtocolLinks(Uri url, string protocol);
+        IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(Uri url, PreviewPlatform platform);
         
         /// <summary>
         /// Get Redirection endpoint Information
@@ -1666,39 +1653,19 @@ namespace ShareFile.Api.Client.Entities
         }
         
         /// <summary>
-        /// Get all Item Protocol Link
+        /// Get List of Item Protocol Links
         /// </summary>
-        /// <remarks>
-        /// This method returns all alternate protocol links supported by ShareFile (such
-        /// as WOPI, FTP, WebDAV).
-        /// </remarks>
-        /// <param name="parentUrl"></param>
+        /// <param name="url"></param>
+        /// <param name="platform"></param>
         /// <returns>
-        /// A Feed containing all protocols links supported by the given item
+        /// A list of protocol links depending on the input parameter 'platform', 404 (Not Found) if not supported by the item
         /// </returns>
-        public IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(Uri parentUrl)
+        public IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(Uri url, PreviewPlatform platform)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<ItemProtocolLink>>(Client);
 		    sfApiQuery.Action("ProtocolLinks");
-            sfApiQuery.Uri(parentUrl);
-            sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
-        }
-        
-        /// <summary>
-        /// Get an Item Protocol Link
-        /// </summary>
-        /// <param name="url"></param>
-        /// <param name="protocol"></param>
-        /// <returns>
-        /// A single protocol link if supported, 404 (Not Found) if not supported by the item
-        /// </returns>
-        public IQuery<ItemProtocolLink> GetProtocolLinks(Uri url, string protocol)
-        {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ItemProtocolLink>(Client);
-		    sfApiQuery.Action("ProtocolLinks");
             sfApiQuery.Uri(url);
-            sfApiQuery.ActionIds(protocol);
+            sfApiQuery.ActionIds(platform);
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }

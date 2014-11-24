@@ -49,6 +49,8 @@ namespace ShareFile.Api.Models
                 _entityTypeMap.Add("ConnectorGroupAccessControls", typeof(ConnectorGroupAccessControl));
                 _entityTypeMap.Add("Principal", typeof(Principal));
                 _entityTypeMap.Add("Principals", typeof(Principal));
+                _entityTypeMap.Add("PreviewPlatformInfo", typeof(PreviewPlatformInfo));
+                _entityTypeMap.Add("PreviewPlatformInfos", typeof(PreviewPlatformInfo));
                 _entityTypeMap.Add("ShareResendParams", typeof(ShareResendParams));
                 _entityTypeMap.Add("ToolInformation", typeof(ToolInformation));
                 _entityTypeMap.Add("ToolInformations", typeof(ToolInformation));

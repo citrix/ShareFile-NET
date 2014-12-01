@@ -62,6 +62,8 @@ namespace ShareFile.Api.Models
 
 		public IEnumerable<DeviceUser> Devices { get; set; }
 
+		public IEnumerable<SafeEnum<IntegrationProvider>> Integrations { get; set; }
+
 		public Folder VirtualRoot { get; set; }
 
 		public IEnumerable<SafeEnum<UserRole>> Roles { get; set; }
@@ -96,6 +98,7 @@ namespace ShareFile.Api.Models
 				FavoriteFolders = typedSource.FavoriteFolders;
 				HomeFolder = typedSource.HomeFolder;
 				Devices = typedSource.Devices;
+				Integrations = typedSource.Integrations;
 				VirtualRoot = typedSource.VirtualRoot;
 				Roles = typedSource.Roles;
 				Info = typedSource.Info;
@@ -182,6 +185,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("Devices", out token) && token.Type != JTokenType.Null)
 				{
 					Devices = (IEnumerable<DeviceUser>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<DeviceUser>));
+				}
+				if(source.TryGetProperty("Integrations", out token) && token.Type != JTokenType.Null)
+				{
+					Integrations = (IEnumerable<SafeEnum<IntegrationProvider>>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<SafeEnum<IntegrationProvider>>));
 				}
 				if(source.TryGetProperty("VirtualRoot", out token) && token.Type != JTokenType.Null)
 				{

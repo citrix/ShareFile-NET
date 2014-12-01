@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Requests.Filters;
 using ShareFile.Api.Models;
 
@@ -659,6 +660,9 @@ namespace ShareFile.Api.Client.Requests
         public object Body { get; set; }
         public ODataParameterCollection QueryStringCollection { get; set; }
         public QueryBase QueryBase { get; protected set; }
+        /// <summary>
+        /// Indicates whether or not the Uri has been composed.
+        /// </summary>
         public bool IsComposed { get; set; }
 
         public ApiRequest()
@@ -667,9 +671,20 @@ namespace ShareFile.Api.Client.Requests
             HeaderCollection = new Dictionary<string, string>();
         }
 
-        public static bool IsUri(string id)
+        /// <summary>
+        /// Check if the provided id is a fully qualified <see cref="Uri"/>
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="uri"></param>
+        /// <returns></returns>
+        public static bool IsUri(string id, out Uri uri)
         {
-            return id.StartsWith("http://") || id.StartsWith("https://");
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                uri = null;
+                return false;
+            }
+            return Uri.TryCreate(id, UriKind.Absolute, out uri);
         }
 
         public static ApiRequest FromQuery(QueryBase query)
@@ -684,9 +699,22 @@ namespace ShareFile.Api.Client.Requests
             var queryBaseUri = query.GetBaseUri();
             
             StringBuilder url;
-            if (IsUri(ids))
+            Uri idsUri;
+            if (IsUri(ids, out idsUri))
             {
-                url = new StringBuilder(ids);
+                if (string.IsNullOrWhiteSpace(idsUri.Query))
+                {
+                    url = new StringBuilder(ids);
+                }
+                else
+                {
+                    foreach (var odataParameter in idsUri.GetQueryAsODataParameters())
+                    {
+                        queryString.Add(odataParameter);
+                    }
+
+                    url = new StringBuilder(idsUri.ToString().Substring(0, ids.IndexOf('?')));
+                }
             }
             else
             {

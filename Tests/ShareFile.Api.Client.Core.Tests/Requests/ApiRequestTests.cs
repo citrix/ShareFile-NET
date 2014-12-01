@@ -244,17 +244,14 @@ namespace ShareFile.Api.Client.Core.Tests.Requests
         [Test]
         public void ApiRequest_FromQuery_WithQueryStringOnUri()
         {
-            // Arrange
-            var id = GetId();
-
-            // Act
             var query = new Query<ODataObject>(GetShareFileClient())
                 .Uri(new Uri("https://release.sf-api.com/sf/v3/Items(folder)?qsParam=1"))
                 .QueryString("testKey", "testValue");
             var apiRequest = ApiRequest.FromQuery(query);
 
-            var expectedUri = "https://release.sf-api.com/sf/v3/Items(folder)?qsParam=1&testKey=testValue";
-            apiRequest.GetComposedUri().ToString().Should().Be(expectedUri);
+            var composedUri = apiRequest.GetComposedUri().ToString();
+            composedUri.Should().Contain("qsParam=1");
+            composedUri.Should().Contain("testKey=testValue");
         }
     }
 }

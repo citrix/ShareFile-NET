@@ -250,6 +250,7 @@
     <Compile Include="Models\ShareRequestParams.cs" />
     <Compile Include="Models\ShareResendParams.cs" />
     <Compile Include="Models\ShareSendParams.cs" />
+    <Compile Include="Models\ShareSubType.cs" />
     <Compile Include="Models\ShareType.cs" />
     <Compile Include="Models\SimpleQuery.cs" />
     <Compile Include="Models\SimpleSearchQuery.cs" />

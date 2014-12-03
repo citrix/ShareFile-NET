@@ -69,30 +69,6 @@ namespace ShareFile.Api.Client.Entities.Extensions
         }
         
         /// <summary>
-        /// Enable ENS for the Account
-        /// </summary>
-        public static IQuery EnableEns(this IAccountsEntity entity)
-        {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(entity.Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("EnableEns");
-            sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
-        }
-        
-        /// <summary>
-        /// Disable ENS for account
-        /// </summary>
-        public static IQuery DisableEns(this IAccountsEntity entity)
-        {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(entity.Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("DisableEns");
-            sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
-        }
-        
-        /// <summary>
         /// Update Account Preferences
         /// </summary>
         /// <example>

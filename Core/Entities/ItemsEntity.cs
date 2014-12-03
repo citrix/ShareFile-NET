@@ -487,12 +487,25 @@ namespace ShareFile.Api.Client.Entities
         /// <summary>
         /// Upload File
         /// </summary>
+        /// <example>
+        /// POST https://account.sf-api.com/sf/v3/Items(id)/Upload2
+        /// {
+        /// "Method":"Method",
+        /// "Raw": false,
+        /// "FileName":"FileName"
+        /// "FileLength": length
+        /// }
+        /// </example>
         /// <remarks>
         /// Prepares the links for uploading files to the target Folder.
         /// This method returns an Upload Specification object. The fields are
         /// populated based on the upload method, provider, and resume parameters passed to the
         /// upload call.
         /// The Method determines how the URLs must be called.
+        /// 
+        /// There are two different URL's to upload: /sf/v3/Items(id)/Upload? accepts the upload parameters
+        /// through a query URL string, while /sf/v3/Items(id)/Upload2 does it through the HTTP POST message body.
+        /// If using 'Upload2', the parameters must be capitalized.
         /// 
         /// Standard uploads use a single HTTP POST message to the ChunkUri address provided in
         /// the response. All other fields will be empty. Standard uploads do not support Resume.
@@ -554,6 +567,7 @@ namespace ShareFile.Api.Client.Entities
         /// negotiate the resume upload.
         /// </returns>
         IQuery<UploadSpecification> Upload(Uri url, UploadMethod method = UploadMethod.Standard, bool raw = false, string fileName = null, long fileSize = 0, string batchId = null, bool batchLast = false, bool canResume = false, bool startOver = false, bool unzip = false, string tool = "apiv3", bool overwrite = false, string title = null, string details = null, bool isSend = false, string sendGuid = null, string opid = null, int threadCount = 4, string responseFormat = "json", bool notify = false, DateTime? clientCreatedDateUTC = null, DateTime? clientModifiedDateUTC = null, int? expirationDays = null);
+        IQuery<UploadSpecification> Upload2(Uri url, UploadRequestParams uploadParams, int? expirationDays = null);
         
         /// <summary>
         /// Unlock File
@@ -1386,12 +1400,25 @@ namespace ShareFile.Api.Client.Entities
         /// <summary>
         /// Upload File
         /// </summary>
+        /// <example>
+        /// POST https://account.sf-api.com/sf/v3/Items(id)/Upload2
+        /// {
+        /// "Method":"Method",
+        /// "Raw": false,
+        /// "FileName":"FileName"
+        /// "FileLength": length
+        /// }
+        /// </example>
         /// <remarks>
         /// Prepares the links for uploading files to the target Folder.
         /// This method returns an Upload Specification object. The fields are
         /// populated based on the upload method, provider, and resume parameters passed to the
         /// upload call.
         /// The Method determines how the URLs must be called.
+        /// 
+        /// There are two different URL's to upload: /sf/v3/Items(id)/Upload? accepts the upload parameters
+        /// through a query URL string, while /sf/v3/Items(id)/Upload2 does it through the HTTP POST message body.
+        /// If using 'Upload2', the parameters must be capitalized.
         /// 
         /// Standard uploads use a single HTTP POST message to the ChunkUri address provided in
         /// the response. All other fields will be empty. Standard uploads do not support Resume.
@@ -1479,6 +1506,16 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.QueryString("clientCreatedDateUTC", clientCreatedDateUTC);
             sfApiQuery.QueryString("clientModifiedDateUTC", clientModifiedDateUTC);
             sfApiQuery.QueryString("expirationDays", expirationDays);
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        public IQuery<UploadSpecification> Upload2(Uri url, UploadRequestParams uploadParams, int? expirationDays = null)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<UploadSpecification>(Client);
+		    sfApiQuery.Action("Upload2");
+            sfApiQuery.Uri(url);
+            sfApiQuery.QueryString("expirationDays", expirationDays);
+            sfApiQuery.Body = uploadParams;
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }

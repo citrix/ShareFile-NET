@@ -29,6 +29,8 @@ namespace ShareFile.Api.Models
                 _entityTypeMap.Add("AccessControlParams", typeof(AccessControlParam));
                 _entityTypeMap.Add("BillingInfo", typeof(BillingInfo));
                 _entityTypeMap.Add("BillingInfos", typeof(BillingInfo));
+                _entityTypeMap.Add("UploadRequestParams", typeof(UploadRequestParams));
+                _entityTypeMap.Add("UploadRequestParamss", typeof(UploadRequestParams));
                 _entityTypeMap.Add("ESignature", typeof(ESignature));
                 _entityTypeMap.Add("ESignatures", typeof(ESignature));
                 _entityTypeMap.Add("MarketAnalytics", typeof(MarketAnalytics));

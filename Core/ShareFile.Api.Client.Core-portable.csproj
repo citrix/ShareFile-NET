@@ -203,6 +203,7 @@
     <Compile Include="Models\ToolInformation.cs" />
     <Compile Include="Models\TreeMode.cs" />
     <Compile Include="Models\UploadMethod.cs" />
+    <Compile Include="Models\UploadRequestParams.cs" />
     <Compile Include="Models\UploadSpecification.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserConfirmationSettings.cs" />

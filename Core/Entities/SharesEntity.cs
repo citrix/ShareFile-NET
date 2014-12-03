@@ -334,6 +334,15 @@ namespace ShareFile.Api.Client.Entities
         /// <summary>
         /// Upload File to Request Share
         /// </summary>
+        /// <example>
+        /// POST https://account.sf-api.com/sf/v3/Shares(id)/Upload2
+        /// {
+        /// "Method":"Method",
+        /// "Raw": false,
+        /// "FileName":"FileName"
+        /// "FileLength": length
+        /// }
+        /// </example>
         /// <remarks>
         /// Prepares the links for uploading files to the target Share.
         /// This method returns an Upload Specification object. The fields are
@@ -399,6 +408,7 @@ namespace ShareFile.Api.Client.Entities
         /// negotiate the resume upload.
         /// </returns>
         IQuery<UploadSpecification> Upload(Uri url, UploadMethod method = UploadMethod.Standard, bool raw = false, string fileName = null, long fileSize = 0, string batchId = null, bool batchLast = false, bool canResume = false, bool startOver = false, bool unzip = false, string tool = "apiv3", bool overwrite = false, string title = null, string details = null, bool isSend = false, string sendGuid = null, string opid = null, int threadCount = 4, string responseFormat = "json", bool notify = false, DateTime? clientCreatedDateUTC = null, DateTime? clientModifiedDateUTC = null, int? expirationDays = null);
+        IQuery<UploadSpecification> Upload2(Uri url, UploadRequestParams uploadParams, int? expirationDays = null);
         
         /// <summary>
         /// Get Redirection endpoint Information
@@ -894,6 +904,15 @@ namespace ShareFile.Api.Client.Entities
         /// <summary>
         /// Upload File to Request Share
         /// </summary>
+        /// <example>
+        /// POST https://account.sf-api.com/sf/v3/Shares(id)/Upload2
+        /// {
+        /// "Method":"Method",
+        /// "Raw": false,
+        /// "FileName":"FileName"
+        /// "FileLength": length
+        /// }
+        /// </example>
         /// <remarks>
         /// Prepares the links for uploading files to the target Share.
         /// This method returns an Upload Specification object. The fields are
@@ -985,6 +1004,16 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.QueryString("clientCreatedDateUTC", clientCreatedDateUTC);
             sfApiQuery.QueryString("clientModifiedDateUTC", clientModifiedDateUTC);
             sfApiQuery.QueryString("expirationDays", expirationDays);
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        public IQuery<UploadSpecification> Upload2(Uri url, UploadRequestParams uploadParams, int? expirationDays = null)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<UploadSpecification>(Client);
+		    sfApiQuery.Action("Upload2");
+            sfApiQuery.Uri(url);
+            sfApiQuery.QueryString("expirationDays", expirationDays);
+            sfApiQuery.Body = uploadParams;
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }

@@ -65,6 +65,8 @@ namespace ShareFile.Api.Models
 
 		public string DateFormat { get; set; }
 
+		public bool? EnableShareConnect { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -96,6 +98,7 @@ namespace ShareFile.Api.Models
 				TimeFormat = typedSource.TimeFormat;
 				LongTimeFormat = typedSource.LongTimeFormat;
 				DateFormat = typedSource.DateFormat;
+				EnableShareConnect = typedSource.EnableShareConnect;
 			}
 			else
 			{
@@ -191,6 +194,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("DateFormat", out token) && token.Type != JTokenType.Null)
 				{
 					DateFormat = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("EnableShareConnect", out token) && token.Type != JTokenType.Null)
+				{
+					EnableShareConnect = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 			}
 		}

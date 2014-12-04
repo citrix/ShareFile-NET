@@ -47,7 +47,11 @@ namespace ShareFile.Api.Models
         SFAndroid_MDM = 30,
         ThirdParty = 31,
         SF_FTP = 32,
-        SF_SFTP = 33
+        SF_SFTP = 33,
+        SFWebApp = 34,
+        SFMarketing = 35,
+        ShareConnect = 36,
+        ShareConnectWeb = 37
     }
 #endif
 }

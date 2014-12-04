@@ -203,6 +203,8 @@ namespace ShareFile.Api.Models
 
 		public bool? EnableStrictCrossdomainPolicy { get; set; }
 
+		public bool? DisableScanSnap { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -303,6 +305,7 @@ namespace ShareFile.Api.Models
 				DisableShareConnectForAccount = typedSource.DisableShareConnectForAccount;
 				EnableWebAppConnectorBrowsing = typedSource.EnableWebAppConnectorBrowsing;
 				EnableStrictCrossdomainPolicy = typedSource.EnableStrictCrossdomainPolicy;
+				DisableScanSnap = typedSource.DisableScanSnap;
 			}
 			else
 			{
@@ -674,6 +677,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("EnableStrictCrossdomainPolicy", out token) && token.Type != JTokenType.Null)
 				{
 					EnableStrictCrossdomainPolicy = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("DisableScanSnap", out token) && token.Type != JTokenType.Null)
+				{
+					DisableScanSnap = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 			}
 		}

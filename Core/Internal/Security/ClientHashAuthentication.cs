@@ -13,17 +13,17 @@ namespace ShareFile.Api.Client.Security
         public string ClientId { get; private set; }
         public string ClientSecret { get; private set; }
         public string UserId { get; set; }
-        private ShareFileClient Client { get; set; }
+        private IShareFileClient ShareFileClient { get; set; }
 
-        public ClientHashAuthentication(IShareFileClient client, string oauthClientId, string oauthClientSecret)
+        public ClientHashAuthentication(IShareFileClient shareFileClient, string oauthClientId, string oauthClientSecret)
         {
             ClientId = oauthClientId;
             ClientSecret = oauthClientSecret;
-            Client = (ShareFileClient)client;
+            ShareFileClient = shareFileClient;
         }
 
-        public ClientHashAuthentication(IShareFileClient client, string oauthClientId, string oauthClientSecret, string userId)
-            : this(client, oauthClientId, oauthClientSecret)
+        public ClientHashAuthentication(IShareFileClient shareFileClient, string oauthClientId, string oauthClientSecret, string userId)
+            : this(shareFileClient, oauthClientId, oauthClientSecret)
         {
             UserId = userId;
         }
@@ -75,7 +75,7 @@ namespace ShareFile.Api.Client.Security
             using (var stringWriter = new StringWriter())
             using (var textWriter = new JsonTextWriter(stringWriter))
             {
-                Client.Serializer.Serialize(textWriter, body);
+                ShareFileClient.Serializer.Serialize(textWriter, body);
                 return textWriter.ToString();
             }
         }

@@ -30,7 +30,7 @@ namespace ShareFile.Api.Client
     {
         Uri BaseUri { get; set; }
         Configuration Configuration { get; set; }
-
+        JsonSerializer Serializer { get; set; }
 #if ShareFile
         CustomAuthentication CustomAuthentication { get; set; }
 #endif

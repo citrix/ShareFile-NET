@@ -41,6 +41,7 @@ namespace ShareFile.Api.Models
         StreamedUploadForms = 25,
         ThreadedUploadRaw = 26,
         ThreadedUploadForms = 27,
-        RightSignature = 28
+        RightSignature = 28,
+        UploadWithRequestParams = 29
     }
 }

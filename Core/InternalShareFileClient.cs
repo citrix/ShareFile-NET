@@ -20,6 +20,7 @@ namespace ShareFile.Api.Client
         IFileLockEntityInternal FileLock { get; }
         IOAuthClientsEntityInternal OAuthClients { get; }
         IPlanAddonsEntityInternal PlanAddons { get; }
+        IReportsEntityInternal Reports { get; }
         IUsagePlansEntityInternal UsagePlans { get; }
         IAzureSBTopicsEntityInternal AzureSBTopics { get; }
         IConfigsEntityInternal Configs { get; }
@@ -36,6 +37,7 @@ namespace ShareFile.Api.Client
             FileLock = new FileLockEntityInternal(this);
             OAuthClients = new OAuthClientsEntityInternal(this);
             PlanAddons = new PlanAddonsEntityInternal(this);
+            Reports = new ReportsEntityInternal(this);
             UsagePlans = new UsagePlansEntityInternal(this);
             AzureSBTopics = new AzureSBTopicsEntityInternal(this);
             Configs = new ConfigsEntityInternal(this);
@@ -49,6 +51,7 @@ namespace ShareFile.Api.Client
         public IFileLockEntityInternal FileLock { get; private set; }
         public IOAuthClientsEntityInternal OAuthClients { get; private set; }
         public IPlanAddonsEntityInternal PlanAddons { get; private set; }
+        public IReportsEntityInternal Reports { get; private set; }
         public IUsagePlansEntityInternal UsagePlans { get; private set; }
         public IAzureSBTopicsEntityInternal AzureSBTopics { get; private set; }
         public IConfigsEntityInternal Configs { get; private set; }

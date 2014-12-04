@@ -27,6 +27,10 @@ namespace ShareFile.Api.Models
                 _entityTypeMap.Add("AccessControlsBulkParamss", typeof(AccessControlsBulkParams));
                 _entityTypeMap.Add("AccessControlParam", typeof(AccessControlParam));
                 _entityTypeMap.Add("AccessControlParams", typeof(AccessControlParam));
+                _entityTypeMap.Add("UserUsage", typeof(UserUsage));
+                _entityTypeMap.Add("UserUsages", typeof(UserUsage));
+                _entityTypeMap.Add("DiskSpace", typeof(DiskSpace));
+                _entityTypeMap.Add("DiskSpaces", typeof(DiskSpace));
                 _entityTypeMap.Add("BillingInfo", typeof(BillingInfo));
                 _entityTypeMap.Add("BillingInfos", typeof(BillingInfo));
                 _entityTypeMap.Add("UploadRequestParams", typeof(UploadRequestParams));

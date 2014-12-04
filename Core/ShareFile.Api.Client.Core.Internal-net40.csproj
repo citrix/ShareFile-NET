@@ -93,6 +93,7 @@
     <Compile Include="Internal\Entities\ItemsEntityInternal.cs" />
     <Compile Include="Internal\Entities\OAuthClientsEntityInternal.cs" />
     <Compile Include="Internal\Entities\PlanAddonsEntityInternal.cs" />
+    <Compile Include="Internal\Entities\ReportsEntityInternal.cs" />
     <Compile Include="Internal\Entities\UsagePlansEntityInternal.cs" />
     <Compile Include="Internal\Entities\UsersEntityInternal.cs" />
     <Compile Include="Internal\Models\AddonField.cs" />
@@ -131,6 +132,13 @@
     <Compile Include="Internal\Models\PlanAddonsStatus.cs" />
     <Compile Include="Internal\Models\PlanAddonUser.cs" />
     <Compile Include="Internal\Models\QueueStatus.cs" />
+    <Compile Include="Internal\Models\Report.cs" />
+    <Compile Include="Internal\Models\ReportDateOption.cs" />
+    <Compile Include="Internal\Models\ReportObjectType.cs" />
+    <Compile Include="Internal\Models\ReportRecord.cs" />
+    <Compile Include="Internal\Models\ReportRunFrequency.cs" />
+    <Compile Include="Internal\Models\ReportRunStatus.cs" />
+    <Compile Include="Internal\Models\ReportType.cs" />
     <Compile Include="Internal\Models\RepresentativeType.cs" />
     <Compile Include="Internal\Models\Reseller.cs" />
     <Compile Include="Internal\Models\ShareFileRepresentative.cs" />

@@ -27,9 +27,6 @@ namespace ShareFile.Api.Models
 
 		public int? Contacted { get; set; }
 
-		/// <summary>
-		/// The first and last name of the user
-		/// </summary>
 		public string FullName { get; set; }
 
 		public string ReferredBy { get; set; }

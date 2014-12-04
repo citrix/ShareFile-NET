@@ -133,6 +133,7 @@
     <Compile Include="Models\DeviceUser.cs" />
     <Compile Include="Models\DeviceUserWipe.cs" />
     <Compile Include="Models\DeviceWipeReport.cs" />
+    <Compile Include="Models\DiskSpace.cs" />
     <Compile Include="Models\DownloadSpecification.cs" />
     <Compile Include="Models\EnsEventType.cs" />
     <Compile Include="Models\EnsSubscriberConfiguration.cs" />
@@ -211,6 +212,7 @@
     <Compile Include="Models\UserPreferences.cs" />
     <Compile Include="Models\UserRole.cs" />
     <Compile Include="Models\UserSecurity.cs" />
+    <Compile Include="Models\UserUsage.cs" />
     <Compile Include="Models\UXMode.cs" />
     <Compile Include="Models\VRootType.cs" />
     <Compile Include="Models\Zone.cs" />

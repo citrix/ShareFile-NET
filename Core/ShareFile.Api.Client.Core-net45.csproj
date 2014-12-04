@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -252,7 +252,7 @@
     <Compile Include="Security\Cryptography\IMD5HashProvider.cs" />
     <Compile Include="Security\Cryptography\MD5HashProviderFactory.cs" />
     <Compile Include="Security\Cryptography\PortableMD5HashProvider.cs" />
-    <Compile Include="Security\ZoneAuthentication.cs" />
+    <Compile Include="Security\CustomAuthentication.cs" />
     <Compile Include="ShareFileClient.cs" />
     <Compile Include="ShareFileClient.Entities.cs" />
     <Compile Include="Transfers\Downloaders\AsyncFileDownloader.cs" />

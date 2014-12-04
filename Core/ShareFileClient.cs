@@ -32,7 +32,7 @@ namespace ShareFile.Api.Client
         Configuration Configuration { get; set; }
 
 #if ShareFile
-        ZoneAuthentication ZoneAuthentication { get; set; }
+        CustomAuthentication CustomAuthentication { get; set; }
 #endif
 
 #if Async
@@ -152,22 +152,31 @@ namespace ShareFile.Api.Client
         internal LoggingProvider Logging { get; set; }
         internal ICredentialCache CredentialCache { get; set; }
         internal CookieContainer CookieContainer { get; set; }
-        internal JsonSerializer Serializer { get; set; }
+        public JsonSerializer Serializer { get; set; }
         internal JsonSerializer LoggingSerializer { get; set; }
         internal RequestProviderFactory RequestProviderFactory { get; set; }
 
 #if ShareFile
-        private ZoneAuthentication _zoneAuthentication;
-        public ZoneAuthentication ZoneAuthentication
+
+        [Obsolete("Use CustomAuthentication instead. This will be removed from the next major release.")]
+        CustomAuthentication ZoneAuthentication 
         {
-            get { return _zoneAuthentication; }
+            get { return CustomAuthentication; }
+            set { CustomAuthentication = value; }
+        }
+
+        private CustomAuthentication _customAuthentication;
+
+        public CustomAuthentication CustomAuthentication
+        {
+            get { return _customAuthentication; }
             set
             {
-                if (!HmacSha256ProviderFactory.HasProvider())
+                if (value.UsesHmacSha256 && !HmacSha256ProviderFactory.HasProvider())
                 {
-                    throw new Exception("A IHmacSha256Provider has not been registered, this is required for ZoneAuthentication to sign requests.");
+                    throw new Exception("A IHmacSha256Provider has not been registered, this is required for CustomAuthentication to sign requests.");
                 }
-                _zoneAuthentication = value;
+                _customAuthentication = value;
             }
         }
 #endif

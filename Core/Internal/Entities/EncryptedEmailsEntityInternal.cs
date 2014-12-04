@@ -23,9 +23,9 @@ namespace ShareFile.Api.Client.Entities
         IQuery<EncryptedEmail> Get(Uri url, string firstName = null, string lastName = null, string email = null, string company = null);
         IQuery<ODataFeed<EncryptedEmail>> Thread(Uri url, string firstName = null, string lastName = null, string email = null, string company = null);
         IQuery<ODataFeed<EncryptedEmail>> Received();
-        IQuery<EncryptedEmail> Reply(Uri url, EncryptedEmailParams encryptedEmailParams);
+        IQuery<EncryptedEmail> Reply(Uri url, EncrypedEmailReplyParams encryptedEmailParams);
         IQuery<EncryptedEmail> ReplyAll(Uri url, EncryptedEmailParams encryptedEmailParams);
-        IQuery<EncryptedEmail> Create(EncryptedEmailParams encryptedEmailParams);
+        IQuery<EncryptedEmail> Create(EncryptedEmailCreateParams encryptedEmailParams);
         IQuery Send(Uri url, EncryptedEmailSendParams encryptedEmailSendParams);
         IQuery Complete(Uri url, EncryptedEmailSendParams encryptedEmailSendParams);
         IQuery<Stream> Message(Uri url, string aliasId = null, bool redirect = true);
@@ -71,7 +71,7 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
-        public IQuery<EncryptedEmail> Reply(Uri url, EncryptedEmailParams encryptedEmailParams)
+        public IQuery<EncryptedEmail> Reply(Uri url, EncrypedEmailReplyParams encryptedEmailParams)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<EncryptedEmail>(Client);
 		    sfApiQuery.Action("Reply");
@@ -89,7 +89,7 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
-        public IQuery<EncryptedEmail> Create(EncryptedEmailParams encryptedEmailParams)
+        public IQuery<EncryptedEmail> Create(EncryptedEmailCreateParams encryptedEmailParams)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<EncryptedEmail>(Client);
 		    sfApiQuery.From("EncryptedEmails");

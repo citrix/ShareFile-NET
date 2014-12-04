@@ -16,42 +16,38 @@ using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
-	public class DeviceWipeReport : ODataObject 
+#if ShareFile
+	public class EncryptedEmailCreateParams : EncrypedEmailReplyParams 
 	{
 
-		/// <summary>
-		/// Logs
-		/// </summary>
-		public IEnumerable<DeviceLogEntry> Logs { get; set; }
+		public bool? RequireUserInfo { get; set; }
 
-		/// <summary>
-		/// Wipe results
-		/// </summary>
-		public IEnumerable<DeviceUserWipe> WipeResults { get; set; }
+		public bool? RequireLogin { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			var typedSource = source as DeviceWipeReport;
+			var typedSource = source as EncryptedEmailCreateParams;
 			if(typedSource != null)
 			{
-				Logs = typedSource.Logs;
-				WipeResults = typedSource.WipeResults;
+				RequireUserInfo = typedSource.RequireUserInfo;
+				RequireLogin = typedSource.RequireLogin;
 			}
 			else
 			{
 				JToken token;
-				if(source.TryGetProperty("Logs", out token) && token.Type != JTokenType.Null)
+				if(source.TryGetProperty("RequireUserInfo", out token) && token.Type != JTokenType.Null)
 				{
-					Logs = (IEnumerable<DeviceLogEntry>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<DeviceLogEntry>));
+					RequireUserInfo = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
-				if(source.TryGetProperty("WipeResults", out token) && token.Type != JTokenType.Null)
+				if(source.TryGetProperty("RequireLogin", out token) && token.Type != JTokenType.Null)
 				{
-					WipeResults = (IEnumerable<DeviceUserWipe>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<DeviceUserWipe>));
+					RequireLogin = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 			}
 		}
 	}
+#endif
 }

@@ -34,8 +34,8 @@ namespace ShareFile.Api.Client.Internal.Models
             EntityTypeMap.AddEntity("CustomBillingEntrys", typeof(CustomBillingEntry));
             EntityTypeMap.AddEntity("EncryptedEmailParams", typeof(EncryptedEmailParams));
             EntityTypeMap.AddEntity("EncryptedEmailParamss", typeof(EncryptedEmailParams));
-            EntityTypeMap.AddEntity("EncrypedEmailReplyParams", typeof(EncrypedEmailReplyParams));
-            EntityTypeMap.AddEntity("EncrypedEmailReplyParamss", typeof(EncrypedEmailReplyParams));
+            EntityTypeMap.AddEntity("EncryptedEmailReplyParams", typeof(EncryptedEmailReplyParams));
+            EntityTypeMap.AddEntity("EncryptedEmailReplyParamss", typeof(EncryptedEmailReplyParams));
             EntityTypeMap.AddEntity("EncryptedEmailCreateParams", typeof(EncryptedEmailCreateParams));
             EntityTypeMap.AddEntity("EncryptedEmailCreateParamss", typeof(EncryptedEmailCreateParams));
             EntityTypeMap.AddEntity("EnterpriseOrder", typeof(EnterpriseOrder));

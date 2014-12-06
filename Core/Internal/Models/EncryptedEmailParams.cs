@@ -24,6 +24,8 @@ namespace ShareFile.Api.Models
 
 		public int? ExpirationDays { get; set; }
 
+		public bool? NotifyOnUse { get; set; }
+
 		public bool? SendSeparateActivation { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
@@ -36,6 +38,7 @@ namespace ShareFile.Api.Models
 			{
 				Subject = typedSource.Subject;
 				ExpirationDays = typedSource.ExpirationDays;
+				NotifyOnUse = typedSource.NotifyOnUse;
 				SendSeparateActivation = typedSource.SendSeparateActivation;
 			}
 			else
@@ -48,6 +51,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("ExpirationDays", out token) && token.Type != JTokenType.Null)
 				{
 					ExpirationDays = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("NotifyOnUse", out token) && token.Type != JTokenType.Null)
+				{
+					NotifyOnUse = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("SendSeparateActivation", out token) && token.Type != JTokenType.Null)
 				{

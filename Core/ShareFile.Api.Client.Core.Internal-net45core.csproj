@@ -139,6 +139,7 @@
     <Compile Include="Internal\Models\EncryptedEmailCreateParams.cs" />
     <Compile Include="Internal\Models\EncryptedEmailParams.cs" />
     <Compile Include="Internal\Models\EncryptedEmailRecipient.cs" />
+    <Compile Include="Internal\Models\EncryptedEmailReplyParams.cs" />
     <Compile Include="Internal\Models\EncryptedEmailSendParams.cs" />
     <Compile Include="Internal\Models\EnterpriseOrder.cs" />
     <Compile Include="Internal\Models\EnterpriseReseller.cs" />

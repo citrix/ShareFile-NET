@@ -17,7 +17,7 @@ using ShareFile.Api.Client.Extensions;
 namespace ShareFile.Api.Models 
 {
 #if ShareFile
-	public class EncryptedEmailCreateParams : EncrypedEmailReplyParams 
+	public class EncryptedEmailCreateParams : EncryptedEmailReplyParams 
 	{
 
 		public bool? RequireUserInfo { get; set; }

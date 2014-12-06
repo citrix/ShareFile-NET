@@ -23,7 +23,7 @@ namespace ShareFile.Api.Client.Entities
         IQuery<EncryptedEmail> Get(Uri url, string firstName = null, string lastName = null, string email = null, string company = null);
         IQuery<ODataFeed<EncryptedEmail>> Thread(Uri url, string firstName = null, string lastName = null, string email = null, string company = null);
         IQuery<ODataFeed<EncryptedEmail>> Received();
-        IQuery<EncryptedEmail> Reply(Uri url, EncrypedEmailReplyParams encryptedEmailParams);
+        IQuery<EncryptedEmail> Reply(Uri url, EncryptedEmailReplyParams encryptedEmailParams);
         IQuery<EncryptedEmail> ReplyAll(Uri url, EncryptedEmailParams encryptedEmailParams);
         IQuery<EncryptedEmail> Create(EncryptedEmailCreateParams encryptedEmailParams);
         IQuery Send(Uri url, EncryptedEmailSendParams encryptedEmailSendParams);
@@ -71,7 +71,7 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
-        public IQuery<EncryptedEmail> Reply(Uri url, EncrypedEmailReplyParams encryptedEmailParams)
+        public IQuery<EncryptedEmail> Reply(Uri url, EncryptedEmailReplyParams encryptedEmailParams)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<EncryptedEmail>(Client);
 		    sfApiQuery.Action("Reply");

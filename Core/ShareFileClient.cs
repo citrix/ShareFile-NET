@@ -239,7 +239,7 @@ namespace ShareFile.Api.Client
         /// <param name="config"></param>
         /// <param name="expirationDays">Will only be obeyed by ShareFile apps</param>
         /// <returns></returns>
-        public AsyncUploaderBase GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null, IEnumerable<Capability> providerCapabilities = null)
+        public AsyncUploaderBase GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
         {
             this.SetUploadMethod(uploadSpecificationRequest);
 

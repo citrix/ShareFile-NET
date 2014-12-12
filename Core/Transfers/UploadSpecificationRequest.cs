@@ -56,7 +56,6 @@ namespace ShareFile.Api.Client.Transfers
         {
             ResponseFormat = "json";
             FileSize = 0;
-            Tool = "apiv3";
             ThreadCount = 1;
             Raw = true;
         }
@@ -112,7 +111,8 @@ namespace ShareFile.Api.Client.Transfers
                            IsSend = this.IsSend,
                            Notify = this.Notify,
                            ClientCreatedDate = this.ClientCreatedDateUtc,
-                           ClientModifiedDate = this.ClientModifiedDateUtc
+                           ClientModifiedDate = this.ClientModifiedDateUtc,
+                           Tool = this.Tool
                        };
         }
     }

@@ -223,11 +223,16 @@ namespace ShareFile.Api.Client
         /// Use some naive metrics for deciding which <see cref="UploadMethod"/>  should be used.
         /// </summary>
         /// <param name="uploadSpecificationRequest"></param>
-        private void SetUploadMethod(UploadSpecificationRequest uploadSpecificationRequest)
+        private void PreprocessUploadSpecRequest(UploadSpecificationRequest uploadSpecificationRequest)
         {
+            if (string.IsNullOrEmpty(uploadSpecificationRequest.Tool))
+            {
+                uploadSpecificationRequest.Tool = Configuration.ToolName;
+            }
+
             if (uploadSpecificationRequest.Method.HasValue) return;
 
-            uploadSpecificationRequest.Method = this.GetUploadMethod(uploadSpecificationRequest.FileSize);
+            uploadSpecificationRequest.Method = GetUploadMethod(uploadSpecificationRequest.FileSize);
         }
 
 #if Async
@@ -241,7 +246,7 @@ namespace ShareFile.Api.Client
         /// <returns></returns>
         public AsyncUploaderBase GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
         {
-            this.SetUploadMethod(uploadSpecificationRequest);
+            this.PreprocessUploadSpecRequest(uploadSpecificationRequest);
 
             switch (uploadSpecificationRequest.Method)
             {
@@ -271,7 +276,7 @@ namespace ShareFile.Api.Client
         /// <returns></returns>
         public SyncUploaderBase GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
         {
-            this.SetUploadMethod(uploadSpecificationRequest);
+            this.PreprocessUploadSpecRequest(uploadSpecificationRequest);
 
             switch (uploadSpecificationRequest.Method)
             {

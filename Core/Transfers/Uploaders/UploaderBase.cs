@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
 using ShareFile.Api.Client.Exceptions;
+using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Extensions.Tasks;
 using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Requests;
@@ -49,6 +50,11 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         protected IQuery<UploadSpecification> CreateUploadSpecificationQuery(UploadSpecificationRequest uploadSpecificationRequest)
         {
+            if (uploadSpecificationRequest.ProviderCapabilities.SupportsUploadWithRequestParams())
+            {
+                return CreateUploadRequestParamsQuery(uploadSpecificationRequest);
+            }
+
             var query = Client.Items.Upload(uploadSpecificationRequest.Parent, uploadSpecificationRequest.Method.GetValueOrDefault(UploadMethod.Threaded),
                 uploadSpecificationRequest.Raw, uploadSpecificationRequest.FileName, uploadSpecificationRequest.FileSize,
                 uploadSpecificationRequest.BatchId,
@@ -59,6 +65,15 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 uploadSpecificationRequest.SendGuid, null, uploadSpecificationRequest.ThreadCount,
                 uploadSpecificationRequest.ResponseFormat, uploadSpecificationRequest.Notify,
                 uploadSpecificationRequest.ClientCreatedDateUtc, uploadSpecificationRequest.ClientModifiedDateUtc, ExpirationDays);
+
+            return query;
+        }
+
+        protected IQuery<UploadSpecification> CreateUploadRequestParamsQuery(
+            UploadSpecificationRequest uploadSpecificationRequest)
+        {
+            var query = Client.Items.Upload2(uploadSpecificationRequest.Parent,
+                uploadSpecificationRequest.ToRequestParams(), ExpirationDays);
 
             return query;
         }

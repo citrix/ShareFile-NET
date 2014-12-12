@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -11,6 +12,7 @@ using ShareFile.Api.Client.Converters;
 using ShareFile.Api.Client.Credentials;
 using ShareFile.Api.Client.Entities;
 using ShareFile.Api.Client.Events;
+using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Logging;
 using ShareFile.Api.Client.Requests;
@@ -237,7 +239,7 @@ namespace ShareFile.Api.Client
         /// <param name="config"></param>
         /// <param name="expirationDays">Will only be obeyed by ShareFile apps</param>
         /// <returns></returns>
-        public AsyncUploaderBase GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
+        public AsyncUploaderBase GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null, IEnumerable<Capability> providerCapabilities = null)
         {
             this.SetUploadMethod(uploadSpecificationRequest);
 

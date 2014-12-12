@@ -207,6 +207,27 @@ namespace ShareFile.Api.Client
             };
         }
 
+        private const int StandardUploadThreshold = 1024 * 1024 * 8;
+        private UploadMethod GetUploadMethod(long fileSize)
+        {
+            if (fileSize > StandardUploadThreshold)
+            {
+                return UploadMethod.Threaded;
+            }
+            return UploadMethod.Standard;
+        }
+
+        /// <summary>
+        /// Use some naive metrics for deciding which <see cref="UploadMethod"/>  should be used.
+        /// </summary>
+        /// <param name="uploadSpecificationRequest"></param>
+        private void SetUploadMethod(UploadSpecificationRequest uploadSpecificationRequest)
+        {
+            if (uploadSpecificationRequest.Method.HasValue) return;
+
+            uploadSpecificationRequest.Method = this.GetUploadMethod(uploadSpecificationRequest.FileSize);
+        }
+
 #if Async
         /// <summary>
         /// 
@@ -218,6 +239,8 @@ namespace ShareFile.Api.Client
         /// <returns></returns>
         public AsyncUploaderBase GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
         {
+            this.SetUploadMethod(uploadSpecificationRequest);
+
             switch (uploadSpecificationRequest.Method)
             {
                 case UploadMethod.Standard:
@@ -246,6 +269,8 @@ namespace ShareFile.Api.Client
         /// <returns></returns>
         public SyncUploaderBase GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
         {
+            this.SetUploadMethod(uploadSpecificationRequest);
+
             switch (uploadSpecificationRequest.Method)
             {
                 case UploadMethod.Standard:

@@ -49,7 +49,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         protected IQuery<UploadSpecification> CreateUploadSpecificationQuery(UploadSpecificationRequest uploadSpecificationRequest)
         {
-            var query = Client.Items.Upload(uploadSpecificationRequest.Parent, uploadSpecificationRequest.Method,
+            var query = Client.Items.Upload(uploadSpecificationRequest.Parent, uploadSpecificationRequest.Method.GetValueOrDefault(UploadMethod.Threaded),
                 uploadSpecificationRequest.Raw, uploadSpecificationRequest.FileName, uploadSpecificationRequest.FileSize,
                 uploadSpecificationRequest.BatchId,
                 uploadSpecificationRequest.BatchLast, uploadSpecificationRequest.CanResume,

@@ -225,7 +225,7 @@ namespace ShareFile.Api.Client
         {
             if (uploadSpecificationRequest.Method.HasValue) return;
 
-            uploadSpecificationRequest.Method = this.GetUploadMethod(uploadSpecificationRequest.FileSize)
+            uploadSpecificationRequest.Method = this.GetUploadMethod(uploadSpecificationRequest.FileSize);
         }
 
 #if Async

@@ -43,6 +43,8 @@ namespace ShareFile.Api.Models
 
 		public string Title { get; set; }
 
+		public string Tool { get; set; }
+
 		public string Details { get; set; }
 
 		public bool? IsSend { get; set; }
@@ -77,6 +79,7 @@ namespace ShareFile.Api.Models
 				Overwrite = typedSource.Overwrite;
 				Opid = typedSource.Opid;
 				Title = typedSource.Title;
+				Tool = typedSource.Tool;
 				Details = typedSource.Details;
 				IsSend = typedSource.IsSend;
 				SendGuid = typedSource.SendGuid;
@@ -135,6 +138,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("Title", out token) && token.Type != JTokenType.Null)
 				{
 					Title = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Tool", out token) && token.Type != JTokenType.Null)
+				{
+					Tool = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
 				if(source.TryGetProperty("Details", out token) && token.Type != JTokenType.Null)
 				{

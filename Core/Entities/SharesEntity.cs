@@ -72,23 +72,7 @@ namespace ShareFile.Api.Client.Entities
         /// A Share Alias representing a single recipient of the Share
         /// </returns>
         IQuery<ShareAlias> GetRecipients(Uri parentUrl, string id);
-        
-        /// <summary>
-        /// Create Recipient for a Share
-        /// </summary>
-        /// <remarks>
-        /// To create a Recipient for Shares that require user informaion ( Email, First Name, Last Name and Company), make sure
-        /// pass those parameters
-        /// </remarks>
-        /// <param name="parentUrl"></param>
-        /// <param name="Email"></param>
-        /// <param name="FirstName"></param>
-        /// <param name="LastName"></param>
-        /// <param name="Company"></param>
-        /// <returns>
-        /// A Share Alias representing a single recipient of the Share
-        /// </returns>
-        IQuery<ShareAlias> CreateRecipients(Uri parentUrl, string Email = null, string FirstName = null, string LastName = null, string Company = null);
+        IQuery<ShareAlias> CreateRecipients(Uri url, string Email = null, string FirstName = null, string LastName = null, string Company = null);
         
         /// <summary>
         /// Get Items of a Share
@@ -508,27 +492,11 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
-        
-        /// <summary>
-        /// Create Recipient for a Share
-        /// </summary>
-        /// <remarks>
-        /// To create a Recipient for Shares that require user informaion ( Email, First Name, Last Name and Company), make sure
-        /// pass those parameters
-        /// </remarks>
-        /// <param name="parentUrl"></param>
-        /// <param name="Email"></param>
-        /// <param name="FirstName"></param>
-        /// <param name="LastName"></param>
-        /// <param name="Company"></param>
-        /// <returns>
-        /// A Share Alias representing a single recipient of the Share
-        /// </returns>
-        public IQuery<ShareAlias> CreateRecipients(Uri parentUrl, string Email = null, string FirstName = null, string LastName = null, string Company = null)
+        public IQuery<ShareAlias> CreateRecipients(Uri url, string Email = null, string FirstName = null, string LastName = null, string Company = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ShareAlias>(Client);
 		    sfApiQuery.Action("Recipients");
-            sfApiQuery.Uri(parentUrl);
+            sfApiQuery.Uri(url);
             sfApiQuery.QueryString("Email", Email);
             sfApiQuery.QueryString("FirstName", FirstName);
             sfApiQuery.QueryString("LastName", LastName);

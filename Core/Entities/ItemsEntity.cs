@@ -650,8 +650,8 @@ namespace ShareFile.Api.Client.Entities
         /// "Paging":{
         /// "PageNumber":1, (deprecated)
         /// "PageSize":10, (deprecated)
-        /// "Count":50,
-        /// "Skip":0
+        /// "Count":50, (default value)
+        /// "Skip":0, (default value)
         /// },
         /// "Sort":{
         /// "SortBy":"",
@@ -1642,8 +1642,8 @@ namespace ShareFile.Api.Client.Entities
         /// "Paging":{
         /// "PageNumber":1, (deprecated)
         /// "PageSize":10, (deprecated)
-        /// "Count":50,
-        /// "Skip":0
+        /// "Count":50, (default value)
+        /// "Skip":0, (default value)
         /// },
         /// "Sort":{
         /// "SortBy":"",
@@ -1663,7 +1663,7 @@ namespace ShareFile.Api.Client.Entities
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AdvancedSearchResults>(Client);
 		    sfApiQuery.From("Items");
-		    sfApiQuery.Action("AdvancedSimpleSearch");
+		    sfApiQuery.Action("AdvancedSearch");
             sfApiQuery.Body = searchQuery;
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;

@@ -521,6 +521,9 @@ namespace ShareFile.Api.Client.Entities
         /// the end of ChunkUri, as explained in Streamed. After all chunks were sent, the client
         /// must call the FinishUri provided in this spec.
         /// 
+        /// If using the Threaded Uploader, you can attach the argument fmt=json to each ChunkUri
+        /// to indicate you wish to retrieve the Item ID of the file after the upload is completed.
+        /// 
         /// For all uploaders, the contents of the POST Body can either be "raw", if the "Raw" parameter
         /// was provided to the Uploader, or use MIME multi-part form encoding otherwise. Raw uploads
         /// simply put the block content in the POST body - Content-Length specifies the size. Multi-part
@@ -1433,6 +1436,9 @@ namespace ShareFile.Api.Client.Entities
         /// threads issuing blocks in parallel. Clients must append index, offset and hash to
         /// the end of ChunkUri, as explained in Streamed. After all chunks were sent, the client
         /// must call the FinishUri provided in this spec.
+        /// 
+        /// If using the Threaded Uploader, you can attach the argument fmt=json to each ChunkUri
+        /// to indicate you wish to retrieve the Item ID of the file after the upload is completed.
         /// 
         /// For all uploaders, the contents of the POST Body can either be "raw", if the "Raw" parameter
         /// was provided to the Uploader, or use MIME multi-part form encoding otherwise. Raw uploads

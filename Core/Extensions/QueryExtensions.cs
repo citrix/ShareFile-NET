@@ -15,6 +15,38 @@ namespace ShareFile.Api.Client.Extensions
 {
     public static class QueryExtensions
     {
+        public static IQuery<Target> Select<Model, Target>(this IQuery<Model> modelQuery, Expression<Func<Model, Target>> mapExpr) 
+            where Model : ODataObject
+            where Target : class
+        {
+            IQuery<Model> modifiedQuery = ApplySelectsAndExpands(modelQuery, mapExpr);
+            Query<Target> mappedQuery = new MappedQuery<Model, Target>(modifiedQuery as Query<Model>, mapExpr.Compile());
+            return mappedQuery;
+        }
+
+        public static IQuery<ICollection<Target>> Select<Model, Target>(this IQuery<ODataFeed<Model>> modelQuery, Expression<Func<Model, Target>> mapExpr)
+            where Model : ODataObject
+        {
+            IQuery<ODataFeed<Model>> modifiedQuery = ApplySelectsAndExpands(modelQuery, mapExpr);
+            Query<ICollection<Target>> mappedQuery = new MappedQuery<ODataFeed<Model>, ICollection<Target>>(modifiedQuery as Query<ODataFeed<Model>>, feed => feed.Feed.Select(mapExpr.Compile()).ToList());
+            return mappedQuery;
+        }
+
+        public static IQuery<Model> Expand<Model, SubModel>(this IQuery<Model> modelQuery, Expression<Func<Model, SubModel>> expandExpr)
+            where Model : ODataObject
+        {
+            IQuery<Model> modifiedQuery = ApplySelectsAndExpands(modelQuery, expandExpr, false);
+            return modifiedQuery;
+        }
+
+        public static IQuery<ODataFeed<Model>> Expand<Model, SubModel>(this IQuery<ODataFeed<Model>> modelQuery, Expression<Func<Model, SubModel>> expandExpr)
+            where Model : ODataObject
+        {
+            IQuery<ODataFeed<Model>> modifiedQuery = ApplySelectsAndExpands(modelQuery, expandExpr, false);
+            return modifiedQuery;
+        }
+
+        #region old stuff
         public static Target SelectAndExecute<Model, Target>(this IQuery<Model> modelQuery, Expression<Func<Model, Target>> mapExpr) where Model : ODataObject
         {
             IQuery<Model> modifiedQuery = ApplySelectsAndExpands(modelQuery, mapExpr);
@@ -44,23 +76,32 @@ namespace ShareFile.Api.Client.Extensions
             return result.Feed.Select(mapExpr.Compile()).ToList();
         }
 #endif
+        #endregion
 
-        public static IQuery<T> ApplySelectsAndExpands<T>(IQuery<T> query, LambdaExpression lambda) where T : class
+        public static IQuery<T> ApplySelectsAndExpands<T>(IQuery<T> query, LambdaExpression lambda,
+            bool applySelects = true, bool applyExpands = true) 
+            where T : class
         {
             var queryModifiers = ExpressionUtils.ExpandLambdaExpression(lambda).SelectMany(z => ExpressionUtils.ParseToQuery(lambda.Parameters[0], z)).ToList();
 
             IQuery<T> modifiedQuery = query;
 
-            IEnumerable<string> selects = queryModifiers.Where(mod => mod.ModType == QueryModifierType.Select).Select(mod => mod.Property).Distinct().OrderBy(s => s.Length);
-            foreach (string select in selects)
+            if (applySelects)
             {
-                modifiedQuery = modifiedQuery.Select(select);
+                IEnumerable<string> selects = queryModifiers.Where(mod => mod.ModType == QueryModifierType.Select).Select(mod => mod.Property).Distinct().OrderBy(s => s.Length);
+                foreach (string select in selects)
+                {
+                    modifiedQuery = modifiedQuery.Select(select);
+                }
             }
 
-            IEnumerable<string> expands = queryModifiers.Where(mod => mod.ModType == QueryModifierType.Expand).Select(mod => mod.Property).Distinct().OrderBy(s => s.Length);
-            foreach (string expand in expands)
+            if (applyExpands)
             {
-                modifiedQuery = modifiedQuery.Expand(expand);
+                IEnumerable<string> expands = queryModifiers.Where(mod => mod.ModType == QueryModifierType.Expand).Select(mod => mod.Property).Distinct().OrderBy(s => s.Length);
+                foreach (string expand in expands)
+                {
+                    modifiedQuery = modifiedQuery.Expand(expand);
+                }
             }
 
             return modifiedQuery;

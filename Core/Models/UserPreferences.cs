@@ -53,7 +53,7 @@ namespace ShareFile.Api.Models
 
 		public int? NotificationInterval { get; set; }
 
-		public int? ShowTutorial { get; set; }
+		public SafeEnum<TypeOfTour> ShowTutorial { get; set; }
 
 		public int? EnableToolOverride { get; set; }
 
@@ -173,7 +173,7 @@ namespace ShareFile.Api.Models
 				}
 				if(source.TryGetProperty("ShowTutorial", out token) && token.Type != JTokenType.Null)
 				{
-					ShowTutorial = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+					ShowTutorial = (SafeEnum<TypeOfTour>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<TypeOfTour>));
 				}
 				if(source.TryGetProperty("EnableToolOverride", out token) && token.Type != JTokenType.Null)
 				{

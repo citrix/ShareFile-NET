@@ -621,12 +621,12 @@ namespace ShareFile.Api.Client.Requests
 
         public IEnumerable<string> GetSelectProperties()
         {
-            return _selectProperties;
+            return _selectProperties.OrderBy(select => select.Length).Distinct();
         }
 
         public IEnumerable<string> GetExpandProperties()
         {
-            return _expandProperties;
+            return _expandProperties.OrderBy(expand => expand.Length).Distinct(); ;
         }
 
         public IFilter GetFilter()

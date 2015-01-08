@@ -42,6 +42,8 @@ namespace ShareFile.Api.Models
         ThreadedUploadRaw = 26,
         ThreadedUploadForms = 27,
         RightSignature = 28,
-        UploadWithRequestParams = 29
+        UploadWithRequestParams = 29,
+        SoftLock = 30,
+        HardLock = 31
     }
 }

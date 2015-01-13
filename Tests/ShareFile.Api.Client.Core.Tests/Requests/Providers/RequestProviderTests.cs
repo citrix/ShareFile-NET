@@ -22,6 +22,30 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
 {
     public class RequestProviderTests : BaseTests
     {
+        [TestCase(true, TestName = "GetStream_Async")]
+        [TestCase(false, TestName = "GetStream_Sync")]
+        public async void GetStream(bool async)
+        {
+            // Arrange
+            var query = this.GetThumbnailQuery();
+            var streamMessage = Guid.NewGuid().ToString();
+            ConfigureStreamResponse(streamMessage);
+
+            Stream stream;
+            // Act
+            if (async)
+            {
+                stream = await query.ExecuteAsync();
+            }
+            else
+            {
+                stream = query.Execute();
+            }
+
+            // Assert
+            Assert.IsNotNull(stream);
+        }
+
         [TestCase(true, TestName = "Query_ItemNotFound_Async")]
         [TestCase(false, TestName = "Query_ItemNotFound_Sync")]
         public async void Query_ItemNotFound(bool async)
@@ -262,6 +286,20 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
                 .Returns(GenerateODataRequestException(HttpStatusCode.NotFound, "Items: NotFound"));
         }
 
+        protected void ConfigureStreamResponse(string responseContent)
+        {
+            A.CallTo(() =>
+                    RequestExecutorFactory.GetAsyncRequestExecutor()
+                        .SendAsync(A<HttpClient>.Ignored, A<HttpRequestMessage>.Ignored, A<HttpCompletionOption>.Ignored,
+                            A<CancellationToken>.Ignored))
+                .Returns(this.GenerateStreamResponse(responseContent));
+
+            A.CallTo(() =>
+                    RequestExecutorFactory.GetSyncRequestExecutor()
+                        .Send(A<HttpClient>.Ignored, A<HttpRequestMessage>.Ignored, A<HttpCompletionOption>.Ignored))
+                .Returns(this.GenerateStreamResponse(responseContent));
+        }
+
         protected void ConfigureAsyncOperationScheduled()
         {
             A.CallTo(() =>
@@ -361,6 +399,20 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
                     Message = new ODataExceptionMessage { Language = "en-US", Message = message }
                 }), Encoding.UTF8, "application/json")
             };
+        }
+
+        private HttpResponseMessage streamResponse;
+        protected HttpResponseMessage GenerateStreamResponse(string message)
+        {
+            if (this.streamResponse == null)
+            {
+                this.streamResponse = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(message),
+                };
+            }
+
+            return this.streamResponse;
         }
 
         protected HttpResponseMessage GenerateAsyncOperationScheduled()

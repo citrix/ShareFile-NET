@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2015 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -20,6 +20,23 @@ namespace ShareFile.Api.Client.Entities.Extensions
 {
     public static class AccountsEntityInternalExtensions
     {
+        
+        /// <summary>
+        /// Creates a new account
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns>
+        /// The new account created by the api
+        /// </returns>
+        public static IQuery<FreeTrialAccount> CreateFreeTrialAccount(this IAccountsEntity entity, FreeTrialAccount account)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<FreeTrialAccount>(entity.Client);
+		    sfApiQuery.From("Accounts");
+		    sfApiQuery.Action("CreateFreeTrialAccount");
+            sfApiQuery.Body = account;
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
         
         /// <summary>
         /// Get Outlook Information
@@ -48,30 +65,6 @@ namespace ShareFile.Api.Client.Entities.Extensions
 		    sfApiQuery.From("Accounts");
 		    sfApiQuery.Action("GetEnsSubscriberConfiguration");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
-        }
-        
-        /// <summary>
-        /// Enable ENS for the Account
-        /// </summary>
-        public static IQuery EnableEns(this IAccountsEntity entity)
-        {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(entity.Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("EnableEns");
-            sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
-        }
-        
-        /// <summary>
-        /// Disable ENS for account
-        /// </summary>
-        public static IQuery DisableEns(this IAccountsEntity entity)
-        {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(entity.Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("DisableEns");
-            sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
         

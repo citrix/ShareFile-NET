@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2015 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using ShareFile.Api.Models;
@@ -26,6 +26,30 @@ namespace ShareFile.Api.Client.Internal.Models
             EntityTypeMap.AddEntity("AppliedPlanAddOnss", typeof(AppliedPlanAddOns));
             EntityTypeMap.AddEntity("Billing", typeof(Billing));
             EntityTypeMap.AddEntity("Billings", typeof(Billing));
+            EntityTypeMap.AddEntity("ReportRecord", typeof(ReportRecord));
+            EntityTypeMap.AddEntity("ReportRecords", typeof(ReportRecord));
+            EntityTypeMap.AddEntity("BillingAddOn", typeof(BillingAddOn));
+            EntityTypeMap.AddEntity("BillingAddOns", typeof(BillingAddOn));
+            EntityTypeMap.AddEntity("CustomBillingEntry", typeof(CustomBillingEntry));
+            EntityTypeMap.AddEntity("CustomBillingEntrys", typeof(CustomBillingEntry));
+            EntityTypeMap.AddEntity("EncryptedEmailParams", typeof(EncryptedEmailParams));
+            EntityTypeMap.AddEntity("EncryptedEmailParamss", typeof(EncryptedEmailParams));
+            EntityTypeMap.AddEntity("EncryptedEmailReplyParams", typeof(EncryptedEmailReplyParams));
+            EntityTypeMap.AddEntity("EncryptedEmailReplyParamss", typeof(EncryptedEmailReplyParams));
+            EntityTypeMap.AddEntity("EncryptedEmailCreateParams", typeof(EncryptedEmailCreateParams));
+            EntityTypeMap.AddEntity("EncryptedEmailCreateParamss", typeof(EncryptedEmailCreateParams));
+            EntityTypeMap.AddEntity("EnterpriseOrder", typeof(EnterpriseOrder));
+            EntityTypeMap.AddEntity("EnterpriseOrders", typeof(EnterpriseOrder));
+            EntityTypeMap.AddEntity("EnterpriseReseller", typeof(EnterpriseReseller));
+            EntityTypeMap.AddEntity("EnterpriseResellers", typeof(EnterpriseReseller));
+            EntityTypeMap.AddEntity("EncryptedEmail", typeof(EncryptedEmail));
+            EntityTypeMap.AddEntity("EncryptedEmails", typeof(EncryptedEmail));
+            EntityTypeMap.AddEntity("EncryptedEmailSendParams", typeof(EncryptedEmailSendParams));
+            EntityTypeMap.AddEntity("EncryptedEmailSendParamss", typeof(EncryptedEmailSendParams));
+            EntityTypeMap.AddEntity("EncryptedEmailRecipient", typeof(EncryptedEmailRecipient));
+            EntityTypeMap.AddEntity("EncryptedEmailRecipients", typeof(EncryptedEmailRecipient));
+            EntityTypeMap.AddEntity("OAuthCode", typeof(OAuthCode));
+            EntityTypeMap.AddEntity("OAuthCodes", typeof(OAuthCode));
             EntityTypeMap.AddEntity("PlanAddon", typeof(PlanAddon));
             EntityTypeMap.AddEntity("PlanAddons", typeof(PlanAddon));
             EntityTypeMap.AddEntity("InAppPurchase", typeof(InAppPurchase));
@@ -36,6 +60,14 @@ namespace ShareFile.Api.Client.Internal.Models
             EntityTypeMap.AddEntity("PlanAddonUsers", typeof(PlanAddonUser));
             EntityTypeMap.AddEntity("OAuthClient", typeof(OAuthClient));
             EntityTypeMap.AddEntity("OAuthClients", typeof(OAuthClient));
+            EntityTypeMap.AddEntity("Report", typeof(Report));
+            EntityTypeMap.AddEntity("Reports", typeof(Report));
+            EntityTypeMap.AddEntity("Reseller", typeof(Reseller));
+            EntityTypeMap.AddEntity("Resellers", typeof(Reseller));
+            EntityTypeMap.AddEntity("ShareFileRepresentative", typeof(ShareFileRepresentative));
+            EntityTypeMap.AddEntity("ShareFileRepresentatives", typeof(ShareFileRepresentative));
+            EntityTypeMap.AddEntity("FreeTrialAccount", typeof(FreeTrialAccount));
+            EntityTypeMap.AddEntity("FreeTrialAccounts", typeof(FreeTrialAccount));
             EntityTypeMap.AddEntity("OutlookInformation", typeof(OutlookInformation));
             EntityTypeMap.AddEntity("OutlookInformations", typeof(OutlookInformation));
             EntityTypeMap.AddEntity("OutlookInformationOptionBool", typeof(OutlookInformationOptionBool));

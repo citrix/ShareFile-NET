@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2015 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using ShareFile.Api.Client.Entities;
@@ -16,8 +16,11 @@ namespace ShareFile.Api.Client
     public interface IInternalShareFileClient : IShareFileClient
     {
         IBillingEntityInternal Billing { get; }
+        IEncryptedEmailsEntityInternal EncryptedEmails { get; }
+        IFileLockEntityInternal FileLock { get; }
         IOAuthClientsEntityInternal OAuthClients { get; }
         IPlanAddonsEntityInternal PlanAddons { get; }
+        IReportsEntityInternal Reports { get; }
         IUsagePlansEntityInternal UsagePlans { get; }
         IAzureSBTopicsEntityInternal AzureSBTopics { get; }
         IConfigsEntityInternal Configs { get; }
@@ -30,8 +33,11 @@ namespace ShareFile.Api.Client
             : base(baseUri, configuration)
         {
             Billing = new BillingEntityInternal(this);
+            EncryptedEmails = new EncryptedEmailsEntityInternal(this);
+            FileLock = new FileLockEntityInternal(this);
             OAuthClients = new OAuthClientsEntityInternal(this);
             PlanAddons = new PlanAddonsEntityInternal(this);
+            Reports = new ReportsEntityInternal(this);
             UsagePlans = new UsagePlansEntityInternal(this);
             AzureSBTopics = new AzureSBTopicsEntityInternal(this);
             Configs = new ConfigsEntityInternal(this);
@@ -41,8 +47,11 @@ namespace ShareFile.Api.Client
         }
 
         public IBillingEntityInternal Billing { get; private set; }
+        public IEncryptedEmailsEntityInternal EncryptedEmails { get; private set; }
+        public IFileLockEntityInternal FileLock { get; private set; }
         public IOAuthClientsEntityInternal OAuthClients { get; private set; }
         public IPlanAddonsEntityInternal PlanAddons { get; private set; }
+        public IReportsEntityInternal Reports { get; private set; }
         public IUsagePlansEntityInternal UsagePlans { get; private set; }
         public IAzureSBTopicsEntityInternal AzureSBTopics { get; private set; }
         public IConfigsEntityInternal Configs { get; private set; }

@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2015 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -72,29 +72,13 @@ namespace ShareFile.Api.Client.Entities
         /// A Share Alias representing a single recipient of the Share
         /// </returns>
         IQuery<ShareAlias> GetRecipients(Uri parentUrl, string id);
-        
-        /// <summary>
-        /// Create Recipient for a Share
-        /// </summary>
-        /// <remarks>
-        /// To create a Recipient for Shares that require user informaion ( Email, First Name, Last Name and Company), make sure
-        /// pass those parameters
-        /// </remarks>
-        /// <param name="parentUrl"></param>
-        /// <param name="Email"></param>
-        /// <param name="FirstName"></param>
-        /// <param name="LastName"></param>
-        /// <param name="Company"></param>
-        /// <returns>
-        /// A Share Alias representing a single recipient of the Share
-        /// </returns>
-        IQuery<ShareAlias> CreateRecipients(Uri parentUrl, string Email = null, string FirstName = null, string LastName = null, string Company = null);
+        IQuery<ShareAlias> CreateRecipients(Uri url, string Email = null, string FirstName = null, string LastName = null, string Company = null);
         
         /// <summary>
         /// Get Items of a Share
         /// </summary>
         /// <remarks>
-        /// Retrieve the list of Items (files and folders) in the Share.
+        /// Retrieve the list of Items (files and folders) in the Send Share.
         /// </remarks>
         /// <param name="url"></param>
         /// <returns>
@@ -103,10 +87,10 @@ namespace ShareFile.Api.Client.Entities
         IQuery<ODataFeed<Item>> GetItems(Uri url);
         
         /// <summary>
-        /// Get Items of a Share
+        /// Get Items of a Send Share
         /// </summary>
         /// <remarks>
-        /// Retrieve a single Item in the Share
+        /// Retrieve a single Item in the Send Share
         /// </remarks>
         /// <param name="shareUrl"></param>
         /// <param name="itemid"></param>
@@ -114,6 +98,32 @@ namespace ShareFile.Api.Client.Entities
         /// An item in the Share
         /// </returns>
         IQuery<Item> GetItems(Uri shareUrl, string itemid);
+        
+        /// <summary>
+        /// Get Thumbnail of a Share Item
+        /// </summary>
+        /// <remarks>
+        /// Retrieve a thumbnail link for the specified Item in the Share.
+        /// </remarks>
+        /// <param name="shareUrl"></param>
+        /// <param name="itemid"></param>
+        /// <param name="size"></param>
+        /// <param name="redirect"></param>
+        /// <returns>
+        /// A 302 redirection to the Thumbnail link
+        /// </returns>
+        IQuery<Stream> Thumbnail(Uri shareUrl, string itemid, int size = 75, bool redirect = false);
+        
+        /// <summary>
+        /// Get List of Protocol Links of a Share item
+        /// </summary>
+        /// <param name="shareUrl"></param>
+        /// <param name="itemid"></param>
+        /// <param name="platform"></param>
+        /// <returns>
+        /// A list of protocol links depending on the input parameter 'platform', 404 (Not Found) if not supported by the item
+        /// </returns>
+        IQuery<ODataFeed<ItemProtocolLink>> ProtocolLinks(Uri shareUrl, string itemid, PreviewPlatform platform);
         
         /// <summary>
         /// Downloads Share Items
@@ -308,6 +318,15 @@ namespace ShareFile.Api.Client.Entities
         /// <summary>
         /// Upload File to Request Share
         /// </summary>
+        /// <example>
+        /// POST https://account.sf-api.com/sf/v3/Shares(id)/Upload2
+        /// {
+        /// "Method":"Method",
+        /// "Raw": false,
+        /// "FileName":"FileName"
+        /// "FileLength": length
+        /// }
+        /// </example>
         /// <remarks>
         /// Prepares the links for uploading files to the target Share.
         /// This method returns an Upload Specification object. The fields are
@@ -373,6 +392,7 @@ namespace ShareFile.Api.Client.Entities
         /// negotiate the resume upload.
         /// </returns>
         IQuery<UploadSpecification> Upload(Uri url, UploadMethod method = UploadMethod.Standard, bool raw = false, string fileName = null, long fileSize = 0, string batchId = null, bool batchLast = false, bool canResume = false, bool startOver = false, bool unzip = false, string tool = "apiv3", bool overwrite = false, string title = null, string details = null, bool isSend = false, string sendGuid = null, string opid = null, int threadCount = 4, string responseFormat = "json", bool notify = false, DateTime? clientCreatedDateUTC = null, DateTime? clientModifiedDateUTC = null, int? expirationDays = null);
+        IQuery<UploadSpecification> Upload2(Uri url, UploadRequestParams uploadParams, int? expirationDays = null);
         
         /// <summary>
         /// Get Redirection endpoint Information
@@ -472,27 +492,11 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
-        
-        /// <summary>
-        /// Create Recipient for a Share
-        /// </summary>
-        /// <remarks>
-        /// To create a Recipient for Shares that require user informaion ( Email, First Name, Last Name and Company), make sure
-        /// pass those parameters
-        /// </remarks>
-        /// <param name="parentUrl"></param>
-        /// <param name="Email"></param>
-        /// <param name="FirstName"></param>
-        /// <param name="LastName"></param>
-        /// <param name="Company"></param>
-        /// <returns>
-        /// A Share Alias representing a single recipient of the Share
-        /// </returns>
-        public IQuery<ShareAlias> CreateRecipients(Uri parentUrl, string Email = null, string FirstName = null, string LastName = null, string Company = null)
+        public IQuery<ShareAlias> CreateRecipients(Uri url, string Email = null, string FirstName = null, string LastName = null, string Company = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ShareAlias>(Client);
 		    sfApiQuery.Action("Recipients");
-            sfApiQuery.Uri(parentUrl);
+            sfApiQuery.Uri(url);
             sfApiQuery.QueryString("Email", Email);
             sfApiQuery.QueryString("FirstName", FirstName);
             sfApiQuery.QueryString("LastName", LastName);
@@ -505,7 +509,7 @@ namespace ShareFile.Api.Client.Entities
         /// Get Items of a Share
         /// </summary>
         /// <remarks>
-        /// Retrieve the list of Items (files and folders) in the Share.
+        /// Retrieve the list of Items (files and folders) in the Send Share.
         /// </remarks>
         /// <param name="url"></param>
         /// <returns>
@@ -521,10 +525,10 @@ namespace ShareFile.Api.Client.Entities
         }
         
         /// <summary>
-        /// Get Items of a Share
+        /// Get Items of a Send Share
         /// </summary>
         /// <remarks>
-        /// Retrieve a single Item in the Share
+        /// Retrieve a single Item in the Send Share
         /// </remarks>
         /// <param name="shareUrl"></param>
         /// <param name="itemid"></param>
@@ -537,6 +541,52 @@ namespace ShareFile.Api.Client.Entities
 		    sfApiQuery.Action("Items");
             sfApiQuery.Uri(shareUrl);
             sfApiQuery.ActionIds(itemid);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get Thumbnail of a Share Item
+        /// </summary>
+        /// <remarks>
+        /// Retrieve a thumbnail link for the specified Item in the Share.
+        /// </remarks>
+        /// <param name="shareUrl"></param>
+        /// <param name="itemid"></param>
+        /// <param name="size"></param>
+        /// <param name="redirect"></param>
+        /// <returns>
+        /// A 302 redirection to the Thumbnail link
+        /// </returns>
+        public IQuery<Stream> Thumbnail(Uri shareUrl, string itemid, int size = 75, bool redirect = false)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
+		    sfApiQuery.Action("Items");
+            sfApiQuery.Uri(shareUrl);
+            sfApiQuery.ActionIds(itemid);
+            sfApiQuery.SubAction("Thumbnail");
+            sfApiQuery.QueryString("size", size);
+            sfApiQuery.QueryString("redirect", redirect);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get List of Protocol Links of a Share item
+        /// </summary>
+        /// <param name="shareUrl"></param>
+        /// <param name="itemid"></param>
+        /// <param name="platform"></param>
+        /// <returns>
+        /// A list of protocol links depending on the input parameter 'platform', 404 (Not Found) if not supported by the item
+        /// </returns>
+        public IQuery<ODataFeed<ItemProtocolLink>> ProtocolLinks(Uri shareUrl, string itemid, PreviewPlatform platform)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<ItemProtocolLink>>(Client);
+		    sfApiQuery.Action("Items");
+            sfApiQuery.Uri(shareUrl);
+            sfApiQuery.ActionIds(itemid);
+            sfApiQuery.SubAction("ProtocolLinks", platform);
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
@@ -721,7 +771,7 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Share>(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.Body = share;
-            sfApiQuery.HttpMethod = "POST";	
+            sfApiQuery.HttpMethod = "PATCH";	
 		    return sfApiQuery;
         }
         
@@ -822,6 +872,15 @@ namespace ShareFile.Api.Client.Entities
         /// <summary>
         /// Upload File to Request Share
         /// </summary>
+        /// <example>
+        /// POST https://account.sf-api.com/sf/v3/Shares(id)/Upload2
+        /// {
+        /// "Method":"Method",
+        /// "Raw": false,
+        /// "FileName":"FileName"
+        /// "FileLength": length
+        /// }
+        /// </example>
         /// <remarks>
         /// Prepares the links for uploading files to the target Share.
         /// This method returns an Upload Specification object. The fields are
@@ -913,6 +972,16 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.QueryString("clientCreatedDateUTC", clientCreatedDateUTC);
             sfApiQuery.QueryString("clientModifiedDateUTC", clientModifiedDateUTC);
             sfApiQuery.QueryString("expirationDays", expirationDays);
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        public IQuery<UploadSpecification> Upload2(Uri url, UploadRequestParams uploadParams, int? expirationDays = null)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<UploadSpecification>(Client);
+		    sfApiQuery.Action("Upload2");
+            sfApiQuery.Uri(url);
+            sfApiQuery.QueryString("expirationDays", expirationDays);
+            sfApiQuery.Body = uploadParams;
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }

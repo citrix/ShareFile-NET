@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Threading;
+using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Logging;
 
 namespace ShareFile.Api.Client
@@ -52,7 +55,29 @@ namespace ShareFile.Api.Client
         /// </summary>
         public IEnumerable<CultureInfo> SupportedCultures { get; set; }
 
-        public string ToolName { get; set; }
+        private string _toolName;
+
+        public string ToolName
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_toolName))
+                {
+                    return DefaultToolName;
+                }
+                return _toolName;
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    _toolName = DefaultToolName;
+                    return;
+                }
+                _toolName = value;
+            }
+        }
+
         public string ToolVersion { get; set; }
 
         public static Configuration Default()
@@ -61,13 +86,37 @@ namespace ShareFile.Api.Client
             {
                 UseHttpMethodOverride = false,
                 AutoComposeUri = true,
-                ToolName = "SF Client SDK",
-                ToolVersion = "3.0",
+                ToolName = DefaultToolName,
+                ToolVersion = GetDefaultToolVersion(),
                 HttpTimeout = 100000,
                 Logger = new DefaultLoggingProvider { LogLevel = LogLevel.Error },
                 LogPersonalInformation = false,
                 LogFullResponse = false
             };
+        }
+
+        public const string DefaultToolName = "SF Client SDK";
+
+        private static string _defaultToolVersion;
+        public static string GetDefaultToolVersion()
+        {
+            if (!string.IsNullOrEmpty(_defaultToolVersion)) return _defaultToolVersion;
+
+            var fileVersion =
+                Assembly.GetExecutingAssembly()
+                    .GetCustomAttributes(true)
+                    .OfType<AssemblyFileVersionAttribute>()
+                    .FirstOrDefault();
+            if (fileVersion == null)
+            {
+                _defaultToolVersion = "3.0.0";
+            }
+            else
+            {
+                _defaultToolVersion = fileVersion.Version;
+            }
+
+            return _defaultToolVersion;
         }
     }
 }

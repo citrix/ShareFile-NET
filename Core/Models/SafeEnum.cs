@@ -46,6 +46,11 @@ namespace ShareFile.Api.Models
             return instance;
         }
 
+        public override string ToString()
+        {
+            return Value;
+        }
+
         #region equality
         public bool Equals(SafeEnum<TEnumSource> other)
         {
@@ -53,7 +58,7 @@ namespace ShareFile.Api.Models
             {
                 return Enum.Value.Equals(other.Enum.Value);
             }
-            else if (Value != null && other.Value != null)
+            if (Value != null && other.Value != null)
             {
                 return String.Equals(Value, other.Value, StringComparison.OrdinalIgnoreCase);
             }

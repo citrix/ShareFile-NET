@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -65,6 +65,7 @@
     <Compile Include="Entities\ConnectorGroupsEntity.cs" />
     <Compile Include="Entities\EntityBase.cs" />
     <Compile Include="Entities\FavoriteFoldersEntity.cs" />
+    <Compile Include="Entities\FileLockEntity.cs" />
     <Compile Include="Entities\GroupsEntity.cs" />
     <Compile Include="Entities\ItemsEntity.cs" />
     <Compile Include="Entities\MetadataEntity.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="Models\DeviceUser.cs" />
     <Compile Include="Models\DeviceUserWipe.cs" />
     <Compile Include="Models\DeviceWipeReport.cs" />
+    <Compile Include="Models\DiskSpace.cs" />
     <Compile Include="Models\DownloadSpecification.cs" />
     <Compile Include="Models\EnsEventType.cs" />
     <Compile Include="Models\EnsSubscriberConfiguration.cs" />
@@ -142,11 +144,11 @@
     <Compile Include="Models\ESignatureDocumentStatus.cs" />
     <Compile Include="Models\FavoriteFolder.cs" />
     <Compile Include="Models\File.cs" />
+    <Compile Include="Models\FileLock.cs" />
     <Compile Include="Models\FileVirusStatus.cs" />
     <Compile Include="Models\FindSubdomainParams.cs" />
     <Compile Include="Models\FindSubdomainResult.cs" />
     <Compile Include="Models\Folder.cs" />
-    <Compile Include="Models\FreeTrialAccount.cs" />
     <Compile Include="Models\GenericConfig.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\Industry.cs" />
@@ -155,6 +157,8 @@
     <Compile Include="Models\ItemInfo.cs" />
     <Compile Include="Models\ItemProtocolLink.cs" />
     <Compile Include="Models\Link.cs" />
+    <Compile Include="Models\LockType.cs" />
+    <Compile Include="Models\MarketAnalytics.cs" />
     <Compile Include="Models\Metadata.cs" />
     <Compile Include="Models\MobileSecuritySettings.cs" />
     <Compile Include="Models\Note.cs" />
@@ -165,6 +169,8 @@
     <Compile Include="Models\PinLockType.cs" />
     <Compile Include="Models\PlanFeatures.cs" />
     <Compile Include="Models\PowerTools.cs" />
+    <Compile Include="Models\PreviewPlatform.cs" />
+    <Compile Include="Models\PreviewPlatformInfo.cs" />
     <Compile Include="Models\PreviewStatus.cs" />
     <Compile Include="Models\Principal.cs" />
     <Compile Include="Models\ProductDefaults.cs" />
@@ -185,6 +191,7 @@
     <Compile Include="Models\ShareRequestParams.cs" />
     <Compile Include="Models\ShareResendParams.cs" />
     <Compile Include="Models\ShareSendParams.cs" />
+    <Compile Include="Models\ShareSubType.cs" />
     <Compile Include="Models\ShareType.cs" />
     <Compile Include="Models\SimpleQuery.cs" />
     <Compile Include="Models\SimpleSearchQuery.cs" />
@@ -195,7 +202,9 @@
     <Compile Include="Models\SymbolicLink.cs" />
     <Compile Include="Models\ToolInformation.cs" />
     <Compile Include="Models\TreeMode.cs" />
+    <Compile Include="Models\TypeOfTour.cs" />
     <Compile Include="Models\UploadMethod.cs" />
+    <Compile Include="Models\UploadRequestParams.cs" />
     <Compile Include="Models\UploadSpecification.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserConfirmationSettings.cs" />
@@ -203,6 +212,7 @@
     <Compile Include="Models\UserPreferences.cs" />
     <Compile Include="Models\UserRole.cs" />
     <Compile Include="Models\UserSecurity.cs" />
+    <Compile Include="Models\UserUsage.cs" />
     <Compile Include="Models\UXMode.cs" />
     <Compile Include="Models\VRootType.cs" />
     <Compile Include="Models\Zone.cs" />

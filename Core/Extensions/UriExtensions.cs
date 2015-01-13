@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ShareFile.Api.Client.Requests;
 
 namespace ShareFile.Api.Client.Extensions
 {
@@ -40,6 +41,30 @@ namespace ShareFile.Api.Client.Extensions
         public static string GetAuthority(this Uri uri)
         {
             return string.Format("{0}://{1}", uri.GetComponents(UriComponents.Scheme, UriFormat.Unescaped), uri.GetComponents(UriComponents.Host, UriFormat.Unescaped));
+        }
+
+
+        private static readonly char[] EqualsChar = { '=' };
+        private static readonly char[] AmpersandChar = { '&' };
+        /// <summary>
+        /// Convert Uri.Query into collection of <see cref="ODataParameter"/>
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <returns></returns>
+        public static IEnumerable<ODataParameter> GetQueryAsODataParameters(this Uri uri)
+        {
+            foreach (var parameter in uri.Query.Substring(1).Split(AmpersandChar, StringSplitOptions.RemoveEmptyEntries))
+            {
+                var kvp = parameter.Split(EqualsChar);
+                if (kvp.Length == 1)
+                {
+                    yield return new ODataParameter(Uri.UnescapeDataString(kvp[0]));
+                }
+                else
+                {
+                    yield return new ODataParameter(Uri.UnescapeDataString(kvp[0]), Uri.UnescapeDataString(kvp[1]));
+                }
+            }
         }
     }
 }

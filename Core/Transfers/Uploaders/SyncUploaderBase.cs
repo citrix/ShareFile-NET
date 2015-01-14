@@ -85,6 +85,14 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         {
             if (UploadSpecification == null)
             {
+                if (UploadSpecificationRequest.ProviderCapabilities == null)
+                {
+                    UploadSpecificationRequest.ProviderCapabilities = 
+                            Client.Capabilities.Get()
+                                .WithBaseUri(UploadSpecificationRequest.Parent)
+                                .Execute().Feed;
+                }
+
                 UploadSpecification = CreateUploadSpecificationQuery(UploadSpecificationRequest).Execute();
             }
             return UploadSpecification;

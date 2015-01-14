@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using ShareFile.Api.Client.Exceptions;
+using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Requests.Providers;
 using ShareFile.Api.Client.Security.Cryptography;
@@ -36,9 +37,18 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         public TransferProgress Progress { get; set; }
         protected CancellationToken? CancellationToken { get; set; }
 
-        protected async Task<UploadSpecification> CreateUpload(UploadSpecificationRequest uploadSpecificationRequest)
+        protected async Task<UploadSpecification> CreateUpload()
         {
-            var query = CreateUploadSpecificationQuery(uploadSpecificationRequest);
+            if (UploadSpecificationRequest.ProviderCapabilities == null)
+            {
+                UploadSpecificationRequest.ProviderCapabilities =
+                    (await
+                        Client.Capabilities.Get()
+                            .WithBaseUri(UploadSpecificationRequest.Parent)
+                            .ExecuteAsync(CancellationToken)).Feed;
+            }
+
+            var query = CreateUploadSpecificationQuery(UploadSpecificationRequest);
 
             return await query.ExecuteAsync(CancellationToken);
         }

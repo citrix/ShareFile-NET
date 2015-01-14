@@ -168,6 +168,7 @@
     <Compile Include="Internal\Models\ReportRunStatus.cs" />
     <Compile Include="Internal\Models\ReportType.cs" />
     <Compile Include="Internal\Models\RepresentativeType.cs" />
+    <Compile Include="Internal\Models\RepRole.cs" />
     <Compile Include="Internal\Models\Reseller.cs" />
     <Compile Include="Internal\Models\ShareFileRepresentative.cs" />
     <Compile Include="Internal\Models\TrialPeriod.cs" />

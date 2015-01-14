@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //
-//	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2015 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -42,6 +42,8 @@ namespace ShareFile.Api.Models
         ThreadedUploadRaw = 26,
         ThreadedUploadForms = 27,
         RightSignature = 28,
-        UploadWithRequestParams = 29
+        UploadWithRequestParams = 29,
+        SoftLock = 30,
+        HardLock = 31
     }
 }

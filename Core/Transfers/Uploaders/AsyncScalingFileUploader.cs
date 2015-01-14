@@ -15,6 +15,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         public AsyncScalingFileUploader(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
             : base(client, uploadSpecificationRequest, file, config, expirationDays)
         {
+            UploadSpecificationRequest.Raw = true;
             var chunkConfig = config != null ? config.PartConfig : new FilePartConfig();
             partUploader = new ScalingPartUploader(chunkConfig, Config.NumberOfThreads,
                 ExecuteChunkUploadMessage,
@@ -33,7 +34,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             {
                 if (UploadSpecification == null)
                 {
-                    UploadSpecification = await CreateUpload(UploadSpecificationRequest);
+                    UploadSpecification = await CreateUpload();
                 }
 
                 await CheckResumeAsync();

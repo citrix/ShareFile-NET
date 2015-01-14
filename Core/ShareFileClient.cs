@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -11,6 +12,7 @@ using ShareFile.Api.Client.Converters;
 using ShareFile.Api.Client.Credentials;
 using ShareFile.Api.Client.Entities;
 using ShareFile.Api.Client.Events;
+using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Logging;
 using ShareFile.Api.Client.Requests;
@@ -216,6 +218,32 @@ namespace ShareFile.Api.Client
             };
         }
 
+        private const int StandardUploadThreshold = 1024 * 1024 * 8;
+        private UploadMethod GetUploadMethod(long fileSize)
+        {
+            if (fileSize > StandardUploadThreshold)
+            {
+                return UploadMethod.Threaded;
+            }
+            return UploadMethod.Standard;
+        }
+
+        /// <summary>
+        /// Use some naive metrics for deciding which <see cref="UploadMethod"/>  should be used.
+        /// </summary>
+        /// <param name="uploadSpecificationRequest"></param>
+        private void PreprocessUploadSpecRequest(UploadSpecificationRequest uploadSpecificationRequest)
+        {
+            if (string.IsNullOrEmpty(uploadSpecificationRequest.Tool))
+            {
+                uploadSpecificationRequest.Tool = Configuration.ToolName;
+            }
+
+            if (uploadSpecificationRequest.Method.HasValue) return;
+
+            uploadSpecificationRequest.Method = GetUploadMethod(uploadSpecificationRequest.FileSize);
+        }
+
 #if Async
         /// <summary>
         /// 
@@ -227,6 +255,8 @@ namespace ShareFile.Api.Client
         /// <returns></returns>
         public AsyncUploaderBase GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
         {
+            this.PreprocessUploadSpecRequest(uploadSpecificationRequest);
+
             switch (uploadSpecificationRequest.Method)
             {
                 case UploadMethod.Standard:
@@ -255,6 +285,8 @@ namespace ShareFile.Api.Client
         /// <returns></returns>
         public SyncUploaderBase GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
         {
+            this.PreprocessUploadSpecRequest(uploadSpecificationRequest);
+
             switch (uploadSpecificationRequest.Method)
             {
                 case UploadMethod.Standard:

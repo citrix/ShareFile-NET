@@ -116,7 +116,15 @@ namespace ShareFile.Api.Client.Requests.Providers
             {
                 requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                WriteRequestBody(requestMessage, request.Body, new MediaTypeHeaderValue("application/json"));
+                try
+                {
+                    WriteRequestBody(requestMessage, request.Body, new MediaTypeHeaderValue("application/json"));
+                }
+                catch (Exception e)
+                {
+                    requestMessage.Dispose();
+                    throw;
+                }
             }
             else
             {
@@ -418,9 +426,17 @@ namespace ShareFile.Api.Client.Requests.Providers
 
                 if (ShareFileClient.Logging.IsDebugEnabled)
                 {
-                    var contentAsString = formContent.ReadAsStringAsync();
+                    try
+                    {
+                        var contentAsString = formContent.ReadAsStringAsync();
 
-                    ShareFileClient.Logging.Debug(contentAsString.Result, null);
+                        ShareFileClient.Logging.Debug(contentAsString.Result, null);
+                    }
+                    catch (Exception e)
+                    {
+                        formContent.Dispose();
+                        throw;
+                    }
                 }
 
                 httpRequestMessage.Content = formContent;

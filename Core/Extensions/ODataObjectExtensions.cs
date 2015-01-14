@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using ShareFile.Api.Models;
 
@@ -142,6 +143,12 @@ namespace ShareFile.Api.Client.Extensions
                 return true;
             }
             return false;
+        }
+
+        public static bool SupportsUploadWithRequestParams(this IEnumerable<Capability> capabilities)
+        {
+            if (capabilities == null) return false;
+            return capabilities.Any(x => x.Name == CapabilityName.UploadWithRequestParams);
         }
     }
 }

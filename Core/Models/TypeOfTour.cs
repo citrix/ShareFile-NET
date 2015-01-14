@@ -11,9 +11,18 @@
 using System;
 namespace ShareFile.Api.Models 
 {
-	public enum UXMode
+	public enum TypeOfTour
     {
-        Classic = 0,
-        TabView = 1
+        NoTour = 0,
+        Welcome = 1,
+        Sync = 2,
+        WoolworthsLimited = 3,
+        Radiant = 4,
+        SuperUserAutoConvert = 5,
+        SuperUserManualConvert = 6,
+        NewFeature = 7,
+        NewEmployee = 8,
+        TFA = 9,
+        GetApp = 10
     }
 }

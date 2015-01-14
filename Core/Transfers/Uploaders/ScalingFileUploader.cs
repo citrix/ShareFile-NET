@@ -31,10 +31,17 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         public override UploadResponse Upload(Dictionary<string, object> transferMetadata = null)
         {
-            SetUploadSpecification();
-            var uploads = partUploader.Upload(File, HashProvider, UploadSpecification.ChunkUri.AbsoluteUri);
-            uploads.Wait();
-            return FinishUpload();
+            try
+            {
+                SetUploadSpecification();
+                var uploads = partUploader.Upload(File, HashProvider, UploadSpecification.ChunkUri.AbsoluteUri);
+                uploads.Wait();
+                return FinishUpload();
+            }
+            catch(AggregateException aggEx)
+            {
+                throw aggEx.Unwrap();
+            }
         }
         
         private void ExecuteChunkUploadMessage(HttpRequestMessage requestMessage)

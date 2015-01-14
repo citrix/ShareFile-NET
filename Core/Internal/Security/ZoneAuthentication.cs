@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Net.Http;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Security.Cryptography;
 using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Security
 {
-    public class ZoneAuthentication
+    public class ZoneAuthentication : CustomAuthentication
     {
         public Zone Zone { get; set; }
 
@@ -55,6 +56,16 @@ namespace ShareFile.Api.Client.Security
             var hmac = HmacSha256ProviderFactory.GetProvider(secret);
             byte[] hash = hmac.ComputeHash(new System.Text.UTF8Encoding().GetBytes(uriToHash));
             return new Uri(request.GetAuthority() + uriToHash + "&h=" + Uri.EscapeDataString(Convert.ToBase64String(hash)));
+        }
+
+        public override Uri SignUri(Uri uri)
+        {
+            return Sign(uri);
+        }
+
+        public override HttpRequestMessage SignBody(object body, HttpRequestMessage requestMessage)
+        {
+            return requestMessage;
         }
     }
 }

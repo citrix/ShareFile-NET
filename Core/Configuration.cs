@@ -102,11 +102,16 @@ namespace ShareFile.Api.Client
         {
             if (!string.IsNullOrEmpty(_defaultToolVersion)) return _defaultToolVersion;
 
-            var fileVersion =
-                Assembly.GetExecutingAssembly()
-                    .GetCustomAttributes(true)
-                    .OfType<AssemblyFileVersionAttribute>()
+            AssemblyFileVersionAttribute fileVersion;
+#if NETFX_CORE
+            fileVersion = typeof(Configuration).GetAssembly()
+                    .GetCustomAttributes().OfType<AssemblyFileVersionAttribute>()
                     .FirstOrDefault();
+#else
+            fileVersion = typeof(Configuration).GetAssembly().GetCustomAttributes(true)
+                .OfType<AssemblyFileVersionAttribute>()
+                .FirstOrDefault();
+#endif
             if (fileVersion == null)
             {
                 _defaultToolVersion = "3.0.0";

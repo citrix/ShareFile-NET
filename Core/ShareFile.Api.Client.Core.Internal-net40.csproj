@@ -141,6 +141,8 @@
     <Compile Include="Internal\Models\UsagePlan.cs" />
     <Compile Include="Internal\Models\UsagePlanAddOn.cs" />
     <Compile Include="InternalShareFileClient.cs" />
+    <Compile Include="Internal\Security\ClientHashAuthentication.cs" />
+    <Compile Include="Internal\Security\ZoneAuthentication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

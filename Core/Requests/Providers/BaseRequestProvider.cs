@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,19 +6,12 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Converters;
 using ShareFile.Api.Client.Credentials;
-using ShareFile.Api.Client.Events;
 using ShareFile.Api.Client.Exceptions;
-using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Logging;
-using ShareFile.Api.Client.Security.Authentication.OAuth2;
-using ShareFile.Api.Client.Security.Cryptography;
 using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Requests.Providers
@@ -84,7 +76,10 @@ namespace ShareFile.Api.Client.Requests.Providers
             var uri = request.GetComposedUri();
 
 #if ShareFile
-            if (ShareFileClient.ZoneAuthentication != null) uri = ShareFileClient.ZoneAuthentication.Sign(uri);
+            if (ShareFileClient.CustomAuthentication != null)
+            {
+                uri = ShareFileClient.CustomAuthentication.SignUri(uri);
+            }
 #endif
 
             if (ShareFileClient.Configuration.UseHttpMethodOverride)
@@ -140,6 +135,13 @@ namespace ShareFile.Api.Client.Requests.Providers
             }
 
             TryAddCookies(ShareFileClient, requestMessage);
+
+#if ShareFile
+            if (ShareFileClient.CustomAuthentication != null && request.Body != null)
+            {
+                requestMessage = ShareFileClient.CustomAuthentication.SignBody(request.Body, requestMessage);
+            }
+#endif
 
             ShareFileClient.Logging.Trace(watch);
 

@@ -32,7 +32,6 @@ namespace ShareFile.Api.Client
     {
         Uri BaseUri { get; set; }
         Configuration Configuration { get; set; }
-        JsonSerializer Serializer { get; set; }
 #if ShareFile
         CustomAuthentication CustomAuthentication { get; set; }
 #endif
@@ -154,7 +153,7 @@ namespace ShareFile.Api.Client
         internal LoggingProvider Logging { get; set; }
         internal ICredentialCache CredentialCache { get; set; }
         internal CookieContainer CookieContainer { get; set; }
-        public JsonSerializer Serializer { get; set; }
+        internal JsonSerializer Serializer { get; set; }
         internal JsonSerializer LoggingSerializer { get; set; }
         internal RequestProviderFactory RequestProviderFactory { get; set; }
 

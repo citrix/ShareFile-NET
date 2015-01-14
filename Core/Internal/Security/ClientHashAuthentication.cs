@@ -13,16 +13,16 @@ namespace ShareFile.Api.Client.Security
         public string ClientId { get; private set; }
         public string ClientSecret { get; private set; }
         public string UserId { get; set; }
-        private IShareFileClient ShareFileClient { get; set; }
+        private ShareFileClient ShareFileClient { get; set; }
 
-        public ClientHashAuthentication(IShareFileClient shareFileClient, string oauthClientId, string oauthClientSecret)
+        public ClientHashAuthentication(ShareFileClient shareFileClient, string oauthClientId, string oauthClientSecret)
         {
             ClientId = oauthClientId;
             ClientSecret = oauthClientSecret;
             ShareFileClient = shareFileClient;
         }
 
-        public ClientHashAuthentication(IShareFileClient shareFileClient, string oauthClientId, string oauthClientSecret, string userId)
+        public ClientHashAuthentication(ShareFileClient shareFileClient, string oauthClientId, string oauthClientSecret, string userId)
             : this(shareFileClient, oauthClientId, oauthClientSecret)
         {
             UserId = userId;

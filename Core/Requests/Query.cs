@@ -373,6 +373,28 @@ namespace ShareFile.Api.Client.Requests
             _top = -1;
         }
 
+        internal static Query<U> Copy<T, U>(Query<T> copyFrom, Query<U> copyTo)
+            where T : class
+            where U : class
+        {
+            copyTo._action = copyFrom._action;
+            copyTo._baseUri = copyFrom._baseUri;
+            copyTo._entity = copyFrom._entity;
+            copyTo._filterCriteria = copyFrom._filterCriteria;
+            copyTo._headerCollection = copyFrom._headerCollection;
+            copyTo._orderBy = copyFrom._orderBy;
+            copyTo._skip = copyFrom._skip;
+            copyTo._subActions = copyFrom._subActions;
+            copyTo._top = copyFrom._top;
+            copyTo.Body = copyFrom.Body;
+            copyTo.HttpMethod = copyFrom.HttpMethod;
+            foreach (var expand in copyFrom._expandProperties) copyTo._expandProperties.Add(expand);
+            foreach (var id in copyFrom._ids) copyTo._ids.Add(id);
+            foreach (var qsParam in copyFrom._queryString) copyTo._queryString.Add(qsParam);
+            foreach (var select in copyFrom._selectProperties) copyTo._selectProperties.Add(select);
+            return copyTo;
+        }
+
         public Query<T> Id(object id)
         {
             return Id(id.ToString());
@@ -599,12 +621,12 @@ namespace ShareFile.Api.Client.Requests
 
         public IEnumerable<string> GetSelectProperties()
         {
-            return _selectProperties;
+            return _selectProperties.OrderBy(select => select.Length).Distinct();
         }
 
         public IEnumerable<string> GetExpandProperties()
         {
-            return _expandProperties;
+            return _expandProperties.OrderBy(expand => expand.Length).Distinct(); ;
         }
 
         public IFilter GetFilter()
@@ -648,6 +670,35 @@ namespace ShareFile.Api.Client.Requests
         public override Task<Stream> ExecuteAsync(CancellationToken? token = null)
         {
             return Client.ExecuteAsync(this, token);
+        }
+#endif
+    }
+
+    internal class MappedQuery<SourceType, TargetType> : Query<TargetType>
+        where SourceType : class
+        where TargetType : class
+    {
+        private Func<SourceType, TargetType> map;
+
+        public MappedQuery(Query<SourceType> query, Func<SourceType, TargetType> map) : base(query.Client)
+        {
+            Query<SourceType>.Copy(query, this);
+            this.map = map;
+        }
+
+        public override TargetType Execute()
+        {
+            Query<SourceType> query = Query<TargetType>.Copy(this, new Query<SourceType>(this.Client));
+            SourceType result = query.Execute();
+            return map(result);
+        }
+
+#if Async
+        public override async Task<TargetType> ExecuteAsync(CancellationToken? token = null)
+        {
+            Query<SourceType> query = Query<TargetType>.Copy(this, new Query<SourceType>(this.Client));
+            SourceType result = await query.ExecuteAsync(token);
+            return map(result);
         }
 #endif
     }

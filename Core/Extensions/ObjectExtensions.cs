@@ -17,6 +17,11 @@ namespace ShareFile.Api.Client.Extensions
             return instance;
         }
 
+        public static TResult As<TCast, TResult>(this object obj, Func<TCast, TResult> map)
+        {
+            return As(obj, map, default(TResult));
+        }
+
         public static TResult As<TCast, TResult>(this object obj, Func<TCast, TResult> map, TResult defaultValue)
         {
             //check assignable from instead?

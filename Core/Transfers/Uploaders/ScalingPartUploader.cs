@@ -41,7 +41,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
                 var results = workers.Select(task => task.Result);
                 if (!results.All(partUploadResult => partUploadResult.IsSuccess))
-                    throw new UploadException("FilePart upload failed", -1, results.Select(result => result.PartUploadException).FirstOrDefault(ex => ex != null));
+                    throw results.Select(result => result.PartUploadException).FirstOrDefault(ex => ex != null) ?? new UploadException("FilePart upload failed", -1);
             });
         }
 

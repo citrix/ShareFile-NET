@@ -65,7 +65,8 @@ namespace ShareFile.Api.Models
         SalesEngineer = 48,
         Release = 49,
         TechnicalServiceEngineer = 50,
-        IT = 51
+        IT = 51,
+        Database = 52
     }
 #endif
 }

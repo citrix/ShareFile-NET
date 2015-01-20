@@ -205,6 +205,16 @@ namespace ShareFile.Api.Models
 
 		public bool? DisableScanSnap { get; set; }
 
+		public bool? EnableFileCount { get; set; }
+
+		public bool? EnableAntiVirus { get; set; }
+
+		public bool? EnableFileLocking { get; set; }
+
+		public bool? EnableIntegrations { get; set; }
+
+		public IEnumerable<SafeEnum<IntegrationProvider>> IntegrationProviders { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -306,6 +316,11 @@ namespace ShareFile.Api.Models
 				EnableWebAppConnectorBrowsing = typedSource.EnableWebAppConnectorBrowsing;
 				EnableStrictCrossdomainPolicy = typedSource.EnableStrictCrossdomainPolicy;
 				DisableScanSnap = typedSource.DisableScanSnap;
+				EnableFileCount = typedSource.EnableFileCount;
+				EnableAntiVirus = typedSource.EnableAntiVirus;
+				EnableFileLocking = typedSource.EnableFileLocking;
+				EnableIntegrations = typedSource.EnableIntegrations;
+				IntegrationProviders = typedSource.IntegrationProviders;
 			}
 			else
 			{
@@ -681,6 +696,26 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("DisableScanSnap", out token) && token.Type != JTokenType.Null)
 				{
 					DisableScanSnap = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableFileCount", out token) && token.Type != JTokenType.Null)
+				{
+					EnableFileCount = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableAntiVirus", out token) && token.Type != JTokenType.Null)
+				{
+					EnableAntiVirus = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableFileLocking", out token) && token.Type != JTokenType.Null)
+				{
+					EnableFileLocking = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableIntegrations", out token) && token.Type != JTokenType.Null)
+				{
+					EnableIntegrations = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IntegrationProviders", out token) && token.Type != JTokenType.Null)
+				{
+					IntegrationProviders = (IEnumerable<SafeEnum<IntegrationProvider>>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<SafeEnum<IntegrationProvider>>));
 				}
 			}
 		}

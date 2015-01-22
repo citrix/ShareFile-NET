@@ -23,6 +23,7 @@ namespace ShareFile.Api.Models
         NewFeature = 7,
         NewEmployee = 8,
         TFA = 9,
-        GetApp = 10
+        GetApp = 10,
+        ScanSnap = 11
     }
 }

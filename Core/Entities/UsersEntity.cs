@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2015 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -259,13 +259,22 @@ namespace ShareFile.Api.Client.Entities
         IQuery<ODataFeed<Item>> TopFolders(Uri url);
         
         /// <summary>
+        /// Get User's FileBox children
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns>
+        /// User's FileBox children
+        /// </returns>
+        IQuery<ODataFeed<Item>> Box(Uri url);
+        
+        /// <summary>
         /// Get User's FileBox folder
         /// </summary>
         /// <param name="url"></param>
         /// <returns>
         /// User's FileBox
         /// </returns>
-        IQuery<ODataFeed<Item>> Box(Uri url);
+        IQuery<Item> FileBox(Uri url);
         
         /// <summary>
         /// Get User Preferences
@@ -789,16 +798,32 @@ namespace ShareFile.Api.Client.Entities
         }
         
         /// <summary>
+        /// Get User's FileBox children
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns>
+        /// User's FileBox children
+        /// </returns>
+        public IQuery<ODataFeed<Item>> Box(Uri url)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
+		    sfApiQuery.Action("Box");
+            sfApiQuery.Uri(url);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
         /// Get User's FileBox folder
         /// </summary>
         /// <param name="url"></param>
         /// <returns>
         /// User's FileBox
         /// </returns>
-        public IQuery<ODataFeed<Item>> Box(Uri url)
+        public IQuery<Item> FileBox(Uri url)
         {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
-		    sfApiQuery.Action("Box");
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
+		    sfApiQuery.Action("FileBox");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;

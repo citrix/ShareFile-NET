@@ -11,10 +11,10 @@ let authors = ["Citrix ShareFile"]
 let buildDir = "./build/"
 let packagingRoot = "./packaging/"
 let packagingDir = packagingRoot @@ "sharefile"
-let nugetVersion = getBuildParamOrDefault "nugetVersion" "3.0.9"
+let nugetVersion = getBuildParamOrDefault "nugetVersion" "3.0.11"
 // DO NOT INCREMENT THIS VALUE -- Will cause issues with PowerShell and StrongNamed versions of the assembly
 let assemblyVersion = getBuildParamOrDefault "assemblyVersion" "3.0.0"
-let assemblyFileVersion = getBuildParamOrDefault "assemblyFileVersion" "3.0.9"
+let assemblyFileVersion = getBuildParamOrDefault "assemblyFileVersion" "3.0.11"
 let nugetAccessKey = getBuildParamOrDefault "nugetkey" ""
 let nugetDestination = getBuildParamOrDefault "nugetserver" ""
 let title = "ShareFile Client SDK"
@@ -39,26 +39,26 @@ Target "Clean" (fun () ->
 )
 
 Target "AssemblyInfo" (fun () ->
-    let assemblyInfo = 
+    let assemblyInfo =
         [   Attribute.Product projectName
             Attribute.Title title
             Attribute.Version assemblyVersion
             Attribute.FileVersion assemblyFileVersion
-            Attribute.Copyright "Copyright © Citrix ShareFile 2014" ]
+            Attribute.Copyright "Copyright © Citrix ShareFile 2015" ]
 
     let applyAssemblyInfo assemblyInfoFile = CreateCSharpAssemblyInfo assemblyInfoFile assemblyInfo
     [ "./Core/Properties/AssemblyInfo.cs"; "./Net45/Properties/AssemblyInfo.cs" ] |> Seq.iter applyAssemblyInfo
 )
 
-Target "Build" (fun () ->    
-    let composeConstants solutionConstants = 
+Target "Build" (fun () ->
+    let composeConstants solutionConstants =
         [   [ "CODE_ANALYSIS" ] //default constants
             (if signRequested = "true" then [ "SIGNED" ] else [])
             (if buildType = "internal" then [ "ShareFile" ] else [])
             solutionConstants
         ] |> Seq.concat |> String.concat ";"
 
-    let composeBuildParams constants = 
+    let composeBuildParams constants =
         [   "Optimize", "True"
             "DebugSymbols", "False"
             "Configuration", buildMode
@@ -72,10 +72,10 @@ Target "Build" (fun () ->
     let solutions = //solution name, build subdirectory, compile constants
         [   "Core", "Portable", [ "Portable"; "Async" ]
             "Net40", "Net40", [ "Net40" ]
-            "Net45", "Net45", [ "Async" ]        
+            "Net45", "Net45", [ "Async" ]
             "Net45Core", "NetCore45", [ "Async"; "NETFX_CORE" ] ]
 
-    let build (solutionName, solutionBuildDir, solutionConstants) = 
+    let build (solutionName, solutionBuildDir, solutionConstants) =
         MSBuild (buildDir @@ solutionBuildDir) "Clean;Build" (composeBuildParams <| composeConstants solutionConstants) [ composeSolutionName solutionName ]
             |> Log "AppBuild-Output: "
         CleanDirs ["./Core" @@ "obj"]
@@ -89,7 +89,7 @@ Target "CreateNuGetPackage" (fun () ->
     let net40Dir = packagingDir @@ "lib/net40/"
     let net40ClientDir = packagingDir @@ "lib/net40-client/"
     let portableDir = packagingDir @@ "lib/portable-net45+wp80+win8+wpa81/"
-    
+
     let nugetTitle =
         if signRequested = "true" then signedTitle
         else title
@@ -98,7 +98,7 @@ Target "CreateNuGetPackage" (fun () ->
         else projectName
 
     CleanDirs [net45Dir; net40Dir; net40ClientDir; portableDir; netCore45Dir]
-    
+
     CopyFile net45Dir (buildDir @@ "Net45/ShareFile.Api.Client.Core.dll")
     CopyFile net45Dir (buildDir @@ "Net45/ShareFile.Api.Client.Net45.dll")
     CopyFile net40Dir (buildDir @@ "Net40/ShareFile.Api.Client.Core.dll")
@@ -111,7 +111,7 @@ Target "CreateNuGetPackage" (fun () ->
     CopyFile net40ClientDir (buildDir @@ "Net40/ShareFile.Api.Client.Core.xml")
     CopyFile portableDir (buildDir @@ "Portable/ShareFile.Api.Client.Core.xml")
     CopyFile netCore45Dir (buildDir @@ "NetCore45/ShareFile.Api.Client.Core.xml")
-    
+
     if buildType = "internal" then
         CopyFile net45Dir (buildDir @@ "Net45/ShareFile.Api.Client.Core.Internal.dll")
         CopyFile net40Dir (buildDir @@ "Net40/ShareFile.Api.Client.Core.Internal.dll")
@@ -123,7 +123,7 @@ Target "CreateNuGetPackage" (fun () ->
         CopyFile net40ClientDir (buildDir @@ "Net40/ShareFile.Api.Client.Core.Internal.xml")
         CopyFile portableDir (buildDir @@ "Portable/ShareFile.Api.Client.Core.Internal.xml")
         CopyFile netCore45Dir (buildDir @@ "NetCore45/ShareFile.Api.Client.Core.Internal.xml")
-    
+
     NuGet (fun p ->
         {p with
             Authors = authors

@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2015 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -69,6 +69,16 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="url"></param>
         /// <param name="lockid"></param>
         IQuery DeleteByItem(Uri url, string lockid);
+        
+        /// <summary>
+        /// Discard checkout on a File
+        /// </summary>
+        /// <remarks>
+        /// Discard a checkout on a file
+        /// </remarks>
+        /// <param name="url"></param>
+        /// <param name="lockid"></param>
+        IQuery Discard(Uri url, string lockid);
     }
 
     public class FileLockEntityInternal : EntityBase, IFileLockEntityInternal
@@ -155,6 +165,25 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.Uri(url);
             sfApiQuery.ActionIds(lockid);
             sfApiQuery.HttpMethod = "DELETE";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Discard checkout on a File
+        /// </summary>
+        /// <remarks>
+        /// Discard a checkout on a file
+        /// </remarks>
+        /// <param name="url"></param>
+        /// <param name="lockid"></param>
+        public IQuery Discard(Uri url, string lockid)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+		    sfApiQuery.Action("FileLock");
+            sfApiQuery.Uri(url);
+            sfApiQuery.ActionIds(lockid);
+            sfApiQuery.SubAction("Discard");
+            sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
     }

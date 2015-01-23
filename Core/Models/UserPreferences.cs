@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2015 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -53,7 +53,7 @@ namespace ShareFile.Api.Models
 
 		public int? NotificationInterval { get; set; }
 
-		public int? ShowTutorial { get; set; }
+		public SafeEnum<TypeOfTour> ShowTutorial { get; set; }
 
 		public int? EnableToolOverride { get; set; }
 
@@ -173,7 +173,7 @@ namespace ShareFile.Api.Models
 				}
 				if(source.TryGetProperty("ShowTutorial", out token) && token.Type != JTokenType.Null)
 				{
-					ShowTutorial = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+					ShowTutorial = (SafeEnum<TypeOfTour>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<TypeOfTour>));
 				}
 				if(source.TryGetProperty("EnableToolOverride", out token) && token.Type != JTokenType.Null)
 				{

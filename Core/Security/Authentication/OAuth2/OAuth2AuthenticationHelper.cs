@@ -18,8 +18,9 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
             if (navigationUri.ToString().StartsWith(_completionUrl))
             {
                 var queryString = navigationUri.Query.ToQueryStringCollection();
-                response = queryString.ToOAuthResponse();
+                if (queryString == null) return false;
 
+                response = queryString.ToOAuthResponse();
                 return true;
             }
 

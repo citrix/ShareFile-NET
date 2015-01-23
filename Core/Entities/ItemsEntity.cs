@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2015 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -521,6 +521,9 @@ namespace ShareFile.Api.Client.Entities
         /// the end of ChunkUri, as explained in Streamed. After all chunks were sent, the client
         /// must call the FinishUri provided in this spec.
         /// 
+        /// If using the Threaded Uploader, you can attach the argument fmt=json to each ChunkUri
+        /// to indicate you wish to retrieve the Item ID of the file after the upload is completed.
+        /// 
         /// For all uploaders, the contents of the POST Body can either be "raw", if the "Raw" parameter
         /// was provided to the Uploader, or use MIME multi-part form encoding otherwise. Raw uploads
         /// simply put the block content in the POST body - Content-Length specifies the size. Multi-part
@@ -650,8 +653,8 @@ namespace ShareFile.Api.Client.Entities
         /// "Paging":{
         /// "PageNumber":1, (deprecated)
         /// "PageSize":10, (deprecated)
-        /// "Count":50,
-        /// "Skip":0
+        /// "Count":50, (default value)
+        /// "Skip":0, (default value)
         /// },
         /// "Sort":{
         /// "SortBy":"",
@@ -1434,6 +1437,9 @@ namespace ShareFile.Api.Client.Entities
         /// the end of ChunkUri, as explained in Streamed. After all chunks were sent, the client
         /// must call the FinishUri provided in this spec.
         /// 
+        /// If using the Threaded Uploader, you can attach the argument fmt=json to each ChunkUri
+        /// to indicate you wish to retrieve the Item ID of the file after the upload is completed.
+        /// 
         /// For all uploaders, the contents of the POST Body can either be "raw", if the "Raw" parameter
         /// was provided to the Uploader, or use MIME multi-part form encoding otherwise. Raw uploads
         /// simply put the block content in the POST body - Content-Length specifies the size. Multi-part
@@ -1642,8 +1648,8 @@ namespace ShareFile.Api.Client.Entities
         /// "Paging":{
         /// "PageNumber":1, (deprecated)
         /// "PageSize":10, (deprecated)
-        /// "Count":50,
-        /// "Skip":0
+        /// "Count":50, (default value)
+        /// "Skip":0, (default value)
         /// },
         /// "Sort":{
         /// "SortBy":"",
@@ -1663,7 +1669,7 @@ namespace ShareFile.Api.Client.Entities
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AdvancedSearchResults>(Client);
 		    sfApiQuery.From("Items");
-		    sfApiQuery.Action("AdvancedSimpleSearch");
+		    sfApiQuery.Action("AdvancedSearch");
             sfApiQuery.Body = searchQuery;
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;

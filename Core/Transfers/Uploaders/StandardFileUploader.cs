@@ -20,6 +20,8 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         public override UploadResponse Upload(Dictionary<string, object> transferMetadata = null)
         {
+            SetUploadSpecification();
+
             int tryCount = 0;
             Exception lastException = null;
 
@@ -57,17 +59,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         public override void Prepare()
         {
-            if (!Prepared)
-            {
-                if (UploadSpecification == null)
-                {
-                    UploadSpecification = CreateUploadSpecificationQuery(UploadSpecificationRequest).Execute();
-                }
-
-                CheckResume();
-
-                Prepared = true;
-            }
+            throw new NotImplementedException();
         }
     }
 }

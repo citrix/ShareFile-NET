@@ -22,6 +22,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         public ScalingFileUploader(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
             : base(client, uploadSpecificationRequest, file, config, expirationDays)
         {
+            UploadSpecificationRequest.Raw = true;
             var partConfig = config != null ? config.PartConfig : new FilePartConfig();
             partUploader = new ScalingPartUploader(partConfig, Config.NumberOfThreads,
                 requestMessage => Task.Factory.StartNew(() => ExecuteChunkUploadMessage(requestMessage)),
@@ -30,10 +31,17 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         public override UploadResponse Upload(Dictionary<string, object> transferMetadata = null)
         {
-            SetUploadSpecification();
-            var uploads = partUploader.Upload(File, HashProvider, UploadSpecification.ChunkUri.AbsoluteUri);
-            uploads.Wait();
-            return FinishUpload();
+            try
+            {
+                SetUploadSpecification();
+                var uploads = partUploader.Upload(File, HashProvider, UploadSpecification.ChunkUri.AbsoluteUri);
+                uploads.Wait();
+                return FinishUpload();
+            }
+            catch(AggregateException aggEx)
+            {
+                throw aggEx.Unwrap();
+            }
         }
         
         private void ExecuteChunkUploadMessage(HttpRequestMessage requestMessage)

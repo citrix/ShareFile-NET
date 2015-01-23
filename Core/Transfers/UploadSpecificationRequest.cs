@@ -11,18 +11,10 @@ namespace ShareFile.Api.Client.Transfers
         public Uri Parent { get; set; }
         public UploadMethod? Method { get; set; }
 
-        private bool _raw;
         /// <summary>
-        /// Set is no longer supported
+        /// Set is no longer supported; value will be overwritten during uploader constructor
         /// </summary>
-        public bool Raw
-        {
-            get
-            {
-                return _raw;
-            }
-            set { }
-        }
+        public bool Raw { get; set; }
 
         public string FileName { get; set; }
         public long FileSize { get; set; }

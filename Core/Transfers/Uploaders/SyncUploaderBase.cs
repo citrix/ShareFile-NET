@@ -118,21 +118,31 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         protected T DeserializeShareFileApiResponse<T>(HttpResponseMessage responseMessage)
         {
             string response = responseMessage.Content.ReadAsStringAsync().WaitForTask();
-            try
+            if (responseMessage.IsSuccessStatusCode)
             {
-                using (var rdr = new JsonTextReader(new StringReader(response)))
+                try
                 {
-                    var result = new JsonSerializer().Deserialize<ShareFileApiResponse<T>>(rdr);
-                    if (result.Error)
-                        throw new UploadException(result.ErrorMessage, result.ErrorCode);
-                    else
-                        return result.Value;
+                    using (var rdr = new JsonTextReader(new StringReader(response)))
+                    {
+                        var result = new JsonSerializer().Deserialize<ShareFileApiResponse<T>>(rdr);
+                        if (result.Error)
+                            throw new UploadException(result.ErrorMessage, result.ErrorCode);
+                        else
+                            return result.Value;
+                    }
+                }
+                catch (JsonSerializationException jEx)
+                {
+                    throw new UploadException("StorageCenter error: " + response, -1, jEx);
                 }
             }
-            catch (JsonSerializationException jEx)
+
+            if (responseMessage.Content != null)
             {
-                throw new UploadException("StorageCenter error: " + response, -1, jEx);
+                TryProcessFailedUploadResponse(response);
             }
+
+            throw new UploadException("StorageCenter error: " + response, -1);
         }
 
         private HttpClient httpClient;

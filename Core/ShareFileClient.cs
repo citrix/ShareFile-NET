@@ -468,7 +468,7 @@ namespace ShareFile.Api.Client
             }
             catch (Exception exception)
             {
-                Logging.Error("Failed to add OAuth credentials", exception);
+                Logging.Error(exception, "Failed to add OAuth credentials");
             }
             finally
             {
@@ -497,7 +497,7 @@ namespace ShareFile.Api.Client
             }
             catch (Exception exception)
             {
-                Logging.Error("Failed to add OAuth credentials", exception);
+                Logging.Error(exception, "Failed to add OAuth credentials");
             }
             finally
             {

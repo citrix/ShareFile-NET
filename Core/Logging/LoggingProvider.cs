@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace ShareFile.Api.Client.Logging
 {
@@ -22,7 +23,7 @@ namespace ShareFile.Api.Client.Logging
 
         public void Trace(ActionStopwatch stopwatch)
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Trace))
+            if (IsTraceEnabled)
             {
                 stopwatch.Stop();
                 Trace(stopwatch.StringFormat(), stopwatch.Name, stopwatch.ElapsedMilliseconds());
@@ -31,7 +32,7 @@ namespace ShareFile.Api.Client.Logging
 
         public void Trace(string format, params object[] args)
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Trace))
+            if (IsTraceEnabled)
             {
                 _instance.Trace(BuildString(format, args));
             }
@@ -39,7 +40,7 @@ namespace ShareFile.Api.Client.Logging
 
         public void Trace(Exception exception, string format, params object[] args)
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Trace))
+            if (IsTraceEnabled)
             {
                 _instance.Trace(exception, BuildString(format, args));
             }
@@ -47,7 +48,7 @@ namespace ShareFile.Api.Client.Logging
 
         public void Debug(string format, params object[] args)
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Debug))
+            if (IsDebugEnabled)
             {
                 _instance.Debug(BuildString(format, args));
             }
@@ -55,7 +56,7 @@ namespace ShareFile.Api.Client.Logging
 
         public void Debug(Exception exception, string format, params object[] args)
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Debug))
+            if (IsDebugEnabled)
             {
                 _instance.Debug(exception, BuildString(format, args));
             }
@@ -63,7 +64,7 @@ namespace ShareFile.Api.Client.Logging
 
         public void Info(string format, params object[] args)
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Info))
+            if (IsInformationEnabled)
             {
                 _instance.Info(BuildString(format, args));
             }
@@ -71,7 +72,7 @@ namespace ShareFile.Api.Client.Logging
 
         public void Info(Exception exception, string format, params object[] args)
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Info))
+            if (IsInformationEnabled)
             {
                 _instance.Info(exception, BuildString(format, args));
             }
@@ -79,7 +80,7 @@ namespace ShareFile.Api.Client.Logging
 
         public void Warn(string format, params object[] args)
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Warn))
+            if (IsWarningEnabled)
             {
                 _instance.Warn(BuildString(format, args));
             }
@@ -87,7 +88,7 @@ namespace ShareFile.Api.Client.Logging
 
         public void Warn(Exception exception, string format, params object[] args)
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Warn))
+            if (IsWarningEnabled)
             {
                 _instance.Warn(exception, BuildString(format, args));
             }
@@ -95,7 +96,7 @@ namespace ShareFile.Api.Client.Logging
 
         public void Error(string format, params object[] args)
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Error))
+            if (IsErrorEnabled)
             {
                 _instance.Error(BuildString(format, args));
             }
@@ -103,7 +104,7 @@ namespace ShareFile.Api.Client.Logging
 
         public void Error(Exception exception, string format, params object[] args)
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Error))
+            if (IsErrorEnabled)
             {
                 if (string.IsNullOrEmpty(format))
                 {
@@ -115,7 +116,7 @@ namespace ShareFile.Api.Client.Logging
 
         public void Fatal(string format, params object[] args)
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Fatal))
+            if (IsFatalEnabled)
             {
                 _instance.Fatal(BuildString(format, args));
             }
@@ -123,7 +124,7 @@ namespace ShareFile.Api.Client.Logging
 
         public void Fatal(Exception exception, string format, params object[] args)
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Fatal))
+            if (IsFatalEnabled)
             {
                 _instance.Fatal(exception, BuildString(format, args));
             }

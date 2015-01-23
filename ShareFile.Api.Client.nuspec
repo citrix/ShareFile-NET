@@ -22,12 +22,15 @@
       <group targetFramework="net45">
         <dependency id="Newtonsoft.Json" version="6.0.8" />
       </group>
+      <group targetFramework="net451">
+        <dependency id="Newtonsoft.Json" version="6.0.8" />
+      </group>
       <group targetFramework="netcore45">
         <dependency id="Newtonsoft.Json" version="6.0.8" />
       </group>
     </dependencies>
     <frameworkAssemblies>
-        <frameworkAssembly assemblyName="System.Net.Http" targetFramework="net45, netcore45"/>
+        <frameworkAssembly assemblyName="System.Net.Http" targetFramework="net45, net451, netcore45"/>
     </frameworkAssemblies>
   </metadata>
 </package>

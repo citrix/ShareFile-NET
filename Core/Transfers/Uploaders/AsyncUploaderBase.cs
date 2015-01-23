@@ -145,10 +145,10 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         protected async Task<UploadResponse> GetUploadResponseAsync(HttpResponseMessage responseMessage)
         {
-            if (responseMessage.IsSuccessStatusCode)
+            var response = await responseMessage.Content.ReadAsStringAsync();
+            using (var textReader = new JsonTextReader(new StringReader(response)))
             {
-                using (var responseStream = await responseMessage.Content.ReadAsStreamAsync())
-                using (var textReader = new JsonTextReader(new StreamReader(responseStream)))
+                try
                 {
                     var uploadResponse = new JsonSerializer().Deserialize<ShareFileApiResponse<UploadResponse>>(textReader);
 
@@ -158,17 +158,15 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     }
 
                     return uploadResponse.Value;
+
+                }
+                catch (JsonSerializationException jEx)
+                {
+                    TryProcessFailedUploadResponse(response);
+
+                    throw new UploadException("StorageCenter error: " + response, -1, jEx);
                 }
             }
-
-            // Connectors may not use v1 API response objects
-            if (responseMessage.Content != null)
-            {
-                var errorResponse = await responseMessage.Content.ReadAsStringAsync();
-                TryProcessFailedUploadResponse(errorResponse);
-            }
-
-            throw new UploadException("Error completing upload.", -1);
         }
     }
 #endif

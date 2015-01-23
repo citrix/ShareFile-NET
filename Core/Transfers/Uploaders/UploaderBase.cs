@@ -155,16 +155,21 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
             using (var textReader = new JsonTextReader(new StringReader(errorResponse)))
             {
+                ODataRequestException requestMessage = null;
                 try
                 {
-                    var requestException = Client.Serializer.Deserialize<ODataRequestException>(textReader);
-                    throw new UploadException(requestException.Message.Message, (int)requestException.Code, new ODataException
-                    {
-                        Code = requestException.Code,
-                        ODataExceptionMessage = requestException.Message
-                    });
+                    requestMessage = Client.Serializer.Deserialize<ODataRequestException>(textReader);
                 }
                 catch { }
+
+                if (requestMessage != null)
+                {
+                    throw new UploadException(requestMessage.Message.Message, (int)requestMessage.Code, new ODataException
+                    {
+                        Code = requestMessage.Code,
+                        ODataExceptionMessage = requestMessage.Message
+                    });
+                }
             }
         }
     }

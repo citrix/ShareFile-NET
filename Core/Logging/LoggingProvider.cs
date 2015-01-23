@@ -1,5 +1,7 @@
 ﻿using System;
+#if !NO_CALLERMEMBER
 using System.Runtime.CompilerServices;
+#endif
 
 namespace ShareFile.Api.Client.Logging
 {
@@ -26,11 +28,11 @@ namespace ShareFile.Api.Client.Logging
             if (IsTraceEnabled)
             {
                 stopwatch.Stop();
-                Trace(stopwatch.StringFormat(), stopwatch.Name, stopwatch.ElapsedMilliseconds());
+                Trace(stopwatch.StringFormat(), new object[] {stopwatch.Name, stopwatch.ElapsedMilliseconds()});
             }
         }
 
-        public void Trace(string format, params object[] args)
+        public void Trace(string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
             if (IsTraceEnabled)
             {
@@ -38,7 +40,7 @@ namespace ShareFile.Api.Client.Logging
             }
         }
 
-        public void Trace(Exception exception, string format, params object[] args)
+        public void Trace(Exception exception, string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
             if (IsTraceEnabled)
             {
@@ -46,7 +48,7 @@ namespace ShareFile.Api.Client.Logging
             }
         }
 
-        public void Debug(string format, params object[] args)
+        public void Debug(string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
             if (IsDebugEnabled)
             {
@@ -54,7 +56,7 @@ namespace ShareFile.Api.Client.Logging
             }
         }
 
-        public void Debug(Exception exception, string format, params object[] args)
+        public void Debug(Exception exception, string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
             if (IsDebugEnabled)
             {
@@ -62,7 +64,7 @@ namespace ShareFile.Api.Client.Logging
             }
         }
 
-        public void Info(string format, params object[] args)
+        public void Info(string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
             if (IsInformationEnabled)
             {
@@ -70,7 +72,7 @@ namespace ShareFile.Api.Client.Logging
             }
         }
 
-        public void Info(Exception exception, string format, params object[] args)
+        public void Info(Exception exception, string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
             if (IsInformationEnabled)
             {
@@ -78,7 +80,7 @@ namespace ShareFile.Api.Client.Logging
             }
         }
 
-        public void Warn(string format, params object[] args)
+        public void Warn(string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
             if (IsWarningEnabled)
             {
@@ -86,7 +88,7 @@ namespace ShareFile.Api.Client.Logging
             }
         }
 
-        public void Warn(Exception exception, string format, params object[] args)
+        public void Warn(Exception exception, string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
             if (IsWarningEnabled)
             {
@@ -94,7 +96,7 @@ namespace ShareFile.Api.Client.Logging
             }
         }
 
-        public void Error(string format, params object[] args)
+        public void Error(string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
             if (IsErrorEnabled)
             {
@@ -102,7 +104,7 @@ namespace ShareFile.Api.Client.Logging
             }
         }
 
-        public void Error(Exception exception, string format, params object[] args)
+        public void Error(Exception exception, string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
             if (IsErrorEnabled)
             {
@@ -114,7 +116,7 @@ namespace ShareFile.Api.Client.Logging
             }
         }
 
-        public void Fatal(string format, params object[] args)
+        public void Fatal(string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
             if (IsFatalEnabled)
             {
@@ -122,7 +124,7 @@ namespace ShareFile.Api.Client.Logging
             }
         }
 
-        public void Fatal(Exception exception, string format, params object[] args)
+        public void Fatal(Exception exception, string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
             if (IsFatalEnabled)
             {
@@ -130,11 +132,36 @@ namespace ShareFile.Api.Client.Logging
             }
         }
 
-        private string BuildString(string format, params object[] args)
+        private string BuildString(string format, object[] args = null, string memberName = null)
         {
+            string message;
             if (args == null || args.Length == 0)
-                return format;
-            return string.Format(format, args);
+            {
+                message = format;
+            }
+            else
+            {
+                message = string.Format(format, args);
+            }
+
+#if !NO_CALLERMEMBER
+            if (_instance.LogCallerMember && !string.IsNullOrEmpty(memberName))
+            {
+                return memberName + ": " + message;
+            }
+#endif
+
+            return message;
         }
+
+#if NO_CALLERMEMBER
+        /// <summary>
+        /// Dummy attribute to prevent the need to ifdef all logging methods.
+        /// </summary>
+        private class CallerMemberNameAttribute : Attribute
+        {
+            
+        }
+#endif
     }
 }

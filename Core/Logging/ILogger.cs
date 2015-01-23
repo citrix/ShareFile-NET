@@ -4,6 +4,9 @@ namespace ShareFile.Api.Client.Logging
 {
     public interface ILogger
     {
+#if !NO_CALLERMEMBER
+        bool LogCallerMember { get; }
+#endif
         LogLevel LogLevel { get; set; }
         void Trace(string message);
         void Trace(Exception exception, string message);

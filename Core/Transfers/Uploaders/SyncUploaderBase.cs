@@ -105,6 +105,13 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 return DeserializeShareFileApiResponse<UploadResponse>(responseMessage);
             }
 
+            // Connectors may not use v1 API response objects
+            if (responseMessage.Content != null)
+            {
+                var errorResponse = responseMessage.Content.ReadAsStringAsync().WaitForTask();
+                TryProcessFailedUploadResponse(errorResponse);
+            }
+
             throw new UploadException("Error completing upload.", -1);
         }
 

@@ -6,9 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using ShareFile.Api.Client.Exceptions;
-using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.FileSystem;
-using ShareFile.Api.Client.Requests.Providers;
 using ShareFile.Api.Client.Security.Cryptography;
 using ShareFile.Api.Models;
 
@@ -163,9 +161,11 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 }
             }
 
+            // Connectors may not use v1 API response objects
             if (responseMessage.Content != null)
             {
-                Client.Logging.Error(await responseMessage.Content.ReadAsStringAsync());
+                var errorResponse = await responseMessage.Content.ReadAsStringAsync();
+                TryProcessFailedUploadResponse(errorResponse);
             }
 
             throw new UploadException("Error completing upload.", -1);

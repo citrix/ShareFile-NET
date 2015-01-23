@@ -160,7 +160,7 @@ namespace ShareFile.Api.Client
 #if ShareFile
 
         [Obsolete("Use CustomAuthentication instead. This will be removed from the next major release.")]
-        CustomAuthentication ZoneAuthentication 
+        CustomAuthentication ZoneAuthentication
         {
             get { return CustomAuthentication; }
             set { CustomAuthentication = value; }
@@ -213,7 +213,7 @@ namespace ShareFile.Api.Client
                 ObjectCreationHandling = ObjectCreationHandling.Replace,
                 MissingMemberHandling = MissingMemberHandling.Ignore,
                 NullValueHandling = NullValueHandling.Ignore,
-                Converters = {new LoggingConverter(client), new StringEnumConverter(), new SafeEnumConverter()}
+                Converters = { new LoggingConverter(client), new StringEnumConverter(), new SafeEnumConverter() }
             };
         }
 
@@ -308,7 +308,7 @@ namespace ShareFile.Api.Client
         public void AddCookie(Uri host, Cookie cookie)
         {
             Logging.Info("Add cookie");
-            Logging.Debug("Cookie: {1} for {0}", host.ToString(), cookie.ToString());
+            Logging.Debug("Cookie: {1} for {0}", new object[] { host.ToString(), cookie.ToString() });
 
             CookieContainer.Add(host, cookie);
         }
@@ -323,7 +323,7 @@ namespace ShareFile.Api.Client
         public void AddAuthenticationId(Uri host, string authenticationId, string path = "", string cookieName = "SFAPI_AuthId")
         {
             Logging.Info("Adding AuthenticationId");
-            Logging.Debug("Host: {0}; CookieName: {1}; CookiePath: {2}", host, cookieName, path);
+            Logging.Debug("Host: {0}; CookieName: {1}; CookiePath: {2}", new object[] { host, cookieName, path });
 
             CookieContainer.Add(host, new Cookie(cookieName, authenticationId, path));
         }
@@ -385,7 +385,7 @@ namespace ShareFile.Api.Client
 
         public EventHandlerResponse OnException(HttpResponseMessage responseMessage, int retryCount)
         {
-            if(ExceptionHandlers != null)
+            if (ExceptionHandlers != null)
             {
                 foreach (var handler in ExceptionHandlers)
                 {
@@ -464,7 +464,7 @@ namespace ShareFile.Api.Client
         public void AddOAuthCredentials(Uri host, string oauthToken)
         {
             Logging.Info("Adding OAuth Credentials");
-            Logging.Debug("Host: {0}", host);
+            Logging.Debug("Host: {0}", new object[] { host });
 
             try
             {
@@ -476,7 +476,7 @@ namespace ShareFile.Api.Client
             }
             catch (Exception exception)
             {
-                Logging.Error("Failed to add OAuth credentials", exception);
+                Logging.Error(exception, "Failed to add OAuth credentials");
             }
             finally
             {
@@ -486,14 +486,13 @@ namespace ShareFile.Api.Client
 
         /// <summary>
         /// </summary>
-        /// <param name="host"></param>
         /// <param name="oauthToken"></param>
         public void AddOAuthCredentials(OAuthToken oauthToken)
         {
             var host = oauthToken.GetUri();
 
             Logging.Info("Adding OAuth Credentials using oauthToken");
-            Logging.Debug("Host: {0}", host);
+            Logging.Debug("Host: {0}", new object[] { host });
 
             try
             {
@@ -505,7 +504,7 @@ namespace ShareFile.Api.Client
             }
             catch (Exception exception)
             {
-                Logging.Error("Failed to add OAuth credentials", exception);
+                Logging.Error(exception, "Failed to add OAuth credentials");
             }
             finally
             {
@@ -519,13 +518,13 @@ namespace ShareFile.Api.Client
         }
 
         #region Entity Registration
-        
+
         public T Entities<T>() where T : EntityBase
         {
             EntityBase entity;
-            if (!RegisteredEntities.TryGetValue(typeof (T).FullName, out entity))
+            if (!RegisteredEntities.TryGetValue(typeof(T).FullName, out entity))
             {
-                entity = (T)Activator.CreateInstance(typeof (T), new object[] {this});
+                entity = (T)Activator.CreateInstance(typeof(T), new object[] { this });
 
                 RegisteredEntities.Add(typeof(T).FullName, entity);
             }

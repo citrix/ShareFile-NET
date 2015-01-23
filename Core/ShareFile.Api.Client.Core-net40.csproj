@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Net40\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;ShareFile;Net40</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;ShareFile;Net40;NO_CALLERMEMBER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>$(OutputPath)\ShareFile.Api.Client.Core.XML</DocumentationFile>

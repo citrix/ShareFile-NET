@@ -68,10 +68,17 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 {
                     var sfResponse = JsonConvert.DeserializeObject<ShareFileApiResponse<string>>(response);
                     if (sfResponse.Error)
+                    {
                         throw new UploadException(sfResponse.ErrorMessage, sfResponse.ErrorCode);
+                    }
                 }
-                catch(JsonSerializationException jEx)
+                catch (JsonSerializationException jEx)
                 {
+                    if (responseMessage.Content != null)
+                    {
+                        TryProcessFailedUploadResponse(response);
+                    }
+
                     throw new UploadException("StorageCenter error: " + response, -1, jEx);
                 }
             }

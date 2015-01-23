@@ -148,5 +148,29 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
             return new Uri(finishUri.ToString());
         }
+
+        protected void TryProcessFailedUploadResponse(string errorResponse)
+        {
+            Client.Logging.Error(errorResponse);
+
+            using (var textReader = new JsonTextReader(new StringReader(errorResponse)))
+            {
+                ODataRequestException requestMessage = null;
+                try
+                {
+                    requestMessage = Client.Serializer.Deserialize<ODataRequestException>(textReader);
+                }
+                catch { }
+
+                if (requestMessage != null)
+                {
+                    throw new UploadException(requestMessage.Message.Message, (int)requestMessage.Code, new ODataException
+                    {
+                        Code = requestMessage.Code,
+                        ODataExceptionMessage = requestMessage.Message
+                    });
+                }
+            }
+        }
     }
 }

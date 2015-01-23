@@ -706,6 +706,31 @@ namespace ShareFile.Api.Client.Entities
         /// The Redirection endpoint Information
         /// </returns>
         IQuery<Redirection> GetRedirection(Uri url);
+        
+        /// <summary>
+        /// Get a collection of recoverable/deleted items in a folder
+        /// </summary>
+        /// <param name="url"></param>
+        IQuery<ODataFeed<Item>> GetDeletedChildren(Uri url, string id);
+        
+        /// <summary>
+        /// Get a collection of recoverable/deleted items for a user
+        /// </summary>
+        /// <param name="userid"></param>
+        IQuery<ODataFeed<Item>> GetUserDeletedItems(string userid = null);
+        
+        /// <summary>
+        /// Restore expired items to their original locations
+        /// </summary>
+        /// <param name="ids"></param>
+        IQuery BulkRestore(IEnumerable<string> ids);
+        
+        /// <summary>
+        /// Permanently delete multiple items
+        /// </summary>
+        /// <param name="itemIds"></param>
+        /// <param name="ids"></param>
+        IQuery BulkDeletePermanently(IEnumerable<string> ids);
     }
 
     public class ItemsEntity : EntityBase, IItemsEntity
@@ -1729,6 +1754,63 @@ namespace ShareFile.Api.Client.Entities
 		    sfApiQuery.Action("Redirection");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get a collection of recoverable/deleted items in a folder
+        /// </summary>
+        /// <param name="url"></param>
+        public IQuery<ODataFeed<Item>> GetDeletedChildren(Uri url, string id)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
+		    sfApiQuery.Action("DeletedChildren");
+            sfApiQuery.Uri(url);
+            sfApiQuery.QueryString("parentid", id);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get a collection of recoverable/deleted items for a user
+        /// </summary>
+        /// <param name="userid"></param>
+        public IQuery<ODataFeed<Item>> GetUserDeletedItems(string userid = null)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
+		    sfApiQuery.From("Items");
+		    sfApiQuery.Action("UserDeletedItems");
+            sfApiQuery.QueryString("userid", userid);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Restore expired items to their original locations
+        /// </summary>
+        /// <param name="ids"></param>
+        public IQuery BulkRestore(IEnumerable<string> ids)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+		    sfApiQuery.From("Items");
+		    sfApiQuery.Action("BulkRestore");
+            sfApiQuery.Body = ids;
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Permanently delete multiple items
+        /// </summary>
+        /// <param name="itemIds"></param>
+        /// <param name="ids"></param>
+        public IQuery BulkDeletePermanently(IEnumerable<string> ids)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+		    sfApiQuery.From("Items");
+		    sfApiQuery.Action("BulkDeletePermanently");
+            sfApiQuery.Body = ids;
+            sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
     }

@@ -77,6 +77,10 @@ namespace ShareFile.Api.Models
 
 		public string TreeModeSourceId { get; set; }
 
+		public string ForcedSortField { get; set; }
+
+		public string ForcedSortOrder { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -114,6 +118,8 @@ namespace ShareFile.Api.Models
 				TreeMode = typedSource.TreeMode;
 				TreeModeOperationAllowed = typedSource.TreeModeOperationAllowed;
 				TreeModeSourceId = typedSource.TreeModeSourceId;
+				ForcedSortField = typedSource.ForcedSortField;
+				ForcedSortOrder = typedSource.ForcedSortOrder;
 			}
 			else
 			{
@@ -233,6 +239,14 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("TreeModeSourceId", out token) && token.Type != JTokenType.Null)
 				{
 					TreeModeSourceId = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ForcedSortField", out token) && token.Type != JTokenType.Null)
+				{
+					ForcedSortField = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ForcedSortOrder", out token) && token.Type != JTokenType.Null)
+				{
+					ForcedSortOrder = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
 			}
 		}

@@ -88,8 +88,10 @@ namespace ShareFile.Api.Client.Requests.Providers
                     if (result is Redirection && typeof(T) != typeof(Redirection))
                     {
                         var redirection = result as Redirection;
-
-                        if(!redirection.Available || redirection.Uri == null)
+                        
+                        // Removed until API is updated to provide this correctly.
+                        // !redirection.Available || 
+                        if (redirection.Uri == null)
                             throw new ZoneUnavailableException(httpResponseMessage.RequestMessage.RequestUri, "Destination zone is unavailable");
 
                         if (httpResponseMessage.RequestMessage.RequestUri.GetAuthority() != redirection.Uri.GetAuthority())

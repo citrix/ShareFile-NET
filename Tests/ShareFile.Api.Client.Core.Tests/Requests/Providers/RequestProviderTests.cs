@@ -456,7 +456,7 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
         {
             var redirection = new Redirection
             {
-                Available = false
+                Uri = null
             };
 
             redirection.MetadataUrl = "https://newhost.sharefile.com/sf/v3/$metadata#ShareFile.Api.Models.Redirection@Element";

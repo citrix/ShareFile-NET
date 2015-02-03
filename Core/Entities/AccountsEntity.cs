@@ -374,6 +374,14 @@ namespace ShareFile.Api.Client.Entities
         IQuery<FindSubdomainResult> FindSubdomain(FindSubdomainParams findSubdomainParams, bool singlePlane = false);
         
         /// <summary>
+        /// Get Outlook Information
+        /// </summary>
+        /// <returns>
+        /// OutlookInformation
+        /// </returns>
+        IQuery<OutlookInformation> GetOutlookInformation();
+        
+        /// <summary>
         /// Get SSO Info
         /// </summary>
         /// <param name="subdomain"></param>
@@ -931,6 +939,21 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.QueryString("singlePlane", singlePlane);
             sfApiQuery.Body = findSubdomainParams;
             sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get Outlook Information
+        /// </summary>
+        /// <returns>
+        /// OutlookInformation
+        /// </returns>
+        public IQuery<OutlookInformation> GetOutlookInformation()
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<OutlookInformation>(Client);
+		    sfApiQuery.From("Accounts");
+		    sfApiQuery.Action("OutlookInformation");
+            sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
         

@@ -122,6 +122,14 @@ namespace ShareFile.Api.Models
                     _entityTypeMap.Add("Notes", typeof(Note));
                     _entityTypeMap.Add("Notification", typeof(Notification));
                     _entityTypeMap.Add("Notifications", typeof(Notification));
+                    _entityTypeMap.Add("OutlookInformation", typeof(OutlookInformation));
+                    _entityTypeMap.Add("OutlookInformations", typeof(OutlookInformation));
+                    _entityTypeMap.Add("OutlookInformationOptionBool", typeof(OutlookInformationOptionBool));
+                    _entityTypeMap.Add("OutlookInformationOptionBools", typeof(OutlookInformationOptionBool));
+                    _entityTypeMap.Add("OutlookInformationOptionString", typeof(OutlookInformationOptionString));
+                    _entityTypeMap.Add("OutlookInformationOptionStrings", typeof(OutlookInformationOptionString));
+                    _entityTypeMap.Add("OutlookInformationOptionInt", typeof(OutlookInformationOptionInt));
+                    _entityTypeMap.Add("OutlookInformationOptionInts", typeof(OutlookInformationOptionInt));
                     _entityTypeMap.Add("ProductDefaults", typeof(ProductDefaults));
                     _entityTypeMap.Add("Redirection", typeof(Redirection));
                     _entityTypeMap.Add("Redirections", typeof(Redirection));

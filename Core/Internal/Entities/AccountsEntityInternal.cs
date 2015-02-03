@@ -39,21 +39,6 @@ namespace ShareFile.Api.Client.Entities.Extensions
         }
         
         /// <summary>
-        /// Get Outlook Information
-        /// </summary>
-        /// <returns>
-        /// OutlookInformation
-        /// </returns>
-        public static IQuery<OutlookInformation> GetOutlookInformation(this IAccountsEntity entity)
-        {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<OutlookInformation>(entity.Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("OutlookInformation");
-            sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
-        }
-        
-        /// <summary>
         /// Get EnsSubscriber Configuration
         /// </summary>
         /// <returns>

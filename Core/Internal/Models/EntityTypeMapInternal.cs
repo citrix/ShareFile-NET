@@ -68,14 +68,6 @@ namespace ShareFile.Api.Client.Internal.Models
             EntityTypeMap.AddEntity("ShareFileRepresentatives", typeof(ShareFileRepresentative));
             EntityTypeMap.AddEntity("FreeTrialAccount", typeof(FreeTrialAccount));
             EntityTypeMap.AddEntity("FreeTrialAccounts", typeof(FreeTrialAccount));
-            EntityTypeMap.AddEntity("OutlookInformation", typeof(OutlookInformation));
-            EntityTypeMap.AddEntity("OutlookInformations", typeof(OutlookInformation));
-            EntityTypeMap.AddEntity("OutlookInformationOptionBool", typeof(OutlookInformationOptionBool));
-            EntityTypeMap.AddEntity("OutlookInformationOptionBools", typeof(OutlookInformationOptionBool));
-            EntityTypeMap.AddEntity("OutlookInformationOptionString", typeof(OutlookInformationOptionString));
-            EntityTypeMap.AddEntity("OutlookInformationOptionStrings", typeof(OutlookInformationOptionString));
-            EntityTypeMap.AddEntity("OutlookInformationOptionInt", typeof(OutlookInformationOptionInt));
-            EntityTypeMap.AddEntity("OutlookInformationOptionInts", typeof(OutlookInformationOptionInt));
             EntityTypeMap.AddEntity("AzureSBTopicsEndPointInfo", typeof(AzureSBTopicsEndPointInfo));
             EntityTypeMap.AddEntity("AzureSBTopicsEndPointInfos", typeof(AzureSBTopicsEndPointInfo));
             EntityTypeMap.AddEntity("AzureSBTopicsResponse", typeof(AzureSBTopicsResponse));

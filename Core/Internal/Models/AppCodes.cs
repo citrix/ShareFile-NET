@@ -51,7 +51,8 @@ namespace ShareFile.Api.Models
         SFWebApp = 34,
         SFMarketing = 35,
         ShareConnect = 36,
-        ShareConnectWeb = 37
+        ShareConnectWeb = 37,
+        SFWindowsDesktop = 38
     }
 #endif
 }

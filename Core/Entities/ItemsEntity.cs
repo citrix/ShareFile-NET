@@ -712,12 +712,7 @@ namespace ShareFile.Api.Client.Entities
         /// </summary>
         /// <param name="url"></param>
         IQuery<ODataFeed<Item>> GetDeletedChildren(Uri url, string id);
-        
-        /// <summary>
-        /// Get a collection of recoverable/deleted items for a user
-        /// </summary>
-        /// <param name="userid"></param>
-        IQuery<ODataFeed<Item>> GetUserDeletedItems(string userid = null);
+        IQuery<ODataFeed<Item>> GetUserDeletedItems(string userid = null, string zone = null);
         
         /// <summary>
         /// Restore expired items to their original locations
@@ -1770,17 +1765,13 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
-        
-        /// <summary>
-        /// Get a collection of recoverable/deleted items for a user
-        /// </summary>
-        /// <param name="userid"></param>
-        public IQuery<ODataFeed<Item>> GetUserDeletedItems(string userid = null)
+        public IQuery<ODataFeed<Item>> GetUserDeletedItems(string userid = null, string zone = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
 		    sfApiQuery.From("Items");
 		    sfApiQuery.Action("UserDeletedItems");
             sfApiQuery.QueryString("userid", userid);
+            sfApiQuery.QueryString("zone", zone);
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }

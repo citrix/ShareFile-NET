@@ -215,6 +215,16 @@ namespace ShareFile.Api.Models
 
 		public IEnumerable<SafeEnum<IntegrationProvider>> IntegrationProviders { get; set; }
 
+		public bool? ShowDownloadLinkInUploadNotification { get; set; }
+
+		public bool? EnableUserInvitations { get; set; }
+
+		public bool? EnableClickTrails { get; set; }
+
+		public bool? CanStoreItemsInShareFile { get; set; }
+
+		public bool? EnableHomeFolders { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -321,6 +331,11 @@ namespace ShareFile.Api.Models
 				EnableFileLocking = typedSource.EnableFileLocking;
 				EnableIntegrations = typedSource.EnableIntegrations;
 				IntegrationProviders = typedSource.IntegrationProviders;
+				ShowDownloadLinkInUploadNotification = typedSource.ShowDownloadLinkInUploadNotification;
+				EnableUserInvitations = typedSource.EnableUserInvitations;
+				EnableClickTrails = typedSource.EnableClickTrails;
+				CanStoreItemsInShareFile = typedSource.CanStoreItemsInShareFile;
+				EnableHomeFolders = typedSource.EnableHomeFolders;
 			}
 			else
 			{
@@ -716,6 +731,26 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("IntegrationProviders", out token) && token.Type != JTokenType.Null)
 				{
 					IntegrationProviders = (IEnumerable<SafeEnum<IntegrationProvider>>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<SafeEnum<IntegrationProvider>>));
+				}
+				if(source.TryGetProperty("ShowDownloadLinkInUploadNotification", out token) && token.Type != JTokenType.Null)
+				{
+					ShowDownloadLinkInUploadNotification = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableUserInvitations", out token) && token.Type != JTokenType.Null)
+				{
+					EnableUserInvitations = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableClickTrails", out token) && token.Type != JTokenType.Null)
+				{
+					EnableClickTrails = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanStoreItemsInShareFile", out token) && token.Type != JTokenType.Null)
+				{
+					CanStoreItemsInShareFile = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableHomeFolders", out token) && token.Type != JTokenType.Null)
+				{
+					EnableHomeFolders = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 			}
 		}

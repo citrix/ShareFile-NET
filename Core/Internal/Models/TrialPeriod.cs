@@ -26,6 +26,8 @@ namespace ShareFile.Api.Models
 
 		public int DurationInDays { get; set; }
 
+		public int NumberOfLicenses { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -37,6 +39,7 @@ namespace ShareFile.Api.Models
 				ProductID = typedSource.ProductID;
 				AppStore = typedSource.AppStore;
 				DurationInDays = typedSource.DurationInDays;
+				NumberOfLicenses = typedSource.NumberOfLicenses;
 			}
 			else
 			{
@@ -52,6 +55,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("DurationInDays", out token) && token.Type != JTokenType.Null)
 				{
 					DurationInDays = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
+				}
+				if(source.TryGetProperty("NumberOfLicenses", out token) && token.Type != JTokenType.Null)
+				{
+					NumberOfLicenses = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
 				}
 			}
 		}

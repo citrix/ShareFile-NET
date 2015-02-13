@@ -11,10 +11,10 @@ let authors = ["Citrix ShareFile"]
 let buildDir = "./build/"
 let packagingRoot = "./packaging/"
 let packagingDir = packagingRoot @@ "sharefile"
-let nugetVersion = getBuildParamOrDefault "nugetVersion" "3.0.12"
+let nugetVersion = getBuildParamOrDefault "nugetVersion" "3.0.13"
 // DO NOT INCREMENT THIS VALUE -- Will cause issues with PowerShell and StrongNamed versions of the assembly
 let assemblyVersion = getBuildParamOrDefault "assemblyVersion" "3.0.0"
-let assemblyFileVersion = getBuildParamOrDefault "assemblyFileVersion" "3.0.12"
+let assemblyFileVersion = getBuildParamOrDefault "assemblyFileVersion" "3.0.13"
 let nugetAccessKey = getBuildParamOrDefault "nugetkey" ""
 let nugetDestination = getBuildParamOrDefault "nugetserver" ""
 let title = "ShareFile Client SDK"

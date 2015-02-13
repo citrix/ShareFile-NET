@@ -45,6 +45,28 @@ namespace ShareFile.Api.Client.Entities
         IQuery<Report> Get(Uri url);
         
         /// <summary>
+        /// Get recent reports
+        /// </summary>
+        /// <remarks>
+        /// Returns the last 10 reports run
+        /// </remarks>
+        /// <returns>
+        /// List of reports
+        /// </returns>
+        IQuery<ODataFeed<Report>> GetRecent();
+        
+        /// <summary>
+        /// Get recurring reports
+        /// </summary>
+        /// <remarks>
+        /// Returns all recurring reports
+        /// </remarks>
+        /// <returns>
+        /// List of reports
+        /// </returns>
+        IQuery<ODataFeed<Report>> GetRecurring();
+        
+        /// <summary>
         /// Get Report Record by ID
         /// </summary>
         /// <remarks>
@@ -73,11 +95,13 @@ namespace ShareFile.Api.Client.Entities
         /// </summary>
         /// <example>
         /// {
+        /// "Id": "rs24f83e-b147-437e-9f28-e7d03634af42"
         /// "Title": "Usage Report",
         /// "ReportType": "Activity",
         /// "ObjectType": "Account",
-        /// "ObjectId": "a024f83e-b147-437e-9f28-e7d03634af42",
-        /// "DateOption": "Last30Days"
+        /// "ObjectId": "a024f83e-b147-437e-9f28-e7d0ef634af42",
+        /// "DateOption": "Last30Days",
+        /// "SaveFormat": "Excel"
         /// }
         /// </example>
         /// <remarks>
@@ -89,6 +113,28 @@ namespace ShareFile.Api.Client.Entities
         /// the created report
         /// </returns>
         IQuery<Report> Create(Report report, bool runOnCreate = false);
+        
+        /// <summary>
+        /// Update Report
+        /// </summary>
+        /// <example>
+        /// {
+        /// "Title": "Usage Report",
+        /// "ReportType": "Activity",
+        /// "ObjectType": "Account",
+        /// "ObjectId": "a024f83e-b147-437e-9f28-e7d03634af42",
+        /// "DateOption": "Last30Days",
+        /// "Frequency": "Once"
+        /// }
+        /// </example>
+        /// <remarks>
+        /// Updates an existing report
+        /// </remarks>
+        /// <param name="report"></param>
+        /// <returns>
+        /// the updated report
+        /// </returns>
+        IQuery<Report> Update(Report report);
         
         /// <summary>
         /// Delete Report
@@ -132,6 +178,13 @@ namespace ShareFile.Api.Client.Entities
         /// JSON Formatted Report Results
         /// </returns>
         IQuery GetJsonData(string id);
+        
+        /// <summary>
+        /// Save a folder to a folder location
+        /// </summary>
+        /// <param name="reportUrl"></param>
+        /// <param name="folderId"></param>
+        IQuery Move(Uri reportUrl, string folderId);
         
         /// <summary>
         /// Get Excel Data
@@ -189,6 +242,42 @@ namespace ShareFile.Api.Client.Entities
         }
         
         /// <summary>
+        /// Get recent reports
+        /// </summary>
+        /// <remarks>
+        /// Returns the last 10 reports run
+        /// </remarks>
+        /// <returns>
+        /// List of reports
+        /// </returns>
+        public IQuery<ODataFeed<Report>> GetRecent()
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Report>>(Client);
+		    sfApiQuery.From("Reports");
+		    sfApiQuery.Action("Recent");
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get recurring reports
+        /// </summary>
+        /// <remarks>
+        /// Returns all recurring reports
+        /// </remarks>
+        /// <returns>
+        /// List of reports
+        /// </returns>
+        public IQuery<ODataFeed<Report>> GetRecurring()
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Report>>(Client);
+		    sfApiQuery.From("Reports");
+		    sfApiQuery.Action("Recurring");
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
         /// Get Report Record by ID
         /// </summary>
         /// <remarks>
@@ -232,11 +321,13 @@ namespace ShareFile.Api.Client.Entities
         /// </summary>
         /// <example>
         /// {
+        /// "Id": "rs24f83e-b147-437e-9f28-e7d03634af42"
         /// "Title": "Usage Report",
         /// "ReportType": "Activity",
         /// "ObjectType": "Account",
-        /// "ObjectId": "a024f83e-b147-437e-9f28-e7d03634af42",
-        /// "DateOption": "Last30Days"
+        /// "ObjectId": "a024f83e-b147-437e-9f28-e7d0ef634af42",
+        /// "DateOption": "Last30Days",
+        /// "SaveFormat": "Excel"
         /// }
         /// </example>
         /// <remarks>
@@ -254,6 +345,35 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.QueryString("runOnCreate", runOnCreate);
             sfApiQuery.Body = report;
             sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Update Report
+        /// </summary>
+        /// <example>
+        /// {
+        /// "Title": "Usage Report",
+        /// "ReportType": "Activity",
+        /// "ObjectType": "Account",
+        /// "ObjectId": "a024f83e-b147-437e-9f28-e7d03634af42",
+        /// "DateOption": "Last30Days",
+        /// "Frequency": "Once"
+        /// }
+        /// </example>
+        /// <remarks>
+        /// Updates an existing report
+        /// </remarks>
+        /// <param name="report"></param>
+        /// <returns>
+        /// the updated report
+        /// </returns>
+        public IQuery<Report> Update(Report report)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Report>(Client);
+		    sfApiQuery.From("Reports");
+            sfApiQuery.Body = report;
+            sfApiQuery.HttpMethod = "PATCH";	
 		    return sfApiQuery;
         }
         
@@ -326,6 +446,21 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.ActionIds(id);
             sfApiQuery.SubAction("JsonData");
             sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Save a folder to a folder location
+        /// </summary>
+        /// <param name="reportUrl"></param>
+        /// <param name="folderId"></param>
+        public IQuery Move(Uri reportUrl, string folderId)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+		    sfApiQuery.Action("Move");
+            sfApiQuery.Uri(reportUrl);
+            sfApiQuery.QueryString("folderId", folderId);
+            sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
         

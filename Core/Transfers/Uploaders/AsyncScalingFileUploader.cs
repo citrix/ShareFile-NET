@@ -59,6 +59,8 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         private async Task ExecuteChunkUploadMessage(HttpRequestMessage requestMessage)
         {
+            await TryPauseAsync(CancellationToken);
+
             BaseRequestProvider.TryAddCookies(Client, requestMessage);
 
             using(var responseMessage = await GetHttpClient().SendAsync(requestMessage))

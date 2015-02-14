@@ -185,6 +185,8 @@ namespace ShareFile.Api.Models
 
 		public string TrustedDomains { get; set; }
 
+		public bool? EnableReportingV3 { get; set; }
+
 		public bool? EnableEncryptedEmailForOutlookPlugin { get; set; }
 
 		public bool? EnableDocPreviews { get; set; }
@@ -316,6 +318,7 @@ namespace ShareFile.Api.Models
 				ENSFailSafePollingCount = typedSource.ENSFailSafePollingCount;
 				ENSMaxNotificationSyncWaitCount = typedSource.ENSMaxNotificationSyncWaitCount;
 				TrustedDomains = typedSource.TrustedDomains;
+				EnableReportingV3 = typedSource.EnableReportingV3;
 				EnableEncryptedEmailForOutlookPlugin = typedSource.EnableEncryptedEmailForOutlookPlugin;
 				EnableDocPreviews = typedSource.EnableDocPreviews;
 				EnableDesktopEditorForAccount = typedSource.EnableDesktopEditorForAccount;
@@ -671,6 +674,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("TrustedDomains", out token) && token.Type != JTokenType.Null)
 				{
 					TrustedDomains = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("EnableReportingV3", out token) && token.Type != JTokenType.Null)
+				{
+					EnableReportingV3 = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("EnableEncryptedEmailForOutlookPlugin", out token) && token.Type != JTokenType.Null)
 				{

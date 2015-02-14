@@ -5,9 +5,9 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
     public class FileUploaderConfig
     {
         public const int DefaultPartSize = 4*1024*1024;
-        public const int DefaultNumberOfThreads = 4;
+        public const int DefaultNumberOfThreads = 1;
         public const int DefaultHttpTimeout = 60000;
-        public const int MaxNumberOfThreads = 4;
+        public const int MaxNumberOfThreads = 1;
         public const int DefaultThreadStartPauseInMS = 100;
 
         private int _numberOfThreads;

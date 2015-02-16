@@ -56,7 +56,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             MaxPartSize = 8 * 1024 * 1024;
             MinPartSize = 4 * 1024;
             TargetPartUploadTime = TimeSpan.FromSeconds(15);
-            MaxPartSizeIncreaseFactor = 4;
+            MaxPartSizeIncreaseFactor = 8;
             MaxPartSizeDecreaseFactor = 2;
             PartRetryCount = 1;
         }

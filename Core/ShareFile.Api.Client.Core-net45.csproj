@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -56,9 +56,7 @@
     <Compile Include="Entities\AsyncOperationsEntity.cs" />
     <Compile Include="Entities\CapabilitiesEntity.cs" />
     <Compile Include="Entities\ConnectorGroupsEntity.cs" />
-    <Compile Include="Entities\EntityBase.cs" />
     <Compile Include="Entities\FavoriteFoldersEntity.cs" />
-    <Compile Include="Entities\FileLockEntity.cs" />
     <Compile Include="Entities\GroupsEntity.cs" />
     <Compile Include="Entities\ItemsEntity.cs" />
     <Compile Include="Entities\MetadataEntity.cs" />
@@ -107,7 +105,6 @@
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\AccountPreferences.cs" />
     <Compile Include="Models\AccountUser.cs" />
-    <Compile Include="Models\AddressListType.cs" />
     <Compile Include="Models\AdvancedSearchResults.cs" />
     <Compile Include="Models\AsyncOperation.cs" />
     <Compile Include="Models\AsyncOperationState.cs" />
@@ -179,7 +176,6 @@
     <Compile Include="Models\Redirection.cs" />
     <Compile Include="Models\RequireSubdomainResult.cs" />
     <Compile Include="Models\RequireWebPopResult.cs" />
-    <Compile Include="Models\SafeEnum.cs" />
     <Compile Include="Models\SearchQuery.cs" />
     <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Models\SearchResults.cs" />

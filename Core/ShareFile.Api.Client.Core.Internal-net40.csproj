@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -100,7 +100,6 @@
     <Compile Include="Internal\Models\CustomBillingEntry.cs" />
     <Compile Include="Internal\Models\DatabaseLevel.cs" />
     <Compile Include="Internal\Models\DataCenter.cs" />
-    <Compile Include="Internal\Models\EncrypedEmailReplyParams.cs" />
     <Compile Include="Internal\Models\EncryptedEmail.cs" />
     <Compile Include="Internal\Models\EncryptedEmailCreateParams.cs" />
     <Compile Include="Internal\Models\EncryptedEmailParams.cs" />
@@ -118,10 +117,6 @@
     <Compile Include="Internal\Models\OAuthClientPermissions.cs" />
     <Compile Include="Internal\Models\OAuthCode.cs" />
     <Compile Include="Internal\Models\OAuthState.cs" />
-    <Compile Include="Internal\Models\OutlookInformation.cs" />
-    <Compile Include="Internal\Models\OutlookInformationOptionBool.cs" />
-    <Compile Include="Internal\Models\OutlookInformationOptionInt.cs" />
-    <Compile Include="Internal\Models\OutlookInformationOptionString.cs" />
     <Compile Include="Internal\Models\PlanAddon.cs" />
     <Compile Include="Internal\Models\PlanAddonsStatus.cs" />
     <Compile Include="Internal\Models\PlanAddonUser.cs" />
@@ -140,9 +135,9 @@
     <Compile Include="Internal\Models\TrialPeriod.cs" />
     <Compile Include="Internal\Models\UsagePlan.cs" />
     <Compile Include="Internal\Models\UsagePlanAddOn.cs" />
-    <Compile Include="InternalShareFileClient.cs" />
     <Compile Include="Internal\Security\ClientHashAuthentication.cs" />
     <Compile Include="Internal\Security\ZoneAuthentication.cs" />
+    <Compile Include="InternalShareFileClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

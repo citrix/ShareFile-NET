@@ -1,4 +1,5 @@
-﻿namespace ShareFile.Api.Client.Entities
+﻿// ReSharper disable once CheckNamespace
+namespace ShareFile.Api.Client.Entities
 {
     public interface IEntityBase
     {

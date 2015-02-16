@@ -1,5 +1,6 @@
 ﻿using System;
 
+// ReSharper disable once CheckNamespace
 namespace ShareFile.Api.Models
 {
     public interface ISafeEnum 

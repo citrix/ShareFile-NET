@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -99,7 +99,9 @@
     <Compile Include="Entities\StorageCentersEntity.cs" />
     <Compile Include="Entities\UsersEntity.cs" />
     <Compile Include="Entities\ZonesEntity.cs" />
+    <Compile Include="Enums\AddressListType.cs" />
     <Compile Include="Enums\ItemAlias.cs" />
+    <Compile Include="Enums\SafeEnum.cs" />
     <Compile Include="Events\ChangeDomainCallback.cs" />
     <Compile Include="Events\EventHandlerResponse.cs" />
     <Compile Include="Events\ExceptionCallback.cs" />

@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2015 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -336,7 +336,9 @@ namespace ShareFile.Api.Client.Entities
         /// }
         /// </example>
         /// <remarks>
-        /// Updates an Item object
+        /// Updates an Item object. Please note that for a Folder, the Name and FileName properties must be consistent.
+        /// If a new Name is provided, the FileName will also be updated with the new name, and viceversa.
+        /// If both Name and FileName are provided, FileName is disregarded and Name will be used to update both properties.
         /// </remarks>
         /// <param name="url"></param>
         /// <param name="item"></param>
@@ -485,12 +487,25 @@ namespace ShareFile.Api.Client.Entities
         /// <summary>
         /// Upload File
         /// </summary>
+        /// <example>
+        /// POST https://account.sf-api.com/sf/v3/Items(id)/Upload2
+        /// {
+        /// "Method":"Method",
+        /// "Raw": false,
+        /// "FileName":"FileName"
+        /// "FileLength": length
+        /// }
+        /// </example>
         /// <remarks>
         /// Prepares the links for uploading files to the target Folder.
         /// This method returns an Upload Specification object. The fields are
         /// populated based on the upload method, provider, and resume parameters passed to the
         /// upload call.
         /// The Method determines how the URLs must be called.
+        /// 
+        /// There are two different URL's to upload: /sf/v3/Items(id)/Upload? accepts the upload parameters
+        /// through a query URL string, while /sf/v3/Items(id)/Upload2 does it through the HTTP POST message body.
+        /// If using 'Upload2', the parameters must be capitalized.
         /// 
         /// Standard uploads use a single HTTP POST message to the ChunkUri address provided in
         /// the response. All other fields will be empty. Standard uploads do not support Resume.
@@ -505,6 +520,9 @@ namespace ShareFile.Api.Client.Entities
         /// threads issuing blocks in parallel. Clients must append index, offset and hash to
         /// the end of ChunkUri, as explained in Streamed. After all chunks were sent, the client
         /// must call the FinishUri provided in this spec.
+        /// 
+        /// If using the Threaded Uploader, you can attach the argument fmt=json to each ChunkUri
+        /// to indicate you wish to retrieve the Item ID of the file after the upload is completed.
         /// 
         /// For all uploaders, the contents of the POST Body can either be "raw", if the "Raw" parameter
         /// was provided to the Uploader, or use MIME multi-part form encoding otherwise. Raw uploads
@@ -552,6 +570,7 @@ namespace ShareFile.Api.Client.Entities
         /// negotiate the resume upload.
         /// </returns>
         IQuery<UploadSpecification> Upload(Uri url, UploadMethod method = UploadMethod.Standard, bool raw = false, string fileName = null, long fileSize = 0, string batchId = null, bool batchLast = false, bool canResume = false, bool startOver = false, bool unzip = false, string tool = "apiv3", bool overwrite = false, string title = null, string details = null, bool isSend = false, string sendGuid = null, string opid = null, int threadCount = 4, string responseFormat = "json", bool notify = false, DateTime? clientCreatedDateUTC = null, DateTime? clientModifiedDateUTC = null, int? expirationDays = null);
+        IQuery<UploadSpecification> Upload2(Uri url, UploadRequestParams uploadParams, int? expirationDays = null);
         
         /// <summary>
         /// Unlock File
@@ -562,26 +581,8 @@ namespace ShareFile.Api.Client.Entities
         /// </remarks>
         /// <param name="url"></param>
         /// <param name="message"></param>
-        IQuery CheckIn(Uri url, string message);
-        
-        /// <summary>
-        /// Lock File
-        /// </summary>
-        /// <remarks>
-        /// Locks a file.
-        /// This operation is only implemented in Sharepoint providers (/sp)
-        /// </remarks>
-        /// <param name="url"></param>
+        IQuery CheckIn(Uri url, string message = null);
         IQuery CheckOut(Uri url);
-        
-        /// <summary>
-        /// Discard CheckOut
-        /// </summary>
-        /// <remarks>
-        /// Discards the existing lock on the file
-        /// This operation is only implemented in Sharepoint providers (/sp)
-        /// </remarks>
-        /// <param name="url"></param>
         IQuery DiscardCheckOut(Uri url);
         
         /// <summary>
@@ -652,8 +653,8 @@ namespace ShareFile.Api.Client.Entities
         /// "Paging":{
         /// "PageNumber":1, (deprecated)
         /// "PageSize":10, (deprecated)
-        /// "Count":50,
-        /// "Skip":0
+        /// "Count":50, (default value)
+        /// "Skip":0, (default value)
         /// },
         /// "Sort":{
         /// "SortBy":"",
@@ -685,27 +686,14 @@ namespace ShareFile.Api.Client.Entities
         IQuery<Redirection> WebView(Uri url);
         
         /// <summary>
-        /// Get all Item Protocol Link
-        /// </summary>
-        /// <remarks>
-        /// This method returns all alternate protocol links supported by ShareFile (such
-        /// as WOPI, FTP, WebDAV).
-        /// </remarks>
-        /// <param name="parentUrl"></param>
-        /// <returns>
-        /// A Feed containing all protocols links supported by the given item
-        /// </returns>
-        IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(Uri parentUrl);
-        
-        /// <summary>
-        /// Get an Item Protocol Link
+        /// Get List of Item Protocol Links
         /// </summary>
         /// <param name="url"></param>
-        /// <param name="protocol"></param>
+        /// <param name="platform"></param>
         /// <returns>
-        /// A single protocol link if supported, 404 (Not Found) if not supported by the item
+        /// A list of protocol links depending on the input parameter 'platform', 404 (Not Found) if not supported by the item
         /// </returns>
-        IQuery<ItemProtocolLink> GetProtocolLinks(Uri url, string protocol);
+        IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(Uri url, PreviewPlatform platform);
         
         /// <summary>
         /// Get Redirection endpoint Information
@@ -718,6 +706,26 @@ namespace ShareFile.Api.Client.Entities
         /// The Redirection endpoint Information
         /// </returns>
         IQuery<Redirection> GetRedirection(Uri url);
+        
+        /// <summary>
+        /// Get a collection of recoverable/deleted items in a folder
+        /// </summary>
+        /// <param name="url"></param>
+        IQuery<ODataFeed<Item>> GetDeletedChildren(Uri url, string id);
+        IQuery<ODataFeed<Item>> GetUserDeletedItems(string userid = null, string zone = null);
+        
+        /// <summary>
+        /// Restore expired items to their original locations
+        /// </summary>
+        /// <param name="ids"></param>
+        IQuery BulkRestore(IEnumerable<string> ids);
+        
+        /// <summary>
+        /// Permanently delete multiple items
+        /// </summary>
+        /// <param name="itemIds"></param>
+        /// <param name="ids"></param>
+        IQuery BulkDeletePermanently(IEnumerable<string> ids);
     }
 
     public class ItemsEntity : EntityBase, IItemsEntity
@@ -1179,7 +1187,9 @@ namespace ShareFile.Api.Client.Entities
         /// }
         /// </example>
         /// <remarks>
-        /// Updates an Item object
+        /// Updates an Item object. Please note that for a Folder, the Name and FileName properties must be consistent.
+        /// If a new Name is provided, the FileName will also be updated with the new name, and viceversa.
+        /// If both Name and FileName are provided, FileName is disregarded and Name will be used to update both properties.
         /// </remarks>
         /// <param name="url"></param>
         /// <param name="item"></param>
@@ -1413,12 +1423,25 @@ namespace ShareFile.Api.Client.Entities
         /// <summary>
         /// Upload File
         /// </summary>
+        /// <example>
+        /// POST https://account.sf-api.com/sf/v3/Items(id)/Upload2
+        /// {
+        /// "Method":"Method",
+        /// "Raw": false,
+        /// "FileName":"FileName"
+        /// "FileLength": length
+        /// }
+        /// </example>
         /// <remarks>
         /// Prepares the links for uploading files to the target Folder.
         /// This method returns an Upload Specification object. The fields are
         /// populated based on the upload method, provider, and resume parameters passed to the
         /// upload call.
         /// The Method determines how the URLs must be called.
+        /// 
+        /// There are two different URL's to upload: /sf/v3/Items(id)/Upload? accepts the upload parameters
+        /// through a query URL string, while /sf/v3/Items(id)/Upload2 does it through the HTTP POST message body.
+        /// If using 'Upload2', the parameters must be capitalized.
         /// 
         /// Standard uploads use a single HTTP POST message to the ChunkUri address provided in
         /// the response. All other fields will be empty. Standard uploads do not support Resume.
@@ -1433,6 +1456,9 @@ namespace ShareFile.Api.Client.Entities
         /// threads issuing blocks in parallel. Clients must append index, offset and hash to
         /// the end of ChunkUri, as explained in Streamed. After all chunks were sent, the client
         /// must call the FinishUri provided in this spec.
+        /// 
+        /// If using the Threaded Uploader, you can attach the argument fmt=json to each ChunkUri
+        /// to indicate you wish to retrieve the Item ID of the file after the upload is completed.
         /// 
         /// For all uploaders, the contents of the POST Body can either be "raw", if the "Raw" parameter
         /// was provided to the Uploader, or use MIME multi-part form encoding otherwise. Raw uploads
@@ -1509,6 +1535,16 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
+        public IQuery<UploadSpecification> Upload2(Uri url, UploadRequestParams uploadParams, int? expirationDays = null)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<UploadSpecification>(Client);
+		    sfApiQuery.Action("Upload2");
+            sfApiQuery.Uri(url);
+            sfApiQuery.QueryString("expirationDays", expirationDays);
+            sfApiQuery.Body = uploadParams;
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
         
         /// <summary>
         /// Unlock File
@@ -1519,7 +1555,7 @@ namespace ShareFile.Api.Client.Entities
         /// </remarks>
         /// <param name="url"></param>
         /// <param name="message"></param>
-        public IQuery CheckIn(Uri url, string message)
+        public IQuery CheckIn(Uri url, string message = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 		    sfApiQuery.Action("CheckIn");
@@ -1528,15 +1564,6 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
-        
-        /// <summary>
-        /// Lock File
-        /// </summary>
-        /// <remarks>
-        /// Locks a file.
-        /// This operation is only implemented in Sharepoint providers (/sp)
-        /// </remarks>
-        /// <param name="url"></param>
         public IQuery CheckOut(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
@@ -1545,15 +1572,6 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
-        
-        /// <summary>
-        /// Discard CheckOut
-        /// </summary>
-        /// <remarks>
-        /// Discards the existing lock on the file
-        /// This operation is only implemented in Sharepoint providers (/sp)
-        /// </remarks>
-        /// <param name="url"></param>
         public IQuery DiscardCheckOut(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
@@ -1650,8 +1668,8 @@ namespace ShareFile.Api.Client.Entities
         /// "Paging":{
         /// "PageNumber":1, (deprecated)
         /// "PageSize":10, (deprecated)
-        /// "Count":50,
-        /// "Skip":0
+        /// "Count":50, (default value)
+        /// "Skip":0, (default value)
         /// },
         /// "Sort":{
         /// "SortBy":"",
@@ -1671,7 +1689,7 @@ namespace ShareFile.Api.Client.Entities
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AdvancedSearchResults>(Client);
 		    sfApiQuery.From("Items");
-		    sfApiQuery.Action("AdvancedSimpleSearch");
+		    sfApiQuery.Action("AdvancedSearch");
             sfApiQuery.Body = searchQuery;
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
@@ -1698,39 +1716,19 @@ namespace ShareFile.Api.Client.Entities
         }
         
         /// <summary>
-        /// Get all Item Protocol Link
+        /// Get List of Item Protocol Links
         /// </summary>
-        /// <remarks>
-        /// This method returns all alternate protocol links supported by ShareFile (such
-        /// as WOPI, FTP, WebDAV).
-        /// </remarks>
-        /// <param name="parentUrl"></param>
+        /// <param name="url"></param>
+        /// <param name="platform"></param>
         /// <returns>
-        /// A Feed containing all protocols links supported by the given item
+        /// A list of protocol links depending on the input parameter 'platform', 404 (Not Found) if not supported by the item
         /// </returns>
-        public IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(Uri parentUrl)
+        public IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(Uri url, PreviewPlatform platform)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<ItemProtocolLink>>(Client);
 		    sfApiQuery.Action("ProtocolLinks");
-            sfApiQuery.Uri(parentUrl);
-            sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
-        }
-        
-        /// <summary>
-        /// Get an Item Protocol Link
-        /// </summary>
-        /// <param name="url"></param>
-        /// <param name="protocol"></param>
-        /// <returns>
-        /// A single protocol link if supported, 404 (Not Found) if not supported by the item
-        /// </returns>
-        public IQuery<ItemProtocolLink> GetProtocolLinks(Uri url, string protocol)
-        {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ItemProtocolLink>(Client);
-		    sfApiQuery.Action("ProtocolLinks");
             sfApiQuery.Uri(url);
-            sfApiQuery.ActionIds(protocol);
+            sfApiQuery.ActionIds(platform);
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
@@ -1751,6 +1749,59 @@ namespace ShareFile.Api.Client.Entities
 		    sfApiQuery.Action("Redirection");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get a collection of recoverable/deleted items in a folder
+        /// </summary>
+        /// <param name="url"></param>
+        public IQuery<ODataFeed<Item>> GetDeletedChildren(Uri url, string id)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
+		    sfApiQuery.Action("DeletedChildren");
+            sfApiQuery.Uri(url);
+            sfApiQuery.QueryString("parentid", id);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        public IQuery<ODataFeed<Item>> GetUserDeletedItems(string userid = null, string zone = null)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
+		    sfApiQuery.From("Items");
+		    sfApiQuery.Action("UserDeletedItems");
+            sfApiQuery.QueryString("userid", userid);
+            sfApiQuery.QueryString("zone", zone);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Restore expired items to their original locations
+        /// </summary>
+        /// <param name="ids"></param>
+        public IQuery BulkRestore(IEnumerable<string> ids)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+		    sfApiQuery.From("Items");
+		    sfApiQuery.Action("BulkRestore");
+            sfApiQuery.Body = ids;
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Permanently delete multiple items
+        /// </summary>
+        /// <param name="itemIds"></param>
+        /// <param name="ids"></param>
+        public IQuery BulkDeletePermanently(IEnumerable<string> ids)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+		    sfApiQuery.From("Items");
+		    sfApiQuery.Action("BulkDeletePermanently");
+            sfApiQuery.Body = ids;
+            sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
     }

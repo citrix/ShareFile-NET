@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2015 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -372,6 +372,14 @@ namespace ShareFile.Api.Client.Entities
         /// FindSubdomainResult
         /// </returns>
         IQuery<FindSubdomainResult> FindSubdomain(FindSubdomainParams findSubdomainParams, bool singlePlane = false);
+        
+        /// <summary>
+        /// Get Outlook Information
+        /// </summary>
+        /// <returns>
+        /// OutlookInformation
+        /// </returns>
+        IQuery<OutlookInformation> GetOutlookInformation();
         
         /// <summary>
         /// Get SSO Info
@@ -931,6 +939,21 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.QueryString("singlePlane", singlePlane);
             sfApiQuery.Body = findSubdomainParams;
             sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get Outlook Information
+        /// </summary>
+        /// <returns>
+        /// OutlookInformation
+        /// </returns>
+        public IQuery<OutlookInformation> GetOutlookInformation()
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<OutlookInformation>(Client);
+		    sfApiQuery.From("Accounts");
+		    sfApiQuery.Action("OutlookInformation");
+            sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
         

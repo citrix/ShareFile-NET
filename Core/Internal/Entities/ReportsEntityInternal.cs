@@ -146,17 +146,6 @@ namespace ShareFile.Api.Client.Entities
         IQuery Delete(Uri url);
         
         /// <summary>
-        /// Schedule Report
-        /// </summary>
-        /// <remarks>
-        /// Schedule a report and get the run id.
-        /// </remarks>
-        /// <returns>
-        /// ReportRecord
-        /// </returns>
-        IQuery<ReportRecord> CreateSchedule(Uri url);
-        
-        /// <summary>
         /// Run Report
         /// </summary>
         /// <remarks>
@@ -389,24 +378,6 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
-        }
-        
-        /// <summary>
-        /// Schedule Report
-        /// </summary>
-        /// <remarks>
-        /// Schedule a report and get the run id.
-        /// </remarks>
-        /// <returns>
-        /// ReportRecord
-        /// </returns>
-        public IQuery<ReportRecord> CreateSchedule(Uri url)
-        {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ReportRecord>(Client);
-		    sfApiQuery.Action("Schedule");
-            sfApiQuery.Uri(url);
-            sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
         

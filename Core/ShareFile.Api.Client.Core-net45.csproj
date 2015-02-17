@@ -32,9 +32,9 @@
     <DocumentationFile>$(OutputPath)\ShareFile.Api.Client.Core.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(SolutionDir)packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>$(SolutionDir)packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -56,7 +56,6 @@
     <Compile Include="Entities\AsyncOperationsEntity.cs" />
     <Compile Include="Entities\CapabilitiesEntity.cs" />
     <Compile Include="Entities\ConnectorGroupsEntity.cs" />
-    <Compile Include="Entities\EntityBase.cs" />
     <Compile Include="Entities\FavoriteFoldersEntity.cs" />
     <Compile Include="Entities\GroupsEntity.cs" />
     <Compile Include="Entities\ItemsEntity.cs" />
@@ -66,7 +65,10 @@
     <Compile Include="Entities\StorageCentersEntity.cs" />
     <Compile Include="Entities\UsersEntity.cs" />
     <Compile Include="Entities\ZonesEntity.cs" />
+    <Compile Include="EntityBase.cs" />
+    <Compile Include="Enums\AddressListType.cs" />
     <Compile Include="Enums\ItemAlias.cs" />
+    <Compile Include="Enums\SafeEnum.cs" />
     <Compile Include="Events\ChangeDomainCallback.cs" />
     <Compile Include="Events\EventHandlerResponse.cs" />
     <Compile Include="Events\ExceptionCallback.cs" />
@@ -104,7 +106,6 @@
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\AccountPreferences.cs" />
     <Compile Include="Models\AccountUser.cs" />
-    <Compile Include="Models\AddressListType.cs" />
     <Compile Include="Models\AdvancedSearchResults.cs" />
     <Compile Include="Models\AsyncOperation.cs" />
     <Compile Include="Models\AsyncOperationState.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="Models\DeviceUser.cs" />
     <Compile Include="Models\DeviceUserWipe.cs" />
     <Compile Include="Models\DeviceWipeReport.cs" />
+    <Compile Include="Models\DiskSpace.cs" />
     <Compile Include="Models\DownloadSpecification.cs" />
     <Compile Include="Models\EnsEventType.cs" />
     <Compile Include="Models\EnsSubscriberConfiguration.cs" />
@@ -135,11 +137,11 @@
     <Compile Include="Models\ESignatureDocumentStatus.cs" />
     <Compile Include="Models\FavoriteFolder.cs" />
     <Compile Include="Models\File.cs" />
+    <Compile Include="Models\FileLock.cs" />
     <Compile Include="Models\FileVirusStatus.cs" />
     <Compile Include="Models\FindSubdomainParams.cs" />
     <Compile Include="Models\FindSubdomainResult.cs" />
     <Compile Include="Models\Folder.cs" />
-    <Compile Include="Models\FreeTrialAccount.cs" />
     <Compile Include="Models\GenericConfig.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\Industry.cs" />
@@ -148,6 +150,8 @@
     <Compile Include="Models\ItemInfo.cs" />
     <Compile Include="Models\ItemProtocolLink.cs" />
     <Compile Include="Models\Link.cs" />
+    <Compile Include="Models\LockType.cs" />
+    <Compile Include="Models\MarketAnalytics.cs" />
     <Compile Include="Models\Metadata.cs" />
     <Compile Include="Models\MobileSecuritySettings.cs" />
     <Compile Include="Models\Note.cs" />
@@ -155,9 +159,15 @@
     <Compile Include="Models\ODataFeed.cs" />
     <Compile Include="Models\ODataObject.cs" />
     <Compile Include="Models\ODataObjectType.cs" />
+    <Compile Include="Models\OutlookInformation.cs" />
+    <Compile Include="Models\OutlookInformationOptionBool.cs" />
+    <Compile Include="Models\OutlookInformationOptionInt.cs" />
+    <Compile Include="Models\OutlookInformationOptionString.cs" />
     <Compile Include="Models\PinLockType.cs" />
     <Compile Include="Models\PlanFeatures.cs" />
     <Compile Include="Models\PowerTools.cs" />
+    <Compile Include="Models\PreviewPlatform.cs" />
+    <Compile Include="Models\PreviewPlatformInfo.cs" />
     <Compile Include="Models\PreviewStatus.cs" />
     <Compile Include="Models\Principal.cs" />
     <Compile Include="Models\ProductDefaults.cs" />
@@ -167,7 +177,6 @@
     <Compile Include="Models\Redirection.cs" />
     <Compile Include="Models\RequireSubdomainResult.cs" />
     <Compile Include="Models\RequireWebPopResult.cs" />
-    <Compile Include="Models\SafeEnum.cs" />
     <Compile Include="Models\SearchQuery.cs" />
     <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Models\SearchResults.cs" />
@@ -178,6 +187,7 @@
     <Compile Include="Models\ShareRequestParams.cs" />
     <Compile Include="Models\ShareResendParams.cs" />
     <Compile Include="Models\ShareSendParams.cs" />
+    <Compile Include="Models\ShareSubType.cs" />
     <Compile Include="Models\ShareType.cs" />
     <Compile Include="Models\SimpleQuery.cs" />
     <Compile Include="Models\SimpleSearchQuery.cs" />
@@ -188,7 +198,9 @@
     <Compile Include="Models\SymbolicLink.cs" />
     <Compile Include="Models\ToolInformation.cs" />
     <Compile Include="Models\TreeMode.cs" />
+    <Compile Include="Models\TypeOfTour.cs" />
     <Compile Include="Models\UploadMethod.cs" />
+    <Compile Include="Models\UploadRequestParams.cs" />
     <Compile Include="Models\UploadSpecification.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserConfirmationSettings.cs" />
@@ -196,12 +208,14 @@
     <Compile Include="Models\UserPreferences.cs" />
     <Compile Include="Models\UserRole.cs" />
     <Compile Include="Models\UserSecurity.cs" />
+    <Compile Include="Models\UserUsage.cs" />
     <Compile Include="Models\UXMode.cs" />
     <Compile Include="Models\VRootType.cs" />
     <Compile Include="Models\Zone.cs" />
     <Compile Include="Models\ZoneService.cs" />
     <Compile Include="Models\ZoneType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\InternalAssemblyInfo.cs" />
     <Compile Include="Requests\Executors\AsyncRequestExecutor.cs" />
     <Compile Include="Requests\Executors\IAsyncRequestExecutor.cs" />
     <Compile Include="Requests\Executors\ISyncRequestExecutor.cs" />
@@ -242,7 +256,7 @@
     <Compile Include="Security\Cryptography\IMD5HashProvider.cs" />
     <Compile Include="Security\Cryptography\MD5HashProviderFactory.cs" />
     <Compile Include="Security\Cryptography\PortableMD5HashProvider.cs" />
-    <Compile Include="Security\ZoneAuthentication.cs" />
+    <Compile Include="Security\CustomAuthentication.cs" />
     <Compile Include="ShareFileClient.cs" />
     <Compile Include="ShareFileClient.Entities.cs" />
     <Compile Include="Transfers\Downloaders\AsyncFileDownloader.cs" />
@@ -271,7 +285,7 @@
     <Compile Include="Transfers\UploadSpecificationRequest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

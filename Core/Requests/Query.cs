@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Requests.Filters;
 using ShareFile.Api.Models;
 
@@ -211,6 +212,11 @@ namespace ShareFile.Api.Client.Requests
         {
             
         }
+        
+        public Query Id(object id)
+        {
+            return Id(id.ToString());
+        }
 
         public Query Id(string id)
         {
@@ -224,10 +230,20 @@ namespace ShareFile.Api.Client.Requests
             return this;
         }
 
+        public Query Ids(object id)
+        {
+            return Ids(id.ToString());
+        }
+
         public Query Ids(string id)
         {
             _Ids(id);
             return this;
+        }
+
+        public Query Ids(string key, object id)
+        {
+            return Ids(key, id.ToString());
         }
 
         public Query Ids(string key, string id)
@@ -248,10 +264,20 @@ namespace ShareFile.Api.Client.Requests
             return this;
         }
 
+        public Query ActionIds(object id)
+        {
+            return ActionIds(id.ToString());
+        }
+
         public Query ActionIds(string id)
         {
             _ActionIds(id);
             return this;
+        }
+
+        public Query ActionIds(string key, object id)
+        {
+            return ActionIds(key, id.ToString());
         }
 
         public Query ActionIds(string key, string id)
@@ -266,10 +292,20 @@ namespace ShareFile.Api.Client.Requests
             return this;
         }
 
+        public Query SubAction(string subAction, object id)
+        {
+            return SubAction(subAction, id.ToString());
+        }
+
         public Query SubAction(string subAction, string id)
         {
             _SubAction(subAction, id);
             return this;
+        }
+
+        public Query SubAction(string subAction, string key, object id)
+        {
+            return SubAction(subAction, key, id.ToString());
         }
 
         public Query SubAction(string subAction, string key, string id)
@@ -337,6 +373,33 @@ namespace ShareFile.Api.Client.Requests
             _top = -1;
         }
 
+        internal static Query<U> Copy<T, U>(Query<T> copyFrom, Query<U> copyTo)
+            where T : class
+            where U : class
+        {
+            copyTo._action = copyFrom._action;
+            copyTo._baseUri = copyFrom._baseUri;
+            copyTo._entity = copyFrom._entity;
+            copyTo._filterCriteria = copyFrom._filterCriteria;
+            copyTo._headerCollection = copyFrom._headerCollection;
+            copyTo._orderBy = copyFrom._orderBy;
+            copyTo._skip = copyFrom._skip;
+            copyTo._subActions = copyFrom._subActions;
+            copyTo._top = copyFrom._top;
+            copyTo.Body = copyFrom.Body;
+            copyTo.HttpMethod = copyFrom.HttpMethod;
+            foreach (var expand in copyFrom._expandProperties) copyTo._expandProperties.Add(expand);
+            foreach (var id in copyFrom._ids) copyTo._ids.Add(id);
+            foreach (var qsParam in copyFrom._queryString) copyTo._queryString.Add(qsParam);
+            foreach (var select in copyFrom._selectProperties) copyTo._selectProperties.Add(select);
+            return copyTo;
+        }
+
+        public Query<T> Id(object id)
+        {
+            return Id(id.ToString());
+        }
+
         public Query<T> Id(string id)
         {
             _Id(id);
@@ -349,10 +412,20 @@ namespace ShareFile.Api.Client.Requests
             return this;
         }
 
+        public Query<T> Ids(object id)
+        {
+            return Ids(id.ToString());
+        }
+
         public Query<T> Ids(string id)
         {
             _Ids(id);
             return this;
+        }
+
+        public Query<T> Ids(string key, object id)
+        {
+            return Ids(key, id.ToString());
         }
 
         public Query<T> Ids(string key, string id)
@@ -373,10 +446,20 @@ namespace ShareFile.Api.Client.Requests
             return this;
         }
 
+        public Query<T> ActionIds(object id)
+        {
+            return ActionIds(id.ToString());
+        }
+
         public Query<T> ActionIds(string id)
         {
             _ActionIds(id);
             return this;
+        }
+
+        public Query<T> ActionIds(string key, object id)
+        {
+            return ActionIds(key, id.ToString());
         }
 
         public Query<T> ActionIds(string key, string id)
@@ -391,10 +474,20 @@ namespace ShareFile.Api.Client.Requests
             return this;
         }
 
+        public Query<T> SubAction(string subAction, object id)
+        {
+            return SubAction(subAction, id.ToString());
+        }
+
         public Query<T> SubAction(string subAction, string id)
         {
             _SubAction(subAction, id);
             return this;
+        }
+
+        public Query<T> SubAction(string subAction, string key, object id)
+        {
+            return SubAction(subAction, key, id.ToString());
         }
 
         public Query<T> SubAction(string subAction, string key, string id)
@@ -498,12 +591,20 @@ namespace ShareFile.Api.Client.Requests
 
         public virtual T Execute()
         {
+            if (this is IQuery<Stream>)
+            {
+                return Client.Execute((IQuery<Stream>)this) as T;
+            }
             return Client.Execute(this);
         }
 
 #if Async
         public virtual Task<T> ExecuteAsync(CancellationToken? token = null)
         {
+            if (this is IQuery<Stream>)
+            {
+                return Client.ExecuteAsync((IQuery<Stream>)this, token) as Task<T>;
+            }
             return Client.ExecuteAsync(this, token);
         }
 #endif
@@ -520,12 +621,12 @@ namespace ShareFile.Api.Client.Requests
 
         public IEnumerable<string> GetSelectProperties()
         {
-            return _selectProperties;
+            return _selectProperties.OrderBy(select => select.Length).Distinct();
         }
 
         public IEnumerable<string> GetExpandProperties()
         {
-            return _expandProperties;
+            return _expandProperties.OrderBy(expand => expand.Length).Distinct(); ;
         }
 
         public IFilter GetFilter()
@@ -573,6 +674,35 @@ namespace ShareFile.Api.Client.Requests
 #endif
     }
 
+    internal class MappedQuery<SourceType, TargetType> : Query<TargetType>
+        where SourceType : class
+        where TargetType : class
+    {
+        private Func<SourceType, TargetType> map;
+
+        public MappedQuery(Query<SourceType> query, Func<SourceType, TargetType> map) : base(query.Client)
+        {
+            Query<SourceType>.Copy(query, this);
+            this.map = map;
+        }
+
+        public override TargetType Execute()
+        {
+            Query<SourceType> query = Query<TargetType>.Copy(this, new Query<SourceType>(this.Client));
+            SourceType result = query.Execute();
+            return map(result);
+        }
+
+#if Async
+        public override async Task<TargetType> ExecuteAsync(CancellationToken? token = null)
+        {
+            Query<SourceType> query = Query<TargetType>.Copy(this, new Query<SourceType>(this.Client));
+            SourceType result = await query.ExecuteAsync(token);
+            return map(result);
+        }
+#endif
+    }
+
     public class ApiRequest
     {
         public Uri Uri { get; set; }
@@ -581,6 +711,9 @@ namespace ShareFile.Api.Client.Requests
         public object Body { get; set; }
         public ODataParameterCollection QueryStringCollection { get; set; }
         public QueryBase QueryBase { get; protected set; }
+        /// <summary>
+        /// Indicates whether or not the Uri has been composed.
+        /// </summary>
         public bool IsComposed { get; set; }
 
         public ApiRequest()
@@ -589,9 +722,20 @@ namespace ShareFile.Api.Client.Requests
             HeaderCollection = new Dictionary<string, string>();
         }
 
-        public static bool IsUri(string id)
+        /// <summary>
+        /// Check if the provided id is a fully qualified <see cref="Uri"/>
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="uri"></param>
+        /// <returns></returns>
+        public static bool IsUri(string id, out Uri uri)
         {
-            return id.StartsWith("http://") || id.StartsWith("https://");
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                uri = null;
+                return false;
+            }
+            return Uri.TryCreate(id, UriKind.Absolute, out uri);
         }
 
         public static ApiRequest FromQuery(QueryBase query)
@@ -606,9 +750,22 @@ namespace ShareFile.Api.Client.Requests
             var queryBaseUri = query.GetBaseUri();
             
             StringBuilder url;
-            if (IsUri(ids))
+            Uri idsUri;
+            if (IsUri(ids, out idsUri))
             {
-                url = new StringBuilder(ids);
+                if (string.IsNullOrWhiteSpace(idsUri.Query))
+                {
+                    url = new StringBuilder(ids);
+                }
+                else
+                {
+                    foreach (var odataParameter in idsUri.GetQueryAsODataParameters())
+                    {
+                        queryString.Add(odataParameter);
+                    }
+
+                    url = new StringBuilder(idsUri.ToString().Substring(0, ids.IndexOf('?')));
+                }
             }
             else
             {

@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.FileSystem;
-using ShareFile.Api.Client.Requests.Providers;
 using ShareFile.Api.Client.Security.Cryptography;
 using ShareFile.Api.Models;
 
@@ -36,9 +35,18 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         public TransferProgress Progress { get; set; }
         protected CancellationToken? CancellationToken { get; set; }
 
-        protected async Task<UploadSpecification> CreateUpload(UploadSpecificationRequest uploadSpecificationRequest)
+        protected async Task<UploadSpecification> CreateUpload()
         {
-            var query = CreateUploadSpecificationQuery(uploadSpecificationRequest);
+            if (UploadSpecificationRequest.ProviderCapabilities == null)
+            {
+                UploadSpecificationRequest.ProviderCapabilities =
+                    (await
+                        Client.Capabilities.Get()
+                            .WithBaseUri(UploadSpecificationRequest.Parent)
+                            .ExecuteAsync(CancellationToken)).Feed;
+            }
+
+            var query = CreateUploadSpecificationQuery(UploadSpecificationRequest);
 
             return await query.ExecuteAsync(CancellationToken);
         }
@@ -137,10 +145,10 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         protected async Task<UploadResponse> GetUploadResponseAsync(HttpResponseMessage responseMessage)
         {
-            if (responseMessage.IsSuccessStatusCode)
+            var response = await responseMessage.Content.ReadAsStringAsync();
+            using (var textReader = new JsonTextReader(new StringReader(response)))
             {
-                using (var responseStream = await responseMessage.Content.ReadAsStreamAsync())
-                using (var textReader = new JsonTextReader(new StreamReader(responseStream)))
+                try
                 {
                     var uploadResponse = new JsonSerializer().Deserialize<ShareFileApiResponse<UploadResponse>>(textReader);
 
@@ -150,15 +158,15 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     }
 
                     return uploadResponse.Value;
+
+                }
+                catch (JsonSerializationException jEx)
+                {
+                    TryProcessFailedUploadResponse(response);
+
+                    throw new UploadException("StorageCenter error: " + response, -1, jEx);
                 }
             }
-
-            if (responseMessage.Content != null)
-            {
-                Client.Logging.Error(await responseMessage.Content.ReadAsStringAsync());
-            }
-
-            throw new UploadException("Error completing upload.", -1);
         }
     }
 #endif

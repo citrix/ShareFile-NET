@@ -15,6 +15,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         public AsyncScalingFileUploader(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
             : base(client, uploadSpecificationRequest, file, config, expirationDays)
         {
+            UploadSpecificationRequest.Raw = true;
             var chunkConfig = config != null ? config.PartConfig : new FilePartConfig();
             partUploader = new ScalingPartUploader(chunkConfig, Config.NumberOfThreads,
                 ExecuteChunkUploadMessage,
@@ -33,7 +34,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             {
                 if (UploadSpecification == null)
                 {
-                    UploadSpecification = await CreateUpload(UploadSpecificationRequest);
+                    UploadSpecification = await CreateUpload();
                 }
 
                 await CheckResumeAsync();
@@ -58,6 +59,8 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         private async Task ExecuteChunkUploadMessage(HttpRequestMessage requestMessage)
         {
+            await TryPauseAsync(CancellationToken);
+
             BaseRequestProvider.TryAddCookies(Client, requestMessage);
 
             using(var responseMessage = await GetHttpClient().SendAsync(requestMessage))
@@ -67,10 +70,17 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 {
                     var sfResponse = JsonConvert.DeserializeObject<ShareFileApiResponse<string>>(response);
                     if (sfResponse.Error)
+                    {
                         throw new UploadException(sfResponse.ErrorMessage, sfResponse.ErrorCode);
+                    }
                 }
-                catch(JsonSerializationException jEx)
+                catch (JsonSerializationException jEx)
                 {
+                    if (responseMessage.Content != null)
+                    {
+                        TryProcessFailedUploadResponse(response);
+                    }
+
                     throw new UploadException("StorageCenter error: " + response, -1, jEx);
                 }
             }

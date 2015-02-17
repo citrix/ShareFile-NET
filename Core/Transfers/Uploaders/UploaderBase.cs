@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
 using ShareFile.Api.Client.Exceptions;
+using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Extensions.Tasks;
 using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Requests;
@@ -49,7 +50,12 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         protected IQuery<UploadSpecification> CreateUploadSpecificationQuery(UploadSpecificationRequest uploadSpecificationRequest)
         {
-            var query = Client.Items.Upload(uploadSpecificationRequest.Parent, uploadSpecificationRequest.Method,
+            if (uploadSpecificationRequest.ProviderCapabilities.SupportsUploadWithRequestParams())
+            {
+                return CreateUploadRequestParamsQuery(uploadSpecificationRequest);
+            }
+
+            var query = Client.Items.Upload(uploadSpecificationRequest.Parent, uploadSpecificationRequest.Method.GetValueOrDefault(UploadMethod.Threaded),
                 uploadSpecificationRequest.Raw, uploadSpecificationRequest.FileName, uploadSpecificationRequest.FileSize,
                 uploadSpecificationRequest.BatchId,
                 uploadSpecificationRequest.BatchLast, uploadSpecificationRequest.CanResume,
@@ -59,6 +65,15 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 uploadSpecificationRequest.SendGuid, null, uploadSpecificationRequest.ThreadCount,
                 uploadSpecificationRequest.ResponseFormat, uploadSpecificationRequest.Notify,
                 uploadSpecificationRequest.ClientCreatedDateUtc, uploadSpecificationRequest.ClientModifiedDateUtc, ExpirationDays);
+
+            return query;
+        }
+
+        protected IQuery<UploadSpecification> CreateUploadRequestParamsQuery(
+            UploadSpecificationRequest uploadSpecificationRequest)
+        {
+            var query = Client.Items.Upload2(uploadSpecificationRequest.Parent,
+                uploadSpecificationRequest.ToRequestParams(), ExpirationDays);
 
             return query;
         }
@@ -132,6 +147,30 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             }
 
             return new Uri(finishUri.ToString());
+        }
+
+        protected void TryProcessFailedUploadResponse(string errorResponse)
+        {
+            Client.Logging.Error(errorResponse);
+
+            using (var textReader = new JsonTextReader(new StringReader(errorResponse)))
+            {
+                ODataRequestException requestMessage = null;
+                try
+                {
+                    requestMessage = Client.Serializer.Deserialize<ODataRequestException>(textReader);
+                }
+                catch { }
+
+                if (requestMessage != null)
+                {
+                    throw new UploadException(requestMessage.Message.Message, (int)requestMessage.Code, new ODataException
+                    {
+                        Code = requestMessage.Code,
+                        ODataExceptionMessage = requestMessage.Message
+                    });
+                }
+            }
         }
     }
 }

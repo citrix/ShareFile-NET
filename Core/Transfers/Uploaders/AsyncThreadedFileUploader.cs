@@ -42,7 +42,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             {
                 if (UploadSpecification == null)
                 {
-                    UploadSpecification = await CreateUpload(UploadSpecificationRequest);
+                    UploadSpecification = await CreateUpload();
                 }
 
                 await CheckResumeAsync();

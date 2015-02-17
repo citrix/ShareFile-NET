@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2015 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -49,6 +49,8 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public FavoriteFolder FavoriteFolder { get; set; }
 
+		public SafeEnum<ZoneService> ZoneService { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -63,6 +65,7 @@ namespace ShareFile.Api.Models
 				Info = typedSource.Info;
 				Redirection = typedSource.Redirection;
 				FavoriteFolder = typedSource.FavoriteFolder;
+				ZoneService = typedSource.ZoneService;
 			}
 			else
 			{
@@ -90,6 +93,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("FavoriteFolder", out token) && token.Type != JTokenType.Null)
 				{
 					FavoriteFolder = (FavoriteFolder)serializer.Deserialize(token.CreateReader(), typeof(FavoriteFolder));
+				}
+				if(source.TryGetProperty("ZoneService", out token) && token.Type != JTokenType.Null)
+				{
+					ZoneService = (SafeEnum<ZoneService>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<ZoneService>));
 				}
 			}
 		}

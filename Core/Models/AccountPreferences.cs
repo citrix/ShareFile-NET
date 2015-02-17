@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2015 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -185,13 +185,47 @@ namespace ShareFile.Api.Models
 
 		public string TrustedDomains { get; set; }
 
+		public bool? EnableReportingV3 { get; set; }
+
 		public bool? EnableEncryptedEmailForOutlookPlugin { get; set; }
 
 		public bool? EnableDocPreviews { get; set; }
 
 		public bool? EnableDesktopEditorForAccount { get; set; }
 
+		public bool? UseStrictEmployeeDefinition { get; set; }
+
+		public string EmployeeEmailDomains { get; set; }
+
+		public bool? IsPremier { get; set; }
+
 		public bool? DisableShareConnectForAccount { get; set; }
+
+		public bool? EnableWebAppConnectorBrowsing { get; set; }
+
+		public bool? EnableStrictCrossdomainPolicy { get; set; }
+
+		public bool? DisableScanSnap { get; set; }
+
+		public bool? EnableFileCount { get; set; }
+
+		public bool? EnableAntiVirus { get; set; }
+
+		public bool? EnableFileLocking { get; set; }
+
+		public bool? EnableIntegrations { get; set; }
+
+		public IEnumerable<SafeEnum<IntegrationProvider>> IntegrationProviders { get; set; }
+
+		public bool? ShowDownloadLinkInUploadNotification { get; set; }
+
+		public bool? EnableUserInvitations { get; set; }
+
+		public bool? EnableClickTrails { get; set; }
+
+		public bool? CanStoreItemsInShareFile { get; set; }
+
+		public bool? EnableHomeFolders { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
@@ -284,10 +318,27 @@ namespace ShareFile.Api.Models
 				ENSFailSafePollingCount = typedSource.ENSFailSafePollingCount;
 				ENSMaxNotificationSyncWaitCount = typedSource.ENSMaxNotificationSyncWaitCount;
 				TrustedDomains = typedSource.TrustedDomains;
+				EnableReportingV3 = typedSource.EnableReportingV3;
 				EnableEncryptedEmailForOutlookPlugin = typedSource.EnableEncryptedEmailForOutlookPlugin;
 				EnableDocPreviews = typedSource.EnableDocPreviews;
 				EnableDesktopEditorForAccount = typedSource.EnableDesktopEditorForAccount;
+				UseStrictEmployeeDefinition = typedSource.UseStrictEmployeeDefinition;
+				EmployeeEmailDomains = typedSource.EmployeeEmailDomains;
+				IsPremier = typedSource.IsPremier;
 				DisableShareConnectForAccount = typedSource.DisableShareConnectForAccount;
+				EnableWebAppConnectorBrowsing = typedSource.EnableWebAppConnectorBrowsing;
+				EnableStrictCrossdomainPolicy = typedSource.EnableStrictCrossdomainPolicy;
+				DisableScanSnap = typedSource.DisableScanSnap;
+				EnableFileCount = typedSource.EnableFileCount;
+				EnableAntiVirus = typedSource.EnableAntiVirus;
+				EnableFileLocking = typedSource.EnableFileLocking;
+				EnableIntegrations = typedSource.EnableIntegrations;
+				IntegrationProviders = typedSource.IntegrationProviders;
+				ShowDownloadLinkInUploadNotification = typedSource.ShowDownloadLinkInUploadNotification;
+				EnableUserInvitations = typedSource.EnableUserInvitations;
+				EnableClickTrails = typedSource.EnableClickTrails;
+				CanStoreItemsInShareFile = typedSource.CanStoreItemsInShareFile;
+				EnableHomeFolders = typedSource.EnableHomeFolders;
 			}
 			else
 			{
@@ -624,6 +675,10 @@ namespace ShareFile.Api.Models
 				{
 					TrustedDomains = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
+				if(source.TryGetProperty("EnableReportingV3", out token) && token.Type != JTokenType.Null)
+				{
+					EnableReportingV3 = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
 				if(source.TryGetProperty("EnableEncryptedEmailForOutlookPlugin", out token) && token.Type != JTokenType.Null)
 				{
 					EnableEncryptedEmailForOutlookPlugin = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
@@ -636,9 +691,73 @@ namespace ShareFile.Api.Models
 				{
 					EnableDesktopEditorForAccount = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
+				if(source.TryGetProperty("UseStrictEmployeeDefinition", out token) && token.Type != JTokenType.Null)
+				{
+					UseStrictEmployeeDefinition = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EmployeeEmailDomains", out token) && token.Type != JTokenType.Null)
+				{
+					EmployeeEmailDomains = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("IsPremier", out token) && token.Type != JTokenType.Null)
+				{
+					IsPremier = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
 				if(source.TryGetProperty("DisableShareConnectForAccount", out token) && token.Type != JTokenType.Null)
 				{
 					DisableShareConnectForAccount = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableWebAppConnectorBrowsing", out token) && token.Type != JTokenType.Null)
+				{
+					EnableWebAppConnectorBrowsing = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableStrictCrossdomainPolicy", out token) && token.Type != JTokenType.Null)
+				{
+					EnableStrictCrossdomainPolicy = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("DisableScanSnap", out token) && token.Type != JTokenType.Null)
+				{
+					DisableScanSnap = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableFileCount", out token) && token.Type != JTokenType.Null)
+				{
+					EnableFileCount = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableAntiVirus", out token) && token.Type != JTokenType.Null)
+				{
+					EnableAntiVirus = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableFileLocking", out token) && token.Type != JTokenType.Null)
+				{
+					EnableFileLocking = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableIntegrations", out token) && token.Type != JTokenType.Null)
+				{
+					EnableIntegrations = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IntegrationProviders", out token) && token.Type != JTokenType.Null)
+				{
+					IntegrationProviders = (IEnumerable<SafeEnum<IntegrationProvider>>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<SafeEnum<IntegrationProvider>>));
+				}
+				if(source.TryGetProperty("ShowDownloadLinkInUploadNotification", out token) && token.Type != JTokenType.Null)
+				{
+					ShowDownloadLinkInUploadNotification = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableUserInvitations", out token) && token.Type != JTokenType.Null)
+				{
+					EnableUserInvitations = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableClickTrails", out token) && token.Type != JTokenType.Null)
+				{
+					EnableClickTrails = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanStoreItemsInShareFile", out token) && token.Type != JTokenType.Null)
+				{
+					CanStoreItemsInShareFile = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableHomeFolders", out token) && token.Type != JTokenType.Null)
+				{
+					EnableHomeFolders = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 			}
 		}

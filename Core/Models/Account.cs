@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2015 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -105,10 +105,14 @@ namespace ShareFile.Api.Models
 
 		public int? UserMax { get; set; }
 
+		public UserUsage UserUsage { get; set; }
+
 		/// <summary>
 		/// Maximum disk space for the account in megabtyes
 		/// </summary>
 		public int? DiskSpaceMax { get; set; }
+
+		public DiskSpace DiskSpace { get; set; }
 
 		/// <summary>
 		/// Maximum bandwidth for the account in megabtyes
@@ -246,7 +250,9 @@ namespace ShareFile.Api.Models
 				AdditionalDiskSpaceRate = typedSource.AdditionalDiskSpaceRate;
 				AdditionalUserRate = typedSource.AdditionalUserRate;
 				UserMax = typedSource.UserMax;
+				UserUsage = typedSource.UserUsage;
 				DiskSpaceMax = typedSource.DiskSpaceMax;
+				DiskSpace = typedSource.DiskSpace;
 				BandwidthMax = typedSource.BandwidthMax;
 				HasPowerTools = typedSource.HasPowerTools;
 				HasEncryption = typedSource.HasEncryption;
@@ -398,9 +404,17 @@ namespace ShareFile.Api.Models
 				{
 					UserMax = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
 				}
+				if(source.TryGetProperty("UserUsage", out token) && token.Type != JTokenType.Null)
+				{
+					UserUsage = (UserUsage)serializer.Deserialize(token.CreateReader(), typeof(UserUsage));
+				}
 				if(source.TryGetProperty("DiskSpaceMax", out token) && token.Type != JTokenType.Null)
 				{
 					DiskSpaceMax = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("DiskSpace", out token) && token.Type != JTokenType.Null)
+				{
+					DiskSpace = (DiskSpace)serializer.Deserialize(token.CreateReader(), typeof(DiskSpace));
 				}
 				if(source.TryGetProperty("BandwidthMax", out token) && token.Type != JTokenType.Null)
 				{

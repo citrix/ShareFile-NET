@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //
-//	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2015 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -22,26 +22,28 @@ namespace ShareFile.Api.Models
         LastProgenyUpdateDate = 6,
         DirectDownload = 7,
         DirectUpload = 8,
-        FileLocking = 9,
-        FileVersioning = 10,
-        RecycleBin = 11,
-        FolderTemplates = 12,
-        VirusScan = 13,
-        ItemLink = 14,
-        ItemNote = 15,
-        CheckIn = 16,
-        CheckOut = 17,
-        ItemDescription = 18,
-        VersionMax = 19,
-        VersionMin = 20,
-        Favorites = 21,
-        ReusableItemId = 22,
-        StandardUploadRaw = 23,
-        StandardUploadForms = 24,
-        StreamedUploadRaw = 25,
-        StreamedUploadForms = 26,
-        ThreadedUploadRaw = 27,
-        ThreadedUploadForms = 28,
-        RightSignature = 29
+        CheckIn = 9,
+        CheckOut = 10,
+        FileVersioning = 11,
+        RecycleBin = 12,
+        FolderTemplates = 13,
+        VirusScan = 14,
+        ItemLink = 15,
+        ItemNote = 16,
+        ItemDescription = 17,
+        VersionMax = 18,
+        VersionMin = 19,
+        Favorites = 20,
+        ReusableItemId = 21,
+        StandardUploadRaw = 22,
+        StandardUploadForms = 23,
+        StreamedUploadRaw = 24,
+        StreamedUploadForms = 25,
+        ThreadedUploadRaw = 26,
+        ThreadedUploadForms = 27,
+        RightSignature = 28,
+        UploadWithRequestParams = 29,
+        SoftLock = 30,
+        HardLock = 31
     }
 }

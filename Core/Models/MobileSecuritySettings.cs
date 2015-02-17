@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2015 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -31,6 +31,14 @@ namespace ShareFile.Api.Models
 
 		public SafeEnum<PinLockType> PinLockType { get; set; }
 
+		public int? PinLockMaxAttempts { get; set; }
+
+		public int? PinLockLockoutIntervalSeconds { get; set; }
+
+		public int? PinLockExternalActionGraceIntervalSeconds { get; set; }
+
+		public int? PinLockInternalActionGraceIntervalSeconds { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -45,6 +53,10 @@ namespace ShareFile.Api.Models
 				EnableAutoLogin = typedSource.EnableAutoLogin;
 				RestrictModifiedDevices = typedSource.RestrictModifiedDevices;
 				PinLockType = typedSource.PinLockType;
+				PinLockMaxAttempts = typedSource.PinLockMaxAttempts;
+				PinLockLockoutIntervalSeconds = typedSource.PinLockLockoutIntervalSeconds;
+				PinLockExternalActionGraceIntervalSeconds = typedSource.PinLockExternalActionGraceIntervalSeconds;
+				PinLockInternalActionGraceIntervalSeconds = typedSource.PinLockInternalActionGraceIntervalSeconds;
 			}
 			else
 			{
@@ -72,6 +84,22 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("PinLockType", out token) && token.Type != JTokenType.Null)
 				{
 					PinLockType = (SafeEnum<PinLockType>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<PinLockType>));
+				}
+				if(source.TryGetProperty("PinLockMaxAttempts", out token) && token.Type != JTokenType.Null)
+				{
+					PinLockMaxAttempts = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("PinLockLockoutIntervalSeconds", out token) && token.Type != JTokenType.Null)
+				{
+					PinLockLockoutIntervalSeconds = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("PinLockExternalActionGraceIntervalSeconds", out token) && token.Type != JTokenType.Null)
+				{
+					PinLockExternalActionGraceIntervalSeconds = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("PinLockInternalActionGraceIntervalSeconds", out token) && token.Type != JTokenType.Null)
+				{
+					PinLockInternalActionGraceIntervalSeconds = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
 				}
 			}
 		}

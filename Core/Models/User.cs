@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2015 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -27,9 +27,6 @@ namespace ShareFile.Api.Models
 
 		public int? Contacted { get; set; }
 
-		/// <summary>
-		/// The first and last name of the user
-		/// </summary>
 		public string FullName { get; set; }
 
 		public string ReferredBy { get; set; }
@@ -61,6 +58,8 @@ namespace ShareFile.Api.Models
 		public Folder HomeFolder { get; set; }
 
 		public IEnumerable<DeviceUser> Devices { get; set; }
+
+		public IEnumerable<SafeEnum<IntegrationProvider>> Integrations { get; set; }
 
 		public Folder VirtualRoot { get; set; }
 
@@ -96,6 +95,7 @@ namespace ShareFile.Api.Models
 				FavoriteFolders = typedSource.FavoriteFolders;
 				HomeFolder = typedSource.HomeFolder;
 				Devices = typedSource.Devices;
+				Integrations = typedSource.Integrations;
 				VirtualRoot = typedSource.VirtualRoot;
 				Roles = typedSource.Roles;
 				Info = typedSource.Info;
@@ -182,6 +182,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("Devices", out token) && token.Type != JTokenType.Null)
 				{
 					Devices = (IEnumerable<DeviceUser>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<DeviceUser>));
+				}
+				if(source.TryGetProperty("Integrations", out token) && token.Type != JTokenType.Null)
+				{
+					Integrations = (IEnumerable<SafeEnum<IntegrationProvider>>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<SafeEnum<IntegrationProvider>>));
 				}
 				if(source.TryGetProperty("VirtualRoot", out token) && token.Type != JTokenType.Null)
 				{

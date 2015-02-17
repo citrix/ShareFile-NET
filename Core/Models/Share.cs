@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2015 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -159,6 +159,8 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public Redirection Redirection { get; set; }
 
+		public SafeEnum<ShareSubType> ShareSubType { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -199,6 +201,7 @@ namespace ShareFile.Api.Models
 				Signature = typedSource.Signature;
 				HasRemoteChildren = typedSource.HasRemoteChildren;
 				Redirection = typedSource.Redirection;
+				ShareSubType = typedSource.ShareSubType;
 			}
 			else
 			{
@@ -330,6 +333,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("Redirection", out token) && token.Type != JTokenType.Null)
 				{
 					Redirection = (Redirection)serializer.Deserialize(token.CreateReader(), typeof(Redirection));
+				}
+				if(source.TryGetProperty("ShareSubType", out token) && token.Type != JTokenType.Null)
+				{
+					ShareSubType = (SafeEnum<ShareSubType>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<ShareSubType>));
 				}
 			}
 		}

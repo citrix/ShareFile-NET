@@ -55,7 +55,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     multipartFormContent.Add(streamContent, "File1", File.Name);
                     requestMessage.Content = multipartFormContent;
 
-                    var responseMessage = await httpClient.SendAsync(requestMessage, CancellationToken ?? System.Threading.CancellationToken.None);
+                    var responseMessage = await httpClient.SendAsync(requestMessage, CancellationToken.GetValueOrDefault(System.Threading.CancellationToken.None));
                     
                     return await GetUploadResponseAsync(responseMessage);
                 }

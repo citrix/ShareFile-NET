@@ -63,7 +63,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
             BaseRequestProvider.TryAddCookies(Client, requestMessage);
 
-            using(var responseMessage = await GetHttpClient().SendAsync(requestMessage))
+            using(var responseMessage = await GetHttpClient().SendAsync(requestMessage, CancellationToken.GetValueOrDefault(System.Threading.CancellationToken.None)))
             {
                 string response = await responseMessage.Content.ReadAsStringAsync();
                 try

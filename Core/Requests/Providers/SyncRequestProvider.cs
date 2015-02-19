@@ -35,10 +35,14 @@ namespace ShareFile.Api.Client.Requests.Providers
 
         public T Execute<T>(IQuery<T> query) where T : class
         {
+            var streamQuery = query as IQuery<Stream>;
+            if (streamQuery != null)
+            {
+                return this.Execute(streamQuery) as T;
+            }
+
             var response = Execute(query as QueryBase, responseMessage => ParseTypedResponse<T>(responseMessage));
-            return response.As(
-                (Response<T> typedResponse) => typedResponse.Value,
-                default(T));
+            return response.As((Response<T> typedResponse) => typedResponse.Value);
         }
 
         public T Execute<T>(IFormQuery<T> query) where T : class
@@ -46,12 +50,15 @@ namespace ShareFile.Api.Client.Requests.Providers
             return Execute(query as IQuery<T>);
         }
 
-        public Stream Execute(IStreamQuery query)
+        public Stream Execute(IQuery<Stream> query)
         {
             var response = Execute(query as QueryBase, responseMessage => Response.CreateSuccess(responseMessage.Content.ReadAsStreamAsync().WaitForTask()));
-            return response.As(
-                (Response<Stream> streamResponse) => streamResponse.Value,
-                default(Stream));
+            return response.As((Response<Stream> streamResponse) => streamResponse.Value);
+        }
+
+        public Stream Execute(IStreamQuery query)
+        {
+            return Execute((IQuery<Stream>)query);
         }
 
         private Response<T> ParseTypedResponse<T>(HttpResponseMessage httpResponseMessage)
@@ -81,8 +88,10 @@ namespace ShareFile.Api.Client.Requests.Providers
                     if (result is Redirection && typeof(T) != typeof(Redirection))
                     {
                         var redirection = result as Redirection;
-
-                        if(!redirection.Available || redirection.Uri == null)
+                        
+                        // Removed until API is updated to provide this correctly.
+                        // !redirection.Available || 
+                        if (redirection.Uri == null)
                             throw new ZoneUnavailableException(httpResponseMessage.RequestMessage.RequestUri, "Destination zone is unavailable");
 
                         if (httpResponseMessage.RequestMessage.RequestUri.GetAuthority() != redirection.Uri.GetAuthority())

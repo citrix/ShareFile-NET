@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2015 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -37,6 +37,8 @@ namespace ShareFile.Api.Models
 
 		public int? StorageQuotaPercent { get; set; }
 
+		public bool? EnableHardLimit { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -54,6 +56,7 @@ namespace ShareFile.Api.Models
 				Bandwidth = typedSource.Bandwidth;
 				StorageQuotaLimitGB = typedSource.StorageQuotaLimitGB;
 				StorageQuotaPercent = typedSource.StorageQuotaPercent;
+				EnableHardLimit = typedSource.EnableHardLimit;
 			}
 			else
 			{
@@ -93,6 +96,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("StorageQuotaPercent", out token) && token.Type != JTokenType.Null)
 				{
 					StorageQuotaPercent = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("EnableHardLimit", out token) && token.Type != JTokenType.Null)
+				{
+					EnableHardLimit = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 			}
 		}

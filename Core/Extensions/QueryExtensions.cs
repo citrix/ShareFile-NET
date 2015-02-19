@@ -15,6 +15,52 @@ namespace ShareFile.Api.Client.Extensions
 {
     public static class QueryExtensions
     {
+        public static IQuery<Target> Project<Model, Target>(this IQuery<Model> modelQuery, Expression<Func<Model, Target>> mapExpr) 
+            where Model : ODataObject
+            where Target : class
+        {
+            IQuery<Model> modifiedQuery = ApplySelectsAndExpands(modelQuery, mapExpr);
+            Query<Target> mappedQuery = new MappedQuery<Model, Target>(modifiedQuery as Query<Model>, mapExpr.Compile());
+            return mappedQuery;
+        }
+
+        public static IQuery<ICollection<Target>> Project<Model, Target>(this IQuery<ODataFeed<Model>> modelQuery, Expression<Func<Model, Target>> mapExpr)
+            where Model : ODataObject
+        {
+            IQuery<ODataFeed<Model>> modifiedQuery = ApplySelectsAndExpands(modelQuery, mapExpr);
+            Query<ICollection<Target>> mappedQuery = new MappedQuery<ODataFeed<Model>, ICollection<Target>>(modifiedQuery as Query<ODataFeed<Model>>, feed => feed.Feed.Select(mapExpr.Compile()).ToList());
+            return mappedQuery;
+        }
+
+        public static IQuery<Model> Select<Model, Property>(this IQuery<Model> modelQuery, Expression<Func<Model, Property>> selectExpr)
+            where Model : ODataObject
+        {
+            IQuery<Model> modifiedQuery = ApplySelectsAndExpands(modelQuery, selectExpr);
+            return modifiedQuery;
+        }
+
+        public static IQuery<ODataFeed<Model>> Select<Model, Property>(this IQuery<ODataFeed<Model>> modelQuery, Expression<Func<Model, Property>> selectExpr)
+            where Model : ODataObject
+        {
+            IQuery<ODataFeed<Model>> modifiedQuery = ApplySelectsAndExpands(modelQuery, selectExpr);
+            return modifiedQuery;
+        }
+
+        public static IQuery<Model> Expand<Model, SubModel>(this IQuery<Model> modelQuery, Expression<Func<Model, SubModel>> expandExpr)
+            where Model : ODataObject
+        {
+            IQuery<Model> modifiedQuery = ApplySelectsAndExpands(modelQuery, expandExpr);
+            return modifiedQuery;
+        }
+
+        public static IQuery<ODataFeed<Model>> Expand<Model, SubModel>(this IQuery<ODataFeed<Model>> modelQuery, Expression<Func<Model, SubModel>> expandExpr)
+            where Model : ODataObject
+        {
+            IQuery<ODataFeed<Model>> modifiedQuery = ApplySelectsAndExpands(modelQuery, expandExpr);
+            return modifiedQuery;
+        }
+
+        #region old stuff
         public static Target SelectAndExecute<Model, Target>(this IQuery<Model> modelQuery, Expression<Func<Model, Target>> mapExpr) where Model : ODataObject
         {
             IQuery<Model> modifiedQuery = ApplySelectsAndExpands(modelQuery, mapExpr);
@@ -44,8 +90,10 @@ namespace ShareFile.Api.Client.Extensions
             return result.Feed.Select(mapExpr.Compile()).ToList();
         }
 #endif
+        #endregion
 
-        public static IQuery<T> ApplySelectsAndExpands<T>(IQuery<T> query, LambdaExpression lambda) where T : class
+        public static IQuery<T> ApplySelectsAndExpands<T>(IQuery<T> query, LambdaExpression lambda)
+            where T : class
         {
             var queryModifiers = ExpressionUtils.ExpandLambdaExpression(lambda).SelectMany(z => ExpressionUtils.ParseToQuery(lambda.Parameters[0], z)).ToList();
 

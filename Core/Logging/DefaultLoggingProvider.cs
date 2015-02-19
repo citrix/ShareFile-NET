@@ -5,6 +5,14 @@ namespace ShareFile.Api.Client.Logging
     {
         // Default to Error loglevel
         private LogLevel _logLevel = LogLevel.Error;
+
+#if !NO_CALLERMEMBER
+        public bool LogCallerMember
+        {
+            get { return false; }
+        }
+#endif
+
         public LogLevel LogLevel
         {
             get { return _logLevel; }

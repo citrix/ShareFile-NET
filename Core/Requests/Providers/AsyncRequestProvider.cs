@@ -70,6 +70,12 @@ namespace ShareFile.Api.Client.Requests.Providers
         public async Task<T> ExecuteAsync<T>(IQuery<T> query, CancellationToken? token = null)
             where T : class
         {
+            var streamQuery = query as IQuery<Stream>;
+            if (streamQuery != null)
+            {
+                return await this.ExecuteAsync(streamQuery, token) as T;
+            }
+
             EventHandlerResponse action = null;
             int retryCount = 0;
 
@@ -126,7 +132,9 @@ namespace ShareFile.Api.Client.Requests.Providers
                             {
                                 var redirection = response.Value as Redirection;
 
-                                if (!redirection.Available || redirection.Uri == null)
+                                // Removed until API is updated to provide this correctly.
+                                // !redirection.Available || 
+                                if (redirection.Uri == null)
                                     throw new ZoneUnavailableException(responseMessage.RequestMessage.RequestUri, "Destination zone is unavailable");
 
                                 if (httpRequestMessage.RequestUri.GetAuthority() != redirection.Uri.GetAuthority())
@@ -168,7 +176,9 @@ namespace ShareFile.Api.Client.Requests.Providers
             return await ExecuteAsync(query as IQuery<T>, token).ConfigureAwait(false);
         }
 
-        public async Task<Stream> ExecuteAsync(IStreamQuery query, CancellationToken? token = null)
+        public async Task<Stream> ExecuteAsync(
+            IQuery<Stream> query,
+            CancellationToken? token = null)
         {
             EventHandlerResponse action = null;
             int retryCount = 0;
@@ -205,6 +215,11 @@ namespace ShareFile.Api.Client.Requests.Providers
             } while (action != null && (action.Action == EventHandlerResponseAction.Retry || action.Action == EventHandlerResponseAction.Redirect));
 
             return default(Stream);
+        }
+
+        public Task<Stream> ExecuteAsync(IStreamQuery query, CancellationToken? token = null)
+        {
+            return this.ExecuteAsync((IQuery<Stream>)query, token);
         }
 
         protected async Task<Response<T>> HandleTypedResponse<T>(HttpResponseMessage httpResponseMessage, ApiRequest request, int retryCount, bool tryResolveUnauthorizedChallenge = true)

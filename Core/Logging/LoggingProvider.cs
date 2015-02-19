@@ -1,4 +1,7 @@
 ﻿using System;
+#if !NO_CALLERMEMBER
+using System.Runtime.CompilerServices;
+#endif
 
 namespace ShareFile.Api.Client.Logging
 {
@@ -22,88 +25,88 @@ namespace ShareFile.Api.Client.Logging
 
         public void Trace(ActionStopwatch stopwatch)
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Trace))
+            if (IsTraceEnabled)
             {
                 stopwatch.Stop();
-                Trace(stopwatch.StringFormat(), stopwatch.Name, stopwatch.ElapsedMilliseconds());
+                Trace(stopwatch.StringFormat(), new object[] {stopwatch.Name, stopwatch.ElapsedMilliseconds()});
             }
         }
 
-        public void Trace(string format, params object[] args)
+        public void Trace(string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Trace))
+            if (IsTraceEnabled)
             {
                 _instance.Trace(BuildString(format, args));
             }
         }
 
-        public void Trace(Exception exception, string format, params object[] args)
+        public void Trace(Exception exception, string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Trace))
+            if (IsTraceEnabled)
             {
                 _instance.Trace(exception, BuildString(format, args));
             }
         }
 
-        public void Debug(string format, params object[] args)
+        public void Debug(string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Debug))
+            if (IsDebugEnabled)
             {
                 _instance.Debug(BuildString(format, args));
             }
         }
 
-        public void Debug(Exception exception, string format, params object[] args)
+        public void Debug(Exception exception, string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Debug))
+            if (IsDebugEnabled)
             {
                 _instance.Debug(exception, BuildString(format, args));
             }
         }
 
-        public void Info(string format, params object[] args)
+        public void Info(string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Info))
+            if (IsInformationEnabled)
             {
                 _instance.Info(BuildString(format, args));
             }
         }
 
-        public void Info(Exception exception, string format, params object[] args)
+        public void Info(Exception exception, string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Info))
+            if (IsInformationEnabled)
             {
                 _instance.Info(exception, BuildString(format, args));
             }
         }
 
-        public void Warn(string format, params object[] args)
+        public void Warn(string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Warn))
+            if (IsWarningEnabled)
             {
                 _instance.Warn(BuildString(format, args));
             }
         }
 
-        public void Warn(Exception exception, string format, params object[] args)
+        public void Warn(Exception exception, string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Warn))
+            if (IsWarningEnabled)
             {
                 _instance.Warn(exception, BuildString(format, args));
             }
         }
 
-        public void Error(string format, params object[] args)
+        public void Error(string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Error))
+            if (IsErrorEnabled)
             {
                 _instance.Error(BuildString(format, args));
             }
         }
 
-        public void Error(Exception exception, string format, params object[] args)
+        public void Error(Exception exception, string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Error))
+            if (IsErrorEnabled)
             {
                 if (string.IsNullOrEmpty(format))
                 {
@@ -113,27 +116,52 @@ namespace ShareFile.Api.Client.Logging
             }
         }
 
-        public void Fatal(string format, params object[] args)
+        public void Fatal(string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Fatal))
+            if (IsFatalEnabled)
             {
                 _instance.Fatal(BuildString(format, args));
             }
         }
 
-        public void Fatal(Exception exception, string format, params object[] args)
+        public void Fatal(Exception exception, string format, object[] args = null, [CallerMemberName] string memberName = "")
         {
-            if (_instance != null && _instance.LogLevel.HasFlag(LogLevel.Fatal))
+            if (IsFatalEnabled)
             {
                 _instance.Fatal(exception, BuildString(format, args));
             }
         }
 
-        private string BuildString(string format, params object[] args)
+        private string BuildString(string format, object[] args = null, string memberName = null)
         {
+            string message;
             if (args == null || args.Length == 0)
-                return format;
-            return string.Format(format, args);
+            {
+                message = format;
+            }
+            else
+            {
+                message = string.Format(format, args);
+            }
+
+#if !NO_CALLERMEMBER
+            if (_instance.LogCallerMember && !string.IsNullOrEmpty(memberName))
+            {
+                return memberName + ": " + message;
+            }
+#endif
+
+            return message;
         }
+
+#if NO_CALLERMEMBER
+        /// <summary>
+        /// Dummy attribute to prevent the need to ifdef all logging methods.
+        /// </summary>
+        private class CallerMemberNameAttribute : Attribute
+        {
+            
+        }
+#endif
     }
 }

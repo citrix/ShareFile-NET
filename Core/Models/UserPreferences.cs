@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2015 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -53,7 +53,7 @@ namespace ShareFile.Api.Models
 
 		public int? NotificationInterval { get; set; }
 
-		public int? ShowTutorial { get; set; }
+		public SafeEnum<TypeOfTour> ShowTutorial { get; set; }
 
 		public int? EnableToolOverride { get; set; }
 
@@ -64,6 +64,8 @@ namespace ShareFile.Api.Models
 		public string LongTimeFormat { get; set; }
 
 		public string DateFormat { get; set; }
+
+		public bool? EnableShareConnect { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
@@ -96,6 +98,7 @@ namespace ShareFile.Api.Models
 				TimeFormat = typedSource.TimeFormat;
 				LongTimeFormat = typedSource.LongTimeFormat;
 				DateFormat = typedSource.DateFormat;
+				EnableShareConnect = typedSource.EnableShareConnect;
 			}
 			else
 			{
@@ -170,7 +173,7 @@ namespace ShareFile.Api.Models
 				}
 				if(source.TryGetProperty("ShowTutorial", out token) && token.Type != JTokenType.Null)
 				{
-					ShowTutorial = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+					ShowTutorial = (SafeEnum<TypeOfTour>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<TypeOfTour>));
 				}
 				if(source.TryGetProperty("EnableToolOverride", out token) && token.Type != JTokenType.Null)
 				{
@@ -191,6 +194,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("DateFormat", out token) && token.Type != JTokenType.Null)
 				{
 					DateFormat = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("EnableShareConnect", out token) && token.Type != JTokenType.Null)
+				{
+					EnableShareConnect = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 			}
 		}

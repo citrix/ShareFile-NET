@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,19 +6,12 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Converters;
 using ShareFile.Api.Client.Credentials;
-using ShareFile.Api.Client.Events;
 using ShareFile.Api.Client.Exceptions;
-using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Logging;
-using ShareFile.Api.Client.Security.Authentication.OAuth2;
-using ShareFile.Api.Client.Security.Cryptography;
 using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Requests.Providers
@@ -36,7 +28,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 #else
         public static bool RuntimeRequiresCustomCookieHandling = false;
 #endif
-        
+
         public HttpClient HttpClient { get; set; }
 
         protected BaseRequestProvider(ShareFileClient shareFileClient)
@@ -84,7 +76,10 @@ namespace ShareFile.Api.Client.Requests.Providers
             var uri = request.GetComposedUri();
 
 #if ShareFile
-            if (ShareFileClient.ZoneAuthentication != null) uri = ShareFileClient.ZoneAuthentication.Sign(uri);
+            if (ShareFileClient.CustomAuthentication != null)
+            {
+                uri = ShareFileClient.CustomAuthentication.SignUri(uri);
+            }
 #endif
 
             if (ShareFileClient.Configuration.UseHttpMethodOverride)
@@ -121,7 +116,15 @@ namespace ShareFile.Api.Client.Requests.Providers
             {
                 requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                WriteRequestBody(requestMessage, request.Body, new MediaTypeHeaderValue("application/json"));
+                try
+                {
+                    WriteRequestBody(requestMessage, request.Body, new MediaTypeHeaderValue("application/json"));
+                }
+                catch (Exception e)
+                {
+                    requestMessage.Dispose();
+                    throw;
+                }
             }
             else
             {
@@ -132,6 +135,13 @@ namespace ShareFile.Api.Client.Requests.Providers
             }
 
             TryAddCookies(ShareFileClient, requestMessage);
+
+#if ShareFile
+            if (ShareFileClient.CustomAuthentication != null && request.Body != null)
+            {
+                requestMessage = ShareFileClient.CustomAuthentication.SignBody(request.Body, requestMessage);
+            }
+#endif
 
             ShareFileClient.Logging.Trace(watch);
 
@@ -182,7 +192,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                     var stringResponse = responseStreamReader.ReadToEnd();
 
                     reader = new JsonTextReader(new StringReader(stringResponse));
-                    ShareFileClient.Logging.Debug(stringResponse, null);
+                    ShareFileClient.Logging.Debug(stringResponse);
                 }
                 else
                 {
@@ -223,7 +233,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 
             return task;
         }
-        
+
         protected Task<string> SerializeObjectAsync(object obj)
         {
             var tcs = new TaskCompletionSource<string>();
@@ -251,12 +261,12 @@ namespace ShareFile.Api.Client.Requests.Providers
             {
                 if (ShareFileClient.Configuration.LogCookiesAndHeaders)
                 {
-                    ShareFileClient.Logging.Debug("Headers: {0}", headers);
+                    ShareFileClient.Logging.Debug("Headers: {0}", new object[] { headers });
                     LogCookies(request.GetComposedUri());
                 }
                 if (request.Body != null)
                 {
-                    ShareFileClient.Logging.Debug("Content:{0}{1}", Environment.NewLine, await SerializeObjectAsync(request.Body).ConfigureAwait(false));
+                    ShareFileClient.Logging.Debug("Content:{0}{1}", new object[] { Environment.NewLine, await SerializeObjectAsync(request.Body).ConfigureAwait(false) });
                 }
             }
         }
@@ -265,24 +275,24 @@ namespace ShareFile.Api.Client.Requests.Providers
         {
             if (ShareFileClient.Logging.IsDebugEnabled)
             {
-                ShareFileClient.Logging.Debug("Response Code: {0}", statusCode);
+                ShareFileClient.Logging.Debug("Response Code: {0}", new object[] { statusCode });
                 if (ShareFileClient.Configuration.LogCookiesAndHeaders)
                 {
-                    ShareFileClient.Logging.Debug("{0}", headers);
+                    ShareFileClient.Logging.Debug("{0}", new object[] { headers });
                     LogCookies(requestUri);
                 }
                 if (response != null)
                 {
                     if (mediaType == null || mediaType.MediaType == "application/json")
                     {
-                        ShareFileClient.Logging.Debug("Content:{0}{1}", Environment.NewLine, await SerializeObjectAsync(response).ConfigureAwait(false));
+                        ShareFileClient.Logging.Debug("Content:{0}{1}", new object[] { Environment.NewLine, await SerializeObjectAsync(response).ConfigureAwait(false) });
                     }
-                    else ShareFileClient.Logging.Debug("Content {0}", response.ToString());
+                    else ShareFileClient.Logging.Debug("Content {0}", new object[] { response.ToString() });
                 }
             }
             else if (ShareFileClient.Logging.IsTraceEnabled)
             {
-                ShareFileClient.Logging.Trace("Response Code: {0}", statusCode);
+                ShareFileClient.Logging.Trace("Response Code: {0}", new object[] { statusCode });
             }
         }
 #endif
@@ -295,12 +305,12 @@ namespace ShareFile.Api.Client.Requests.Providers
             {
                 if (ShareFileClient.Configuration.LogCookiesAndHeaders)
                 {
-                    ShareFileClient.Logging.Debug("Headers: {0}", headers);
+                    ShareFileClient.Logging.Debug("Headers: {0}", new object[] { headers });
                     LogCookies(request.GetComposedUri());
                 }
                 if (request.Body != null)
                 {
-                    ShareFileClient.Logging.Debug("Content:{0}{1}", Environment.NewLine, SerializeObject(request.Body));
+                    ShareFileClient.Logging.Debug("Content:{0}{1}", new object[] {Environment.NewLine, SerializeObject(request.Body)});
                 }
             }
         }
@@ -309,24 +319,24 @@ namespace ShareFile.Api.Client.Requests.Providers
         {
             if (ShareFileClient.Logging.IsDebugEnabled)
             {
-                ShareFileClient.Logging.Debug("Response Code: {0}", statusCode);
+                ShareFileClient.Logging.Debug("Response Code: {0}", new object[] {statusCode});
                 if (ShareFileClient.Configuration.LogCookiesAndHeaders)
                 {
-                    ShareFileClient.Logging.Debug("{0}", headers);
+                    ShareFileClient.Logging.Debug("{0}", new object[] {headers});
                     LogCookies(requestUri);
                 }
                 if (response != null)
                 {
                     if (mediaType == null || mediaType.MediaType == "application/json")
                     {
-                        ShareFileClient.Logging.Debug("Content:{0}{1}", Environment.NewLine, SerializeObject(response));
+                        ShareFileClient.Logging.Debug("Content:{0}{1}", new object[] {Environment.NewLine, SerializeObject(response)});
                     }
-                    else ShareFileClient.Logging.Debug("Content {0}", response.ToString());
+                    else ShareFileClient.Logging.Debug("Content {0}", new object[] {response.ToString()});
                 }
             }
             else if (ShareFileClient.Logging.IsTraceEnabled)
             {
-                ShareFileClient.Logging.Trace("Response Code: {0}", statusCode);
+                ShareFileClient.Logging.Trace("Response Code: {0}", new object[] {statusCode});
             }
         }
 
@@ -364,11 +374,11 @@ namespace ShareFile.Api.Client.Requests.Providers
 
             if (ShareFileClient.Logging.IsDebugEnabled)
             {
-                ShareFileClient.Logging.Debug("{0} {1}", request.HttpMethod, requestUri);
+                ShareFileClient.Logging.Debug("{0} {1}", new object[] {request.HttpMethod, requestUri});
             }
             else if (ShareFileClient.Logging.IsTraceEnabled)
             {
-                ShareFileClient.Logging.Trace("{0} {1}", request.HttpMethod, requestUri);
+                ShareFileClient.Logging.Trace("{0} {1}", new object[] {request.HttpMethod, requestUri});
             }
         }
 
@@ -416,9 +426,17 @@ namespace ShareFile.Api.Client.Requests.Providers
 
                 if (ShareFileClient.Logging.IsDebugEnabled)
                 {
-                    var contentAsString = formContent.ReadAsStringAsync();
+                    try
+                    {
+                        var contentAsString = formContent.ReadAsStringAsync();
 
-                    ShareFileClient.Logging.Debug(contentAsString.Result, null);
+                        ShareFileClient.Logging.Debug(contentAsString.Result, null);
+                    }
+                    catch (Exception e)
+                    {
+                        formContent.Dispose();
+                        throw;
+                    }
                 }
 
                 httpRequestMessage.Content = formContent;

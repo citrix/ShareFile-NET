@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2014 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2015 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -48,6 +48,11 @@ namespace ShareFile.Api.Models
 		public User LockedBy { get; set; }
 
 		/// <summary>
+		/// File lock info
+		/// </summary>
+		public FileLock FileLockInfo { get; set; }
+
+		/// <summary>
 		/// File version.
 		/// </summary>
 		public float? Version { get; set; }
@@ -65,6 +70,7 @@ namespace ShareFile.Api.Models
 				HasPreview = typedSource.HasPreview;
 				VirusStatus = typedSource.VirusStatus;
 				LockedBy = typedSource.LockedBy;
+				FileLockInfo = typedSource.FileLockInfo;
 				Version = typedSource.Version;
 			}
 			else
@@ -89,6 +95,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("LockedBy", out token) && token.Type != JTokenType.Null)
 				{
 					LockedBy = (User)serializer.Deserialize(token.CreateReader(), typeof(User));
+				}
+				if(source.TryGetProperty("FileLockInfo", out token) && token.Type != JTokenType.Null)
+				{
+					FileLockInfo = (FileLock)serializer.Deserialize(token.CreateReader(), typeof(FileLock));
 				}
 				if(source.TryGetProperty("Version", out token) && token.Type != JTokenType.Null)
 				{

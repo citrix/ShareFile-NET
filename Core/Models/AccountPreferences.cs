@@ -191,6 +191,8 @@ namespace ShareFile.Api.Models
 
 		public bool? EnableDocPreviews { get; set; }
 
+		public bool? DisablePasswordAutocompleteInWebApp { get; set; }
+
 		public bool? EnableDesktopEditorForAccount { get; set; }
 
 		public bool? UseStrictEmployeeDefinition { get; set; }
@@ -321,6 +323,7 @@ namespace ShareFile.Api.Models
 				EnableReportingV3 = typedSource.EnableReportingV3;
 				EnableEncryptedEmailForOutlookPlugin = typedSource.EnableEncryptedEmailForOutlookPlugin;
 				EnableDocPreviews = typedSource.EnableDocPreviews;
+				DisablePasswordAutocompleteInWebApp = typedSource.DisablePasswordAutocompleteInWebApp;
 				EnableDesktopEditorForAccount = typedSource.EnableDesktopEditorForAccount;
 				UseStrictEmployeeDefinition = typedSource.UseStrictEmployeeDefinition;
 				EmployeeEmailDomains = typedSource.EmployeeEmailDomains;
@@ -686,6 +689,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("EnableDocPreviews", out token) && token.Type != JTokenType.Null)
 				{
 					EnableDocPreviews = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("DisablePasswordAutocompleteInWebApp", out token) && token.Type != JTokenType.Null)
+				{
+					DisablePasswordAutocompleteInWebApp = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("EnableDesktopEditorForAccount", out token) && token.Type != JTokenType.Null)
 				{

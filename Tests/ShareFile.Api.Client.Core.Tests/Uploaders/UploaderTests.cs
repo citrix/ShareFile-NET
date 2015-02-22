@@ -78,11 +78,15 @@ namespace ShareFile.Api.Client.Core.Tests.Uploaders
             return builder.ToString();
         }
 
-        [TestCase(UploadMethod.Standard, 1)]
-        [TestCase(UploadMethod.Threaded, 1)]
-        [TestCase(UploadMethod.Standard, 8)]
-        [TestCase(UploadMethod.Threaded, 8)]
-        public async void Upload(UploadMethod uploadMethod, int megabytes)
+        [TestCase(UploadMethod.Standard, 1, true)]
+        [TestCase(UploadMethod.Standard, 1, false)]
+        [TestCase(UploadMethod.Threaded, 1, true)]
+        [TestCase(UploadMethod.Threaded, 1, false)]
+        [TestCase(UploadMethod.Standard, 4, true)]
+        [TestCase(UploadMethod.Standard, 4, false)]
+        [TestCase(UploadMethod.Threaded, 4, true)]
+        [TestCase(UploadMethod.Threaded, 4, false)]
+        public async void Upload(UploadMethod uploadMethod, int megabytes, bool useAsync)
         {
             var shareFileClient = GetShareFileClient();
             var rootFolder = shareFileClient.Items.Get().Execute();
@@ -92,12 +96,31 @@ namespace ShareFile.Api.Client.Core.Tests.Uploaders
             var file = GetFileToUpload(1024 * 1024 * megabytes);
             var uploadSpec = new UploadSpecificationRequest(file.Name, file.Length, testFolder.url, uploadMethod);
 
-            var uploader = shareFileClient.GetAsyncFileUploader(uploadSpec, file);
+            UploaderBase uploader;
+
+            if (useAsync)
+            {
+                uploader = shareFileClient.GetAsyncFileUploader(uploadSpec, file);
+            }
+            else
+            {
+                uploader = shareFileClient.GetFileUploader(uploadSpec, file);
+            }
+
             var progressInvocations = 0;
 
             uploader.OnTransferProgress += (sender, args) => progressInvocations++;
 
-            var uploadResponse = await uploader.UploadAsync();
+            UploadResponse uploadResponse;
+
+            if (useAsync)
+            {
+                uploadResponse = await ((AsyncUploaderBase)uploader).UploadAsync();
+            }
+            else
+            {
+                uploadResponse = ((SyncUploaderBase)uploader).Upload();
+            }
 
             shareFileClient.Items.Delete(testFolder.url);
 

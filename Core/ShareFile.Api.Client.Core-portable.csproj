@@ -280,6 +280,7 @@
     <Compile Include="Transfers\Uploaders\AsyncStandardFileUploader.cs" />
     <Compile Include="Transfers\Uploaders\AsyncThreadedFileUploader.cs" />
     <Compile Include="Transfers\Uploaders\AsyncUploaderBase.cs" />
+    <Compile Include="Transfers\Uploaders\ByteArrayContentWithProgress.cs" />
     <Compile Include="Transfers\Uploaders\FilePart.cs" />
     <Compile Include="Transfers\Uploaders\FileUploaderConfig.cs" />
     <Compile Include="Transfers\Uploaders\ScalingFileUploader.cs" />

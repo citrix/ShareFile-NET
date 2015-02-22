@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -339,11 +339,13 @@
     <Compile Include="Transfers\Uploaders\AsyncStandardFileUploader.cs" />
     <Compile Include="Transfers\Uploaders\AsyncThreadedFileUploader.cs" />
     <Compile Include="Transfers\Uploaders\AsyncUploaderBase.cs" />
+    <Compile Include="Transfers\Uploaders\ByteArrayContentWithProgress.cs" />
     <Compile Include="Transfers\Uploaders\FilePart.cs" />
     <Compile Include="Transfers\Uploaders\FileUploaderConfig.cs" />
     <Compile Include="Transfers\Uploaders\ScalingFileUploader.cs" />
     <Compile Include="Transfers\Uploaders\ScalingPartUploader.cs" />
     <Compile Include="Transfers\Uploaders\StandardFileUploader.cs" />
+    <Compile Include="Transfers\Uploaders\StreamContentWithProgress.cs" />
     <Compile Include="Transfers\Uploaders\SyncUploaderBase.cs" />
     <Compile Include="Transfers\Uploaders\ThreadedFileUploader.cs" />
     <Compile Include="Transfers\Uploaders\UploaderBase.cs" />

@@ -16,7 +16,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             : base(content)
         {
             this.content = content;
-            this.bufferSize = UploaderBase.MaxBufferLength;
+            this.bufferSize = UploaderBase.DefaultBufferLength;
             this.progressCallback = progressCallback;
         }
 
@@ -38,7 +38,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             for (var i = 0; i < this.content.Length; i += this.bufferSize)
             {
                 var totalBytesRead = 0;
-                var bytesRead = stream.Read(buffer, totalBytesRead, buffer.Length);
+                var bytesRead = content.Read(buffer, 0, buffer.Length);
                 while (bytesRead > 0)
                 {
 #if Async
@@ -53,7 +53,10 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     }
 
                     totalBytesRead += bytesRead;
-                    bytesRead = stream.Read(buffer, totalBytesRead, buffer.Length);
+                    if (bytesRead == buffer.Length)
+                    {
+                        bytesRead = content.Read(buffer, 0, buffer.Length);
+                    }
                 }
             }
 

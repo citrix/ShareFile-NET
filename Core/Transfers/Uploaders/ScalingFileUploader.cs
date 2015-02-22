@@ -26,7 +26,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             var partConfig = config != null ? config.PartConfig : new FilePartConfig();
             partUploader = new ScalingPartUploader(partConfig, Config.NumberOfThreads,
                 requestMessage => Task.Factory.StartNew(() => ExecuteChunkUploadMessage(requestMessage)),
-                UpdateProgress);
+                OnProgress);
         }
 
         public override UploadResponse Upload(Dictionary<string, object> transferMetadata = null)

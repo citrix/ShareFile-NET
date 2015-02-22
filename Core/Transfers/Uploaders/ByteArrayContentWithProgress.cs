@@ -17,7 +17,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             : base(content)
         {
             this.content = content;
-            this.bufferSize = UploaderBase.MaxBufferLength;
+            this.bufferSize = UploaderBase.DefaultBufferLength;
             this.progressCallback = progressCallback;
         }
 

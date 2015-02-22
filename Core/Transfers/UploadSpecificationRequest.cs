@@ -52,6 +52,20 @@ namespace ShareFile.Api.Client.Transfers
             Raw = true;
         }
 
+        public UploadSpecificationRequest(string fileName, long fileSize, Uri parent)
+            : this()
+        {
+            FileName = fileName;
+            FileSize = fileSize;
+            Parent = parent;
+        }
+
+        public UploadSpecificationRequest(string fileName, long fileSize, Uri parent, UploadMethod method)
+            : this(fileName, fileSize, parent)
+        {
+            Method = method;
+        }
+
         public virtual IDictionary<string, string> ToDictionary()
         {
             return new Dictionary<string, string>

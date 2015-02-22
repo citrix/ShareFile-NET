@@ -33,15 +33,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         }
 
         public FileUploaderConfig Config { get; private set; }
-        public TransferProgress Progress { get; set; }
-
-        protected void UpdateProgress(int bytesUploaded, bool finished)
-        {
-            Progress.BytesTransferred += bytesUploaded;
-            Progress.BytesRemaining -= bytesUploaded;
-            Progress.Complete = finished;
-            NotifyProgress(Progress);
-        }
 
         protected void CheckResume()
         {

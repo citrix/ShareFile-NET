@@ -37,8 +37,22 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         public ShareFileClient Client { get; protected set; }
         public IMD5HashProvider HashProvider { get; protected set; }
+        public TransferProgress Progress { get; set; }
 
-        internal const int MaxBufferLength = 65536;
+        public const int DefaultBufferLength = 65536;
+        protected void OnProgress(int bytesTransferred, bool finished)
+        {
+            // If there are no changes, don't invoke event handler
+            if (bytesTransferred == 0 && Progress.Complete == finished)
+            {
+                return;
+            }
+
+            Progress.BytesRemaining -= bytesTransferred;
+            Progress.Complete = finished;
+            Progress.BytesTransferred += bytesTransferred;
+            NotifyProgress(Progress);
+        }
 
         protected virtual void NotifyProgress(TransferProgress progress)
         {

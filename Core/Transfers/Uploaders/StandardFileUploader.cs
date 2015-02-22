@@ -6,7 +6,7 @@ using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Requests.Providers;
 using System;
 using System.Collections.Generic;
-#if Async
+#if Portable || NETFX_CORE
 using ApplicationException = ShareFile.Api.Client.Exceptions.ApplicationException;
 #endif
 

@@ -50,7 +50,9 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             }
 
 #if !Async
-            return new Task(() => { });
+            var tcs = new TaskCompletionSource<object>();
+            tcs.SetResult(0);
+            return tcs.Task;
 #endif
         }
 

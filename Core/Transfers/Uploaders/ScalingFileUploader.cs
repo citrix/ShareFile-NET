@@ -70,14 +70,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
             return GetUploadResponse(response);
         }
-
-        private void UpdateProgress(int bytesUploaded, bool finished)
-        {
-            Progress.BytesTransferred += bytesUploaded;
-            Progress.BytesRemaining -= bytesUploaded;
-            Progress.Complete = finished;
-            NotifyProgress(Progress);
-        }
         
         public override void Prepare()
         {

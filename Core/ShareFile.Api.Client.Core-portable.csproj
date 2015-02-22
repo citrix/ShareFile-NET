@@ -285,6 +285,7 @@
     <Compile Include="Transfers\Uploaders\ScalingFileUploader.cs" />
     <Compile Include="Transfers\Uploaders\ScalingPartUploader.cs" />
     <Compile Include="Transfers\Uploaders\StandardFileUploader.cs" />
+    <Compile Include="Transfers\Uploaders\StreamContentWithProgress.cs" />
     <Compile Include="Transfers\Uploaders\SyncUploaderBase.cs" />
     <Compile Include="Transfers\Uploaders\ThreadedFileUploader.cs" />
     <Compile Include="Transfers\Uploaders\UploaderBase.cs" />

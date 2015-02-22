@@ -19,7 +19,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             var chunkConfig = config != null ? config.PartConfig : new FilePartConfig();
             partUploader = new ScalingPartUploader(chunkConfig, Config.NumberOfThreads,
                 ExecuteChunkUploadMessage,
-                (bytesTransferred, finished) => OnProgress(bytesTransferred));        
+                OnProgress);        
         }
 
         protected override async Task<UploadResponse> InternalUploadAsync()

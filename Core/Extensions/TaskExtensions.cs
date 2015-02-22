@@ -21,6 +21,18 @@ namespace ShareFile.Api.Client.Extensions.Tasks
             }
         }
 
+        public static void WaitForTask(this Task task)
+        {
+            try
+            {
+                task.Wait();
+            }
+            catch (AggregateException agg)
+            {
+                throw agg.Unwrap();
+            }
+        }
+
         public static Exception Unwrap(this AggregateException agg)
         {
             Exception ex = agg.Flatten();

@@ -109,7 +109,10 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         private HttpRequestMessage ComposePartUpload(string chunkUploadUrl, FilePart part)
         {
             string uploadUri = part.GetComposedUploadUrl(chunkUploadUrl);
-            var requestMessage = new HttpRequestMessage(HttpMethod.Post, uploadUri) { Content = new ByteArrayContent(part.Bytes) };
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, uploadUri)
+                                     {
+                                         Content = new ByteArrayContentWithProgress(part.Bytes, bytesWritten => updateProgress(bytesWritten, false))
+                                     };
             return requestMessage;
         }
 
@@ -119,7 +122,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 .ContinueWith(task =>
                 {
                     task.Rethrow();
-                    updateProgress(part.Bytes.Length, part.IsLastPart);
+                    updateProgress(0, part.IsLastPart);
                 });
         }
 

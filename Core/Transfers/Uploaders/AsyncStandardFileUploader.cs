@@ -50,14 +50,23 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
                     var multipartFormContent = new MultipartFormDataContent(boundaryGuid);
 
-                    var streamContent = new StreamContent(File.OpenRead(), MaxBufferLength);
-                    streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-                    multipartFormContent.Add(streamContent, "File1", File.Name);
-                    requestMessage.Content = multipartFormContent;
+                    using (var stream = File.OpenRead())
+                    {
+                        var streamContent = new StreamContentWithProgress(stream, bytesSent => OnProgress(bytesSent, false));
+                        streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                        multipartFormContent.Add(streamContent, "File1", File.Name);
+                        requestMessage.Content = multipartFormContent;
 
-                    var responseMessage = await httpClient.SendAsync(requestMessage, CancellationToken.GetValueOrDefault(System.Threading.CancellationToken.None));
-                    
-                    return await GetUploadResponseAsync(responseMessage);
+                        var responseMessage =
+                            await
+                            httpClient.SendAsync(
+                                requestMessage,
+                                CancellationToken.GetValueOrDefault(System.Threading.CancellationToken.None));
+
+                        this.OnProgress(0, true);
+
+                        return await GetUploadResponseAsync(responseMessage);
+                    }
                 }
                 catch (Exception exception)
                 {

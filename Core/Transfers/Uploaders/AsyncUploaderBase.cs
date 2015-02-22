@@ -116,8 +116,10 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         protected abstract Task<UploadResponse> InternalUploadAsync();
         public abstract Task PrepareAsync();
 
-        protected void OnProgress(int bytesTransferred)
+        protected void OnProgress(int bytesTransferred, bool finished)
         {
+            Progress.BytesRemaining -= bytesTransferred;
+            Progress.Complete = finished;
             Progress.BytesTransferred += bytesTransferred;
             NotifyProgress(Progress);
         }

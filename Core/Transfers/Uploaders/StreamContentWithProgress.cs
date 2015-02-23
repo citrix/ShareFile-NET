@@ -57,6 +57,10 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     {
                         bytesRead = content.Read(buffer, 0, buffer.Length);
                     }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
 

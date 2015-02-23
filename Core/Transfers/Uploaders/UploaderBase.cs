@@ -43,7 +43,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         public TransferProgress Progress { get; set; }
 
         public const int DefaultBufferLength = 16384;
-        protected void OnProgress(int bytesTransferred)
+        protected internal void OnProgress(int bytesTransferred)
         {
             // If there are no changes, don't invoke event handler
             if (bytesTransferred == 0)

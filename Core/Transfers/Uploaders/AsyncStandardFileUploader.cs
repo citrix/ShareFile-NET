@@ -38,9 +38,10 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             int tryCount = 0;
             Exception lastException = null;
 
-            var stream = File.OpenRead();
+            Stream stream = null;
             try
             {
+                stream = File.OpenRead();
                 while (tryCount < 3)
                 {
                     try
@@ -81,7 +82,10 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             }
             finally
             {
-                stream.Dispose();
+                if (stream != null)
+                {
+                    stream.Dispose();
+                }
             }
 
             

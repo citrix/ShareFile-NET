@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.IO;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using ShareFile.Api.Client.Extensions.Tasks;
@@ -27,9 +28,10 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             int tryCount = 0;
             Exception lastException = null;
 
-            var stream = File.OpenRead();
+            Stream stream = null;
             try
             {
+                stream = File.OpenRead();
                 while (tryCount < 3)
                 {
                     try
@@ -66,7 +68,10 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             }
             finally
             {
-                stream.Dispose();
+                if (stream != null)
+                {
+                    stream.Dispose();
+                }
             }
 
             throw new ApplicationException("Upload failed after 3 tries", lastException);

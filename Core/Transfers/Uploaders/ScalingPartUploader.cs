@@ -20,11 +20,11 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         private FilePartConfig partConfig;
         private int concurrentWorkers;
         private Func<HttpRequestMessage, Task> executePartUploadRequest;
-        private Action<int, bool> updateProgress;
+        private Action<int> updateProgress;
 
         public ScalingPartUploader(FilePartConfig partConfig, int concurrentWorkers,
             Func<HttpRequestMessage, Task> executePartUploadRequest,
-            Action<int, bool> updateProgress)
+            Action<int> updateProgress)
         {
             this.partConfig = partConfig;
             this.concurrentWorkers = concurrentWorkers;
@@ -111,7 +111,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             string uploadUri = part.GetComposedUploadUrl(chunkUploadUrl);
             var requestMessage = new HttpRequestMessage(HttpMethod.Post, uploadUri)
                                      {
-                                         Content = new ByteArrayContentWithProgress(part.Bytes, bytesWritten => updateProgress(bytesWritten, false))
+                                         Content = new ByteArrayContentWithProgress(part.Bytes, bytesWritten => updateProgress(bytesWritten))
                                      };
             return requestMessage;
         }
@@ -119,11 +119,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         private Task UploadPart(string chunkUploadUrl, FilePart part)
         {
             return executePartUploadRequest(ComposePartUpload(chunkUploadUrl, part))
-                .ContinueWith(task =>
-                {
-                    task.Rethrow();
-                    updateProgress(0, part.IsLastPart);
-                });
+                .ContinueWith(task => task.Rethrow());
         }
 
         //exception boundary: chunk upload exceptions should be propagated to here but no farther
@@ -136,6 +132,9 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             {
                 if(uploadTask.Exception != null)
                 {
+                    // Always back out progress if part fails
+                    updateProgress(part.Length * -1);
+
                     if (retryCount > 0)
                         return AttemptPartUploadWithRetry(attemptUpload, part, retryCount - 1).Result;
                     else

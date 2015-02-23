@@ -21,13 +21,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             Config = config ?? new FileUploaderConfig();
 
             HashProvider = MD5HashProviderFactory.GetHashProvider().CreateHash();
-            Progress = new TransferProgress
-            {
-                TransferId = Guid.NewGuid().ToString(),
-                BytesTransferred = 0
-            };
-
-            Progress.BytesRemaining = Progress.TotalBytes = uploadSpecificationRequest.FileSize;
         }
 
         public FileUploaderConfig Config { get; protected set; }

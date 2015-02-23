@@ -45,6 +45,8 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         
         private async Task<UploadResponse> FinishUploadAsync()
         {
+            this.MarkProgressComplete();
+
             var client = GetHttpClient();
             var finishUri = this.GetFinishUriForThreadedUploads();
             var requestMessage = new HttpRequestMessage(HttpMethod.Get, finishUri);

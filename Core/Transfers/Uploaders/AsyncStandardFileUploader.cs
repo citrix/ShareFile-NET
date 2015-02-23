@@ -55,9 +55,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
                         var multipartFormContent = new MultipartFormDataContent(boundaryGuid);
 
-                        var streamContent = new StreamContentWithProgress(
-                            stream,
-                            bytesSent => OnProgress(bytesSent, false));
+                        var streamContent = new StreamContentWithProgress(stream, OnProgress);
                         streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
                         multipartFormContent.Add(streamContent, "File1", File.Name);
                         requestMessage.Content = multipartFormContent;
@@ -68,7 +66,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                                 requestMessage,
                                 CancellationToken.GetValueOrDefault(System.Threading.CancellationToken.None));
 
-                        this.OnProgress(0, true);
+                        MarkProgressComplete();
 
                         return await GetUploadResponseAsync(responseMessage);
                     }

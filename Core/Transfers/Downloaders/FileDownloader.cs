@@ -23,13 +23,7 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
                 {
                     var totalBytesToDownload = Item.FileSizeBytes.GetValueOrDefault();
 
-                    var progress = new TransferProgress
-                    {
-                        BytesTransferred = 0,
-                        BytesRemaining = totalBytesToDownload,
-                        TotalBytes = totalBytesToDownload,
-                        TransferMetadata = transferMetadata
-                    };
+                    var progress = new TransferProgress(totalBytesToDownload, transferMetadata);
 
                     int bytesRead;
                     var buffer = new byte[Config.BufferSize];
@@ -43,14 +37,14 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
                         {
                             fileStream.Write(buffer, 0, bytesRead);
 
-                            progress.BytesTransferred += bytesRead;
-                            progress.BytesRemaining -= bytesRead;
+                            progress.DecrementBytesRemaining(bytesRead);
+                            progress.IncrementBytesTransferred(bytesRead);
 
                             NotifyProgress(progress);
                         }
                         else
                         {
-                            progress.Complete = true;
+                            progress.MarkComplete();
                             NotifyProgress(progress);
                         }
 

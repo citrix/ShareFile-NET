@@ -59,6 +59,8 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         
         private UploadResponse FinishUpload()
         {
+            MarkProgressComplete();
+
             var finishUri = GetFinishUriForThreadedUploads();
             var client = GetHttpClient();
 

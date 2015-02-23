@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
+
 using Newtonsoft.Json;
 using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.Extensions;
@@ -23,6 +25,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             File = file;
 
             ExpirationDays = expirationDays;
+            Progress = new TransferProgress(uploadSpecificationRequest.FileSize, null, Guid.NewGuid().ToString());
         }
 
         public Dictionary<string, object> TransferMetadata { get; set; }
@@ -39,18 +42,25 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         public IMD5HashProvider HashProvider { get; protected set; }
         public TransferProgress Progress { get; set; }
 
-        public const int DefaultBufferLength = 65536;
-        protected void OnProgress(int bytesTransferred, bool finished)
+        public const int DefaultBufferLength = 16384;
+        protected void OnProgress(int bytesTransferred)
         {
             // If there are no changes, don't invoke event handler
-            if (bytesTransferred == 0 && Progress.Complete == finished)
+            if (bytesTransferred == 0)
             {
                 return;
             }
 
-            Progress.BytesRemaining -= bytesTransferred;
-            Progress.Complete = finished;
-            Progress.BytesTransferred += bytesTransferred;
+            Progress.IncrementBytesTransferred(bytesTransferred);
+            Progress.DecrementBytesRemaining(bytesTransferred);
+
+            NotifyProgress(Progress);
+        }
+
+        protected void MarkProgressComplete()
+        {
+            Progress.MarkComplete();
+
             NotifyProgress(Progress);
         }
 

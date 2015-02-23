@@ -46,8 +46,8 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
                         var streamContent = new StreamContentWithProgress(
                             stream,
-                            bytesSent => OnProgress(bytesSent, false),
-                            DefaultBufferLength);
+                            OnProgress);
+
                         streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
                         multipartFormContent.Add(streamContent, "File1", File.Name);
 
@@ -55,13 +55,14 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
                         var responseMessage = httpClient.SendAsync(requestMessage, CancellationToken.None).WaitForTask();
 
-                        OnProgress(0, true);
-
+                        MarkProgressComplete();
+                        
                         return GetUploadResponse(responseMessage);
                     }
                     catch (Exception exception)
                     {
                         lastException = exception;
+                        stream.Seek(0, SeekOrigin.Begin);
                         tryCount++;
                     }
                 }

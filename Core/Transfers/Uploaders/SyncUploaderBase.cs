@@ -23,13 +23,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         {
             Config = config ?? new FileUploaderConfig();
             HashProvider = MD5HashProviderFactory.GetHashProvider().CreateHash();
-            Progress = new TransferProgress
-            {
-                TransferId = Guid.NewGuid().ToString(),
-                BytesTransferred = 0,
-                BytesRemaining = uploadSpecificationRequest.FileSize,
-                TotalBytes = uploadSpecificationRequest.FileSize
-            };
         }
 
         public FileUploaderConfig Config { get; private set; }

@@ -21,18 +21,10 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             Config = config ?? new FileUploaderConfig();
 
             HashProvider = MD5HashProviderFactory.GetHashProvider().CreateHash();
-            Progress = new TransferProgress
-            {
-                TransferId = Guid.NewGuid().ToString(),
-                BytesTransferred = 0
-            };
-
-            Progress.BytesRemaining = Progress.TotalBytes = uploadSpecificationRequest.FileSize;
         }
 
         public FileUploaderConfig Config { get; protected set; }
 
-        public TransferProgress Progress { get; set; }
         protected CancellationToken? CancellationToken { get; set; }
 
         protected async Task<UploadSpecification> CreateUpload()
@@ -73,10 +65,10 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             var localHash = MD5HashProviderFactory.GetHashProvider().CreateHash();
             using (var fileStream = await File.OpenReadAsync())
             {
-                var buffer = new byte[MaxBufferLength];
+                var buffer = new byte[DefaultBufferLength];
                 do
                 {
-                    var bytesToRead = count < MaxBufferLength ? (int)count : MaxBufferLength;
+                    var bytesToRead = count < DefaultBufferLength ? (int)count : DefaultBufferLength;
                     var bytesRead = fileStream.Read(buffer, 0, bytesToRead);
                     if (bytesRead > 0)
                     {
@@ -114,13 +106,8 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         }
 
         protected abstract Task<UploadResponse> InternalUploadAsync();
-        public abstract Task PrepareAsync();
 
-        protected void OnProgress(int bytesTransferred)
-        {
-            Progress.BytesTransferred += bytesTransferred;
-            NotifyProgress(Progress);
-        }
+        public abstract Task PrepareAsync();
 
         protected bool IsCancellationRequested()
         {

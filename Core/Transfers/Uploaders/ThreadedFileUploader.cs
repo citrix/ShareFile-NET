@@ -316,13 +316,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 partUpload.Shutdown();
             }
         }
-
-        internal void OnProgress(int bytesTransferred)
-        {
-            Progress.BytesTransferred += bytesTransferred;
-
-            NotifyProgress(Progress);
-        }
     }
 
     internal class FilePartUploader

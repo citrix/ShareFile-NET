@@ -196,6 +196,11 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 if (!result.Error)
                 {
                     OnProgress(part.Bytes.Length);
+
+                    if (part.IsLastPart)
+                    {
+                        MarkProgressComplete();
+                    }
                 }
                 retryCount--;
 

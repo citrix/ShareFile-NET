@@ -84,10 +84,15 @@
     <Compile Include="Requests\Filters\BooleanFilterTests.cs" />
     <Compile Include="Requests\Filters\SubstringFilterTests.cs" />
     <Compile Include="Requests\Providers\RequestProviderTests.cs" />
+    <Compile Include="Uploaders\UploaderTests.cs" />
+    <Compile Include="UserInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="TestConfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\ShareFile.Api.Client.Core-portable.csproj">

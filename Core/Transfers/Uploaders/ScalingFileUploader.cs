@@ -26,7 +26,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             var partConfig = config != null ? config.PartConfig : new FilePartConfig();
             partUploader = new ScalingPartUploader(partConfig, Config.NumberOfThreads,
                 requestMessage => Task.Factory.StartNew(() => ExecuteChunkUploadMessage(requestMessage)),
-                UpdateProgress);
+                OnProgress);
         }
 
         public override UploadResponse Upload(Dictionary<string, object> transferMetadata = null)
@@ -59,6 +59,8 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         
         private UploadResponse FinishUpload()
         {
+            MarkProgressComplete();
+
             var finishUri = GetFinishUriForThreadedUploads();
             var client = GetHttpClient();
 
@@ -69,14 +71,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             var response = client.SendAsync(requestMessage).WaitForTask();
 
             return GetUploadResponse(response);
-        }
-
-        private void UpdateProgress(int bytesUploaded, bool finished)
-        {
-            Progress.BytesTransferred += bytesUploaded;
-            Progress.BytesRemaining -= bytesUploaded;
-            Progress.Complete = finished;
-            NotifyProgress(Progress);
         }
         
         public override void Prepare()

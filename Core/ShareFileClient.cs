@@ -40,11 +40,11 @@ namespace ShareFile.Api.Client
         AsyncUploaderBase GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null);
 
         AsyncFileDownloader GetAsyncFileDownloader(Item itemToDownload, DownloaderConfig config = null);
-#else
+#endif
         SyncUploaderBase GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null);
 
         FileDownloader GetFileDownloader(Item itemToDownload, DownloaderConfig config = null);
-#endif
+
         void AddCookie(Uri host, Cookie cookie);
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace ShareFile.Api.Client
         {
             return new AsyncFileDownloader(itemToDownload, this, config);
         }
-#else
+#endif
         /// <summary>
         /// 
         /// </summary>
@@ -304,7 +304,6 @@ namespace ShareFile.Api.Client
             return new FileDownloader(itemToDownload, this, config);
         }
 
-#endif
         public void AddCookie(Uri host, Cookie cookie)
         {
             Logging.Info("Add cookie");

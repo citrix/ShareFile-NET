@@ -40,7 +40,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         public ShareFileClient Client { get; protected set; }
         public IMD5HashProvider HashProvider { get; protected set; }
-        public TransferProgress Progress { get; set; }
+        protected TransferProgress Progress { get; set; }
 
         public const int DefaultBufferLength = 16384;
         protected internal void OnProgress(int bytesTransferred)
@@ -51,17 +51,12 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 return;
             }
 
-            Progress.IncrementBytesTransferred(bytesTransferred);
-            Progress.DecrementBytesRemaining(bytesTransferred);
-
-            NotifyProgress(Progress);
+            NotifyProgress(Progress.UpdateBytesTransferred(bytesTransferred));
         }
 
         protected void MarkProgressComplete()
         {
-            Progress.MarkComplete();
-
-            NotifyProgress(Progress);
+            NotifyProgress(Progress.MarkComplete());
         }
 
         protected virtual void NotifyProgress(TransferProgress progress)

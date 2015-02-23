@@ -40,17 +40,13 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
                         {
                             fileStream.Write(buffer, 0, bytesRead);
 
-                            progress.DecrementBytesRemaining(bytesRead);
-                            progress.IncrementBytesTransferred(bytesRead);
-
-                            NotifyProgress(progress);
+                            NotifyProgress(progress.UpdateBytesTransferred(bytesRead));
 
                             await TryPauseAsync(cancellationToken);
                         }
                         else
                         {
-                            progress.MarkComplete();
-                            NotifyProgress(progress);
+                            NotifyProgress(progress.MarkComplete());
                         }
 
                     } while (bytesRead > 0);

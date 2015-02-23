@@ -9,7 +9,7 @@ namespace ShareFile.Api.Client.Transfers
 
         private long bytesRemaining;
 
-        private int complete;
+        private bool complete;
 
         public long BytesTransferred
 	    {
@@ -31,7 +31,7 @@ namespace ShareFile.Api.Client.Transfers
         {
             get
             {
-                return this.complete == 1;
+                return this.complete;
             }
         }
 
@@ -47,24 +47,27 @@ namespace ShareFile.Api.Client.Transfers
             TransferMetadata = transferMetadata;
         }
 
-        public TransferProgress()
+        internal TransferProgress UpdateBytesTransferred(long transferred)
         {
-            
+            if (bytesTransferred + transferred < 0)
+            {
+                bytesTransferred = 0;
+                bytesRemaining = TotalBytes;
+            }
+            else
+            {
+                bytesTransferred += transferred;
+                bytesRemaining -= transferred;
+            }
+
+            return this;
         }
 
-        public void IncrementBytesTransferred(long increment)
+        internal TransferProgress MarkComplete()
         {
-            Interlocked.Add(ref bytesTransferred, increment);
-        }
+            complete = true;
 
-        public void DecrementBytesRemaining(long increment)
-        {
-            Interlocked.Add(ref bytesRemaining, increment * -1);
-        }
-
-        public void MarkComplete()
-        {
-            Interlocked.Exchange(ref complete, 1);
+            return this;
         }
     }
 }

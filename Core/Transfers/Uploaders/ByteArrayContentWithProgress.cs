@@ -38,14 +38,15 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             
             for (var totalBytesRead = 0; totalBytesRead < this.content.Length; totalBytesRead += this.bufferSize)
             {
+                var bytesToWrite = Math.Min(this.bufferSize, this.content.Length - totalBytesRead);
 #if Async
-                await stream.WriteAsync(this.content, totalBytesRead, Math.Min(this.bufferSize, this.content.Length - totalBytesRead));
+                await stream.WriteAsync(this.content, totalBytesRead, bytesToWrite);
 #else
-                stream.Write(this.content, totalBytesRead, Math.Min(bufferSize, this.content.Length - totalBytesRead));
+                stream.Write(this.content, totalBytesRead, bytesToWrite);
 #endif
                 if (this.progressCallback != null)
                 {
-                    this.progressCallback(totalBytesRead);
+                    this.progressCallback(bytesToWrite);
                 }
             }
 

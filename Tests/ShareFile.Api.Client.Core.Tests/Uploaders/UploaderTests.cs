@@ -108,8 +108,12 @@ namespace ShareFile.Api.Client.Core.Tests.Uploaders
             }
 
             var progressInvocations = 0;
-
-            uploader.OnTransferProgress += (sender, args) => progressInvocations++;
+            var bytesTransferred = 0L;
+            uploader.OnTransferProgress += (sender, args) =>
+            {
+                bytesTransferred = args.Progress.BytesTransferred;
+                progressInvocations++;
+            };
 
             UploadResponse uploadResponse;
 
@@ -126,6 +130,8 @@ namespace ShareFile.Api.Client.Core.Tests.Uploaders
 
             uploadResponse.FirstOrDefault().Should().NotBeNull();
             var expectedInvocations = Math.Ceiling((double)file.Length / UploaderBase.DefaultBufferLength) + 1;
+
+            bytesTransferred.Should().Be(1024 * 1024 * megabytes);
 
             if (uploadMethod == UploadMethod.Standard)
             {

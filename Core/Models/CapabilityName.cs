@@ -46,4 +46,9 @@ namespace ShareFile.Api.Models
         SoftLock = 30,
         HardLock = 31
     }
+
+    public enum ClientCapability
+    {
+        HardLock
+    }
 }

@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Logging;
+using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client
 {
@@ -54,6 +55,11 @@ namespace ShareFile.Api.Client
         /// Header value to send on every API call.
         /// </summary>
         public IEnumerable<CultureInfo> SupportedCultures { get; set; }
+
+        /// <summary>
+        /// Key represents providers for the collection of capabilities to be sent as a header on each API call.
+        /// </summary>
+        public IDictionary<string, IEnumerable<ClientCapability>> ClientCapabilities { get; set; }
 
         private string _toolName;
 

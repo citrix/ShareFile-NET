@@ -4,57 +4,46 @@ namespace ShareFile.Api.Client.Transfers
 {
     public class TransferProgress
     {
-        private long bytesTransferred;
+        public long BytesTransferred { get; set; }
 
-        private long bytesRemaining;
-
-        public long BytesTransferred
-	    {
-            get
-            {
-                return bytesTransferred;
-            }
-	    }
-
-        public long BytesRemaining
-        {
-            get
-            {
-                return this.bytesRemaining;
-            }
-        }
+        public long BytesRemaining { get; set; }
 
         public bool Complete { get; set; }
 
-        public long TotalBytes { get; private set; }
-        public string TransferId { get; private set; }
+        public long TotalBytes { get; set; }
+        public string TransferId { get; set; }
         public IDictionary<string, object> TransferMetadata { get; internal set; }
 
         public TransferProgress(long totalBytes, IDictionary<string, object> transferMetadata = null, string transferId = null)
         {
             TotalBytes = totalBytes;
             TransferId = transferId;
-            bytesRemaining = totalBytes;
+            BytesRemaining = totalBytes;
             TransferMetadata = transferMetadata;
+        }
+
+        public TransferProgress()
+        {
+            
         }
 
         internal TransferProgress UpdateBytesTransferred(long transferred)
         {
-            if (bytesTransferred + transferred < 0)
+            if (BytesTransferred + transferred < 0)
             {
-                bytesTransferred = 0;
-                bytesRemaining = TotalBytes;
+                BytesTransferred = 0;
+                BytesRemaining = TotalBytes;
             }
             else
             {
-                bytesTransferred += transferred;
-                bytesRemaining -= transferred;
+                BytesTransferred += transferred;
+                BytesRemaining -= transferred;
             }
 
             return this;
         }
 
-        public TransferProgress MarkComplete()
+        internal TransferProgress MarkComplete()
         {
             Complete = true;
 

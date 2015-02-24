@@ -8,8 +8,6 @@ namespace ShareFile.Api.Client.Transfers
 
         private long bytesRemaining;
 
-        private bool complete;
-
         public long BytesTransferred
 	    {
             get
@@ -26,13 +24,7 @@ namespace ShareFile.Api.Client.Transfers
             }
         }
 
-        public bool Complete
-        {
-            get
-            {
-                return this.complete;
-            }
-        }
+        public bool Complete { get; set; }
 
         public long TotalBytes { get; private set; }
         public string TransferId { get; private set; }
@@ -62,9 +54,9 @@ namespace ShareFile.Api.Client.Transfers
             return this;
         }
 
-        internal TransferProgress MarkComplete()
+        public TransferProgress MarkComplete()
         {
-            complete = true;
+            Complete = true;
 
             return this;
         }

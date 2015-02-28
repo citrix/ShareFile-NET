@@ -121,6 +121,7 @@
     <Compile Include="Models\BillingInfo.cs" />
     <Compile Include="Models\Capability.cs" />
     <Compile Include="Models\CapabilityName.cs" />
+    <Compile Include="Models\ClientCapability.cs" />
     <Compile Include="Models\ConnectorGroup.cs" />
     <Compile Include="Models\ConnectorGroupAccessControl.cs" />
     <Compile Include="Models\ConnectorGroupKind.cs" />

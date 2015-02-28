@@ -15,7 +15,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 {
     public class StandardFileUploader : SyncUploaderBase
     {
-        public StandardFileUploader(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null) 
+        public StandardFileUploader(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
             : base(client, uploadSpecificationRequest, file, config, expirationDays)
         {
             UploadSpecificationRequest.Raw = false;
@@ -37,27 +37,30 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     try
                     {
                         var httpClient = GetHttpClient();
-                        var boundaryGuid = "upload-" + Guid.NewGuid().ToString("N");
-                        var requestMessage = new HttpRequestMessage(HttpMethod.Post, GetChunkUriForStandardUploads());
 
-                        BaseRequestProvider.TryAddCookies(Client, requestMessage);
+                        using (var requestMessage = new HttpRequestMessage(
+                                HttpMethod.Post,
+                                GetChunkUriForStandardUploads()))
+                        {
+                            using (var multipartFormContent = new MultipartFormDataContent("upload-" + Guid.NewGuid().ToString("N")))
+                            {
+                                BaseRequestProvider.TryAddCookies(Client, requestMessage);
 
-                        var multipartFormContent = new MultipartFormDataContent(boundaryGuid);
+                                var streamContent = new StreamContentWithProgress(stream, OnProgress);
 
-                        var streamContent = new StreamContentWithProgress(
-                            stream,
-                            OnProgress);
+                                streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                                multipartFormContent.Add(streamContent, "File1", File.Name);
 
-                        streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-                        multipartFormContent.Add(streamContent, "File1", File.Name);
+                                requestMessage.Content = multipartFormContent;
 
-                        requestMessage.Content = multipartFormContent;
+                                var responseMessage =
+                                    httpClient.SendAsync(requestMessage, CancellationToken.None).WaitForTask();
 
-                        var responseMessage = httpClient.SendAsync(requestMessage, CancellationToken.None).WaitForTask();
+                                MarkProgressComplete();
 
-                        MarkProgressComplete();
-                        
-                        return GetUploadResponse(responseMessage);
+                                return GetUploadResponse(responseMessage);
+                            }
+                        }
                     }
                     catch (Exception exception)
                     {

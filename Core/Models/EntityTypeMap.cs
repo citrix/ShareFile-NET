@@ -186,9 +186,9 @@ namespace ShareFile.Api.Models
                     _entityTypeMap.Add("Zone", typeof(Zone));
                     _entityTypeMap.Add("Zones", typeof(Zone));
 			    }
+
+                return _entityTypeMap;
             }
-            
-            return _entityTypeMap;
 		}
         
         /// <summary>

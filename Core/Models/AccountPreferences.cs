@@ -219,6 +219,8 @@ namespace ShareFile.Api.Models
 
 		public IEnumerable<SafeEnum<IntegrationProvider>> IntegrationProviders { get; set; }
 
+		public bool? EnableBouncedEmailNotifications { get; set; }
+
 		public bool? ShowDownloadLinkInUploadNotification { get; set; }
 
 		public bool? EnableUserInvitations { get; set; }
@@ -337,6 +339,7 @@ namespace ShareFile.Api.Models
 				EnableFileLocking = typedSource.EnableFileLocking;
 				EnableIntegrations = typedSource.EnableIntegrations;
 				IntegrationProviders = typedSource.IntegrationProviders;
+				EnableBouncedEmailNotifications = typedSource.EnableBouncedEmailNotifications;
 				ShowDownloadLinkInUploadNotification = typedSource.ShowDownloadLinkInUploadNotification;
 				EnableUserInvitations = typedSource.EnableUserInvitations;
 				EnableClickTrails = typedSource.EnableClickTrails;
@@ -745,6 +748,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("IntegrationProviders", out token) && token.Type != JTokenType.Null)
 				{
 					IntegrationProviders = (IEnumerable<SafeEnum<IntegrationProvider>>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<SafeEnum<IntegrationProvider>>));
+				}
+				if(source.TryGetProperty("EnableBouncedEmailNotifications", out token) && token.Type != JTokenType.Null)
+				{
+					EnableBouncedEmailNotifications = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("ShowDownloadLinkInUploadNotification", out token) && token.Type != JTokenType.Null)
 				{

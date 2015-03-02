@@ -117,6 +117,7 @@
     <Compile Include="Internal\Entities\FileLockEntityInternal.cs" />
     <Compile Include="Internal\Entities\FolderTemplatesEntityInternal.cs" />
     <Compile Include="Internal\Entities\ItemsEntityInternal.cs" />
+    <Compile Include="Internal\Entities\NotificationsEntityInternal.cs" />
     <Compile Include="Internal\Entities\OAuthClientsEntityInternal.cs" />
     <Compile Include="Internal\Entities\PlanAddonsEntityInternal.cs" />
     <Compile Include="Internal\Entities\ReportsEntityInternal.cs" />

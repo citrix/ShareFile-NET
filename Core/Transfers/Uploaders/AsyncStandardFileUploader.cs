@@ -47,28 +47,31 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     try
                     {
                         var httpClient = GetHttpClient();
-                        var boundaryGuid = "upload-" + Guid.NewGuid().ToString("N");
 
-                        var requestMessage = new HttpRequestMessage(HttpMethod.Post, GetChunkUriForStandardUploads());
+                        using (var requestMessage = new HttpRequestMessage(
+                                HttpMethod.Post,
+                                GetChunkUriForStandardUploads()))
+                        {
+                            using (var multipartFormContent = new MultipartFormDataContent("upload-" + Guid.NewGuid().ToString("N")))
+                            {
+                                BaseRequestProvider.TryAddCookies(Client, requestMessage);
 
-                        BaseRequestProvider.TryAddCookies(Client, requestMessage);
+                                var streamContent = new StreamContentWithProgress(stream, OnProgress);
+                                streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                                multipartFormContent.Add(streamContent, "File1", File.Name);
+                                requestMessage.Content = multipartFormContent;
 
-                        var multipartFormContent = new MultipartFormDataContent(boundaryGuid);
+                                var responseMessage =
+                                    await
+                                    httpClient.SendAsync(
+                                        requestMessage,
+                                        CancellationToken.GetValueOrDefault(System.Threading.CancellationToken.None));
 
-                        var streamContent = new StreamContentWithProgress(stream, OnProgress);
-                        streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-                        multipartFormContent.Add(streamContent, "File1", File.Name);
-                        requestMessage.Content = multipartFormContent;
+                                MarkProgressComplete();
 
-                        var responseMessage =
-                            await
-                            httpClient.SendAsync(
-                                requestMessage,
-                                CancellationToken.GetValueOrDefault(System.Threading.CancellationToken.None));
-
-                        MarkProgressComplete();
-
-                        return await GetUploadResponseAsync(responseMessage);
+                                return await GetUploadResponseAsync(responseMessage);
+                            }
+                        }
                     }
                     catch (Exception exception)
                     {

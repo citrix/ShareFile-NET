@@ -25,14 +25,16 @@ namespace ShareFile.Api.Client.Entities.Extensions
         /// Creates a new account
         /// </summary>
         /// <param name="account"></param>
+        /// <param name="sendActivationLink"></param>
         /// <returns>
         /// The new account created by the api
         /// </returns>
-        public static IQuery<FreeTrialAccount> CreateFreeTrialAccount(this IAccountsEntity entity, FreeTrialAccount account)
+        public static IQuery<FreeTrialAccount> CreateFreeTrialAccount(this IAccountsEntity entity, FreeTrialAccount account, bool sendActivationLink = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<FreeTrialAccount>(entity.Client);
 		    sfApiQuery.From("Accounts");
 		    sfApiQuery.Action("CreateFreeTrialAccount");
+            account.AddProperty("sendActivationLink", sendActivationLink);
             sfApiQuery.Body = account;
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;

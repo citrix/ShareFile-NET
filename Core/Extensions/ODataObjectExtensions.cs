@@ -159,7 +159,7 @@ namespace ShareFile.Api.Client.Extensions
                 if (!uri.Query.Contains("root="))
                 {
                     var bridgeChar = string.IsNullOrEmpty(uri.Query) ? '?' : '&';
-                    uri = new Uri(redirection.Uri.ToString() + bridgeChar + "root=" + redirection.Root);
+                    uri = new Uri(redirection.Uri.ToString().TrimEnd(bridgeChar) + bridgeChar + "root=" + redirection.Root);
                 }
             }
 

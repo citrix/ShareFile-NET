@@ -67,6 +67,7 @@ namespace ShareFile.Api.Client.Core.Tests.Extensions
 
         [TestCase("Items(id)", "123", "Items(id)?root=123")]
         [TestCase("Items(id)?test=123", "123", "Items(id)?test=123&root=123")]
+        [TestCase("Items(id)?test=123&", "123", "Items(id)?test=123&root=123")]
         [TestCase("Items(id)?root=123", "123", "Items(id)?root=123")]
         [TestCase("Items(id)", null, "Items(id)")]
         [TestCase("Items(id)?test=123", null, "Items(id)?test=123")]

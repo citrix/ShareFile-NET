@@ -150,5 +150,20 @@ namespace ShareFile.Api.Client.Extensions
             if (capabilities == null) return false;
             return capabilities.Any(x => x.Name == CapabilityName.UploadWithRequestParams);
         }
+
+        public static Uri GetCalculatedUri(this Redirection redirection)
+        {
+            var uri = redirection.Uri;
+            if (!string.IsNullOrEmpty(redirection.Root))
+            {
+                if (!uri.Query.Contains("root="))
+                {
+                    var bridgeChar = string.IsNullOrEmpty(uri.Query) ? '?' : '&';
+                    uri = new Uri(redirection.Uri.ToString() + bridgeChar + "root=" + redirection.Root);
+                }
+            }
+
+            return uri;
+        }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Transfers.Downloaders
@@ -16,14 +15,13 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
         public override void DownloadTo(Stream fileStream, Dictionary<string, object> transferMetadata = null)
         {
             var downloadQuery = CreateDownloadQuery();
+            var totalBytesToDownload = Item.FileSizeBytes.GetValueOrDefault();
+            var progress = new TransferProgress(totalBytesToDownload, transferMetadata);
 
             using (var stream = downloadQuery.Execute())
             {
                 if (stream != null)
                 {
-                    var totalBytesToDownload = Item.FileSizeBytes.GetValueOrDefault();
-
-                    var progress = new TransferProgress(totalBytesToDownload, transferMetadata);
 
                     int bytesRead;
                     var buffer = new byte[Config.BufferSize];
@@ -39,14 +37,12 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
 
                             NotifyProgress(progress.UpdateBytesTransferred(bytesRead));
                         }
-                        else
-                        {
-                            NotifyProgress(progress.MarkComplete());
-                        }
 
                     } while (bytesRead > 0);
                 }
             }
+
+            NotifyProgress(progress.MarkComplete());
         }
     }
 }

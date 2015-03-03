@@ -21,15 +21,13 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
             Dictionary<string, object> transferMetadata = null)
         {
             var downloadQuery = CreateDownloadQuery();
+            var totalBytesToDownload = Item.FileSizeBytes.GetValueOrDefault();
+            var progress = new TransferProgress(totalBytesToDownload, transferMetadata);
 
             using (var stream = await downloadQuery.ExecuteAsync(cancellationToken))
             {
                 if (stream != null)
                 {
-                    var totalBytesToDownload = Item.FileSizeBytes.GetValueOrDefault();
-
-                    var progress = new TransferProgress(totalBytesToDownload, transferMetadata);
-
                     int bytesRead;
                     var buffer = new byte[Config.BufferSize];
 
@@ -44,14 +42,12 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
 
                             await TryPauseAsync(cancellationToken);
                         }
-                        else
-                        {
-                            NotifyProgress(progress.MarkComplete());
-                        }
 
                     } while (bytesRead > 0);
                 }
             }
+
+            NotifyProgress(progress.MarkComplete());
         }
     }
 #endif

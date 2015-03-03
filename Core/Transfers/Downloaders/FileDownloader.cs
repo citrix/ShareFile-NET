@@ -38,9 +38,6 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
                         }
 
                     } while (bytesRead > 0);
-
-                    stream.Flush();
-                    stream.Dispose();
                 }
             }
 

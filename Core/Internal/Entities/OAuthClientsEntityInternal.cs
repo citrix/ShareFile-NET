@@ -196,7 +196,7 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("singlePlane", singlePlane);
             sfApiQuery.Body = oauthClient;
-            sfApiQuery.HttpMethod = "GET";	
+            sfApiQuery.HttpMethod = "PATCH";	
 		    return sfApiQuery;
         }
         
@@ -211,7 +211,7 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("singlePlane", singlePlane);
-            sfApiQuery.HttpMethod = "GET";	
+            sfApiQuery.HttpMethod = "DELETE";	
 		    return sfApiQuery;
         }
         

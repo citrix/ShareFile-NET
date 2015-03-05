@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -37,34 +38,57 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             int tryCount = 0;
             Exception lastException = null;
 
-            while (tryCount < 3)
+            Stream stream = null;
+            try
             {
-                try
+                stream = File.OpenRead();
+                while (tryCount < 3)
                 {
-                    var httpClient = GetHttpClient();
-                    var boundaryGuid = "upload-" + Guid.NewGuid().ToString("N");
-                    
-                    var requestMessage = new HttpRequestMessage(HttpMethod.Post, GetChunkUriForStandardUploads());
+                    try
+                    {
+                        var httpClient = GetHttpClient();
 
-                    BaseRequestProvider.TryAddCookies(Client, requestMessage);
+                        using (var requestMessage = new HttpRequestMessage(
+                                HttpMethod.Post,
+                                GetChunkUriForStandardUploads()))
+                        {
+                            using (var multipartFormContent = new MultipartFormDataContent("upload-" + Guid.NewGuid().ToString("N")))
+                            {
+                                BaseRequestProvider.TryAddCookies(Client, requestMessage);
 
-                    var multipartFormContent = new MultipartFormDataContent(boundaryGuid);
+                                var streamContent = new StreamContentWithProgress(stream, OnProgress);
+                                streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                                multipartFormContent.Add(streamContent, "File1", File.Name);
+                                requestMessage.Content = multipartFormContent;
 
-                    var streamContent = new StreamContent(File.OpenRead(), MaxBufferLength);
-                    streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-                    multipartFormContent.Add(streamContent, "File1", File.Name);
-                    requestMessage.Content = multipartFormContent;
+                                var responseMessage =
+                                    await
+                                    httpClient.SendAsync(
+                                        requestMessage,
+                                        CancellationToken.GetValueOrDefault(System.Threading.CancellationToken.None));
 
-                    var responseMessage = await httpClient.SendAsync(requestMessage, CancellationToken.GetValueOrDefault(System.Threading.CancellationToken.None));
-                    
-                    return await GetUploadResponseAsync(responseMessage);
+                                MarkProgressComplete();
+
+                                return await GetUploadResponseAsync(responseMessage);
+                            }
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        lastException = exception;
+                        stream.Seek(0, SeekOrigin.Begin);
+                        tryCount++;
+                    }
                 }
-                catch (Exception exception)
-                {
-                    lastException = exception;
-                    tryCount++;
-                }   
             }
+            finally
+            {
+                if (stream != null)
+                {
+                    stream.Dispose();
+                }
+            }
+
             
             throw new ApplicationException("Upload failed after 3 tries", lastException);
         }

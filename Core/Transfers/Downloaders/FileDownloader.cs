@@ -22,7 +22,6 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
             {
                 if (stream != null)
                 {
-
                     int bytesRead;
                     var buffer = new byte[Config.BufferSize];
 

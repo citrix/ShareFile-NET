@@ -142,7 +142,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 if (action != null && action.Redirection != null)
                 {
                     apiRequest.IsComposed = true;
-                    apiRequest.Uri = action.Redirection.Uri;
+                    apiRequest.Uri = action.Redirection.GetCalculatedUri();
                     apiRequest.Body = action.Redirection.Body;
                     apiRequest.HttpMethod = action.Redirection.Method ?? "GET";
                 }

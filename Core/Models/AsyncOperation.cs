@@ -94,6 +94,8 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public SafeEnum<AsyncOperationState> BatchState { get; set; }
 
+		public int? BatchTotal { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -116,6 +118,7 @@ namespace ShareFile.Api.Models
 				BatchTargetID = typedSource.BatchTargetID;
 				BatchProgress = typedSource.BatchProgress;
 				BatchState = typedSource.BatchState;
+				BatchTotal = typedSource.BatchTotal;
 			}
 			else
 			{
@@ -175,6 +178,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("BatchState", out token) && token.Type != JTokenType.Null)
 				{
 					BatchState = (SafeEnum<AsyncOperationState>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<AsyncOperationState>));
+				}
+				if(source.TryGetProperty("BatchTotal", out token) && token.Type != JTokenType.Null)
+				{
+					BatchTotal = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
 				}
 			}
 		}

@@ -27,6 +27,10 @@ namespace ShareFile.Api.Models
                     _entityTypeMap.Add("AccessControlsBulkParamss", typeof(AccessControlsBulkParams));
                     _entityTypeMap.Add("AccessControlParam", typeof(AccessControlParam));
                     _entityTypeMap.Add("AccessControlParams", typeof(AccessControlParam));
+                    _entityTypeMap.Add("FolderTemplate", typeof(FolderTemplate));
+                    _entityTypeMap.Add("FolderTemplates", typeof(FolderTemplate));
+                    _entityTypeMap.Add("FolderTemplateItem", typeof(FolderTemplateItem));
+                    _entityTypeMap.Add("FolderTemplateItems", typeof(FolderTemplateItem));
                     _entityTypeMap.Add("UserUsage", typeof(UserUsage));
                     _entityTypeMap.Add("UserUsages", typeof(UserUsage));
                     _entityTypeMap.Add("DiskSpace", typeof(DiskSpace));
@@ -182,9 +186,9 @@ namespace ShareFile.Api.Models
                     _entityTypeMap.Add("Zone", typeof(Zone));
                     _entityTypeMap.Add("Zones", typeof(Zone));
 			    }
+
+                return _entityTypeMap;
             }
-            
-            return _entityTypeMap;
 		}
         
         /// <summary>

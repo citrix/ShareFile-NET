@@ -24,7 +24,9 @@ namespace ShareFile.Api.Models
         Amazon_US_OR = 7,
         Amazon_SA_BR = 8,
         Amazon_AU_SYD = 9,
-        Azure_US_East = 10
+        Azure_US_East = 10,
+        Amazon_HIPAA_East = 11,
+        Amazon_HIPAA_West = 12
     }
 #endif
 }

@@ -19,7 +19,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             var chunkConfig = config != null ? config.PartConfig : new FilePartConfig();
             partUploader = new ScalingPartUploader(chunkConfig, Config.NumberOfThreads,
                 ExecuteChunkUploadMessage,
-                (bytesTransferred, finished) => OnProgress(bytesTransferred));        
+                OnProgress);        
         }
 
         protected override async Task<UploadResponse> InternalUploadAsync()
@@ -45,6 +45,8 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         
         private async Task<UploadResponse> FinishUploadAsync()
         {
+            this.MarkProgressComplete();
+
             var client = GetHttpClient();
             var finishUri = this.GetFinishUriForThreadedUploads();
             var requestMessage = new HttpRequestMessage(HttpMethod.Get, finishUri);

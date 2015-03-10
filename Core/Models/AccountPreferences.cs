@@ -191,6 +191,8 @@ namespace ShareFile.Api.Models
 
 		public bool? EnableDocPreviews { get; set; }
 
+		public bool? DisablePasswordAutocompleteInWebApp { get; set; }
+
 		public bool? EnableDesktopEditorForAccount { get; set; }
 
 		public bool? UseStrictEmployeeDefinition { get; set; }
@@ -216,6 +218,8 @@ namespace ShareFile.Api.Models
 		public bool? EnableIntegrations { get; set; }
 
 		public IEnumerable<SafeEnum<IntegrationProvider>> IntegrationProviders { get; set; }
+
+		public bool? EnableBouncedEmailNotifications { get; set; }
 
 		public bool? ShowDownloadLinkInUploadNotification { get; set; }
 
@@ -321,6 +325,7 @@ namespace ShareFile.Api.Models
 				EnableReportingV3 = typedSource.EnableReportingV3;
 				EnableEncryptedEmailForOutlookPlugin = typedSource.EnableEncryptedEmailForOutlookPlugin;
 				EnableDocPreviews = typedSource.EnableDocPreviews;
+				DisablePasswordAutocompleteInWebApp = typedSource.DisablePasswordAutocompleteInWebApp;
 				EnableDesktopEditorForAccount = typedSource.EnableDesktopEditorForAccount;
 				UseStrictEmployeeDefinition = typedSource.UseStrictEmployeeDefinition;
 				EmployeeEmailDomains = typedSource.EmployeeEmailDomains;
@@ -334,6 +339,7 @@ namespace ShareFile.Api.Models
 				EnableFileLocking = typedSource.EnableFileLocking;
 				EnableIntegrations = typedSource.EnableIntegrations;
 				IntegrationProviders = typedSource.IntegrationProviders;
+				EnableBouncedEmailNotifications = typedSource.EnableBouncedEmailNotifications;
 				ShowDownloadLinkInUploadNotification = typedSource.ShowDownloadLinkInUploadNotification;
 				EnableUserInvitations = typedSource.EnableUserInvitations;
 				EnableClickTrails = typedSource.EnableClickTrails;
@@ -687,6 +693,10 @@ namespace ShareFile.Api.Models
 				{
 					EnableDocPreviews = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
+				if(source.TryGetProperty("DisablePasswordAutocompleteInWebApp", out token) && token.Type != JTokenType.Null)
+				{
+					DisablePasswordAutocompleteInWebApp = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
 				if(source.TryGetProperty("EnableDesktopEditorForAccount", out token) && token.Type != JTokenType.Null)
 				{
 					EnableDesktopEditorForAccount = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
@@ -738,6 +748,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("IntegrationProviders", out token) && token.Type != JTokenType.Null)
 				{
 					IntegrationProviders = (IEnumerable<SafeEnum<IntegrationProvider>>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<SafeEnum<IntegrationProvider>>));
+				}
+				if(source.TryGetProperty("EnableBouncedEmailNotifications", out token) && token.Type != JTokenType.Null)
+				{
+					EnableBouncedEmailNotifications = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("ShowDownloadLinkInUploadNotification", out token) && token.Type != JTokenType.Null)
 				{

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -174,6 +175,40 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
             }
         }
 
+        [TestCase(true, null)]
+        [TestCase(false, null)]
+        [TestCase(true, "123")]
+        [TestCase(false, "123")]
+        public async void RedirectionWithRoot(bool async, string root)
+        {
+            // Arrange
+            var shareFileClient = GetShareFileClient(true);
+            ConfigureDomainChangedResponse(root);
+
+            var changeDomainRaised = false;
+            shareFileClient.AddChangeDomainHandler((message, redirect) =>
+            {
+                changeDomainRaised = true;
+                ConfigureItemResponse(root);
+                return EventHandlerResponse.Redirect(redirect);
+            });
+
+            var query = shareFileClient.Items.Get(shareFileClient.Items.GetAlias(GetId()));
+
+            // Act
+            if (async)
+            {
+                await query.ExecuteAsync();
+            }
+            else
+            {
+                query.Execute();
+            }
+
+            // Assert
+            changeDomainRaised.Should().BeTrue();
+        }
+
         [TestCase(true, TestName = "OnDomainChangeRaise_Async")]
         [TestCase(false, TestName = "OnDomainChangeRaise_Sync")]
         public async void OnDomainChangeRaised(bool async)
@@ -314,18 +349,18 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
                 .Returns(GenerateAsyncOperationScheduled());
         }
 
-        protected void ConfigureDomainChangedResponse()
+        protected void ConfigureDomainChangedResponse(string root = null)
         {
             A.CallTo(() =>
                     RequestExecutorFactory.GetAsyncRequestExecutor()
                         .SendAsync(A<HttpClient>.Ignored, A<HttpRequestMessage>.Ignored, A<HttpCompletionOption>.Ignored,
                             A<CancellationToken>.Ignored))
-                .Returns(GenerateRedirectionResponse());
+                .Returns(GenerateRedirectionResponse(root));
 
             A.CallTo(() =>
                     RequestExecutorFactory.GetSyncRequestExecutor()
                         .Send(A<HttpClient>.Ignored, A<HttpRequestMessage>.Ignored, A<HttpCompletionOption>.Ignored))
-                .Returns(GenerateRedirectionResponse());
+                .Returns(GenerateRedirectionResponse(root));
         }
 
         protected void ConfigureZoneUnavailableResponse()
@@ -342,13 +377,14 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
                 .Returns(GenerateRedirectionUnavailableResponse());
         }
 
-        protected void ConfigureItemResponse()
+        protected void ConfigureItemResponse(string root = null)
         {
             HttpRequestMessage requestMessage = null;
 
             A.CallTo(() =>
                     RequestExecutorFactory.GetAsyncRequestExecutor()
-                        .SendAsync(A<HttpClient>.Ignored, A<HttpRequestMessage>.Ignored, A<HttpCompletionOption>.Ignored,
+                        .SendAsync(A<HttpClient>.Ignored, A<HttpRequestMessage>.That.Matches(
+                            message => root == null || message.RequestUri.ToString().Contains("root=" + root)), A<HttpCompletionOption>.Ignored,
                             A<CancellationToken>.Ignored))
                         .Invokes((HttpClient client, HttpRequestMessage message, HttpCompletionOption options, CancellationToken token) =>
                         {
@@ -358,7 +394,8 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
 
             A.CallTo(() =>
                     RequestExecutorFactory.GetSyncRequestExecutor()
-                        .Send(A<HttpClient>.Ignored, A<HttpRequestMessage>.Ignored, A<HttpCompletionOption>.Ignored))
+                        .Send(A<HttpClient>.Ignored, A<HttpRequestMessage>.That.Matches(
+                            message => root == null || message.RequestUri.ToString().Contains("root=" + root)), A<HttpCompletionOption>.Ignored))
                         .Invokes((HttpClient client, HttpRequestMessage message, HttpCompletionOption options) =>
                         {
                             requestMessage = message;
@@ -434,13 +471,14 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
             };
         }
 
-        protected HttpResponseMessage GenerateRedirectionResponse()
+        protected HttpResponseMessage GenerateRedirectionResponse(string root = null)
         {
             var baseUri = "https://newhost.sharefile.com/sf/v3/";
             var redirection = new Redirection
             {
                 Available = true,
-                Uri = new Uri(baseUri)
+                Uri = new Uri(baseUri),
+                Root = root
             };
 
             redirection.MetadataUrl = "https://newhost.sharefile.com/sf/v3/$metadata#ShareFile.Api.Models.Redirection@Element";

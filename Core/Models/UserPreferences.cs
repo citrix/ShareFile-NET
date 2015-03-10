@@ -67,6 +67,8 @@ namespace ShareFile.Api.Models
 
 		public bool? EnableShareConnect { get; set; }
 
+		public bool? ReceiveBouncedEmailNotifications { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -99,6 +101,7 @@ namespace ShareFile.Api.Models
 				LongTimeFormat = typedSource.LongTimeFormat;
 				DateFormat = typedSource.DateFormat;
 				EnableShareConnect = typedSource.EnableShareConnect;
+				ReceiveBouncedEmailNotifications = typedSource.ReceiveBouncedEmailNotifications;
 			}
 			else
 			{
@@ -198,6 +201,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("EnableShareConnect", out token) && token.Type != JTokenType.Null)
 				{
 					EnableShareConnect = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("ReceiveBouncedEmailNotifications", out token) && token.Type != JTokenType.Null)
+				{
+					ReceiveBouncedEmailNotifications = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 			}
 		}

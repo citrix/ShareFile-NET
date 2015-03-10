@@ -18,6 +18,12 @@ namespace ShareFile.Api.Client.Requests.Providers
 {
     public abstract class BaseRequestProvider
     {
+        private static class Headers
+        {
+            public const string HttpOverrideHeader = "X-Http-Method-Override";
+            public const string ClientCapabilities = "X-SF-ClientCapabilities";
+        }
+
         public ShareFileClient ShareFileClient { get; protected set; }
 
         /// <summary>
@@ -85,7 +91,7 @@ namespace ShareFile.Api.Client.Requests.Providers
             if (ShareFileClient.Configuration.UseHttpMethodOverride)
             {
                 requestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
-                requestMessage.Headers.Add("X-Http-Method-Override", request.HttpMethod);
+                requestMessage.Headers.Add(Headers.HttpOverrideHeader, request.HttpMethod);
             }
             else
             {
@@ -102,6 +108,16 @@ namespace ShareFile.Api.Client.Requests.Providers
                 foreach (var cultureInfo in ShareFileClient.Configuration.SupportedCultures)
                 {
                     requestMessage.Headers.AcceptLanguage.Add(new StringWithQualityHeaderValue(cultureInfo.Name));
+                }
+            }
+
+            if (ShareFileClient.Configuration.ClientCapabilities != null)
+            {
+                var provider = ShareFileClient.GetProvider(uri);
+                IEnumerable<ClientCapability> clientCapabilities;
+                if (ShareFileClient.Configuration.ClientCapabilities.TryGetValue(provider, out clientCapabilities))
+                {
+                    requestMessage.Headers.Add(Headers.ClientCapabilities, clientCapabilities.Select(x => x.ToString()));
                 }
             }
 

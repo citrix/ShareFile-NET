@@ -64,5 +64,21 @@ namespace ShareFile.Api.Client.Core.Tests.Extensions
             // Assert
             streamObjectUri.ToString().Should().Be(BaseUriString + "Items(" + folderId + ")");
         }
+
+        [TestCase("Items(id)", "123", "Items(id)?root=123")]
+        [TestCase("Items(id)?test=123", "123", "Items(id)?test=123&root=123")]
+        [TestCase("Items(id)?test=123&", "123", "Items(id)?test=123&root=123")]
+        [TestCase("Items(id)?root=123", "123", "Items(id)?root=123")]
+        [TestCase("Items(id)", null, "Items(id)")]
+        [TestCase("Items(id)?test=123", null, "Items(id)?test=123")]
+        [TestCase("Items(id)?root=123", null, "Items(id)?root=123")]
+        public void RedirectionUri(string uriPath, string rootParameter, string expectedUri)
+        {
+            var redirection = new Redirection { Uri = new Uri(BaseUriString + uriPath), Root = rootParameter };
+
+            var uri = redirection.GetCalculatedUri();
+
+            uri.ToString().Should().Be(BaseUriString + expectedUri);
+        }
     }
 }

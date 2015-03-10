@@ -44,6 +44,7 @@ namespace ShareFile.Api.Models
         RightSignature = 28,
         UploadWithRequestParams = 29,
         SoftLock = 30,
-        HardLock = 31
+        HardLock = 31,
+        DownloadByStream = 32
     }
 }

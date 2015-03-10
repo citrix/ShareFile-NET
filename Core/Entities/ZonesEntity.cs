@@ -88,16 +88,7 @@ namespace ShareFile.Api.Client.Entities
         /// The modified zone
         /// </returns>
         IQuery<Zone> Update(Uri url, Zone zone);
-        
-        /// <summary>
-        /// Delete Zone
-        /// </summary>
-        /// <remarks>
-        /// Removes an existing zone
-        /// </remarks>
-        /// <param name="url"></param>
-        /// <param name="force"></param>
-        IQuery Delete(Uri url, bool force = false);
+        IQuery Delete(Uri url, bool force = false, string newDefaultZoneId = null);
         
         /// <summary>
         /// Reset Zone Secret
@@ -263,20 +254,12 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "PATCH";	
 		    return sfApiQuery;
         }
-        
-        /// <summary>
-        /// Delete Zone
-        /// </summary>
-        /// <remarks>
-        /// Removes an existing zone
-        /// </remarks>
-        /// <param name="url"></param>
-        /// <param name="force"></param>
-        public IQuery Delete(Uri url, bool force = false)
+        public IQuery Delete(Uri url, bool force = false, string newDefaultZoneId = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("force", force);
+            sfApiQuery.QueryString("newDefaultZoneId", newDefaultZoneId);
             sfApiQuery.HttpMethod = "DELETE";	
 		    return sfApiQuery;
         }

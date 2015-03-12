@@ -449,7 +449,7 @@ namespace ShareFile.Api.Client.Entities
         IQuery<UserInfo> GetInfo();
         
         /// <summary>
-        /// delete the email address from user
+        /// Delete the email address from user
         /// </summary>
         /// <param name="email"></param>
         /// <returns>
@@ -458,7 +458,7 @@ namespace ShareFile.Api.Client.Entities
         IQuery<User> DeleteEmailAddress(string email);
         
         /// <summary>
-        /// set email address as the primary email address for CURRENT user
+        /// Set email address as the primary email address for CURRENT user
         /// </summary>
         /// <param name="email"></param>
         /// <returns>
@@ -467,13 +467,21 @@ namespace ShareFile.Api.Client.Entities
         IQuery<User> MakePrimary(string email);
         
         /// <summary>
-        /// send notification email address to this email address for verification
+        /// Send notification email address to this email address for verification
         /// </summary>
         /// <param name="email"></param>
         /// <returns>
         /// User
         /// </returns>
         IQuery SendConfirmationEmail(string email);
+        
+        /// <summary>
+        /// Create a one-time use login Uri for the Web App.
+        /// </summary>
+        /// <returns>
+        /// Redirection populated with link in Uri field
+        /// </returns>
+        IQuery<Redirection> WebAppLink();
     }
 
     public class UsersEntity : EntityBase, IUsersEntity
@@ -1099,7 +1107,7 @@ namespace ShareFile.Api.Client.Entities
         }
         
         /// <summary>
-        /// delete the email address from user
+        /// Delete the email address from user
         /// </summary>
         /// <param name="email"></param>
         /// <returns>
@@ -1116,7 +1124,7 @@ namespace ShareFile.Api.Client.Entities
         }
         
         /// <summary>
-        /// set email address as the primary email address for CURRENT user
+        /// Set email address as the primary email address for CURRENT user
         /// </summary>
         /// <param name="email"></param>
         /// <returns>
@@ -1133,7 +1141,7 @@ namespace ShareFile.Api.Client.Entities
         }
         
         /// <summary>
-        /// send notification email address to this email address for verification
+        /// Send notification email address to this email address for verification
         /// </summary>
         /// <param name="email"></param>
         /// <returns>
@@ -1145,6 +1153,21 @@ namespace ShareFile.Api.Client.Entities
 		    sfApiQuery.From("Users");
 		    sfApiQuery.Action("SendConfirmationEmail");
             sfApiQuery.QueryString("email", email);
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Create a one-time use login Uri for the Web App.
+        /// </summary>
+        /// <returns>
+        /// Redirection populated with link in Uri field
+        /// </returns>
+        public IQuery<Redirection> WebAppLink()
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Redirection>(Client);
+		    sfApiQuery.From("Users");
+		    sfApiQuery.Action("WebAppLink");
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }

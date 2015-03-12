@@ -726,6 +726,15 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="itemIds"></param>
         /// <param name="ids"></param>
         IQuery BulkDeletePermanently(IEnumerable<string> ids);
+        
+        /// <summary>
+        /// Create a one-time use login Uri for the Web App.
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns>
+        /// Redirection populated with link in Uri field
+        /// </returns>
+        IQuery<Redirection> WebAppLink(Uri url);
     }
 
     public class ItemsEntity : EntityBase, IItemsEntity
@@ -1801,6 +1810,22 @@ namespace ShareFile.Api.Client.Entities
 		    sfApiQuery.From("Items");
 		    sfApiQuery.Action("BulkDeletePermanently");
             sfApiQuery.Body = ids;
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Create a one-time use login Uri for the Web App.
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns>
+        /// Redirection populated with link in Uri field
+        /// </returns>
+        public IQuery<Redirection> WebAppLink(Uri url)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Redirection>(Client);
+		    sfApiQuery.Action("WebAppLink");
+            sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }

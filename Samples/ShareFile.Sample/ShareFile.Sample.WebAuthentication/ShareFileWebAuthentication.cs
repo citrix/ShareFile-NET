@@ -23,6 +23,25 @@ namespace ShareFile.Sample.WebAuthentication
             _authenticationHelper = new OAuth2AuthenticationHelper(_completionUri);
         }
 
+        /// <summary>
+        /// Required for support SAML logins
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void webBrowser1_Navigated(object sender, WebBrowserNavigatedEventArgs e)
+        {
+            IOAuthResponse response;
+            if (_authenticationHelper.IsComplete(e.Url, out response))
+            {
+                HandleOAuthResponse(response);
+            }
+        }
+
+        /// <summary>
+        /// Nice to bail out early if we can, for SAML you can't
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void webBrowser1_Navigating(object sender, WebBrowserNavigatingEventArgs e)
         {
             IOAuthResponse response;

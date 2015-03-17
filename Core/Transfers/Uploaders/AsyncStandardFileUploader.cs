@@ -58,7 +58,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
                                 var streamContent = new StreamContentWithProgress(stream, OnProgress);
                                 streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-                                multipartFormContent.Add(streamContent, "File1", File.Name);
+                                multipartFormContent.Add(streamContent, "File1", UploadSpecificationRequest.FileName);
                                 requestMessage.Content = multipartFormContent;
 
                                 var responseMessage =

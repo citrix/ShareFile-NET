@@ -40,7 +40,7 @@ namespace ShareFile.Api.Client.Extensions
         public static bool IsBase64(this string val)
         {
             val = val.Trim();
-            return (val.Length % 4 == 0) && Regex.IsMatch(val, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None);
+            return (val.Length % 4 == 0) && Regex.IsMatch(val, @"^[a-zA-Z0-9\+/]*={0,2}$", RegexOptions.None);
         }
 
         /// <summary>

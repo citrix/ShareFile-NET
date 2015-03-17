@@ -1,9 +1,16 @@
-﻿using ShareFile.Api.Client.Extensions;
+﻿using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.Extensions.Tasks;
 using ShareFile.Api.Client.FileSystem;
+using ShareFile.Api.Client.Requests.Providers;
+using ShareFile.Api.Client.Security.Cryptography;
+using ShareFile.Api.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ShareFile.Api.Client.Transfers.Uploaders
@@ -41,7 +48,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         {
             TryPause();
 
-            requestMessage.AddDefaultHeaders(Client);
+            BaseRequestProvider.TryAddCookies(Client, requestMessage);
 
             using (var responseMessage = GetHttpClient().SendAsync(requestMessage).WaitForTask())
             {
@@ -59,7 +66,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
             var requestMessage = new HttpRequestMessage(HttpMethod.Get, finishUri);
             requestMessage.Headers.Add("Accept", "application/json");
-            requestMessage.AddDefaultHeaders(Client);
+            BaseRequestProvider.TryAddCookies(Client, requestMessage);
 
             var response = client.SendAsync(requestMessage).WaitForTask();
 

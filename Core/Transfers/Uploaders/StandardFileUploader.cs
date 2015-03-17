@@ -2,14 +2,11 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
-
-using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Extensions.Tasks;
 using ShareFile.Api.Client.FileSystem;
-
+using ShareFile.Api.Client.Requests.Providers;
 using System;
 using System.Collections.Generic;
-
 #if Portable || NETFX_CORE
 using ApplicationException = ShareFile.Api.Client.Exceptions.ApplicationException;
 #endif
@@ -47,7 +44,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                         {
                             using (var multipartFormContent = new MultipartFormDataContent("upload-" + Guid.NewGuid().ToString("N")))
                             {
-                                requestMessage.AddDefaultHeaders(Client);
+                                BaseRequestProvider.TryAddCookies(Client, requestMessage);
 
                                 var streamContent = new StreamContentWithProgress(stream, OnProgress);
 

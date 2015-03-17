@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Reflection;
 using System.Threading;
 using ShareFile.Api.Client.Extensions;
@@ -62,11 +61,6 @@ namespace ShareFile.Api.Client
         /// </summary>
         public IDictionary<string, IEnumerable<ClientCapability>> ClientCapabilities { get; set; }
 
-        /// <summary>
-        /// User-Agent header value to be passed on each API call
-        /// </summary>
-        public string UserAgent { get; set; }
-
         private string _toolName;
 
         public string ToolName
@@ -103,8 +97,7 @@ namespace ShareFile.Api.Client
                 HttpTimeout = 100000,
                 Logger = new DefaultLoggingProvider { LogLevel = LogLevel.Error },
                 LogPersonalInformation = false,
-                LogFullResponse = false,
-                UserAgent = "NET Client SDK/" + GetDefaultToolVersion()
+                LogFullResponse = false
             };
         }
 

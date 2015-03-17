@@ -240,7 +240,7 @@ namespace ShareFile.Api.Client.Entities
         IQuery<Share> Create(Share share, bool notify = false);
         
         /// <summary>
-        /// Modify Share
+        /// Update Share
         /// </summary>
         /// <example>
         /// {
@@ -759,7 +759,7 @@ namespace ShareFile.Api.Client.Entities
         }
         
         /// <summary>
-        /// Modify Share
+        /// Update Share
         /// </summary>
         /// <example>
         /// {

@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using ShareFile.Api.Client.Exceptions;
+using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.FileSystem;
-using ShareFile.Api.Client.Requests.Providers;
 
 namespace ShareFile.Api.Client.Transfers.Uploaders
 {
@@ -52,7 +52,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             var requestMessage = new HttpRequestMessage(HttpMethod.Get, finishUri);
 
             requestMessage.Headers.Add("Accept", "application/json");
-            BaseRequestProvider.TryAddCookies(Client, requestMessage);
+            requestMessage.AddDefaultHeaders(Client);
 
             var response = await client.SendAsync(requestMessage);
 
@@ -63,7 +63,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         {
             await TryPauseAsync(CancellationToken);
 
-            BaseRequestProvider.TryAddCookies(Client, requestMessage);
+            requestMessage.AddDefaultHeaders(Client);
 
             using(var responseMessage = await GetHttpClient().SendAsync(requestMessage, CancellationToken.GetValueOrDefault(System.Threading.CancellationToken.None)))
             {

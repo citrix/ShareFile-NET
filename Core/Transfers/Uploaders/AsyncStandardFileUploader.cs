@@ -4,8 +4,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using ShareFile.Api.Client.Exceptions;
+using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.FileSystem;
-using ShareFile.Api.Client.Requests.Providers;
 
 namespace ShareFile.Api.Client.Transfers.Uploaders
 {
@@ -54,7 +54,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                         {
                             using (var multipartFormContent = new MultipartFormDataContent("upload-" + Guid.NewGuid().ToString("N")))
                             {
-                                BaseRequestProvider.TryAddCookies(Client, requestMessage);
+                                requestMessage.AddDefaultHeaders(Client);
 
                                 var streamContent = new StreamContentWithProgress(stream, OnProgress);
                                 streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");

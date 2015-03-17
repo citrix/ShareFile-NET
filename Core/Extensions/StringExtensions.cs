@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace ShareFile.Api.Client.Extensions
 {
-    internal static class StringExtensions
+    public static class StringExtensions
     {
         private static char[] _ampersand = new[] {'&'};
         private static char[] _equals = new[] { '=' };
@@ -33,6 +35,27 @@ namespace ShareFile.Api.Client.Extensions
             }
 
             return queryString;
+        }
+
+        public static bool IsBase64(this string val)
+        {
+            val = val.Trim();
+            return (val.Length % 4 == 0) && Regex.IsMatch(val, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None);
+        }
+
+        /// <summary>
+        /// Convert string to Base64 iff <paramref name="val"/> is not already encoded
+        /// </summary>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        public static string ToBase64(this string val)
+        {
+            if (val.IsBase64())
+            {
+                return val.Trim();
+            }
+
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(val));
         }
     }
 }

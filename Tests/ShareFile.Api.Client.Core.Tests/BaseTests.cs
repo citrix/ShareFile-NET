@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text;
+
 using FakeItEasy;
 using ShareFile.Api.Client.Requests.Executors;
 
@@ -18,6 +20,18 @@ namespace ShareFile.Api.Client.Core.Tests
             }
 
             return client;
+        }
+
+        private Random Random = new Random();
+        protected string RandomString(int length)
+        {
+            var builder = new StringBuilder();
+            for (var i = 0; i < length; i++)
+            {
+                var ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * Random.NextDouble() + 65)));
+                builder.Append(ch);
+            }
+            return builder.ToString();
         }
 
         protected string GetId(int length = 36)

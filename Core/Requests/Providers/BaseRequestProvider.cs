@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using ShareFile.Api.Client.Converters;
 using ShareFile.Api.Client.Credentials;
 using ShareFile.Api.Client.Exceptions;
+using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Logging;
 using ShareFile.Api.Models;
 
@@ -18,7 +19,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 {
     public abstract class BaseRequestProvider
     {
-        private static class Headers
+        internal static class Headers
         {
             public const string HttpOverrideHeader = "X-Http-Method-Override";
             public const string ClientCapabilities = "X-SF-ClientCapabilities";
@@ -103,23 +104,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 requestMessage = new HttpRequestMessage(new HttpMethod(request.HttpMethod), uri);
             }
 
-            if (ShareFileClient.Configuration.SupportedCultures != null)
-            {
-                foreach (var cultureInfo in ShareFileClient.Configuration.SupportedCultures)
-                {
-                    requestMessage.Headers.AcceptLanguage.Add(new StringWithQualityHeaderValue(cultureInfo.Name));
-                }
-            }
-
-            if (ShareFileClient.Configuration.ClientCapabilities != null)
-            {
-                var provider = ShareFileClient.GetProvider(uri);
-                IEnumerable<ClientCapability> clientCapabilities;
-                if (ShareFileClient.Configuration.ClientCapabilities.TryGetValue(provider, out clientCapabilities))
-                {
-                    requestMessage.Headers.Add(Headers.ClientCapabilities, clientCapabilities.Select(x => x.ToString()));
-                }
-            }
+            requestMessage.AddDefaultHeaders(ShareFileClient);
 
             LogRequestUri(request);
 
@@ -128,10 +113,10 @@ namespace ShareFile.Api.Client.Requests.Providers
                 requestMessage.Headers.Add(kvp.Key, kvp.Value);
             }
 
+            requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
             if (request.Body != null)
             {
-                requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
                 try
                 {
                     WriteRequestBody(requestMessage, request.Body, new MediaTypeHeaderValue("application/json"));
@@ -149,8 +134,6 @@ namespace ShareFile.Api.Client.Requests.Providers
                     requestMessage.Content = new StringContent("");
                 }
             }
-
-            TryAddCookies(ShareFileClient, requestMessage);
 
 #if ShareFile
             if (ShareFileClient.CustomAuthentication != null && request.Body != null)

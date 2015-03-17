@@ -18,7 +18,7 @@ using ShareFile.Api.Client.Transfers;
 
 namespace ShareFile.Api.Client.Core.Tests.Uploaders
 {
-    public class UploaderTests
+    public class UploaderTests : BaseTests
     {
         private object oauthTokenLock = new object();
         private OAuthToken token = null;
@@ -63,19 +63,6 @@ namespace ShareFile.Api.Client.Core.Tests.Uploaders
             RandomNumberGenerator.Create().GetBytes(bytes);
 
             return new PlatformFileStream(new MemoryStream(bytes), (long)size, RandomString(20));
-        }
-
-
-        private Random Random = new Random();
-        protected string RandomString(int length)
-        {
-            var builder = new StringBuilder();
-            for (var i = 0; i < length; i++)
-            {
-                var ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * Random.NextDouble() + 65)));
-                builder.Append(ch);
-            }
-            return builder.ToString();
         }
 
         [TestCase(UploadMethod.Standard, 1, true)]

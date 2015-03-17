@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+
+using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Requests;
 
 namespace ShareFile.Api.Client.Security.Authentication.OAuth2
@@ -73,7 +75,7 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
                     {"client_id", ClientId},
                     {"client_secret", ClientSecret},
                     {"grant_type", "urn:ietf:params:oauth:grant-type:saml2-bearer"},
-                    {"assertion", samlAssertion}
+                    {"assertion", samlAssertion.ToBase64()}
                 }, subdomain);
         }
 

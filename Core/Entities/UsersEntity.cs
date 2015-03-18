@@ -482,6 +482,17 @@ namespace ShareFile.Api.Client.Entities
         /// Redirection populated with link in Uri field
         /// </returns>
         IQuery<Redirection> WebAppLink();
+        
+        /// <summary>
+        /// Get Inbox Metadata
+        /// </summary>
+        /// <remarks>
+        /// Returns metadata of the inbox.User identifier
+        /// </remarks>
+        /// <returns>
+        /// Inbox metadata
+        /// </returns>
+        IQuery<InboxMetadata> InboxMetadata(Uri url);
     }
 
     public class UsersEntity : EntityBase, IUsersEntity
@@ -1169,6 +1180,24 @@ namespace ShareFile.Api.Client.Entities
 		    sfApiQuery.From("Users");
 		    sfApiQuery.Action("WebAppLink");
             sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get Inbox Metadata
+        /// </summary>
+        /// <remarks>
+        /// Returns metadata of the inbox.User identifier
+        /// </remarks>
+        /// <returns>
+        /// Inbox metadata
+        /// </returns>
+        public IQuery<InboxMetadata> InboxMetadata(Uri url)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<InboxMetadata>(Client);
+		    sfApiQuery.Action("InboxMetadata");
+            sfApiQuery.Uri(url);
+            sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
     }

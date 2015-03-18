@@ -405,17 +405,6 @@ namespace ShareFile.Api.Client.Entities
         /// The Redirection endpoint Information
         /// </returns>
         IQuery<Redirection> GetRedirection(Uri url);
-        
-        /// <summary>
-        /// Get Inbox Metadata
-        /// </summary>
-        /// <remarks>
-        /// Returns metadata of the inbox.User identifier
-        /// </remarks>
-        /// <returns>
-        /// Inbox metadata
-        /// </returns>
-        IQuery<InboxMetadata> GetInboxMetadata(string id = null);
     }
 
     public class SharesEntity : EntityBase, ISharesEntity
@@ -1012,25 +1001,6 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Redirection>(Client);
 		    sfApiQuery.Action("Redirection");
             sfApiQuery.Uri(url);
-            sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
-        }
-        
-        /// <summary>
-        /// Get Inbox Metadata
-        /// </summary>
-        /// <remarks>
-        /// Returns metadata of the inbox.User identifier
-        /// </remarks>
-        /// <returns>
-        /// Inbox metadata
-        /// </returns>
-        public IQuery<InboxMetadata> GetInboxMetadata(string id = null)
-        {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<InboxMetadata>(Client);
-		    sfApiQuery.From("Shares");
-		    sfApiQuery.Action("InboxMetadata");
-            sfApiQuery.QueryString("id", id);
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }

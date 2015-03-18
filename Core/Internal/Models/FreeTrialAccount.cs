@@ -96,7 +96,7 @@ namespace ShareFile.Api.Models
 
 		public string ProvisionedById { get; set; }
 
-		public int? TrialLength { get; set; }
+		public int? TrialLengthInDays { get; set; }
 
 		public IEnumerable<EnterpriseOrder> EnterpriseOrders { get; set; }
 
@@ -146,7 +146,7 @@ namespace ShareFile.Api.Models
 				IsCardRequired = typedSource.IsCardRequired;
 				IsCMSZ = typedSource.IsCMSZ;
 				ProvisionedById = typedSource.ProvisionedById;
-				TrialLength = typedSource.TrialLength;
+				TrialLengthInDays = typedSource.TrialLengthInDays;
 				EnterpriseOrders = typedSource.EnterpriseOrders;
 			}
 			else
@@ -304,9 +304,9 @@ namespace ShareFile.Api.Models
 				{
 					ProvisionedById = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
-				if(source.TryGetProperty("TrialLength", out token) && token.Type != JTokenType.Null)
+				if(source.TryGetProperty("TrialLengthInDays", out token) && token.Type != JTokenType.Null)
 				{
-					TrialLength = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+					TrialLengthInDays = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
 				}
 				if(source.TryGetProperty("EnterpriseOrders", out token) && token.Type != JTokenType.Null)
 				{

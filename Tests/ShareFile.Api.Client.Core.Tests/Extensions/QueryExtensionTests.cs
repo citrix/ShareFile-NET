@@ -215,5 +215,37 @@ namespace ShareFile.Api.Client.Core.Tests.Extensions
                 "Principal/Account/ToolInformation/ToolName",
                 "Principal/Account/ToolInformation/Version");
         }
+
+        private static string StaticField;
+        private static string StaticProperty { get { return StaticField;  } }
+        private static string StaticMethod() { return StaticField;  }
+        
+        [Test]
+        public void LambdaQuery_StaticField()
+        {
+            var query = BuildSessionQuery(session => session.Id == QueryExtensionTests.StaticField);
+            AssertSelect(query, "Id");
+        }
+
+        [Test]
+        public void LambdaQuery_StaticProperty()
+        {
+            var query = BuildSessionQuery(session => session.Id == QueryExtensionTests.StaticProperty);
+            AssertSelect(query, "Id");
+        }
+
+        [Test]
+        public void LambdaQuery_StaticMethod()
+        {
+            var query = BuildSessionQuery(session => session.Id == QueryExtensionTests.StaticMethod());
+            AssertSelect(query, "Id");
+        }
+
+        [Test]
+        public void LambdaQuery_NonStaticMethod()
+        {
+            var query = BuildSessionQuery(session => session.Id.ToString());
+            AssertSelect(query, "Id");
+        }
     }
 }

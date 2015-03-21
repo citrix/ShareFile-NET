@@ -405,6 +405,17 @@ namespace ShareFile.Api.Client.Entities
         /// The Redirection endpoint Information
         /// </returns>
         IQuery<Redirection> GetRedirection(Uri url);
+        
+        /// <summary>
+        /// Get Inbox for Recipient
+        /// </summary>
+        /// <remarks>
+        /// Retrieve all outstanding Shares in the inbox.User identifier
+        /// </remarks>
+        /// <returns>
+        /// List of Shares created by the authenticated user
+        /// </returns>
+        IQuery<ODataFeed<Share>> GetInbox(string id = null, ShareType type = ShareType.Both);
     }
 
     public class SharesEntity : EntityBase, ISharesEntity
@@ -1001,6 +1012,26 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Redirection>(Client);
 		    sfApiQuery.Action("Redirection");
             sfApiQuery.Uri(url);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get Inbox for Recipient
+        /// </summary>
+        /// <remarks>
+        /// Retrieve all outstanding Shares in the inbox.User identifier
+        /// </remarks>
+        /// <returns>
+        /// List of Shares created by the authenticated user
+        /// </returns>
+        public IQuery<ODataFeed<Share>> GetInbox(string id = null, ShareType type = ShareType.Both)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Share>>(Client);
+		    sfApiQuery.From("Shares");
+		    sfApiQuery.Action("Inbox");
+            sfApiQuery.ActionIds(id);
+            sfApiQuery.QueryString("type", type);
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }

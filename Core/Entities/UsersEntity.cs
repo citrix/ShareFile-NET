@@ -484,6 +484,17 @@ namespace ShareFile.Api.Client.Entities
         IQuery<Redirection> WebAppLink();
         
         /// <summary>
+        /// Get Inbox for Recipient
+        /// </summary>
+        /// <remarks>
+        /// Retrieve all outstanding Shares in the inbox.User identifier
+        /// </remarks>
+        /// <returns>
+        /// List of Shares created by the authenticated user
+        /// </returns>
+        IQuery<ODataFeed<Share>> GetInbox(Uri url, ShareType type = ShareType.Both);
+        
+        /// <summary>
         /// Get Inbox Metadata
         /// </summary>
         /// <remarks>
@@ -1180,6 +1191,25 @@ namespace ShareFile.Api.Client.Entities
 		    sfApiQuery.From("Users");
 		    sfApiQuery.Action("WebAppLink");
             sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get Inbox for Recipient
+        /// </summary>
+        /// <remarks>
+        /// Retrieve all outstanding Shares in the inbox.User identifier
+        /// </remarks>
+        /// <returns>
+        /// List of Shares created by the authenticated user
+        /// </returns>
+        public IQuery<ODataFeed<Share>> GetInbox(Uri url, ShareType type = ShareType.Both)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Share>>(Client);
+		    sfApiQuery.Action("Inbox");
+            sfApiQuery.Uri(url);
+            sfApiQuery.QueryString("type", type);
+            sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
         

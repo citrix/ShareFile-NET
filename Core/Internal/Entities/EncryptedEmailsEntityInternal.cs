@@ -32,6 +32,7 @@ namespace ShareFile.Api.Client.Entities
         IQuery Delete(Uri url);
         IQuery<UploadSpecification> Upload(Uri url, UploadMethod method = UploadMethod.Standard, bool raw = false, string fileName = null, long fileSize = 0, string batchId = null, bool batchLast = false, bool canResume = false, bool startOver = false, bool unzip = false, string tool = "apiv3", bool overwrite = false, string title = null, string details = null, bool isSend = false, string sendGuid = null, string opid = null, int threadCount = 4, string responseFormat = "json", bool notify = false, DateTime? clientCreatedDateUTC = null, DateTime? clientModifiedDateUTC = null, int? expirationDays = null);
         IQuery<UploadSpecification> Upload2(Uri url, UploadRequestParams uploadParams, int? expirationDays = null);
+        IQuery<EncryptedEmail> GetEncryptedEmailByShare(Uri url);
     }
 
     public class EncryptedEmailsEntityInternal : EntityBase, IEncryptedEmailsEntityInternal
@@ -170,6 +171,14 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.QueryString("expirationDays", expirationDays);
             sfApiQuery.Body = uploadParams;
             sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        public IQuery<EncryptedEmail> GetEncryptedEmailByShare(Uri url)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<EncryptedEmail>(Client);
+		    sfApiQuery.Action("EncryptedEmail");
+            sfApiQuery.Uri(url);
+            sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
     }

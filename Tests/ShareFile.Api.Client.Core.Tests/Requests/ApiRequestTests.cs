@@ -166,9 +166,11 @@ namespace ShareFile.Api.Client.Core.Tests.Requests
             var top = Uri.EscapeDataString("$top") + "=5";
             var skip = Uri.EscapeDataString("$skip") + "=10";
             var orderby = Uri.EscapeDataString("$orderby") + "=FileName";
-            apiRequest.GetComposedUri().ToString().Should().Contain(top);
-            apiRequest.GetComposedUri().ToString().Should().Contain(skip);
-            apiRequest.GetComposedUri().ToString().Should().Contain(orderby);
+
+            var uriString = apiRequest.GetComposedUri().ToString();
+            Assert.IsTrue(uriString.Contains(top) || uriString.Contains("$top=5"));
+            Assert.IsTrue(uriString.Contains(skip) || uriString.Contains("$skip=10"));
+            Assert.IsTrue(uriString.Contains(orderby) || uriString.Contains("$orderby=FileName"));
         }
 
         [Test]

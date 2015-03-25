@@ -64,5 +64,6 @@ namespace ShareFile.Api.Client.Requests
         IEnumerable<string> GetSelectProperties();
         IEnumerable<string> GetExpandProperties();
         IFilter GetFilter();
+        string GetOrderBy();
     }
 }

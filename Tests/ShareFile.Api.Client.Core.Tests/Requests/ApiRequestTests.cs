@@ -149,6 +149,29 @@ namespace ShareFile.Api.Client.Core.Tests.Requests
         }
 
         [Test]
+        public void ApiRequest_ODataPaging()
+        {
+            // Arrange
+            var query =
+                this.GetShareFileClient()
+                    .Items.GetChildren(new Uri("https://release.sf-api.com/sf/v3/Items(" + this.GetId() + ")"))
+                    .Top(5)
+                    .Skip(10)
+                    .OrderBy("FileName");
+
+            // Act
+            var apiRequest = ApiRequest.FromQuery(query);
+
+            // Assert
+            var top = Uri.EscapeDataString("$top") + "=5";
+            var skip = Uri.EscapeDataString("$skip") + "=10";
+            var orderby = Uri.EscapeDataString("$orderby") + "=FileName";
+            apiRequest.GetComposedUri().ToString().Should().Contain(top);
+            apiRequest.GetComposedUri().ToString().Should().Contain(skip);
+            apiRequest.GetComposedUri().ToString().Should().Contain(orderby);
+        }
+
+        [Test]
         public void ApiRequest_FromQuery_CompositeActionIds()
         {
             // Arrange

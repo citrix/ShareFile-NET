@@ -11,12 +11,12 @@
     <description>@description@</description>
     <releaseNotes></releaseNotes>
 	<projectUrl>https://github.com/citrix/ShareFile-NET/blob/master/README.md</projectUrl>
-    <copyright>Copyright © Citrix ShareFile 2014</copyright>
+    <copyright>Copyright © Citrix ShareFile 2015</copyright>
     <tags>ShareFile API Client</tags>
     <dependencies>
       <group>
         <dependency id="Newtonsoft.Json" version="6.0.8" />
-        <dependency id="Microsoft.Net.Http" version="2.2.28" />
+        <dependency id="Microsoft.Net.Http" version="2.2.29" />
         <dependency id="Microsoft.Bcl.Async" version="1.0.168" />
       </group>
       <group targetFramework="net45">

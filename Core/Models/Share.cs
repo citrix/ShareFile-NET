@@ -161,6 +161,11 @@ namespace ShareFile.Api.Models
 
 		public SafeEnum<ShareSubType> ShareSubType { get; set; }
 
+		/// <summary>
+		/// Shared item history.
+		/// </summary>
+		public IEnumerable<ShareItemHistory> ShareItemHistory { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -202,6 +207,7 @@ namespace ShareFile.Api.Models
 				HasRemoteChildren = typedSource.HasRemoteChildren;
 				Redirection = typedSource.Redirection;
 				ShareSubType = typedSource.ShareSubType;
+				ShareItemHistory = typedSource.ShareItemHistory;
 			}
 			else
 			{
@@ -337,6 +343,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("ShareSubType", out token) && token.Type != JTokenType.Null)
 				{
 					ShareSubType = (SafeEnum<ShareSubType>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<ShareSubType>));
+				}
+				if(source.TryGetProperty("ShareItemHistory", out token) && token.Type != JTokenType.Null)
+				{
+					ShareItemHistory = (IEnumerable<ShareItemHistory>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<ShareItemHistory>));
 				}
 			}
 		}

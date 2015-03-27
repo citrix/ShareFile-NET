@@ -81,6 +81,10 @@ namespace ShareFile.Api.Models
 
 		public string ForcedSortOrder { get; set; }
 
+		public SafeEnum<SortField> SortField { get; set; }
+
+		public SafeEnum<SortDirection> SortDirection { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -120,6 +124,8 @@ namespace ShareFile.Api.Models
 				TreeModeSourceId = typedSource.TreeModeSourceId;
 				ForcedSortField = typedSource.ForcedSortField;
 				ForcedSortOrder = typedSource.ForcedSortOrder;
+				SortField = typedSource.SortField;
+				SortDirection = typedSource.SortDirection;
 			}
 			else
 			{
@@ -247,6 +253,14 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("ForcedSortOrder", out token) && token.Type != JTokenType.Null)
 				{
 					ForcedSortOrder = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("SortField", out token) && token.Type != JTokenType.Null)
+				{
+					SortField = (SafeEnum<SortField>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<SortField>));
+				}
+				if(source.TryGetProperty("SortDirection", out token) && token.Type != JTokenType.Null)
+				{
+					SortDirection = (SafeEnum<SortDirection>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<SortDirection>));
 				}
 			}
 		}

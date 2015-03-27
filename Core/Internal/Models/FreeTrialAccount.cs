@@ -36,6 +36,8 @@ namespace ShareFile.Api.Models
 
 		public string SignupProcess { get; set; }
 
+		public decimal? ConversionIndex { get; set; }
+
 		public decimal? ConversionIndexDay7 { get; set; }
 
 		public decimal? ConversionIndexDay14 { get; set; }
@@ -116,6 +118,7 @@ namespace ShareFile.Api.Models
 				FollowUpDate = typedSource.FollowUpDate;
 				CancellationReason = typedSource.CancellationReason;
 				SignupProcess = typedSource.SignupProcess;
+				ConversionIndex = typedSource.ConversionIndex;
 				ConversionIndexDay7 = typedSource.ConversionIndexDay7;
 				ConversionIndexDay14 = typedSource.ConversionIndexDay14;
 				LTVIndex = typedSource.LTVIndex;
@@ -183,6 +186,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("SignupProcess", out token) && token.Type != JTokenType.Null)
 				{
 					SignupProcess = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("ConversionIndex", out token) && token.Type != JTokenType.Null)
+				{
+					ConversionIndex = (decimal?)serializer.Deserialize(token.CreateReader(), typeof(decimal?));
 				}
 				if(source.TryGetProperty("ConversionIndexDay7", out token) && token.Type != JTokenType.Null)
 				{

@@ -55,6 +55,7 @@ namespace ShareFile.Api.Models
         AdminZones = 69,
         AdminCreateSharedGroups = 70,
         AdminArchivedSearch = 71,
-        AdminConnectors = 72
+        AdminConnectors = 72,
+        AdminEmailArchiver = 73
     }
 }

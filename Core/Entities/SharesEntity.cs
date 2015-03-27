@@ -416,6 +416,17 @@ namespace ShareFile.Api.Client.Entities
         /// List of Shares created by the authenticated user
         /// </returns>
         IQuery<ODataFeed<Share>> GetInbox(string id = null, ShareType type = ShareType.Both, bool archived = false);
+        
+        /// <summary>
+        /// Get Sent Message Content by Share
+        /// </summary>
+        /// <remarks>
+        /// Returns sent message content.Share identifier
+        /// </remarks>
+        /// <returns>
+        /// Sent Message Content
+        /// </returns>
+        IQuery<Stream> Message(Uri url);
     }
 
     public class SharesEntity : EntityBase, ISharesEntity
@@ -1033,6 +1044,24 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.ActionIds(id);
             sfApiQuery.QueryString("type", type);
             sfApiQuery.QueryString("archived", archived);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get Sent Message Content by Share
+        /// </summary>
+        /// <remarks>
+        /// Returns sent message content.Share identifier
+        /// </remarks>
+        /// <returns>
+        /// Sent Message Content
+        /// </returns>
+        public IQuery<Stream> Message(Uri url)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
+		    sfApiQuery.Action("Message");
+            sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }

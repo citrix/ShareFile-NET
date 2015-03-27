@@ -492,7 +492,7 @@ namespace ShareFile.Api.Client.Entities
         /// <returns>
         /// List of Shares created by the authenticated user
         /// </returns>
-        IQuery<ODataFeed<Share>> GetInbox(Uri url, ShareType type = ShareType.Both);
+        IQuery<ODataFeed<Share>> GetInbox(Uri url, ShareType type = ShareType.Both, bool archived = false);
         
         /// <summary>
         /// Get Inbox Metadata
@@ -1203,12 +1203,13 @@ namespace ShareFile.Api.Client.Entities
         /// <returns>
         /// List of Shares created by the authenticated user
         /// </returns>
-        public IQuery<ODataFeed<Share>> GetInbox(Uri url, ShareType type = ShareType.Both)
+        public IQuery<ODataFeed<Share>> GetInbox(Uri url, ShareType type = ShareType.Both, bool archived = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Share>>(Client);
 		    sfApiQuery.Action("Inbox");
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("type", type);
+            sfApiQuery.QueryString("archived", archived);
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }

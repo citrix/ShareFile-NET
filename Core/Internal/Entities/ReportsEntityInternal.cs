@@ -112,7 +112,7 @@ namespace ShareFile.Api.Client.Entities
         /// <returns>
         /// the created report
         /// </returns>
-        IQuery<Report> Create(Report report, bool runOnCreate = false);
+        IQuery<Report> Create(Report report, bool runOnCreate);
         
         /// <summary>
         /// Update Report
@@ -176,16 +176,16 @@ namespace ShareFile.Api.Client.Entities
         IQuery Move(Uri reportUrl, string folderId);
         
         /// <summary>
-        /// Get Excel Data
+        /// Get spreadsheet data
         /// </summary>
         /// <remarks>
-        /// Get the Excel data for a report
+        /// Get the spreadsheet data for a report
         /// </remarks>
         /// <param name="id"></param>
         /// <returns>
         /// Excel Formatted Report Results
         /// </returns>
-        IQuery GetExcelData(string id);
+        IQuery DownloadData(string id);
     }
 
     public class ReportsEntityInternal : EntityBase, IReportsEntityInternal
@@ -327,7 +327,7 @@ namespace ShareFile.Api.Client.Entities
         /// <returns>
         /// the created report
         /// </returns>
-        public IQuery<Report> Create(Report report, bool runOnCreate = false)
+        public IQuery<Report> Create(Report report, bool runOnCreate)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Report>(Client);
 		    sfApiQuery.From("Reports");
@@ -436,22 +436,22 @@ namespace ShareFile.Api.Client.Entities
         }
         
         /// <summary>
-        /// Get Excel Data
+        /// Get spreadsheet data
         /// </summary>
         /// <remarks>
-        /// Get the Excel data for a report
+        /// Get the spreadsheet data for a report
         /// </remarks>
         /// <param name="id"></param>
         /// <returns>
         /// Excel Formatted Report Results
         /// </returns>
-        public IQuery GetExcelData(string id)
+        public IQuery DownloadData(string id)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 		    sfApiQuery.From("Reports");
 		    sfApiQuery.Action("Records");
             sfApiQuery.ActionIds(id);
-            sfApiQuery.SubAction("ExcelData");
+            sfApiQuery.SubAction("DownloadData");
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }

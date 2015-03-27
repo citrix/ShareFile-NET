@@ -484,6 +484,17 @@ namespace ShareFile.Api.Client.Entities
         IQuery<Redirection> WebAppLink();
         
         /// <summary>
+        /// Get Inbox Metadata
+        /// </summary>
+        /// <remarks>
+        /// Returns metadata of the inbox.User identifier
+        /// </remarks>
+        /// <returns>
+        /// Inbox metadata
+        /// </returns>
+        IQuery<InboxMetadata> InboxMetadata(Uri url);
+        
+        /// <summary>
         /// Get Inbox for Recipient
         /// </summary>
         /// <remarks>
@@ -495,15 +506,15 @@ namespace ShareFile.Api.Client.Entities
         IQuery<ODataFeed<Share>> GetInbox(Uri url, ShareType type = ShareType.Both, bool archived = false);
         
         /// <summary>
-        /// Get Inbox Metadata
+        /// Get Sent Messages
         /// </summary>
         /// <remarks>
-        /// Returns metadata of the inbox.User identifier
+        /// Returns sent messages for the given user.User identifier
         /// </remarks>
         /// <returns>
-        /// Inbox metadata
+        /// Feed of Shares
         /// </returns>
-        IQuery<InboxMetadata> InboxMetadata(Uri url);
+        IQuery<ODataFeed<Share>> SentMessages(Uri url);
     }
 
     public class UsersEntity : EntityBase, IUsersEntity
@@ -1195,6 +1206,24 @@ namespace ShareFile.Api.Client.Entities
         }
         
         /// <summary>
+        /// Get Inbox Metadata
+        /// </summary>
+        /// <remarks>
+        /// Returns metadata of the inbox.User identifier
+        /// </remarks>
+        /// <returns>
+        /// Inbox metadata
+        /// </returns>
+        public IQuery<InboxMetadata> InboxMetadata(Uri url)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<InboxMetadata>(Client);
+		    sfApiQuery.Action("InboxMetadata");
+            sfApiQuery.Uri(url);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
         /// Get Inbox for Recipient
         /// </summary>
         /// <remarks>
@@ -1215,18 +1244,18 @@ namespace ShareFile.Api.Client.Entities
         }
         
         /// <summary>
-        /// Get Inbox Metadata
+        /// Get Sent Messages
         /// </summary>
         /// <remarks>
-        /// Returns metadata of the inbox.User identifier
+        /// Returns sent messages for the given user.User identifier
         /// </remarks>
         /// <returns>
-        /// Inbox metadata
+        /// Feed of Shares
         /// </returns>
-        public IQuery<InboxMetadata> InboxMetadata(Uri url)
+        public IQuery<ODataFeed<Share>> SentMessages(Uri url)
         {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<InboxMetadata>(Client);
-		    sfApiQuery.Action("InboxMetadata");
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Share>>(Client);
+		    sfApiQuery.Action("SentMessages");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;

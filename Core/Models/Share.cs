@@ -155,7 +155,7 @@ namespace ShareFile.Api.Models
 		public bool? HasRemoteChildren { get; set; }
 
 		/// <summary>
-		/// Redirection endpoint for this Item.
+		/// Redirection endpoint for this Share.
 		/// </summary>
 		public Redirection Redirection { get; set; }
 
@@ -165,6 +165,11 @@ namespace ShareFile.Api.Models
 		/// Shared item history.
 		/// </summary>
 		public IEnumerable<ShareItemHistory> ShareItemHistory { get; set; }
+
+		/// <summary>
+		/// Current Settings for the Share
+		/// </summary>
+		public ShareSettings Settings { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
@@ -208,6 +213,7 @@ namespace ShareFile.Api.Models
 				Redirection = typedSource.Redirection;
 				ShareSubType = typedSource.ShareSubType;
 				ShareItemHistory = typedSource.ShareItemHistory;
+				Settings = typedSource.Settings;
 			}
 			else
 			{
@@ -347,6 +353,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("ShareItemHistory", out token) && token.Type != JTokenType.Null)
 				{
 					ShareItemHistory = (IEnumerable<ShareItemHistory>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<ShareItemHistory>));
+				}
+				if(source.TryGetProperty("Settings", out token) && token.Type != JTokenType.Null)
+				{
+					Settings = (ShareSettings)serializer.Deserialize(token.CreateReader(), typeof(ShareSettings));
 				}
 			}
 		}

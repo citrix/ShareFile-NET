@@ -35,6 +35,8 @@ namespace ShareFile.Api.Models
                     _entityTypeMap.Add("FolderTemplates", typeof(FolderTemplate));
                     _entityTypeMap.Add("FolderTemplateItem", typeof(FolderTemplateItem));
                     _entityTypeMap.Add("FolderTemplateItems", typeof(FolderTemplateItem));
+                    _entityTypeMap.Add("ShareSettings", typeof(ShareSettings));
+                    _entityTypeMap.Add("ShareSettingss", typeof(ShareSettings));
                     _entityTypeMap.Add("UserUsage", typeof(UserUsage));
                     _entityTypeMap.Add("UserUsages", typeof(UserUsage));
                     _entityTypeMap.Add("DiskSpace", typeof(DiskSpace));

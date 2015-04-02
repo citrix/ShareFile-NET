@@ -195,7 +195,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 
             if (httpResponseMessage.IsSuccessStatusCode)
             {
-                if (httpResponseMessage.HasContent() && typeof(TResponse) != typeof(Response<Stream>))
+                if (typeof(TResponse) == typeof(Response) && httpResponseMessage.HasContent())
                 {
                     // It's weird to use Item here, however ODataObject goes down a different code path.
                     // Using Item reduces scope of changes.

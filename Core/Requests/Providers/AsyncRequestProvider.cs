@@ -130,18 +130,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 
                             if (response.Value is Redirection && typeof(T) != typeof(Redirection))
                             {
-                                var redirection = response.Value as Redirection;
-
-                                // Removed until API is updated to provide this correctly.
-                                // !redirection.Available || 
-                                if (redirection.Uri == null)
-                                    throw new ZoneUnavailableException(responseMessage.RequestMessage.RequestUri, "Destination zone is unavailable");
-
-                                if (httpRequestMessage.RequestUri.GetAuthority() != redirection.Uri.GetAuthority())
-                                {
-                                    action = ShareFileClient.OnChangeDomain(httpRequestMessage, redirection);
-                                }
-                                else action = EventHandlerResponse.Redirect(redirection);
+                                action = GetRedirectionAction(response, responseMessage, httpRequestMessage);
                             }
                             else
                             {
@@ -168,6 +157,32 @@ namespace ShareFile.Api.Client.Requests.Providers
             } while (action != null && (action.Action == EventHandlerResponseAction.Retry || action.Action == EventHandlerResponseAction.Redirect));
 
             return default(T);
+        }
+
+        private EventHandlerResponse GetRedirectionAction(
+            Response<ODataObject> response,
+            HttpResponseMessage responseMessage,
+            HttpRequestMessage httpRequestMessage)
+        {
+            EventHandlerResponse action;
+            var redirection = response.Value as Redirection;
+
+            // Removed until API is updated to provide this correctly.
+            // !redirection.Available || 
+            if (redirection.Uri == null)
+            {
+                throw new ZoneUnavailableException(responseMessage.RequestMessage.RequestUri, "Destination zone is unavailable");
+            }
+
+            if (httpRequestMessage.RequestUri.GetAuthority() != redirection.Uri.GetAuthority())
+            {
+                action = this.ShareFileClient.OnChangeDomain(httpRequestMessage, redirection);
+            }
+            else
+            {
+                action = EventHandlerResponse.Redirect(redirection);
+            }
+            return action;
         }
 
         public async Task<T> ExecuteAsync<T>(IFormQuery<T> query, CancellationToken? token = null)
@@ -283,6 +298,20 @@ namespace ShareFile.Api.Client.Requests.Providers
 
             if (httpResponseMessage.IsSuccessStatusCode)
             {
+                if (httpResponseMessage.HasContent())
+                {
+                    var response = await HandleTypedResponse<ODataObject>(httpResponseMessage, request, retryCount).ConfigureAwait(false);
+                    if (response.Value is Redirection)
+                    {
+                        var action = GetRedirectionAction(
+                            response,
+                            httpResponseMessage,
+                            httpResponseMessage.RequestMessage);
+
+                        return Response.CreateAction(action);
+                    }
+                }
+
                 return Response.Success;
             }
 

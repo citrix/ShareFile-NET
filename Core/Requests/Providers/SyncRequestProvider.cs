@@ -30,7 +30,8 @@ namespace ShareFile.Api.Client.Requests.Providers
 
         public void Execute(IQuery query)
         {
-            Execute(query as QueryBase, responseMessage => Response.Success);
+            Execute(query as QueryBase,
+                responseMessage => Response.Success);
         }
 
         public T Execute<T>(IQuery<T> query) where T : class
@@ -194,6 +195,12 @@ namespace ShareFile.Api.Client.Requests.Providers
 
             if (httpResponseMessage.IsSuccessStatusCode)
             {
+                if (httpResponseMessage.HasContent() && typeof(TResponse) != typeof(Response<Stream>))
+                {
+                    // It's weird to use Item here, however ODataObject goes down a different code path.
+                    // Using Item reduces scope of changes.
+                    return ParseTypedResponse<Item>(httpResponseMessage);
+                }
                 return parseSuccessResponse(httpResponseMessage);
             }
 

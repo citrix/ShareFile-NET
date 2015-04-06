@@ -242,6 +242,24 @@ to it via the SDK.
 On any transfer you can be notified of progress.  On the instance of the uploader/downloader
 you can provide a delegate to `OnTransferProgress`.
 
+## Accessing a Share ##
+
+Assuming you have the url that points to the Share API resource (ex. `https://subdomain.sharefile.com/sf/v3/Shares(s0123456789)`), you can easily access the `Items` shared.  Depending on the share you may be required to already be authenticated.
+
+```
+var shareUri = new Uri("https://subdomain.sharefile.com/sf/v3/Shares(s0123456789)");
+var share = await sfClient.Shares.Get(shareUri);
+var shareItems = await sfClient.Shares.GetItems(shareUri, share.AliasID);
+```
+
+Items associated with a `Share` cannot be downloaded as you normally might, instead you need to use the `Shares` API to download.
+
+```
+// assuming you already have shareItems as noted before
+
+var fileStream = await sfClient.Shares.Download(shareUri, share.AliasID, shareItems.Select(x => x.Id).First());
+```
+
 ## Leveraging oData ##
 
 ShareFile supports the oData protocol which provides standard ways of handling

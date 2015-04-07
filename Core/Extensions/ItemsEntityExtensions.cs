@@ -1,8 +1,6 @@
 ﻿using System;
 using ShareFile.Api.Client.Entities;
 using ShareFile.Api.Client.Enums;
-using ShareFile.Api.Client.Requests;
-using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Extensions
 {
@@ -28,7 +26,7 @@ namespace ShareFile.Api.Client.Extensions
                     break;
             }
 
-            return items.GetAlias(aliasString);
+            return items.GetEntityUriFromId(aliasString);
         }
 
         /// <summary>
@@ -37,9 +35,7 @@ namespace ShareFile.Api.Client.Extensions
         /// <returns></returns>
         public static Uri GetAlias(this IItemsEntity items, string aliasOrId)
         {
-            string url = items.Client.BaseUri.ToString();
-
-            return new Uri(url.TrimEnd(new[] { '/' }) + "/" + items.Entity + "(" + aliasOrId + ")", UriKind.RelativeOrAbsolute);
+            return items.GetEntityUriFromId(aliasOrId);
         }
     }
 }

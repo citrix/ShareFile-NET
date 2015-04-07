@@ -194,7 +194,7 @@ namespace ShareFile.Api.Client.Entities
         /// <returns>
         /// Redirects the caller (302) to the download address for the share contents.
         /// </returns>
-        IQuery BulkDownload(Uri shareUrl, string aliasid, IEnumerable<string> ids, bool redirect = true);
+        IQuery<Stream> BulkDownload(Uri shareUrl, string aliasid, IEnumerable<string> ids, bool redirect = true);
         
         /// <summary>
         /// Create Share
@@ -705,9 +705,9 @@ namespace ShareFile.Api.Client.Entities
         /// <returns>
         /// Redirects the caller (302) to the download address for the share contents.
         /// </returns>
-        public IQuery BulkDownload(Uri shareUrl, string aliasid, IEnumerable<string> ids, bool redirect = true)
+        public IQuery<Stream> BulkDownload(Uri shareUrl, string aliasid, IEnumerable<string> ids, bool redirect = true)
         {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
 		    sfApiQuery.Action("Recipients");
             sfApiQuery.Uri(shareUrl);
             sfApiQuery.ActionIds(aliasid);

@@ -26,6 +26,7 @@ namespace ShareFile.Api.Client
         IAzureSBTopicsEntityInternal AzureSBTopics { get; }
         IConfigsEntityInternal Configs { get; }
         IDevicesEntityInternal Devices { get; }
+        IQueuesEntityInternal Queues { get; }
     }
 
     public class InternalShareFileClient : ShareFileClient, IInternalShareFileClient
@@ -44,6 +45,7 @@ namespace ShareFile.Api.Client
             AzureSBTopics = new AzureSBTopicsEntityInternal(this);
             Configs = new ConfigsEntityInternal(this);
             Devices = new DevicesEntityInternal(this);
+            Queues = new QueuesEntityInternal(this);
 
             EntityTypeMapInternal.RegisterInternalModels();
         }
@@ -59,5 +61,6 @@ namespace ShareFile.Api.Client
         public IAzureSBTopicsEntityInternal AzureSBTopics { get; private set; }
         public IConfigsEntityInternal Configs { get; private set; }
         public IDevicesEntityInternal Devices { get; private set; }
+        public IQueuesEntityInternal Queues { get; private set; }
     }
 }

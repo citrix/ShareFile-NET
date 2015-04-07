@@ -68,6 +68,10 @@ namespace ShareFile.Api.Client.Internal.Models
             EntityTypeMap.AddEntity("ShareFileRepresentatives", typeof(ShareFileRepresentative));
             EntityTypeMap.AddEntity("FreeTrialAccount", typeof(FreeTrialAccount));
             EntityTypeMap.AddEntity("FreeTrialAccounts", typeof(FreeTrialAccount));
+            EntityTypeMap.AddEntity("Queue", typeof(Queue));
+            EntityTypeMap.AddEntity("Queues", typeof(Queue));
+            EntityTypeMap.AddEntity("QueueEntry", typeof(QueueEntry));
+            EntityTypeMap.AddEntity("QueueEntries", typeof(QueueEntry));
             EntityTypeMap.AddEntity("AzureSBTopicsEndPointInfo", typeof(AzureSBTopicsEndPointInfo));
             EntityTypeMap.AddEntity("AzureSBTopicsEndPointInfos", typeof(AzureSBTopicsEndPointInfo));
             EntityTypeMap.AddEntity("AzureSBTopicsResponse", typeof(AzureSBTopicsResponse));

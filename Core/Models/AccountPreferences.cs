@@ -215,6 +215,8 @@ namespace ShareFile.Api.Models
 
 		public bool? EnableFileLocking { get; set; }
 
+		public bool? EnableCWC { get; set; }
+
 		public bool? EnableIntegrations { get; set; }
 
 		public IEnumerable<SafeEnum<IntegrationProvider>> IntegrationProviders { get; set; }
@@ -341,6 +343,7 @@ namespace ShareFile.Api.Models
 				EnableFileCount = typedSource.EnableFileCount;
 				EnableAntiVirus = typedSource.EnableAntiVirus;
 				EnableFileLocking = typedSource.EnableFileLocking;
+				EnableCWC = typedSource.EnableCWC;
 				EnableIntegrations = typedSource.EnableIntegrations;
 				IntegrationProviders = typedSource.IntegrationProviders;
 				EnableBouncedEmailNotifications = typedSource.EnableBouncedEmailNotifications;
@@ -746,6 +749,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("EnableFileLocking", out token) && token.Type != JTokenType.Null)
 				{
 					EnableFileLocking = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableCWC", out token) && token.Type != JTokenType.Null)
+				{
+					EnableCWC = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("EnableIntegrations", out token) && token.Type != JTokenType.Null)
 				{

@@ -256,7 +256,7 @@ namespace ShareFile.Api.Client.Entities
         /// <returns>
         /// User's Top Folders
         /// </returns>
-        IQuery<ODataFeed<Item>> TopFolders(Uri url);
+        IQuery<ODataFeed<Item>> GetTopFolders(Uri url);
         
         /// <summary>
         /// Get User's FileBox children
@@ -829,7 +829,7 @@ namespace ShareFile.Api.Client.Entities
         /// <returns>
         /// User's Top Folders
         /// </returns>
-        public IQuery<ODataFeed<Item>> TopFolders(Uri url)
+        public IQuery<ODataFeed<Item>> GetTopFolders(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
 		    sfApiQuery.Action("TopFolders");

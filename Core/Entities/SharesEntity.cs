@@ -421,12 +421,14 @@ namespace ShareFile.Api.Client.Entities
         /// Get Sent Message Content by Share
         /// </summary>
         /// <remarks>
-        /// Returns sent message content.Share identifier
+        /// Returns sent message content.
         /// </remarks>
+        /// <param name="shareUrl"></param>
+        /// <param name="aliasId"></param>
         /// <returns>
         /// Sent Message Content
         /// </returns>
-        IQuery<Stream> Message(Uri url);
+        IQuery<Stream> Message(Uri shareUrl, string aliasId);
     }
 
     public class SharesEntity : EntityBase, ISharesEntity
@@ -1052,16 +1054,20 @@ namespace ShareFile.Api.Client.Entities
         /// Get Sent Message Content by Share
         /// </summary>
         /// <remarks>
-        /// Returns sent message content.Share identifier
+        /// Returns sent message content.
         /// </remarks>
+        /// <param name="shareUrl"></param>
+        /// <param name="aliasId"></param>
         /// <returns>
         /// Sent Message Content
         /// </returns>
-        public IQuery<Stream> Message(Uri url)
+        public IQuery<Stream> Message(Uri shareUrl, string aliasId)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
-		    sfApiQuery.Action("Message");
-            sfApiQuery.Uri(url);
+		    sfApiQuery.Action("Recipients");
+            sfApiQuery.Uri(shareUrl);
+            sfApiQuery.ActionIds(aliasId);
+            sfApiQuery.SubAction("Message");
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }

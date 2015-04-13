@@ -19,7 +19,8 @@ namespace ShareFile.Api.Models
         Storage = 2,
         Messaging = 3,
         BandwidthDetail = 4,
-        BandwidthSummary = 5
+        BandwidthSummary = 5,
+        EncryptedEmail = 6
     }
 #endif
 }

@@ -11,15 +11,10 @@
 using System;
 namespace ShareFile.Api.Models 
 {
-	public enum SortField
+	public enum Versioning
     {
-        UsersPreferences = 0,
-        Name = 1,
-        FileSizeBytes = 2,
-        CreationDate = 3,
-        CreatorName = 4,
-        Path = 5,
-        Type = 6,
-        None = 7
+        Default = 0,
+        Enabled = 1,
+        Disabled = 2
     }
 }

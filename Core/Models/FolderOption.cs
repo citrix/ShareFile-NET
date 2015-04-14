@@ -11,15 +11,15 @@
 using System;
 namespace ShareFile.Api.Models 
 {
-	public enum SortField
+	public enum FolderOption
     {
-        UsersPreferences = 0,
-        Name = 1,
-        FileSizeBytes = 2,
-        CreationDate = 3,
-        CreatorName = 4,
-        Path = 5,
-        Type = 6,
-        None = 7
+        ForcedSort = 0,
+        ForcedThumbnails = 1,
+        EnableDisplayInline = 2,
+        EnableDocViewerPrinting = 3,
+        ViewOnlyWatermarkText = 4,
+        IsVersioned = 5,
+        EnableWatermarkedDownloads = 6,
+        MaxVersions = 7
     }
 }

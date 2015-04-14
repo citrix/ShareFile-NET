@@ -229,6 +229,8 @@ namespace ShareFile.Api.Models
 
 		public bool? EnableClickTrails { get; set; }
 
+		public bool? EnableFolderTemplates { get; set; }
+
 		public bool? EnableExternalEmailArchiving { get; set; }
 
 		public bool? CanStoreItemsInShareFile { get; set; }
@@ -350,6 +352,7 @@ namespace ShareFile.Api.Models
 				ShowDownloadLinkInUploadNotification = typedSource.ShowDownloadLinkInUploadNotification;
 				EnableUserInvitations = typedSource.EnableUserInvitations;
 				EnableClickTrails = typedSource.EnableClickTrails;
+				EnableFolderTemplates = typedSource.EnableFolderTemplates;
 				EnableExternalEmailArchiving = typedSource.EnableExternalEmailArchiving;
 				CanStoreItemsInShareFile = typedSource.CanStoreItemsInShareFile;
 				EnableHomeFolders = typedSource.EnableHomeFolders;
@@ -777,6 +780,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("EnableClickTrails", out token) && token.Type != JTokenType.Null)
 				{
 					EnableClickTrails = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableFolderTemplates", out token) && token.Type != JTokenType.Null)
+				{
+					EnableFolderTemplates = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("EnableExternalEmailArchiving", out token) && token.Type != JTokenType.Null)
 				{

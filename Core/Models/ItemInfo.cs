@@ -73,13 +73,25 @@ namespace ShareFile.Api.Models
 
 		public SafeEnum<TreeMode> TreeMode { get; set; }
 
+		public SafeEnum<Versioning> Versioning { get; set; }
+
 		public bool? TreeModeOperationAllowed { get; set; }
 
 		public string TreeModeSourceId { get; set; }
 
-		public string ForcedSortField { get; set; }
+		public SafeEnum<SortField> ForcedSortField { get; set; }
 
-		public string ForcedSortOrder { get; set; }
+		public SafeEnum<SortDirection> ForcedSortOrder { get; set; }
+
+		public int? MaxVersions { get; set; }
+
+		public SafeEnum<DocumentViewerPrinting> DocumentViewerPrinting { get; set; }
+
+		public SafeEnum<WatermarkedDownloads> WatermarkedDownloads { get; set; }
+
+		public IEnumerable<SafeEnum<FolderOption>> OptionPropagation { get; set; }
+
+		public string ViewOnlyWatermarkText { get; set; }
 
 		public SafeEnum<SortField> SortField { get; set; }
 
@@ -120,10 +132,16 @@ namespace ShareFile.Api.Models
 				FolderPayID = typedSource.FolderPayID;
 				ShowFolderPayBuyButton = typedSource.ShowFolderPayBuyButton;
 				TreeMode = typedSource.TreeMode;
+				Versioning = typedSource.Versioning;
 				TreeModeOperationAllowed = typedSource.TreeModeOperationAllowed;
 				TreeModeSourceId = typedSource.TreeModeSourceId;
 				ForcedSortField = typedSource.ForcedSortField;
 				ForcedSortOrder = typedSource.ForcedSortOrder;
+				MaxVersions = typedSource.MaxVersions;
+				DocumentViewerPrinting = typedSource.DocumentViewerPrinting;
+				WatermarkedDownloads = typedSource.WatermarkedDownloads;
+				OptionPropagation = typedSource.OptionPropagation;
+				ViewOnlyWatermarkText = typedSource.ViewOnlyWatermarkText;
 				SortField = typedSource.SortField;
 				SortDirection = typedSource.SortDirection;
 			}
@@ -238,6 +256,10 @@ namespace ShareFile.Api.Models
 				{
 					TreeMode = (SafeEnum<TreeMode>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<TreeMode>));
 				}
+				if(source.TryGetProperty("Versioning", out token) && token.Type != JTokenType.Null)
+				{
+					Versioning = (SafeEnum<Versioning>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<Versioning>));
+				}
 				if(source.TryGetProperty("TreeModeOperationAllowed", out token) && token.Type != JTokenType.Null)
 				{
 					TreeModeOperationAllowed = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
@@ -248,11 +270,31 @@ namespace ShareFile.Api.Models
 				}
 				if(source.TryGetProperty("ForcedSortField", out token) && token.Type != JTokenType.Null)
 				{
-					ForcedSortField = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+					ForcedSortField = (SafeEnum<SortField>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<SortField>));
 				}
 				if(source.TryGetProperty("ForcedSortOrder", out token) && token.Type != JTokenType.Null)
 				{
-					ForcedSortOrder = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+					ForcedSortOrder = (SafeEnum<SortDirection>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<SortDirection>));
+				}
+				if(source.TryGetProperty("MaxVersions", out token) && token.Type != JTokenType.Null)
+				{
+					MaxVersions = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("DocumentViewerPrinting", out token) && token.Type != JTokenType.Null)
+				{
+					DocumentViewerPrinting = (SafeEnum<DocumentViewerPrinting>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<DocumentViewerPrinting>));
+				}
+				if(source.TryGetProperty("WatermarkedDownloads", out token) && token.Type != JTokenType.Null)
+				{
+					WatermarkedDownloads = (SafeEnum<WatermarkedDownloads>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<WatermarkedDownloads>));
+				}
+				if(source.TryGetProperty("OptionPropagation", out token) && token.Type != JTokenType.Null)
+				{
+					OptionPropagation = (IEnumerable<SafeEnum<FolderOption>>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<SafeEnum<FolderOption>>));
+				}
+				if(source.TryGetProperty("ViewOnlyWatermarkText", out token) && token.Type != JTokenType.Null)
+				{
+					ViewOnlyWatermarkText = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
 				if(source.TryGetProperty("SortField", out token) && token.Type != JTokenType.Null)
 				{

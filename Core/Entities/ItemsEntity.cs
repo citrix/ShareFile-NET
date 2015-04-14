@@ -735,6 +735,25 @@ namespace ShareFile.Api.Client.Entities
         /// Redirection populated with link in Uri field
         /// </returns>
         IQuery<Redirection> WebAppLink(Uri url);
+        
+        /// <summary>
+        /// Remove folder template association from folder
+        /// </summary>
+        /// <param name="url"></param>
+        IQuery RemoveTemplateAssociation(Uri url, string id);
+        
+        /// <summary>
+        /// Check if template is already part of an existing template structure
+        /// </summary>
+        /// <param name="url"></param>
+        IQuery CheckTemplateOwned(Uri url, string id);
+        
+        /// <summary>
+        /// Check if a versioning change would result in file deletions
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="newMaxVersions"></param>
+        IQuery CheckVersioningViolation(Uri url, string id, int newMaxVersions);
     }
 
     public class ItemsEntity : EntityBase, IItemsEntity
@@ -1826,6 +1845,50 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Redirection>(Client);
 		    sfApiQuery.Action("WebAppLink");
             sfApiQuery.Uri(url);
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Remove folder template association from folder
+        /// </summary>
+        /// <param name="url"></param>
+        public IQuery RemoveTemplateAssociation(Uri url, string id)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+		    sfApiQuery.Action("RemoveTemplateAssociation");
+            sfApiQuery.Uri(url);
+            sfApiQuery.QueryString("parentid", id);
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Check if template is already part of an existing template structure
+        /// </summary>
+        /// <param name="url"></param>
+        public IQuery CheckTemplateOwned(Uri url, string id)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+		    sfApiQuery.Action("CheckTemplateOwned");
+            sfApiQuery.Uri(url);
+            sfApiQuery.QueryString("parentid", id);
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Check if a versioning change would result in file deletions
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="newMaxVersions"></param>
+        public IQuery CheckVersioningViolation(Uri url, string id, int newMaxVersions)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+		    sfApiQuery.Action("CheckVersioningViolation");
+            sfApiQuery.Uri(url);
+            sfApiQuery.QueryString("parentid", id);
+            sfApiQuery.QueryString("newMaxVersions", newMaxVersions);
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }

@@ -56,31 +56,36 @@ namespace ShareFile.Api.Client.Core.Tests.Uploaders
             }
         }
 
-        protected PlatformFileStream GetFileToUpload(int size)
+        protected PlatformFileStream GetFileToUpload(int size, bool useNonAsciiFilename)
         {
             var bytes = new byte[size];
 
             RandomNumberGenerator.Create().GetBytes(bytes);
 
-            return new PlatformFileStream(new MemoryStream(bytes), (long)size, RandomString(20));
+            return new PlatformFileStream(new MemoryStream(bytes), (long)size,
+                useNonAsciiFilename ? GetNonAsciiFilename() : RandomString(20));
         }
 
-        [TestCase(UploadMethod.Standard, 1, true)]
-        [TestCase(UploadMethod.Standard, 1, false)]
-        [TestCase(UploadMethod.Threaded, 1, true)]
-        [TestCase(UploadMethod.Threaded, 1, false)]
-        [TestCase(UploadMethod.Standard, 4, true)]
-        [TestCase(UploadMethod.Standard, 4, false)]
-        [TestCase(UploadMethod.Threaded, 4, true)]
-        [TestCase(UploadMethod.Threaded, 4, false)]
-        public async void Upload(UploadMethod uploadMethod, int megabytes, bool useAsync)
+        [TestCase(UploadMethod.Standard, 1, true, false)]
+        [TestCase(UploadMethod.Standard, 1, false, false)]
+        [TestCase(UploadMethod.Threaded, 1, true, false)]
+        [TestCase(UploadMethod.Threaded, 1, false, false)]
+        [TestCase(UploadMethod.Standard, 4, true, false)]
+        [TestCase(UploadMethod.Standard, 4, false, false)]
+        [TestCase(UploadMethod.Threaded, 4, true, false)]
+        [TestCase(UploadMethod.Threaded, 4, false, false)]
+        [TestCase(UploadMethod.Standard, 1, false, true)]
+        [TestCase(UploadMethod.Standard, 1, true, true)]
+        [TestCase(UploadMethod.Threaded, 1, false, true)]
+        [TestCase(UploadMethod.Threaded, 1, true, true)]
+        public async void Upload(UploadMethod uploadMethod, int megabytes, bool useAsync, bool useNonAsciiFilename)
         {
             var shareFileClient = GetShareFileClient();
             var rootFolder = shareFileClient.Items.Get().Execute();
             var testFolder = new Folder { Name = RandomString(30) + ".txt" };
 
             testFolder = shareFileClient.Items.CreateFolder(rootFolder.url, testFolder).Execute();
-            var file = GetFileToUpload(1024 * 1024 * megabytes);
+            var file = GetFileToUpload(1024 * 1024 * megabytes, useNonAsciiFilename);
             var uploadSpec = new UploadSpecificationRequest(file.Name, file.Length, testFolder.url, uploadMethod);
 
             UploaderBase uploader;
@@ -132,5 +137,10 @@ namespace ShareFile.Api.Client.Core.Tests.Uploaders
                         "Threaded scales, therefore byte ranges vary and are less predictable.  We should see no more expectedInvoations");
             }
         }
-    }
+
+        private string GetNonAsciiFilename()
+        {
+            return @"nonascii_貴社ますますご盛栄のこととお慶び申し上げます。平素は格別のご高配を賜り、厚く御礼申し上げます。.txt";
+        }
+    } 
 }

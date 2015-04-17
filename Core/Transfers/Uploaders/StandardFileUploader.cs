@@ -21,7 +21,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         public StandardFileUploader(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
             : base(client, uploadSpecificationRequest, file, config, expirationDays)
         {
-            UploadSpecificationRequest.Raw = false;
+            UploadSpecificationRequest.Raw = true;
         }
 
         public override UploadResponse Upload(Dictionary<string, object> transferMetadata = null)
@@ -45,16 +45,11 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                                 HttpMethod.Post,
                                 GetChunkUriForStandardUploads()))
                         {
-                            using (var multipartFormContent = new MultipartFormDataContent("upload-" + Guid.NewGuid().ToString("N")))
+                            using (var streamContent = new StreamContentWithProgress(stream, OnProgress))
                             {
                                 requestMessage.AddDefaultHeaders(Client);
-
-                                var streamContent = new StreamContentWithProgress(stream, OnProgress);
-
                                 streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-                                multipartFormContent.Add(streamContent, "File1", UploadSpecificationRequest.FileName);
-
-                                requestMessage.Content = multipartFormContent;
+                                requestMessage.Content = streamContent;
 
                                 var responseMessage =
                                     httpClient.SendAsync(requestMessage, CancellationToken.None).WaitForTask();

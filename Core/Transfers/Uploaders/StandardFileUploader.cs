@@ -45,12 +45,12 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                                 HttpMethod.Post,
                                 GetChunkUriForStandardUploads()))
                         {
-                            using (var streamContent = new StreamContentWithProgress(stream, OnProgress))
+                            using (var streamContent = new StreamContentWithProgress(new NoDisposeStream(stream), OnProgress))
                             {
                                 requestMessage.AddDefaultHeaders(Client);
                                 streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
                                 requestMessage.Content = streamContent;
-
+                                
                                 var responseMessage =
                                     httpClient.SendAsync(requestMessage, CancellationToken.None).WaitForTask();
 

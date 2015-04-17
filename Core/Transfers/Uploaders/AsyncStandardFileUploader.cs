@@ -36,58 +36,48 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         protected override async Task<UploadResponse> InternalUploadAsync()
         {
             int tryCount = 0;
-            Exception lastException = null;
-
-            Stream stream = null;
-            try
+            Stream stream = File.OpenRead();
+            while (true)
             {
-                stream = File.OpenRead();
-                while (tryCount < 3)
+                try
                 {
-                    try
+                    var httpClient = GetHttpClient();
+
+                    using (var requestMessage = new HttpRequestMessage(
+                            HttpMethod.Post,
+                            GetChunkUriForStandardUploads()))
                     {
-                        var httpClient = GetHttpClient();
-
-                        using (var requestMessage = new HttpRequestMessage(
-                                HttpMethod.Post,
-                                GetChunkUriForStandardUploads()))
+                        using (var streamContent = new StreamContentWithProgress(new NoDisposeStream(stream), OnProgress))
                         {
-                            using (var streamContent = new StreamContentWithProgress(new NoDisposeStream(stream), OnProgress))
-                            {
-                                requestMessage.AddDefaultHeaders(Client);
-                                streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-                                requestMessage.Content = streamContent;
-                                
-                                var responseMessage =
-                                    await
-                                    httpClient.SendAsync(
-                                        requestMessage,
-                                        CancellationToken.GetValueOrDefault(System.Threading.CancellationToken.None));
+                            requestMessage.AddDefaultHeaders(Client);
+                            streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                            requestMessage.Content = streamContent;
 
-                                MarkProgressComplete();
+                            var responseMessage =
+                                await
+                                httpClient.SendAsync(
+                                    requestMessage,
+                                    CancellationToken.GetValueOrDefault(System.Threading.CancellationToken.None));
 
-                                return await GetUploadResponseAsync(responseMessage);
-                            }
+                            MarkProgressComplete();
+
+                            return await GetUploadResponseAsync(responseMessage);
                         }
                     }
-                    catch (Exception exception)
+                }
+                catch (Exception)
+                {
+                    if (tryCount >= 3)
                     {
-                        lastException = exception;
+                        throw;
+                    }
+                    else
+                    {
+                        tryCount += 1;
                         stream.Seek(0, SeekOrigin.Begin);
-                        tryCount++;
                     }
                 }
             }
-            finally
-            {
-                if (stream != null)
-                {
-                    stream.Dispose();
-                }
-            }
-
-            
-            throw new ApplicationException("Upload failed after 3 tries", lastException);
         }
     }
 #endif

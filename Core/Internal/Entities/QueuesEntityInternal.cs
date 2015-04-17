@@ -88,6 +88,7 @@ namespace ShareFile.Api.Client.Entities
         /// queue, the completion parameter SignedItemId indicates the new item containing the signed
         /// document.
         /// </remarks>
+        /// <param name="grandparentid"></param>
         /// <param name="url"></param>
         /// <param name="result"></param>
         IQuery Complete(Uri url, ODataObject result, string grandparentid);
@@ -113,6 +114,16 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="qUrl"></param>
         /// <param name="eid"></param>
         IQuery Delete(Uri qUrl, string eid);
+        
+        /// <summary>
+        /// Fail the Queue Entry
+        /// </summary>
+        /// <remarks>
+        /// Indicates that the worker has failed to process the queue entry
+        /// </remarks>
+        /// <param name="qUrl"></param>
+        /// <param name="eid"></param>
+        IQuery Error(Uri qUrl, string eid);
     }
 
     public class QueuesEntityInternal : EntityBase, IQueuesEntityInternal
@@ -224,6 +235,7 @@ namespace ShareFile.Api.Client.Entities
         /// queue, the completion parameter SignedItemId indicates the new item containing the signed
         /// document.
         /// </remarks>
+        /// <param name="grandparentid"></param>
         /// <param name="url"></param>
         /// <param name="result"></param>
         public IQuery Complete(Uri url, ODataObject result, string grandparentid)
@@ -273,6 +285,24 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.Uri(qUrl);
             sfApiQuery.ActionIds(eid);
             sfApiQuery.HttpMethod = "DELETE";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Fail the Queue Entry
+        /// </summary>
+        /// <remarks>
+        /// Indicates that the worker has failed to process the queue entry
+        /// </remarks>
+        /// <param name="qUrl"></param>
+        /// <param name="eid"></param>
+        public IQuery Error(Uri qUrl, string eid)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+		    sfApiQuery.Action("Error");
+            sfApiQuery.Uri(qUrl);
+            sfApiQuery.ActionIds(eid);
+            sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
     }

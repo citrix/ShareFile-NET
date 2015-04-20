@@ -67,7 +67,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 }
                 catch (Exception)
                 {
-                    if (tryCount >= 3)
+                    if (tryCount >= 3 || !stream.CanSeek)
                     {
                         throw;
                     }

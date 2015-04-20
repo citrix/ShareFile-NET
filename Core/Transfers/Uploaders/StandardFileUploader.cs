@@ -29,54 +29,45 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             SetUploadSpecification();
 
             int tryCount = 0;
-            Exception lastException = null;
-
-            Stream stream = null;
-            try
+            Stream stream = File.OpenRead();
+            while (true)
             {
-                stream = File.OpenRead();
-                while (tryCount < 3)
+                try
                 {
-                    try
+                    var httpClient = GetHttpClient();
+
+                    using (var requestMessage = new HttpRequestMessage(
+                            HttpMethod.Post,
+                            GetChunkUriForStandardUploads()))
                     {
-                        var httpClient = GetHttpClient();
-
-                        using (var requestMessage = new HttpRequestMessage(
-                                HttpMethod.Post,
-                                GetChunkUriForStandardUploads()))
+                        using (var streamContent = new StreamContentWithProgress(new NoDisposeStream(stream), OnProgress))
                         {
-                            using (var streamContent = new StreamContentWithProgress(stream, OnProgress))
-                            {
-                                requestMessage.AddDefaultHeaders(Client);
-                                streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-                                requestMessage.Content = streamContent;
+                            requestMessage.AddDefaultHeaders(Client);
+                            streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                            requestMessage.Content = streamContent;
 
-                                var responseMessage =
-                                    httpClient.SendAsync(requestMessage, CancellationToken.None).WaitForTask();
+                            var responseMessage =
+                                httpClient.SendAsync(requestMessage, CancellationToken.None).WaitForTask();
 
-                                MarkProgressComplete();
+                            MarkProgressComplete();
 
-                                return GetUploadResponse(responseMessage);
-                            }
+                            return GetUploadResponse(responseMessage);
                         }
                     }
-                    catch (Exception exception)
+                }
+                catch (Exception)
+                {
+                    if (tryCount >= 3 || !stream.CanSeek)
                     {
-                        lastException = exception;
+                        throw;
+                    }
+                    else
+                    {
+                        tryCount += 1;
                         stream.Seek(0, SeekOrigin.Begin);
-                        tryCount++;
                     }
                 }
             }
-            finally
-            {
-                if (stream != null)
-                {
-                    stream.Dispose();
-                }
-            }
-
-            throw new ApplicationException("Upload failed after 3 tries", lastException);
         }
 
         public override void Prepare()

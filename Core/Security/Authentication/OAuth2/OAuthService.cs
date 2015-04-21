@@ -79,7 +79,7 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
                 };
             if (!string.IsNullOrEmpty(samlProviderId))
             {
-                tokenRequestData.Add("idpentityid", Uri.EscapeDataString(samlProviderId));
+                tokenRequestData.Add("idpentityid", samlProviderId);
             }
             return CreateOAuthTokenRequestQuery(applicationControlPlane, tokenRequestData, subdomain);
         }

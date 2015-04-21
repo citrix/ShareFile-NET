@@ -77,8 +77,10 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
                     {"grant_type", "urn:ietf:params:oauth:grant-type:saml2-bearer"},
                     {"assertion", samlAssertion.ToBase64()}
                 };
-            if (!String.IsNullOrEmpty(samlProviderId))
+            if (!string.IsNullOrEmpty(samlProviderId))
+            {
                 tokenRequestData.Add("idpentityid", Uri.EscapeDataString(samlProviderId));
+            }
             return CreateOAuthTokenRequestQuery(applicationControlPlane, tokenRequestData, subdomain);
         }
 

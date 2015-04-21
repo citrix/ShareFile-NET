@@ -16,14 +16,14 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
         FormQuery<OAuthToken> GetAuthorizationCodeForTokenQuery(OAuthAuthorizationCode code);
         FormQuery<OAuthToken> GetRefreshOAuthTokenQuery(OAuthToken token);
         FormQuery<OAuthToken> GetExchangeSamlAssertionForOAuthTokenQuery(string samlAssertion, string subdomain,
-            string applicationControlPlane);
+            string applicationControlPlane, string samlProviderId = "");
         FormQuery<OAuthToken> GetPasswordGrantRequestQuery(string username, string password, string subdomain,
             string applicationControlPlane);
 
 #if Async
         Task<OAuthToken> ExchangeAuthorizationCodeAsync(OAuthAuthorizationCode code);
         Task<OAuthToken> RefreshOAuthTokenAsync(OAuthToken token);
-        Task<OAuthToken> ExchangeSamlAssertionAsync(string samlAssertion, string subdomain, string applicationControlPlane);
+        Task<OAuthToken> ExchangeSamlAssertionAsync(string samlAssertion, string subdomain, string applicationControlPlane, string samlProviderId = "");
         Task<OAuthToken> PasswordGrantAsync(string username, string password, string subdomain,
             string applicationControlPlane);
 #endif
@@ -67,16 +67,19 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
                 }, token.Subdomain);
         }
 
-        public FormQuery<OAuthToken> GetExchangeSamlAssertionForOAuthTokenQuery(string samlAssertion, string subdomain, string applicationControlPlane)
+        public FormQuery<OAuthToken> GetExchangeSamlAssertionForOAuthTokenQuery(string samlAssertion, string subdomain, string applicationControlPlane, string samlProviderId = "")
         {
-            return CreateOAuthTokenRequestQuery(applicationControlPlane,
+            var tokenRequestData =
                 new Dictionary<string, string>
                 {
                     {"client_id", ClientId},
                     {"client_secret", ClientSecret},
                     {"grant_type", "urn:ietf:params:oauth:grant-type:saml2-bearer"},
                     {"assertion", samlAssertion.ToBase64()}
-                }, subdomain);
+                };
+            if (!String.IsNullOrEmpty(samlProviderId))
+                tokenRequestData.Add("idpentityid", Uri.EscapeDataString(samlProviderId));
+            return CreateOAuthTokenRequestQuery(applicationControlPlane, tokenRequestData, subdomain);
         }
 
         public FormQuery<OAuthToken> GetPasswordGrantRequestQuery(string username, string password, string subdomain,
@@ -104,11 +107,11 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
             return RequestOAuthTokenAsync(GetRefreshOAuthTokenQuery(token));
         }
 
-        public Task<OAuthToken> ExchangeSamlAssertionAsync(string samlAssertion, string subdomain, string applicationControlPlane)
+        public Task<OAuthToken> ExchangeSamlAssertionAsync(string samlAssertion, string subdomain, string applicationControlPlane, string samlProviderId = "")
         {
             return
                 RequestOAuthTokenAsync(GetExchangeSamlAssertionForOAuthTokenQuery(samlAssertion, subdomain,
-                    applicationControlPlane));
+                    applicationControlPlane, samlProviderId));
         }
 
         public Task<OAuthToken> PasswordGrantAsync(string username, string password, string subdomain,

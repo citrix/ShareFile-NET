@@ -23,7 +23,7 @@ namespace ShareFile.Api.Client.Exceptions
             {
                 if (ODataExceptionMessage == null)
                     return base.Message;
-                return string.Format("{0} (HttpStatusCode: {1})", ODataExceptionMessage.Message, Code);
+                return ODataExceptionMessage.Message;
             }
         }
     }

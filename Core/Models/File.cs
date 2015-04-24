@@ -57,6 +57,11 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public float? Version { get; set; }
 
+		/// <summary>
+		/// Electronic signature object associated with this item
+		/// </summary>
+		public ESignature ESignatureDocument { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -72,6 +77,7 @@ namespace ShareFile.Api.Models
 				LockedBy = typedSource.LockedBy;
 				FileLockInfo = typedSource.FileLockInfo;
 				Version = typedSource.Version;
+				ESignatureDocument = typedSource.ESignatureDocument;
 			}
 			else
 			{
@@ -103,6 +109,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("Version", out token) && token.Type != JTokenType.Null)
 				{
 					Version = (float?)serializer.Deserialize(token.CreateReader(), typeof(float?));
+				}
+				if(source.TryGetProperty("ESignatureDocument", out token) && token.Type != JTokenType.Null)
+				{
+					ESignatureDocument = (ESignature)serializer.Deserialize(token.CreateReader(), typeof(ESignature));
 				}
 			}
 		}

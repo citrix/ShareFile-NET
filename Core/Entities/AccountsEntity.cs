@@ -130,7 +130,8 @@ namespace ShareFile.Api.Client.Entities
         /// Retrieve the Single Sign-on configuration for the Account
         /// </remarks>
         /// <param name="provider"></param>
-        IQuery<SSOAccountProvider> GetSSO(string provider = "saml");
+        /// <param name="idpEntityId"></param>
+        IQuery<SSOAccountProvider> GetSSO(string provider = "saml", string idpEntityId = null);
         
         /// <summary>
         /// Update Account Single Sign-On Configuration
@@ -572,12 +573,14 @@ namespace ShareFile.Api.Client.Entities
         /// Retrieve the Single Sign-on configuration for the Account
         /// </remarks>
         /// <param name="provider"></param>
-        public IQuery<SSOAccountProvider> GetSSO(string provider = "saml")
+        /// <param name="idpEntityId"></param>
+        public IQuery<SSOAccountProvider> GetSSO(string provider = "saml", string idpEntityId = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<SSOAccountProvider>(Client);
 		    sfApiQuery.From("Accounts");
 		    sfApiQuery.Action("SSO");
             sfApiQuery.QueryString("provider", provider);
+            sfApiQuery.QueryString("idpEntityId", idpEntityId);
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }

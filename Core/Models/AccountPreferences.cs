@@ -203,6 +203,8 @@ namespace ShareFile.Api.Models
 
 		public bool? DisableShareConnectForAccount { get; set; }
 
+		public bool? DisablePrintToShareFile { get; set; }
+
 		public bool? EnableWebAppConnectorBrowsing { get; set; }
 
 		public bool? EnableStrictCrossdomainPolicy { get; set; }
@@ -343,6 +345,7 @@ namespace ShareFile.Api.Models
 				EmployeeEmailDomains = typedSource.EmployeeEmailDomains;
 				IsPremier = typedSource.IsPremier;
 				DisableShareConnectForAccount = typedSource.DisableShareConnectForAccount;
+				DisablePrintToShareFile = typedSource.DisablePrintToShareFile;
 				EnableWebAppConnectorBrowsing = typedSource.EnableWebAppConnectorBrowsing;
 				EnableStrictCrossdomainPolicy = typedSource.EnableStrictCrossdomainPolicy;
 				DisableScanSnap = typedSource.DisableScanSnap;
@@ -734,6 +737,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("DisableShareConnectForAccount", out token) && token.Type != JTokenType.Null)
 				{
 					DisableShareConnectForAccount = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("DisablePrintToShareFile", out token) && token.Type != JTokenType.Null)
+				{
+					DisablePrintToShareFile = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("EnableWebAppConnectorBrowsing", out token) && token.Type != JTokenType.Null)
 				{

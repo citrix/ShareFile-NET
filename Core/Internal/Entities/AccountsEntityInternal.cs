@@ -41,6 +41,18 @@ namespace ShareFile.Api.Client.Entities.Extensions
         }
         
         /// <summary>
+        /// Deletes an account
+        /// </summary>
+        /// <param name="url"></param>
+        public static IQuery Delete(this IAccountsEntity entity, Uri url)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(entity.Client);
+            sfApiQuery.Uri(url);
+            sfApiQuery.HttpMethod = "DELETE";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
         /// Get EnsSubscriber Configuration
         /// </summary>
         /// <returns>

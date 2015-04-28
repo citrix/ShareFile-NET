@@ -231,6 +231,10 @@ namespace ShareFile.Api.Models
 
 		public bool? EnableFolderTemplates { get; set; }
 
+		public bool? EnableFileDrops { get; set; }
+
+		public int? SpamEmailThreshold { get; set; }
+
 		public bool? EnableExternalEmailArchiving { get; set; }
 
 		public bool? CanStoreItemsInShareFile { get; set; }
@@ -353,6 +357,8 @@ namespace ShareFile.Api.Models
 				EnableUserInvitations = typedSource.EnableUserInvitations;
 				EnableClickTrails = typedSource.EnableClickTrails;
 				EnableFolderTemplates = typedSource.EnableFolderTemplates;
+				EnableFileDrops = typedSource.EnableFileDrops;
+				SpamEmailThreshold = typedSource.SpamEmailThreshold;
 				EnableExternalEmailArchiving = typedSource.EnableExternalEmailArchiving;
 				CanStoreItemsInShareFile = typedSource.CanStoreItemsInShareFile;
 				EnableHomeFolders = typedSource.EnableHomeFolders;
@@ -784,6 +790,14 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("EnableFolderTemplates", out token) && token.Type != JTokenType.Null)
 				{
 					EnableFolderTemplates = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableFileDrops", out token) && token.Type != JTokenType.Null)
+				{
+					EnableFileDrops = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("SpamEmailThreshold", out token) && token.Type != JTokenType.Null)
+				{
+					SpamEmailThreshold = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
 				}
 				if(source.TryGetProperty("EnableExternalEmailArchiving", out token) && token.Type != JTokenType.Null)
 				{

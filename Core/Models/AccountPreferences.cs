@@ -185,6 +185,8 @@ namespace ShareFile.Api.Models
 
 		public string TrustedDomains { get; set; }
 
+		public bool? UseWebPopAsWebAppLogin { get; set; }
+
 		public bool? EnableReportingV3 { get; set; }
 
 		public bool? EnableEncryptedEmailForOutlookPlugin { get; set; }
@@ -336,6 +338,7 @@ namespace ShareFile.Api.Models
 				ENSFailSafePollingCount = typedSource.ENSFailSafePollingCount;
 				ENSMaxNotificationSyncWaitCount = typedSource.ENSMaxNotificationSyncWaitCount;
 				TrustedDomains = typedSource.TrustedDomains;
+				UseWebPopAsWebAppLogin = typedSource.UseWebPopAsWebAppLogin;
 				EnableReportingV3 = typedSource.EnableReportingV3;
 				EnableEncryptedEmailForOutlookPlugin = typedSource.EnableEncryptedEmailForOutlookPlugin;
 				EnableDocPreviews = typedSource.EnableDocPreviews;
@@ -701,6 +704,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("TrustedDomains", out token) && token.Type != JTokenType.Null)
 				{
 					TrustedDomains = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("UseWebPopAsWebAppLogin", out token) && token.Type != JTokenType.Null)
+				{
+					UseWebPopAsWebAppLogin = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("EnableReportingV3", out token) && token.Type != JTokenType.Null)
 				{

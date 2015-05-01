@@ -88,10 +88,10 @@ namespace ShareFile.Api.Client.Entities
         /// queue, the completion parameter SignedItemId indicates the new item containing the signed
         /// document.
         /// </remarks>
-        /// <param name="grandparentid"></param>
-        /// <param name="url"></param>
+        /// <param name="qUrl"></param>
+        /// <param name="eid"></param>
         /// <param name="result"></param>
-        IQuery Complete(Uri url, ODataObject result, string grandparentid);
+        IQuery Complete(Uri qUrl, string eid, ODataObject result);
         
         /// <summary>
         /// Modifies a Queue Entry
@@ -235,15 +235,16 @@ namespace ShareFile.Api.Client.Entities
         /// queue, the completion parameter SignedItemId indicates the new item containing the signed
         /// document.
         /// </remarks>
-        /// <param name="grandparentid"></param>
-        /// <param name="url"></param>
+        /// <param name="qUrl"></param>
+        /// <param name="eid"></param>
         /// <param name="result"></param>
-        public IQuery Complete(Uri url, ODataObject result, string grandparentid)
+        public IQuery Complete(Uri qUrl, string eid, ODataObject result)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("Complete");
-            sfApiQuery.Uri(url);
-            sfApiQuery.QueryString("grandparentid", grandparentid);
+		    sfApiQuery.Action("Entries");
+            sfApiQuery.Uri(qUrl);
+            sfApiQuery.ActionIds(eid);
+            sfApiQuery.SubAction("Complete");
             sfApiQuery.Body = result;
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;

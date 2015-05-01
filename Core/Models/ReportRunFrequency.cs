@@ -11,7 +11,6 @@
 using System;
 namespace ShareFile.Api.Models 
 {
-#if ShareFile
 	public enum ReportRunFrequency
     {
         Once = 0,
@@ -19,5 +18,4 @@ namespace ShareFile.Api.Models
         Weekly = 2,
         Monthly = 3
     }
-#endif
 }

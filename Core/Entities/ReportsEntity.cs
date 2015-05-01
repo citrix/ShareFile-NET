@@ -18,14 +18,14 @@ using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Client.Entities
 {
-    public interface IReportsEntityInternal : IEntityBase
+    public interface IReportsEntity : IEntityBase
     {
         
         /// <summary>
         /// Get Reports for Current Account
         /// </summary>
         /// <remarks>
-        /// Returns all reports for the current account.
+        /// Returns all the reports configured for the current account. By expanding the Records property, a list of all ReportRecords can be accessed as well.
         /// </remarks>
         /// <returns>
         /// Reports for current account
@@ -36,7 +36,7 @@ namespace ShareFile.Api.Client.Entities
         /// Get Report by ID
         /// </summary>
         /// <remarks>
-        /// Returns a single report.
+        /// Returns a single report specified by id. The Records property is expandable.
         /// </remarks>
         /// <param name="url"></param>
         /// <returns>
@@ -48,7 +48,7 @@ namespace ShareFile.Api.Client.Entities
         /// Get recent reports
         /// </summary>
         /// <remarks>
-        /// Returns the last 10 reports run
+        /// Returns the last 10 reports run for the current account.
         /// </remarks>
         /// <returns>
         /// List of reports
@@ -59,7 +59,7 @@ namespace ShareFile.Api.Client.Entities
         /// Get recurring reports
         /// </summary>
         /// <remarks>
-        /// Returns all recurring reports
+        /// Returns all recurring reports for the current account.
         /// </remarks>
         /// <returns>
         /// List of reports
@@ -82,7 +82,7 @@ namespace ShareFile.Api.Client.Entities
         /// Get all Records by Report ID
         /// </summary>
         /// <remarks>
-        /// Returns all records for a report.
+        /// Returns all records for a single report.
         /// </remarks>
         /// <param name="url"></param>
         /// <returns>
@@ -105,7 +105,7 @@ namespace ShareFile.Api.Client.Entities
         /// }
         /// </example>
         /// <remarks>
-        /// Creates a new report.
+        /// Creates a new Report.
         /// </remarks>
         /// <param name="report"></param>
         /// <param name="runOnCreate"></param>
@@ -140,7 +140,7 @@ namespace ShareFile.Api.Client.Entities
         /// Delete Report
         /// </summary>
         /// <remarks>
-        /// Removes a report
+        /// Removes a report from the system
         /// </remarks>
         /// <param name="url"></param>
         IQuery Delete(Uri url);
@@ -188,9 +188,9 @@ namespace ShareFile.Api.Client.Entities
         IQuery DownloadData(string id);
     }
 
-    public class ReportsEntityInternal : EntityBase, IReportsEntityInternal
+    public class ReportsEntity : EntityBase, IReportsEntity
     {
-        public ReportsEntityInternal (IShareFileClient client)
+        public ReportsEntity (IShareFileClient client)
             : base (client, "Reports")
         { }
         
@@ -199,7 +199,7 @@ namespace ShareFile.Api.Client.Entities
         /// Get Reports for Current Account
         /// </summary>
         /// <remarks>
-        /// Returns all reports for the current account.
+        /// Returns all the reports configured for the current account. By expanding the Records property, a list of all ReportRecords can be accessed as well.
         /// </remarks>
         /// <returns>
         /// Reports for current account
@@ -216,7 +216,7 @@ namespace ShareFile.Api.Client.Entities
         /// Get Report by ID
         /// </summary>
         /// <remarks>
-        /// Returns a single report.
+        /// Returns a single report specified by id. The Records property is expandable.
         /// </remarks>
         /// <param name="url"></param>
         /// <returns>
@@ -234,7 +234,7 @@ namespace ShareFile.Api.Client.Entities
         /// Get recent reports
         /// </summary>
         /// <remarks>
-        /// Returns the last 10 reports run
+        /// Returns the last 10 reports run for the current account.
         /// </remarks>
         /// <returns>
         /// List of reports
@@ -252,7 +252,7 @@ namespace ShareFile.Api.Client.Entities
         /// Get recurring reports
         /// </summary>
         /// <remarks>
-        /// Returns all recurring reports
+        /// Returns all recurring reports for the current account.
         /// </remarks>
         /// <returns>
         /// List of reports
@@ -290,7 +290,7 @@ namespace ShareFile.Api.Client.Entities
         /// Get all Records by Report ID
         /// </summary>
         /// <remarks>
-        /// Returns all records for a report.
+        /// Returns all records for a single report.
         /// </remarks>
         /// <param name="url"></param>
         /// <returns>
@@ -320,7 +320,7 @@ namespace ShareFile.Api.Client.Entities
         /// }
         /// </example>
         /// <remarks>
-        /// Creates a new report.
+        /// Creates a new Report.
         /// </remarks>
         /// <param name="report"></param>
         /// <param name="runOnCreate"></param>
@@ -370,7 +370,7 @@ namespace ShareFile.Api.Client.Entities
         /// Delete Report
         /// </summary>
         /// <remarks>
-        /// Removes a report
+        /// Removes a report from the system
         /// </remarks>
         /// <param name="url"></param>
         public IQuery Delete(Uri url)

@@ -41,6 +41,8 @@ namespace ShareFile.Api.Models
                     _entityTypeMap.Add("UserUsages", typeof(UserUsage));
                     _entityTypeMap.Add("DiskSpace", typeof(DiskSpace));
                     _entityTypeMap.Add("DiskSpaces", typeof(DiskSpace));
+                    _entityTypeMap.Add("ReportRecord", typeof(ReportRecord));
+                    _entityTypeMap.Add("ReportRecords", typeof(ReportRecord));
                     _entityTypeMap.Add("BillingInfo", typeof(BillingInfo));
                     _entityTypeMap.Add("BillingInfos", typeof(BillingInfo));
                     _entityTypeMap.Add("UploadRequestParams", typeof(UploadRequestParams));
@@ -63,6 +65,8 @@ namespace ShareFile.Api.Models
                     _entityTypeMap.Add("ConnectorGroupZones", typeof(ConnectorGroupZone));
                     _entityTypeMap.Add("ConnectorGroupAccessControl", typeof(ConnectorGroupAccessControl));
                     _entityTypeMap.Add("ConnectorGroupAccessControls", typeof(ConnectorGroupAccessControl));
+                    _entityTypeMap.Add("Report", typeof(Report));
+                    _entityTypeMap.Add("Reports", typeof(Report));
                     _entityTypeMap.Add("Principal", typeof(Principal));
                     _entityTypeMap.Add("Principals", typeof(Principal));
                     _entityTypeMap.Add("PreviewPlatformInfo", typeof(PreviewPlatformInfo));

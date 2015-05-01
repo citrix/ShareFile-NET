@@ -26,8 +26,6 @@ namespace ShareFile.Api.Client.Internal.Models
             EntityTypeMap.AddEntity("AppliedPlanAddOnss", typeof(AppliedPlanAddOns));
             EntityTypeMap.AddEntity("Billing", typeof(Billing));
             EntityTypeMap.AddEntity("Billings", typeof(Billing));
-            EntityTypeMap.AddEntity("ReportRecord", typeof(ReportRecord));
-            EntityTypeMap.AddEntity("ReportRecords", typeof(ReportRecord));
             EntityTypeMap.AddEntity("BillingAddOn", typeof(BillingAddOn));
             EntityTypeMap.AddEntity("BillingAddOns", typeof(BillingAddOn));
             EntityTypeMap.AddEntity("CustomBillingEntry", typeof(CustomBillingEntry));
@@ -60,8 +58,6 @@ namespace ShareFile.Api.Client.Internal.Models
             EntityTypeMap.AddEntity("PlanAddonUsers", typeof(PlanAddonUser));
             EntityTypeMap.AddEntity("OAuthClient", typeof(OAuthClient));
             EntityTypeMap.AddEntity("OAuthClients", typeof(OAuthClient));
-            EntityTypeMap.AddEntity("Report", typeof(Report));
-            EntityTypeMap.AddEntity("Reports", typeof(Report));
             EntityTypeMap.AddEntity("Reseller", typeof(Reseller));
             EntityTypeMap.AddEntity("Resellers", typeof(Reseller));
             EntityTypeMap.AddEntity("ShareFileRepresentative", typeof(ShareFileRepresentative));

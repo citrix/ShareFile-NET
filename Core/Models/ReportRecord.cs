@@ -16,7 +16,6 @@ using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Models 
 {
-#if ShareFile
 	public class ReportRecord : ODataObject 
 	{
 
@@ -96,5 +95,4 @@ namespace ShareFile.Api.Models
 			}
 		}
 	}
-#endif
 }

@@ -11,12 +11,11 @@
 using System;
 namespace ShareFile.Api.Models 
 {
-#if ShareFile
-	public enum ReportObjectType
+	public enum ReportRunStatus
     {
-        Account = 0,
-        Folder = 1,
-        User = 2
+        Pending = 0,
+        Running = 1,
+        Success = 2,
+        Failed = 3
     }
-#endif
 }

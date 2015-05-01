@@ -11,17 +11,14 @@
 using System;
 namespace ShareFile.Api.Models 
 {
-#if ShareFile
-	public enum ReportDateOption
+	public enum ReportType
     {
-        Specific = 0,
-        Today = 1,
-        Yesterday = 2,
-        ThisWeek = 3,
-        LastWeek = 4,
-        ThisMonth = 5,
-        LastMonth = 6,
-        Last30Days = 7
+        Access = 0,
+        Activity = 1,
+        Storage = 2,
+        Messaging = 3,
+        BandwidthDetail = 4,
+        BandwidthSummary = 5,
+        EncryptedEmail = 6
     }
-#endif
 }

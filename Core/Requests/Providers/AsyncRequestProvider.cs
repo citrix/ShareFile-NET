@@ -42,7 +42,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 if (action != null && action.Redirection != null && action.Redirection.Body != null)
                 {
                     apiRequest.IsComposed = true;
-                    apiRequest.Uri = action.Redirection.Uri;
+                    apiRequest.Uri = action.Redirection.GetCalculatedUri();
                     apiRequest.Body = action.Redirection.Body;
                     apiRequest.HttpMethod = action.Redirection.Method ?? "GET";
                 }
@@ -122,10 +122,18 @@ namespace ShareFile.Api.Client.Requests.Providers
                             string redirectUri;
                             if (response.Value is ODataObject && response.Value.TryGetProperty("Uri", out redirectUri))
                             {
-                                response.Value = new Redirection
+                                var redirect = new Redirection
                                 {
                                     Uri = new Uri(redirectUri)
                                 };
+
+                                string redirectRoot;
+                                if(response.Value.TryGetProperty("Root", out redirectRoot))
+                                {
+                                    redirect.Root = redirectRoot;
+                                }
+
+                                response.Value = redirect;
                             }
 
                             if (response.Value is Redirection && typeof(T) != typeof(Redirection))
@@ -206,7 +214,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 if (action != null && action.Redirection != null && action.Redirection.Body != null)
                 {
                     apiRequest.IsComposed = true;
-                    apiRequest.Uri = action.Redirection.Uri;
+                    apiRequest.Uri = action.Redirection.GetCalculatedUri();
                     apiRequest.Body = action.Redirection.Body;
                     apiRequest.HttpMethod = action.Redirection.Method ?? "GET";
                 }

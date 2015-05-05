@@ -83,7 +83,13 @@ namespace ShareFile.Api.Client.Requests.Providers
                     string redirectUri;
                     if (result is ODataObject && result.TryGetProperty("Uri", out redirectUri))
                     {
-                        result = new Redirection { Uri = new Uri(redirectUri) };
+                        var redirect = new Redirection { Uri = new Uri(redirectUri) };
+                        string redirectRoot;
+                        if(result.TryGetProperty("Root", out redirectRoot))
+                        {
+                            redirect.Root = redirectRoot;
+                        }
+                        result = redirect;
                     }
 
                     if (result is Redirection && typeof(T) != typeof(Redirection))

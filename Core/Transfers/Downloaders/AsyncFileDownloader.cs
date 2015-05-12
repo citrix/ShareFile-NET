@@ -9,7 +9,7 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
 #if Async
     public class AsyncFileDownloader : DownloaderBase
     {
-        internal AsyncFileDownloader(Item item, IShareFileClient client, DownloaderConfig config = null)
+        public AsyncFileDownloader(Item item, IShareFileClient client, DownloaderConfig config = null)
             : base (item, client, config)
         {
             Client = client;

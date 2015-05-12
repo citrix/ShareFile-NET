@@ -17,7 +17,7 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
             Item = item;
         }
 
-        public async Task DownloadToAsync(Stream fileStream, CancellationToken? cancellationToken = null,
+        public async virtual Task DownloadToAsync(Stream fileStream, CancellationToken? cancellationToken = null,
             Dictionary<string, object> transferMetadata = null)
         {
             var downloadQuery = CreateDownloadQuery();

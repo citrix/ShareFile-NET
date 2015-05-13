@@ -27,10 +27,11 @@ namespace ShareFile.Api.Client.Entities
         /// <remarks>
         /// Retrieves information about the Account defined in the call subdomain
         /// </remarks>
+        /// <param name="id"></param>
         /// <returns>
         /// The subdomain account information
         /// </returns>
-        IQuery<Account> Get();
+        IQuery<Account> Get(string id = null);
         
         /// <summary>
         /// Get current Account branding
@@ -405,13 +406,15 @@ namespace ShareFile.Api.Client.Entities
         /// <remarks>
         /// Retrieves information about the Account defined in the call subdomain
         /// </remarks>
+        /// <param name="id"></param>
         /// <returns>
         /// The subdomain account information
         /// </returns>
-        public IQuery<Account> Get()
+        public IQuery<Account> Get(string id = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Account>(Client);
 		    sfApiQuery.From("Accounts");
+            sfApiQuery.QueryString("id", id);
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }

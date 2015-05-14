@@ -165,8 +165,6 @@ namespace ShareFile.Api.Models
 
 		public string AccountID { get; set; }
 
-		public bool? EnableGetApp { get; set; }
-
 		public bool? EnableStorageZoneConnector { get; set; }
 
 		public bool? HasAnyConnectorZones { get; set; }
@@ -330,7 +328,6 @@ namespace ShareFile.Api.Models
 				EnableSMBConnectorForAccount = typedSource.EnableSMBConnectorForAccount;
 				EnablePersonalCloudConnectors = typedSource.EnablePersonalCloudConnectors;
 				AccountID = typedSource.AccountID;
-				EnableGetApp = typedSource.EnableGetApp;
 				EnableStorageZoneConnector = typedSource.EnableStorageZoneConnector;
 				HasAnyConnectorZones = typedSource.HasAnyConnectorZones;
 				EnableENSForAccount = typedSource.EnableENSForAccount;
@@ -667,10 +664,6 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("AccountID", out token) && token.Type != JTokenType.Null)
 				{
 					AccountID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
-				}
-				if(source.TryGetProperty("EnableGetApp", out token) && token.Type != JTokenType.Null)
-				{
-					EnableGetApp = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("EnableStorageZoneConnector", out token) && token.Type != JTokenType.Null)
 				{

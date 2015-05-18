@@ -229,6 +229,8 @@ namespace ShareFile.Api.Models
 
 		public bool? ShowDownloadLinkInUploadNotification { get; set; }
 
+		public bool? AllowDownloadNotificationsWithoutAdmin { get; set; }
+
 		public bool? EnableUserInvitations { get; set; }
 
 		public bool? EnableClickTrails { get; set; }
@@ -360,6 +362,7 @@ namespace ShareFile.Api.Models
 				IntegrationProviders = typedSource.IntegrationProviders;
 				EnableBouncedEmailNotifications = typedSource.EnableBouncedEmailNotifications;
 				ShowDownloadLinkInUploadNotification = typedSource.ShowDownloadLinkInUploadNotification;
+				AllowDownloadNotificationsWithoutAdmin = typedSource.AllowDownloadNotificationsWithoutAdmin;
 				EnableUserInvitations = typedSource.EnableUserInvitations;
 				EnableClickTrails = typedSource.EnableClickTrails;
 				EnableFolderTemplates = typedSource.EnableFolderTemplates;
@@ -792,6 +795,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("ShowDownloadLinkInUploadNotification", out token) && token.Type != JTokenType.Null)
 				{
 					ShowDownloadLinkInUploadNotification = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("AllowDownloadNotificationsWithoutAdmin", out token) && token.Type != JTokenType.Null)
+				{
+					AllowDownloadNotificationsWithoutAdmin = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("EnableUserInvitations", out token) && token.Type != JTokenType.Null)
 				{

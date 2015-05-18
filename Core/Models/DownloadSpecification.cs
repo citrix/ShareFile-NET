@@ -27,6 +27,8 @@ namespace ShareFile.Api.Models
 
 		public Uri DownloadPrepStartURL { get; set; }
 
+		public Uri DownloadPrepStatusURL { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -39,6 +41,7 @@ namespace ShareFile.Api.Models
 				PrepareXmlInfo = typedSource.PrepareXmlInfo;
 				DownloadUrl = typedSource.DownloadUrl;
 				DownloadPrepStartURL = typedSource.DownloadPrepStartURL;
+				DownloadPrepStatusURL = typedSource.DownloadPrepStatusURL;
 			}
 			else
 			{
@@ -58,6 +61,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("DownloadPrepStartURL", out token) && token.Type != JTokenType.Null)
 				{
 					DownloadPrepStartURL = (Uri)serializer.Deserialize(token.CreateReader(), typeof(Uri));
+				}
+				if(source.TryGetProperty("DownloadPrepStatusURL", out token) && token.Type != JTokenType.Null)
+				{
+					DownloadPrepStatusURL = (Uri)serializer.Deserialize(token.CreateReader(), typeof(Uri));
 				}
 			}
 		}

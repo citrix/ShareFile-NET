@@ -240,7 +240,17 @@ namespace ShareFile.Api.Client
 
             if (uploadSpecificationRequest.Method.HasValue) return;
 
-            uploadSpecificationRequest.Method = GetUploadMethod(uploadSpecificationRequest.FileSize);
+            if (uploadSpecificationRequest.ProviderCapabilities != null && uploadSpecificationRequest.Method == null)
+            {
+                uploadSpecificationRequest.Method = 
+                    uploadSpecificationRequest.ProviderCapabilities.Any(x => x.Name == CapabilityName.StandardUploadRaw) 
+                    ? this.GetUploadMethod(uploadSpecificationRequest.FileSize) 
+                    : UploadMethod.Threaded;
+            }
+            else
+            {
+                uploadSpecificationRequest.Method = UploadMethod.Threaded;
+            }
         }
 
 #if Async

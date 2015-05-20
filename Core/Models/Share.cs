@@ -113,8 +113,14 @@ namespace ShareFile.Api.Models
 
 		public DateTime? LastDateSent { get; set; }
 
+		/// <summary>
+		/// Indicates whether or not this Share has been downloaded
+		/// </summary>
 		public bool? IsConsumed { get; set; }
 
+		/// <summary>
+		/// Indicates whether the contents of this share have been viewed by a valid, authenticated recipient
+		/// </summary>
 		public bool? IsRead { get; set; }
 
 		public bool? IsArchived { get; set; }

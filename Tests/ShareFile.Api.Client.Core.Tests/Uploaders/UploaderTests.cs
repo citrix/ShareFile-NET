@@ -138,6 +138,42 @@ namespace ShareFile.Api.Client.Core.Tests.Uploaders
             }
         }
 
+        [TestCase(10, true, new[] { CapabilityName.StandardUploadRaw, CapabilityName.AdvancedSearch }, ExpectedResult = typeof(AsyncScalingFileUploader))]
+        [TestCase(10, false, new[] { CapabilityName.StandardUploadRaw, CapabilityName.AdvancedSearch }, ExpectedResult = typeof(ScalingFileUploader))]
+        [TestCase(10, true, null, ExpectedResult = typeof(AsyncScalingFileUploader))]
+        [TestCase(10, false, null, ExpectedResult = typeof(ScalingFileUploader))]
+        [TestCase(1, true, new[] { CapabilityName.AdvancedSearch }, ExpectedResult = typeof(AsyncScalingFileUploader))]
+        [TestCase(1, false, new[] { CapabilityName.AdvancedSearch }, ExpectedResult = typeof(ScalingFileUploader))]
+        [TestCase(1, true, new[] { CapabilityName.StandardUploadRaw, CapabilityName.AdvancedSearch }, ExpectedResult = typeof(AsyncStandardFileUploader))]
+        [TestCase(1, false, new[] { CapabilityName.StandardUploadRaw, CapabilityName.AdvancedSearch }, ExpectedResult = typeof(StandardFileUploader))]
+        [TestCase(1, true, null, ExpectedResult = typeof(AsyncScalingFileUploader))]
+        [TestCase(1, false, null, ExpectedResult = typeof(ScalingFileUploader))]
+        public Type VerifyUploader(int megabytes, bool useAsync, CapabilityName[] capabilityNames)
+        {
+            var shareFileClient = GetShareFileClient();
+            var testFolder = new Folder { Name = RandomString(30) + ".txt" };
+            var file = GetFileToUpload(1024 * 1024 * megabytes, false);
+            var uploadSpec = new UploadSpecificationRequest(file.Name, file.Length, testFolder.url);
+            if (capabilityNames != null)
+            {
+                uploadSpec.ProviderCapabilities =
+                    new List<Capability>(capabilityNames.Select(x => new Capability { Name = x }));
+            }
+
+            UploaderBase uploader;
+
+            if (useAsync)
+            {
+                uploader = shareFileClient.GetAsyncFileUploader(uploadSpec, file);
+            }
+            else
+            {
+                uploader = shareFileClient.GetFileUploader(uploadSpec, file);
+            }
+
+            return uploader.GetType();
+        }
+
         private string GetNonAsciiFilename()
         {
             return @"nonascii_貴社ますますご盛栄のこととお慶び申し上げます。平素は格別のご高配を賜り、厚く御礼申し上げます。.txt";

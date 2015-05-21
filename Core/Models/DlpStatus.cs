@@ -11,9 +11,10 @@
 using System;
 namespace ShareFile.Api.Models 
 {
-	public enum ClientCapability
+	public enum DlpStatus
     {
-        HardLock = 0,
-        DLP = 1
+        Unscanned = 0,
+        ScannedOK = 1,
+        ScannedRejected = 2
     }
 }

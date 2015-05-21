@@ -16,6 +16,7 @@ namespace ShareFile.Api.Client
     public interface IInternalShareFileClient : IShareFileClient
     {
         IBillingEntityInternal Billing { get; }
+        IDlpPoliciesEntityInternal DlpPolicies { get; }
         IEncryptedEmailsEntityInternal EncryptedEmails { get; }
         IFileLockEntityInternal FileLock { get; }
         INotificationsEntityInternal Notifications { get; }
@@ -34,6 +35,7 @@ namespace ShareFile.Api.Client
             : base(baseUri, configuration)
         {
             Billing = new BillingEntityInternal(this);
+            DlpPolicies = new DlpPoliciesEntityInternal(this);
             EncryptedEmails = new EncryptedEmailsEntityInternal(this);
             FileLock = new FileLockEntityInternal(this);
             Notifications = new NotificationsEntityInternal(this);
@@ -49,6 +51,7 @@ namespace ShareFile.Api.Client
         }
 
         public IBillingEntityInternal Billing { get; private set; }
+        public IDlpPoliciesEntityInternal DlpPolicies { get; private set; }
         public IEncryptedEmailsEntityInternal EncryptedEmails { get; private set; }
         public IFileLockEntityInternal FileLock { get; private set; }
         public INotificationsEntityInternal Notifications { get; private set; }

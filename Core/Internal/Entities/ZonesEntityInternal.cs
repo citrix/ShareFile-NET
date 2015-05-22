@@ -41,13 +41,13 @@ namespace ShareFile.Api.Client.Entities.Extensions
         /// Add a tenant account to a multi-tenant zone
         /// </summary>
         /// <param name="parentUrl"></param>
-        /// <param name="Id"></param>
-        public static IQuery<Account> CreateTenants(this IZonesEntity entity, Uri parentUrl, string Id)
+        /// <param name="accountId"></param>
+        public static IQuery<Account> CreateTenants(this IZonesEntity entity, Uri parentUrl, string accountId)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Account>(entity.Client);
 		    sfApiQuery.Action("Tenants");
             sfApiQuery.Uri(parentUrl);
-            sfApiQuery.QueryString("Id", Id);
+            sfApiQuery.QueryString("accountId", accountId);
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
@@ -56,13 +56,13 @@ namespace ShareFile.Api.Client.Entities.Extensions
         /// Remove a tenant from a multi-tenant zone
         /// </summary>
         /// <param name="parentUrl"></param>
-        /// <param name="Id"></param>
-        public static IQuery DeleteTenants(this IZonesEntity entity, Uri parentUrl, string Id)
+        /// <param name="id"></param>
+        public static IQuery DeleteTenants(this IZonesEntity entity, Uri parentUrl, string id)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(entity.Client);
 		    sfApiQuery.Action("Tenants");
             sfApiQuery.Uri(parentUrl);
-            sfApiQuery.ActionIds(Id);
+            sfApiQuery.ActionIds(id);
             sfApiQuery.HttpMethod = "DELETE";	
 		    return sfApiQuery;
         }

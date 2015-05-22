@@ -217,6 +217,8 @@ namespace ShareFile.Api.Models
 
 		public BillingInfo BillingInformation { get; set; }
 
+		public SafeEnum<AccountSubType> AccountSubType { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -300,6 +302,7 @@ namespace ShareFile.Api.Models
 				CreditCardSecurityCode = typedSource.CreditCardSecurityCode;
 				ToolInformation = typedSource.ToolInformation;
 				BillingInformation = typedSource.BillingInformation;
+				AccountSubType = typedSource.AccountSubType;
 			}
 			else
 			{
@@ -603,6 +606,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("BillingInformation", out token) && token.Type != JTokenType.Null)
 				{
 					BillingInformation = (BillingInfo)serializer.Deserialize(token.CreateReader(), typeof(BillingInfo));
+				}
+				if(source.TryGetProperty("AccountSubType", out token) && token.Type != JTokenType.Null)
+				{
+					AccountSubType = (SafeEnum<AccountSubType>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<AccountSubType>));
 				}
 			}
 		}

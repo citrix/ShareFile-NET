@@ -67,6 +67,8 @@ namespace ShareFile.Api.Models
 
 		public UserInfo Info { get; set; }
 
+		public string AffiliatedPartnerUserId { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -99,6 +101,7 @@ namespace ShareFile.Api.Models
 				VirtualRoot = typedSource.VirtualRoot;
 				Roles = typedSource.Roles;
 				Info = typedSource.Info;
+				AffiliatedPartnerUserId = typedSource.AffiliatedPartnerUserId;
 			}
 			else
 			{
@@ -198,6 +201,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("Info", out token) && token.Type != JTokenType.Null)
 				{
 					Info = (UserInfo)serializer.Deserialize(token.CreateReader(), typeof(UserInfo));
+				}
+				if(source.TryGetProperty("AffiliatedPartnerUserId", out token) && token.Type != JTokenType.Null)
+				{
+					AffiliatedPartnerUserId = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
 			}
 		}

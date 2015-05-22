@@ -249,6 +249,8 @@ namespace ShareFile.Api.Models
 
 		public bool? EnableCustomBrandingUsesS3 { get; set; }
 
+		public bool? CanCreateMultiTenantZones { get; set; }
+
 		public bool? EnableDLP { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
@@ -374,6 +376,7 @@ namespace ShareFile.Api.Models
 				CanStoreItemsInShareFile = typedSource.CanStoreItemsInShareFile;
 				EnableHomeFolders = typedSource.EnableHomeFolders;
 				EnableCustomBrandingUsesS3 = typedSource.EnableCustomBrandingUsesS3;
+				CanCreateMultiTenantZones = typedSource.CanCreateMultiTenantZones;
 				EnableDLP = typedSource.EnableDLP;
 			}
 			else
@@ -838,6 +841,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("EnableCustomBrandingUsesS3", out token) && token.Type != JTokenType.Null)
 				{
 					EnableCustomBrandingUsesS3 = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanCreateMultiTenantZones", out token) && token.Type != JTokenType.Null)
+				{
+					CanCreateMultiTenantZones = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("EnableDLP", out token) && token.Type != JTokenType.Null)
 				{

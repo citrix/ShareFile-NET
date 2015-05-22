@@ -43,6 +43,8 @@ namespace ShareFile.Api.Models
 
 		public SafeEnum<ReportRunStatus> Status { get; set; }
 
+		public bool? HasData { get; set; }
+
 		public string Message { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
@@ -59,6 +61,7 @@ namespace ShareFile.Api.Models
 				StartRunTime = typedSource.StartRunTime;
 				EndRunTime = typedSource.EndRunTime;
 				Status = typedSource.Status;
+				HasData = typedSource.HasData;
 				Message = typedSource.Message;
 			}
 			else
@@ -87,6 +90,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("Status", out token) && token.Type != JTokenType.Null)
 				{
 					Status = (SafeEnum<ReportRunStatus>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<ReportRunStatus>));
+				}
+				if(source.TryGetProperty("HasData", out token) && token.Type != JTokenType.Null)
+				{
+					HasData = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("Message", out token) && token.Type != JTokenType.Null)
 				{

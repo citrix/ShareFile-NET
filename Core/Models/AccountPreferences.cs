@@ -249,6 +249,8 @@ namespace ShareFile.Api.Models
 
 		public bool? EnableCustomBrandingUsesS3 { get; set; }
 
+		public bool? EnablePromotions { get; set; }
+
 		public bool? CanCreateMultiTenantZones { get; set; }
 
 		public bool? EnableDLP { get; set; }
@@ -376,6 +378,7 @@ namespace ShareFile.Api.Models
 				CanStoreItemsInShareFile = typedSource.CanStoreItemsInShareFile;
 				EnableHomeFolders = typedSource.EnableHomeFolders;
 				EnableCustomBrandingUsesS3 = typedSource.EnableCustomBrandingUsesS3;
+				EnablePromotions = typedSource.EnablePromotions;
 				CanCreateMultiTenantZones = typedSource.CanCreateMultiTenantZones;
 				EnableDLP = typedSource.EnableDLP;
 			}
@@ -841,6 +844,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("EnableCustomBrandingUsesS3", out token) && token.Type != JTokenType.Null)
 				{
 					EnableCustomBrandingUsesS3 = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnablePromotions", out token) && token.Type != JTokenType.Null)
+				{
+					EnablePromotions = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("CanCreateMultiTenantZones", out token) && token.Type != JTokenType.Null)
 				{

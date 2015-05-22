@@ -59,6 +59,8 @@ namespace ShareFile.Api.Models
 
 		public Item SaveFolder { get; set; }
 
+		public User Creator { get; set; }
+
 		public string CreatorId { get; set; }
 
 		public IEnumerable<ReportRecord> Records { get; set; }
@@ -100,6 +102,7 @@ namespace ShareFile.Api.Models
 				SaveFormat = typedSource.SaveFormat;
 				SaveFolderId = typedSource.SaveFolderId;
 				SaveFolder = typedSource.SaveFolder;
+				Creator = typedSource.Creator;
 				CreatorId = typedSource.CreatorId;
 				Records = typedSource.Records;
 				CreateDate = typedSource.CreateDate;
@@ -179,6 +182,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("SaveFolder", out token) && token.Type != JTokenType.Null)
 				{
 					SaveFolder = (Item)serializer.Deserialize(token.CreateReader(), typeof(Item));
+				}
+				if(source.TryGetProperty("Creator", out token) && token.Type != JTokenType.Null)
+				{
+					Creator = (User)serializer.Deserialize(token.CreateReader(), typeof(User));
 				}
 				if(source.TryGetProperty("CreatorId", out token) && token.Type != JTokenType.Null)
 				{

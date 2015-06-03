@@ -46,9 +46,9 @@ namespace ShareFile.Api.Models
 		public SafeEnum<FileVirusStatus> VirusStatus { get; set; }
 
 		/// <summary>
-		/// Current DLP scanning status for this file
+		/// Data Loss Prevention information for this file.
 		/// </summary>
-		public SafeEnum<DlpStatus> DlpStatus { get; set; }
+		public ItemDlpInfo DlpInfo { get; set; }
 
 		/// <summary>
 		/// Effective Access Control permissions for this file
@@ -87,7 +87,7 @@ namespace ShareFile.Api.Models
 				Hash = typedSource.Hash;
 				HasPreview = typedSource.HasPreview;
 				VirusStatus = typedSource.VirusStatus;
-				DlpStatus = typedSource.DlpStatus;
+				DlpInfo = typedSource.DlpInfo;
 				Info = typedSource.Info;
 				LockedBy = typedSource.LockedBy;
 				FileLockInfo = typedSource.FileLockInfo;
@@ -113,9 +113,9 @@ namespace ShareFile.Api.Models
 				{
 					VirusStatus = (SafeEnum<FileVirusStatus>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<FileVirusStatus>));
 				}
-				if(source.TryGetProperty("DlpStatus", out token) && token.Type != JTokenType.Null)
+				if(source.TryGetProperty("DlpInfo", out token) && token.Type != JTokenType.Null)
 				{
-					DlpStatus = (SafeEnum<DlpStatus>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<DlpStatus>));
+					DlpInfo = (ItemDlpInfo)serializer.Deserialize(token.CreateReader(), typeof(ItemDlpInfo));
 				}
 				if(source.TryGetProperty("Info", out token) && token.Type != JTokenType.Null)
 				{

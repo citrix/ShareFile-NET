@@ -13,7 +13,6 @@ namespace ShareFile.Api.Models
 {
 	public enum ClientCapability
     {
-        HardLock = 0,
-        DLP = 1
+        HardLock = 0
     }
 }

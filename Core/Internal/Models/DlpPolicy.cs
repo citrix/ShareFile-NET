@@ -23,18 +23,44 @@ namespace ShareFile.Api.Models
 	public class DlpPolicy : ODataObject 
 	{
 
+		/// <summary>
+		/// Localized display name of this policy.
+		/// </summary>
 		public string Name { get; set; }
 
+		/// <summary>
+		/// Localized description of this policy.
+		/// </summary>
+		public string Description { get; set; }
+
+		/// <summary>
+		/// File scan status associated with this policy.
+		/// </summary>
 		public SafeEnum<DlpStatus> Status { get; set; }
 
+		/// <summary>
+		/// If true, anonymous share recipients can download Items which have this policy.
+		/// </summary>
 		public bool? AnonymousUserCanDownload { get; set; }
 
+		/// <summary>
+		/// If true, Client users can download Items which have this policy.
+		/// </summary>
 		public bool? ClientUserCanDownload { get; set; }
 
+		/// <summary>
+		/// If true, Client users can share Items which have this policy.
+		/// </summary>
 		public bool? ClientUserCanShare { get; set; }
 
+		/// <summary>
+		/// If true, Employee users can download Items which have this policy.
+		/// </summary>
 		public bool? EmployeeUserCanDownload { get; set; }
 
+		/// <summary>
+		/// If true, Employee users can share Items which have this policy.
+		/// </summary>
 		public bool? EmployeeUserCanShare { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
@@ -46,6 +72,7 @@ namespace ShareFile.Api.Models
 			if(typedSource != null)
 			{
 				Name = typedSource.Name;
+				Description = typedSource.Description;
 				Status = typedSource.Status;
 				AnonymousUserCanDownload = typedSource.AnonymousUserCanDownload;
 				ClientUserCanDownload = typedSource.ClientUserCanDownload;
@@ -59,6 +86,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("Name", out token) && token.Type != JTokenType.Null)
 				{
 					Name = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("Description", out token) && token.Type != JTokenType.Null)
+				{
+					Description = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
 				if(source.TryGetProperty("Status", out token) && token.Type != JTokenType.Null)
 				{

@@ -46,6 +46,30 @@ namespace ShareFile.Api.Client.Entities
         /// The DLP policy with the requested id.
         /// </returns>
         IQuery<DlpPolicy> Get(Uri url);
+        
+        /// <summary>
+        /// Get Data Loss Prevention Info for an Item
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns>
+        /// The Data Loss Prevention information of the Item
+        /// </returns>
+        IQuery<ItemDlpInfo> GetDlpInfoByItem(Uri url);
+        
+        /// <summary>
+        /// Update Data Loss Prevention Info for an Item
+        /// </summary>
+        /// <example>
+        /// {
+        /// "Status":"ScannedRejected"
+        /// }
+        /// </example>
+        /// <param name="url"></param>
+        /// <param name="dlpInfo"></param>
+        /// <returns>
+        /// The updated Data Loss Prevention information of the Item
+        /// </returns>
+        IQuery<ItemDlpInfo> UpdateDlpInfoByItem(Uri url, ItemDlpInfo dlpInfo);
     }
 
     public class DlpPoliciesEntityInternal : EntityBase, IDlpPoliciesEntityInternal
@@ -97,6 +121,45 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<DlpPolicy>(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get Data Loss Prevention Info for an Item
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns>
+        /// The Data Loss Prevention information of the Item
+        /// </returns>
+        public IQuery<ItemDlpInfo> GetDlpInfoByItem(Uri url)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ItemDlpInfo>(Client);
+		    sfApiQuery.Action("DlpInfo");
+            sfApiQuery.Uri(url);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Update Data Loss Prevention Info for an Item
+        /// </summary>
+        /// <example>
+        /// {
+        /// "Status":"ScannedRejected"
+        /// }
+        /// </example>
+        /// <param name="url"></param>
+        /// <param name="dlpInfo"></param>
+        /// <returns>
+        /// The updated Data Loss Prevention information of the Item
+        /// </returns>
+        public IQuery<ItemDlpInfo> UpdateDlpInfoByItem(Uri url, ItemDlpInfo dlpInfo)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ItemDlpInfo>(Client);
+		    sfApiQuery.Action("DlpInfo");
+            sfApiQuery.Uri(url);
+            sfApiQuery.Body = dlpInfo;
+            sfApiQuery.HttpMethod = "PATCH";	
 		    return sfApiQuery;
         }
     }

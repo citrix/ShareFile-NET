@@ -27,7 +27,7 @@ namespace ShareFile.Api.Client.Internal.Models
             EntityTypeMap.AddEntity("Billing", typeof(Billing));
             EntityTypeMap.AddEntity("Billings", typeof(Billing));
             EntityTypeMap.AddEntity("DlpPolicy", typeof(DlpPolicy));
-            EntityTypeMap.AddEntity("DlpPolicys", typeof(DlpPolicy));
+            EntityTypeMap.AddEntity("DlpPolicies", typeof(DlpPolicy));
             EntityTypeMap.AddEntity("BillingAddOn", typeof(BillingAddOn));
             EntityTypeMap.AddEntity("BillingAddOns", typeof(BillingAddOn));
             EntityTypeMap.AddEntity("CustomBillingEntry", typeof(CustomBillingEntry));

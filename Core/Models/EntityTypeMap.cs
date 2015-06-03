@@ -27,6 +27,8 @@ namespace ShareFile.Api.Models
                     _entityTypeMap.Add("AccessControlsBulkParamss", typeof(AccessControlsBulkParams));
                     _entityTypeMap.Add("AccessControlParam", typeof(AccessControlParam));
                     _entityTypeMap.Add("AccessControlParams", typeof(AccessControlParam));
+                    _entityTypeMap.Add("ItemDlpInfo", typeof(ItemDlpInfo));
+                    _entityTypeMap.Add("ItemDlpInfos", typeof(ItemDlpInfo));
                     _entityTypeMap.Add("ShareItemHistory", typeof(ShareItemHistory));
                     _entityTypeMap.Add("ShareItemHistorys", typeof(ShareItemHistory));
                     _entityTypeMap.Add("InboxMetadata", typeof(InboxMetadata));

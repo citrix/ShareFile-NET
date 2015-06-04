@@ -53,7 +53,10 @@ namespace ShareFile.Api.Models
         ShareConnect = 36,
         ShareConnectWeb = 37,
         SFWindowsDesktop = 38,
-        ApiDocumentation = 39
+        ApiDocumentation = 39,
+        SFQuickBooksOnline = 40,
+        SFScanSnap = 41,
+        SFPrintDriver = 42
     }
 #endif
 }

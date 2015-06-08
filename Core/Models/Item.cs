@@ -90,6 +90,8 @@ namespace ShareFile.Api.Models
 
 		public bool? HasMultipleVersions { get; set; }
 
+		public IEnumerable<AsyncOperation> AsyncOperations { get; set; }
+
 		public IEnumerable<Metadata> Metadata { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
@@ -134,6 +136,7 @@ namespace ShareFile.Api.Models
 				StreamID = typedSource.StreamID;
 				CreatorNameShort = typedSource.CreatorNameShort;
 				HasMultipleVersions = typedSource.HasMultipleVersions;
+				AsyncOperations = typedSource.AsyncOperations;
 				Metadata = typedSource.Metadata;
 			}
 			else
@@ -274,6 +277,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("HasMultipleVersions", out token) && token.Type != JTokenType.Null)
 				{
 					HasMultipleVersions = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("AsyncOperations", out token) && token.Type != JTokenType.Null)
+				{
+					AsyncOperations = (IEnumerable<AsyncOperation>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<AsyncOperation>));
 				}
 				if(source.TryGetProperty("Metadata", out token) && token.Type != JTokenType.Null)
 				{

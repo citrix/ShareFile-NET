@@ -157,6 +157,12 @@ namespace ShareFile.Api.Client.Entities
         IQuery<ReportRecord> GetRun(Uri url);
         
         /// <summary>
+        /// Get a preview location for the report
+        /// </summary>
+        /// <param name="reportUrl"></param>
+        IQuery<ItemProtocolLink> Preview(Uri reportUrl);
+        
+        /// <summary>
         /// Get JSON Data
         /// </summary>
         /// <remarks>
@@ -396,6 +402,19 @@ namespace ShareFile.Api.Client.Entities
 		    sfApiQuery.Action("Run");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get a preview location for the report
+        /// </summary>
+        /// <param name="reportUrl"></param>
+        public IQuery<ItemProtocolLink> Preview(Uri reportUrl)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ItemProtocolLink>(Client);
+		    sfApiQuery.Action("Preview");
+            sfApiQuery.Uri(reportUrl);
+            sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
         

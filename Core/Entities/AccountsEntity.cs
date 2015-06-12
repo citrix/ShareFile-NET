@@ -391,6 +391,24 @@ namespace ShareFile.Api.Client.Entities
         /// SSOInfo
         /// </returns>
         IQuery<SSOInfo> GetSSOInfo(string subdomain);
+        
+        /// <summary>
+        /// Get the tenants of a partner account
+        /// </summary>
+        /// <returns>
+        /// List of tenant accounts managed by this partner account, if any
+        /// </returns>
+        IQuery<ODataFeed<Account>> GetTenants();
+        IQuery<Account> GetTenants(string id);
+        
+        /// <summary>
+        /// Get list of multi-tenant zones assigned to a tenant.
+        /// </summary>
+        /// <param name="parentid"></param>
+        /// <returns>
+        /// List of multi-tenant zones assigned to the tenant
+        /// </returns>
+        IQuery<ODataFeed<Zone>> GetZones(string parentid);
     }
 
     public class AccountsEntity : EntityBase, IAccountsEntity
@@ -976,6 +994,48 @@ namespace ShareFile.Api.Client.Entities
 		    sfApiQuery.From("Accounts");
 		    sfApiQuery.Action("SSOInfo");
             sfApiQuery.QueryString("subdomain", subdomain);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get the tenants of a partner account
+        /// </summary>
+        /// <returns>
+        /// List of tenant accounts managed by this partner account, if any
+        /// </returns>
+        public IQuery<ODataFeed<Account>> GetTenants()
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Account>>(Client);
+		    sfApiQuery.From("Accounts");
+		    sfApiQuery.Action("Tenants");
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        public IQuery<Account> GetTenants(string id)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Account>(Client);
+		    sfApiQuery.From("Accounts");
+		    sfApiQuery.Action("Tenants");
+            sfApiQuery.ActionIds(id);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get list of multi-tenant zones assigned to a tenant.
+        /// </summary>
+        /// <param name="parentid"></param>
+        /// <returns>
+        /// List of multi-tenant zones assigned to the tenant
+        /// </returns>
+        public IQuery<ODataFeed<Zone>> GetZones(string parentid)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Zone>>(Client);
+		    sfApiQuery.From("Accounts");
+		    sfApiQuery.Action("Tenants");
+            sfApiQuery.ActionIds(parentid);
+            sfApiQuery.SubAction("Zones");
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }

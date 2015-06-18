@@ -49,5 +49,24 @@ namespace ShareFile.Api.Client.Entities.Extensions
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
+        
+        /// <summary>
+        /// Get Item Editing Redirection
+        /// </summary>
+        /// <remarks>
+        /// Redirects the caller to an endpoint that allows the initiation of an editing session for the given Item.
+        /// </remarks>
+        /// <param name="parentUrl"></param>
+        /// <returns>
+        /// The Redirection object representing the endpoint and request needed to initiate an editing session
+        /// </returns>
+        public static IQuery<Redirection> Edit(this IItemsEntity entity, Uri parentUrl)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Redirection>(entity.Client);
+		    sfApiQuery.Action("Edit");
+            sfApiQuery.Uri(parentUrl);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
     }
 }

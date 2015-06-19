@@ -294,7 +294,10 @@ namespace ShareFile.Api.Client.Entities
         /// The default number of expiration days is 30. -1 disables share expiration.
         /// </remarks>
         /// <param name="parameters"></param>
-        IQuery CreateSend(ShareSendParams parameters);
+        /// <returns>
+        /// The new Share
+        /// </returns>
+        IQuery<Share> CreateSend(ShareSendParams parameters);
         
         /// <summary>
         /// Deliver Request a File Email
@@ -313,7 +316,10 @@ namespace ShareFile.Api.Client.Entities
         /// Sends an Email to the specified list of addresses, containing a link to a download or an upload.
         /// </remarks>
         /// <param name="parameters"></param>
-        IQuery Resend(ShareResendParams parameters);
+        /// <returns>
+        /// The updated Share
+        /// </returns>
+        IQuery<Share> Resend(ShareResendParams parameters);
         
         /// <summary>
         /// Upload File to Request Share
@@ -848,9 +854,12 @@ namespace ShareFile.Api.Client.Entities
         /// The default number of expiration days is 30. -1 disables share expiration.
         /// </remarks>
         /// <param name="parameters"></param>
-        public IQuery CreateSend(ShareSendParams parameters)
+        /// <returns>
+        /// The new Share
+        /// </returns>
+        public IQuery<Share> CreateSend(ShareSendParams parameters)
         {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Share>(Client);
 		    sfApiQuery.From("Shares");
 		    sfApiQuery.Action("Send");
             sfApiQuery.Body = parameters;
@@ -883,9 +892,12 @@ namespace ShareFile.Api.Client.Entities
         /// Sends an Email to the specified list of addresses, containing a link to a download or an upload.
         /// </remarks>
         /// <param name="parameters"></param>
-        public IQuery Resend(ShareResendParams parameters)
+        /// <returns>
+        /// The updated Share
+        /// </returns>
+        public IQuery<Share> Resend(ShareResendParams parameters)
         {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Share>(Client);
 		    sfApiQuery.From("Shares");
 		    sfApiQuery.Action("Resend");
             sfApiQuery.Body = parameters;

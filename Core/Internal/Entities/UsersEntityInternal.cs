@@ -22,6 +22,30 @@ namespace ShareFile.Api.Client.Entities.Extensions
     {
         
         /// <summary>
+        /// Forgot Password For AppCode
+        /// </summary>
+        /// <remarks>
+        /// Triggers a reset password email for the application specififed by appCode. Optional redirectUri can be used to allow for application-specific
+        /// redirection after reset password flow.
+        /// </remarks>
+        /// <param name="email"></param>
+        /// <param name="resetOnMobile"></param>
+        /// <param name="appCode"></param>
+        /// <param name="redirectUri"></param>
+        public static IQuery ForgotPassword(this IUsersEntity entity, string email, AppCodes appCode, string redirectUri, bool resetOnMobile = false)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(entity.Client);
+		    sfApiQuery.From("Users");
+		    sfApiQuery.Action("ForgotPassword");
+            sfApiQuery.QueryString("email", email);
+            sfApiQuery.QueryString("appCode", appCode);
+            sfApiQuery.QueryString("redirectUri", redirectUri);
+            sfApiQuery.QueryString("resetOnMobile", resetOnMobile);
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
         /// This method adds a list of account users to the account
         /// </summary>
         /// <example>

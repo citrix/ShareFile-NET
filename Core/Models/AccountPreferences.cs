@@ -258,6 +258,8 @@ namespace ShareFile.Api.Models
 
 		public bool? EnableDLP { get; set; }
 
+		public int? RecycleBinDays { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -384,6 +386,7 @@ namespace ShareFile.Api.Models
 				EnablePromotions = typedSource.EnablePromotions;
 				CanCreateMultiTenantZones = typedSource.CanCreateMultiTenantZones;
 				EnableDLP = typedSource.EnableDLP;
+				RecycleBinDays = typedSource.RecycleBinDays;
 			}
 			else
 			{
@@ -859,6 +862,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("EnableDLP", out token) && token.Type != JTokenType.Null)
 				{
 					EnableDLP = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("RecycleBinDays", out token) && token.Type != JTokenType.Null)
+				{
+					RecycleBinDays = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
 				}
 			}
 		}

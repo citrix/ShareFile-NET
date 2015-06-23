@@ -49,6 +49,16 @@ namespace ShareFile.Api.Client.Entities.Extensions
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
+        public static IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(this IItemsEntity entity, Uri url, PreviewPlatform id, FileAction action)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<ItemProtocolLink>>(entity.Client);
+		    sfApiQuery.Action("ProtocolLinks");
+            sfApiQuery.Uri(url);
+            sfApiQuery.ActionIds(id);
+            sfApiQuery.QueryString("action", action);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
         
         /// <summary>
         /// Get Item Editing Redirection

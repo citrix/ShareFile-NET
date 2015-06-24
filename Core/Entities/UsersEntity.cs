@@ -35,7 +35,7 @@ namespace ShareFile.Api.Client.Entities
         IQuery<User> Get(string id = null, string emailAddress = null);
         
         /// <summary>
-        /// Create Customer
+        /// Create Client User
         /// </summary>
         /// <example>
         /// {
@@ -56,7 +56,7 @@ namespace ShareFile.Api.Client.Entities
         /// }
         /// </example>
         /// <remarks>
-        /// Creates a new Customer User and associates it to an Account
+        /// Creates a new Client User and associates it to an Account
         /// The following parameters from the input object are used: Email, FirstName, LastName, Company,
         /// DefaultZone, Password, Preferences.CanResetPassword and Preferences.CanViewMySettingsOther parameters are ignored
         /// </remarks>
@@ -546,7 +546,7 @@ namespace ShareFile.Api.Client.Entities
         }
         
         /// <summary>
-        /// Create Customer
+        /// Create Client User
         /// </summary>
         /// <example>
         /// {
@@ -567,7 +567,7 @@ namespace ShareFile.Api.Client.Entities
         /// }
         /// </example>
         /// <remarks>
-        /// Creates a new Customer User and associates it to an Account
+        /// Creates a new Client User and associates it to an Account
         /// The following parameters from the input object are used: Email, FirstName, LastName, Company,
         /// DefaultZone, Password, Preferences.CanResetPassword and Preferences.CanViewMySettingsOther parameters are ignored
         /// </remarks>

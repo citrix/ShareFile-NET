@@ -126,7 +126,9 @@ namespace ShareFile.Api.Client.Entities
         /// </summary>
         /// <param name="parentUrl"></param>
         /// <param name="id"></param>
-        IQuery DeleteTenants(Uri parentUrl, string id);
+        /// <param name="newDefaultZoneId"></param>
+        /// <param name="expireItems"></param>
+        IQuery DeleteTenants(Uri parentUrl, string id, string newDefaultZoneId, bool expireItems = false);
         
         /// <summary>
         /// Get Zone Metadata
@@ -345,12 +347,16 @@ namespace ShareFile.Api.Client.Entities
         /// </summary>
         /// <param name="parentUrl"></param>
         /// <param name="id"></param>
-        public IQuery DeleteTenants(Uri parentUrl, string id)
+        /// <param name="newDefaultZoneId"></param>
+        /// <param name="expireItems"></param>
+        public IQuery DeleteTenants(Uri parentUrl, string id, string newDefaultZoneId, bool expireItems = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 		    sfApiQuery.Action("Tenants");
             sfApiQuery.Uri(parentUrl);
             sfApiQuery.ActionIds(id);
+            sfApiQuery.QueryString("newDefaultZoneId", newDefaultZoneId);
+            sfApiQuery.QueryString("expireItems", expireItems);
             sfApiQuery.HttpMethod = "DELETE";	
 		    return sfApiQuery;
         }

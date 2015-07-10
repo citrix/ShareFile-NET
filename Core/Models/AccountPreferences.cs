@@ -264,6 +264,8 @@ namespace ShareFile.Api.Models
 
 		public int? RecycleBinDays { get; set; }
 
+		public int? SyncConcurrentTransferThreadsLimit { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -393,6 +395,7 @@ namespace ShareFile.Api.Models
 				EnableOfficeOnlinePreviews = typedSource.EnableOfficeOnlinePreviews;
 				EnableOfficeOnlineEditing = typedSource.EnableOfficeOnlineEditing;
 				RecycleBinDays = typedSource.RecycleBinDays;
+				SyncConcurrentTransferThreadsLimit = typedSource.SyncConcurrentTransferThreadsLimit;
 			}
 			else
 			{
@@ -880,6 +883,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("RecycleBinDays", out token) && token.Type != JTokenType.Null)
 				{
 					RecycleBinDays = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("SyncConcurrentTransferThreadsLimit", out token) && token.Type != JTokenType.Null)
+				{
+					SyncConcurrentTransferThreadsLimit = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
 				}
 			}
 		}

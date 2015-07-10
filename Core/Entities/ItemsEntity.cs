@@ -182,10 +182,11 @@ namespace ShareFile.Api.Client.Entities
         /// </remarks>
         /// <param name="url"></param>
         /// <param name="redirect"></param>
+        /// <param name="includeAllVersions"></param>
         /// <returns>
         /// the download link for the provided item content.
         /// </returns>
-        IQuery<Stream> Download(Uri url, bool redirect = true);
+        IQuery<Stream> Download(Uri url, bool redirect = true, bool includeAllVersions = false);
         
         /// <summary>
         /// Download Multiple Items
@@ -1000,15 +1001,17 @@ namespace ShareFile.Api.Client.Entities
         /// </remarks>
         /// <param name="url"></param>
         /// <param name="redirect"></param>
+        /// <param name="includeAllVersions"></param>
         /// <returns>
         /// the download link for the provided item content.
         /// </returns>
-        public IQuery<Stream> Download(Uri url, bool redirect = true)
+        public IQuery<Stream> Download(Uri url, bool redirect = true, bool includeAllVersions = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
 		    sfApiQuery.Action("Download");
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("redirect", redirect);
+            sfApiQuery.QueryString("includeAllVersions", includeAllVersions);
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }

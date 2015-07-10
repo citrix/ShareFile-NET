@@ -5,7 +5,7 @@ using System.Net;
 
 namespace ShareFile.Api.Client.Credentials
 {
-    public class CredentialCache : ICredentialCache
+    public class CredentialCache : NetworkCredential, ICredentialCache
     {
         private readonly Dictionary<string, List<CredentialAuthorityContainer>> _credentials = new Dictionary<string, List<CredentialAuthorityContainer>>();
         private readonly object _credentialLock = new object();
@@ -20,7 +20,7 @@ namespace ShareFile.Api.Client.Credentials
             RemoveInternal(uri, authType);
         }
 
-        public NetworkCredential GetCredential(Uri uri, string authType)
+        public new NetworkCredential GetCredential(Uri uri, string authType)
         {
             return GetCredentialInternal(uri, authType).Credentials;
         }
@@ -113,7 +113,7 @@ namespace ShareFile.Api.Client.Credentials
 
         public CredentialAuthorityContainer()
         {
-            Credentials = new NetworkCredential();
+            Credentials = new NetworkCredential("", "");
         }
 
         internal static CredentialAuthorityContainer Default = new CredentialAuthorityContainer();

@@ -68,6 +68,24 @@ namespace ShareFile.Api.Client.Entities.Extensions
         }
         
         /// <summary>
+        /// Get multitenant zone usage information for all tenants of this account.
+        /// </summary>
+        /// <param name="includePartner"></param>
+        /// <returns>
+        /// Zone usage information for each tenant account
+        /// </returns>
+        public static IQuery<TenantZoneUsageReport> GetZoneUsage(this IAccountsEntity entity, bool includePartner = false)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<TenantZoneUsageReport>(entity.Client);
+		    sfApiQuery.From("Accounts");
+		    sfApiQuery.Action("Tenants");
+            sfApiQuery.SubAction("ZoneUsage");
+            sfApiQuery.QueryString("includePartner", includePartner);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
         /// Update Account Preferences
         /// </summary>
         /// <example>

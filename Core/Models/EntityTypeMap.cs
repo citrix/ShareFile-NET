@@ -27,6 +27,8 @@ namespace ShareFile.Api.Models
                     _entityTypeMap.Add("AccessControlsBulkParamss", typeof(AccessControlsBulkParams));
                     _entityTypeMap.Add("AccessControlParam", typeof(AccessControlParam));
                     _entityTypeMap.Add("AccessControlParams", typeof(AccessControlParam));
+                    _entityTypeMap.Add("AccountZoneUsage", typeof(AccountZoneUsage));
+                    _entityTypeMap.Add("AccountZoneUsages", typeof(AccountZoneUsage));
                     _entityTypeMap.Add("ItemDlpInfo", typeof(ItemDlpInfo));
                     _entityTypeMap.Add("ItemDlpInfos", typeof(ItemDlpInfo));
                     _entityTypeMap.Add("ShareItemHistory", typeof(ShareItemHistory));
@@ -39,6 +41,10 @@ namespace ShareFile.Api.Models
                     _entityTypeMap.Add("FolderTemplateItems", typeof(FolderTemplateItem));
                     _entityTypeMap.Add("ShareSettings", typeof(ShareSettings));
                     _entityTypeMap.Add("ShareSettingss", typeof(ShareSettings));
+                    _entityTypeMap.Add("TenantZoneUsageReport", typeof(TenantZoneUsageReport));
+                    _entityTypeMap.Add("TenantZoneUsageReports", typeof(TenantZoneUsageReport));
+                    _entityTypeMap.Add("ZoneUsageBreakdown", typeof(ZoneUsageBreakdown));
+                    _entityTypeMap.Add("ZoneUsageBreakdowns", typeof(ZoneUsageBreakdown));
                     _entityTypeMap.Add("UserUsage", typeof(UserUsage));
                     _entityTypeMap.Add("UserUsages", typeof(UserUsage));
                     _entityTypeMap.Add("DiskSpace", typeof(DiskSpace));

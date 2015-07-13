@@ -515,7 +515,7 @@ namespace ShareFile.Api.Client.Entities
         /// append the parameters index, offset and hash to the end of the ChunkUri address. Index
         /// is a sequential number representing the data block (zero-based); Offset represents the
         /// byte offset for the block; and hash contains the MD5 hash of the block. The last HTTP
-        /// POST must also contain finish=true parameter.
+        /// POST must also contain finish=true parameter as well as filehash=[MD5 hash of entire file].
         /// 
         /// Threaded uploads use multiple HTTP POST calls to ChunkUri, and can have a number of
         /// threads issuing blocks in parallel. Clients must append index, offset and hash to
@@ -528,7 +528,7 @@ namespace ShareFile.Api.Client.Entities
         /// For all uploaders, the contents of the POST Body can either be "raw", if the "Raw" parameter
         /// was provided to the Uploader, or use MIME multi-part form encoding otherwise. Raw uploads
         /// simply put the block content in the POST body - Content-Length specifies the size. Multi-part
-        /// form encoding has to pass the File as a Form parameter named "File1".
+        /// form encoding has to pass the File as a Form parameter named "Filedata".
         /// 
         /// For streamed and threaded, if Resume options were provided to the Upload call, then the
         /// fields IsResume, ResumeIndex, ResumeOffset and ResumeFileHash MAY be populated. If they are,
@@ -1481,7 +1481,7 @@ namespace ShareFile.Api.Client.Entities
         /// append the parameters index, offset and hash to the end of the ChunkUri address. Index
         /// is a sequential number representing the data block (zero-based); Offset represents the
         /// byte offset for the block; and hash contains the MD5 hash of the block. The last HTTP
-        /// POST must also contain finish=true parameter.
+        /// POST must also contain finish=true parameter as well as filehash=[MD5 hash of entire file].
         /// 
         /// Threaded uploads use multiple HTTP POST calls to ChunkUri, and can have a number of
         /// threads issuing blocks in parallel. Clients must append index, offset and hash to
@@ -1494,7 +1494,7 @@ namespace ShareFile.Api.Client.Entities
         /// For all uploaders, the contents of the POST Body can either be "raw", if the "Raw" parameter
         /// was provided to the Uploader, or use MIME multi-part form encoding otherwise. Raw uploads
         /// simply put the block content in the POST body - Content-Length specifies the size. Multi-part
-        /// form encoding has to pass the File as a Form parameter named "File1".
+        /// form encoding has to pass the File as a Form parameter named "Filedata".
         /// 
         /// For streamed and threaded, if Resume options were provided to the Upload call, then the
         /// fields IsResume, ResumeIndex, ResumeOffset and ResumeFileHash MAY be populated. If they are,

@@ -66,6 +66,7 @@ namespace ShareFile.Api.Client.Converters
                 if (ctor != null)
                 {
                     oDataObject = (ODataObject)ctor.Invoke(new Object[] { });
+                    oDataObject.OriginalCopy = (ODataObject)ctor.Invoke(new Object[] { });
                 }
             }
 
@@ -75,6 +76,7 @@ namespace ShareFile.Api.Client.Converters
             }
 
             oDataObject.Copy(existingObject, serializer);
+            oDataObject.OriginalCopy.Copy(existingObject, serializer);
 
             return oDataObject;
         }

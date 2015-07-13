@@ -38,6 +38,8 @@ namespace ShareFile.Api.Models
 		[JsonExtensionData]
 		internal IDictionary<string, JToken> Properties { get; set; }
 
+        internal ODataObject OriginalCopy { get; set; }
+
 		public virtual void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;

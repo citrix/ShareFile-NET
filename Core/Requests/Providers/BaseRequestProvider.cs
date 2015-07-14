@@ -440,6 +440,34 @@ namespace ShareFile.Api.Client.Requests.Providers
 
                 httpRequestMessage.Content = formContent;
             }
+            else if (httpRequestMessage.Method.Method.Equals("PATCH"))
+            {
+                Dictionary<string, object> originalAttrs = (body as ODataObject).OriginalCopy.GetType()
+                    .GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public)
+                    .ToDictionary(prop => prop.Name, prop => prop.GetValue((body as ODataObject).OriginalCopy, null));
+
+                Dictionary<string, object> extendedAttrs = body.GetType()
+                    .GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public)
+                    .ToDictionary(prop => prop.Name, prop => prop.GetValue(body, null));
+
+                Dictionary<string, object> diff = new Dictionary<string, object>();
+                foreach (KeyValuePair<string, object> entry in originalAttrs)
+                {
+                    if (originalAttrs[entry.Key] != null && !originalAttrs[entry.Key].Equals(extendedAttrs[entry.Key]))
+                    {
+                        if (!originalAttrs[entry.Key].GetType().IsGenericType || !AreEqual((System.Collections.IList)originalAttrs[entry.Key], (System.Collections.IList)extendedAttrs[entry.Key]))
+                        {
+                            diff.Add(entry.Key, extendedAttrs[entry.Key]);
+                            (body as ODataObject).OriginalCopy.GetType().GetProperty(entry.Key).SetValue((body as ODataObject).OriginalCopy, entry.Value);
+                        }
+                    }
+                }
+
+                httpRequestMessage.Content = new StringContent(JsonConvert.SerializeObject(diff));
+
+                if (httpRequestMessage.Content.Headers.ContentLength > 0)
+                    httpRequestMessage.Content.Headers.ContentType = contentType;
+            }
             else
             {
                 var stringWriter = new StringWriter();
@@ -461,6 +489,26 @@ namespace ShareFile.Api.Client.Requests.Providers
                 }
             }
         }
+
+        #region Compare two generics, return true if both are same
+     
+        private bool AreEqual(System.Collections.IList first, System.Collections.IList second)
+        {
+            if (first.Count != second.Count)
+            {
+                return false;
+            }
+
+            for (var elementCounter = 0; elementCounter < first.Count; elementCounter++)
+            {
+                if (!first[elementCounter].Equals(second[elementCounter]))
+                {
+                    return false;
+                }
+            }
+            return true;
+        } 
+        #endregion
 
         protected AuthenticationHeaderValue GetAuthorizationHeaderValue(Uri requestUri, HttpHeaderValueCollection<AuthenticationHeaderValue> authenticationChallenge)
         {

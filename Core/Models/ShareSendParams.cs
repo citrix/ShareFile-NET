@@ -10,9 +10,12 @@
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.Net;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Exceptions;
 
 namespace ShareFile.Api.Models 
 {
@@ -43,6 +46,12 @@ namespace ShareFile.Api.Models
 
 		public int MaxDownloads { get; set; }
 
+		/// <summary>
+		/// When enabled the items are identified by stream IDs instead of item IDs.
+		/// Applies to Send Shares only. (FINRA enabled accounts cannot use this)
+		/// </summary>
+		public bool? UsesStreamIDs { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -63,6 +72,7 @@ namespace ShareFile.Api.Models
 				NotifyOnDownload = typedSource.NotifyOnDownload;
 				IsViewOnly = typedSource.IsViewOnly;
 				MaxDownloads = typedSource.MaxDownloads;
+				UsesStreamIDs = typedSource.UsesStreamIDs;
 			}
 			else
 			{
@@ -114,6 +124,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("MaxDownloads", out token) && token.Type != JTokenType.Null)
 				{
 					MaxDownloads = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
+				}
+				if(source.TryGetProperty("UsesStreamIDs", out token) && token.Type != JTokenType.Null)
+				{
+					UsesStreamIDs = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 			}
 		}

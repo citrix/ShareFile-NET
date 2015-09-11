@@ -30,7 +30,7 @@ namespace ShareFile.Api.Client.Entities
         /// not trigger the SAML authentication flow - use /Sessions/Login instead.
         /// </remarks>
         /// <returns>
-        /// The current authentication Context, based on the request SF_APIAuthId Cookie
+        /// The current authentication Context, based on the request SFAPI_AuthID Cookie
         /// </returns>
         IQuery<Session> Get();
         
@@ -93,7 +93,7 @@ namespace ShareFile.Api.Client.Entities
         /// not trigger the SAML authentication flow - use /Sessions/Login instead.
         /// </remarks>
         /// <returns>
-        /// The current authentication Context, based on the request SF_APIAuthId Cookie
+        /// The current authentication Context, based on the request SFAPI_AuthID Cookie
         /// </returns>
         public IQuery<Session> Get()
         {

@@ -10,9 +10,12 @@
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.Net;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Exceptions;
 
 namespace ShareFile.Api.Models 
 {
@@ -113,8 +116,14 @@ namespace ShareFile.Api.Models
 
 		public DateTime? LastDateSent { get; set; }
 
+		/// <summary>
+		/// Indicates whether or not this Share has been downloaded
+		/// </summary>
 		public bool? IsConsumed { get; set; }
 
+		/// <summary>
+		/// Indicates whether the contents of this share have been viewed by a valid, authenticated recipient
+		/// </summary>
 		public bool? IsRead { get; set; }
 
 		public bool? IsArchived { get; set; }
@@ -155,11 +164,21 @@ namespace ShareFile.Api.Models
 		public bool? HasRemoteChildren { get; set; }
 
 		/// <summary>
-		/// Redirection endpoint for this Item.
+		/// Redirection endpoint for this Share.
 		/// </summary>
 		public Redirection Redirection { get; set; }
 
 		public SafeEnum<ShareSubType> ShareSubType { get; set; }
+
+		/// <summary>
+		/// Shared item history.
+		/// </summary>
+		public IEnumerable<ShareItemHistory> ShareItemHistory { get; set; }
+
+		/// <summary>
+		/// Current Settings for the Share
+		/// </summary>
+		public ShareSettings Settings { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
@@ -202,6 +221,8 @@ namespace ShareFile.Api.Models
 				HasRemoteChildren = typedSource.HasRemoteChildren;
 				Redirection = typedSource.Redirection;
 				ShareSubType = typedSource.ShareSubType;
+				ShareItemHistory = typedSource.ShareItemHistory;
+				Settings = typedSource.Settings;
 			}
 			else
 			{
@@ -337,6 +358,14 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("ShareSubType", out token) && token.Type != JTokenType.Null)
 				{
 					ShareSubType = (SafeEnum<ShareSubType>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<ShareSubType>));
+				}
+				if(source.TryGetProperty("ShareItemHistory", out token) && token.Type != JTokenType.Null)
+				{
+					ShareItemHistory = (IEnumerable<ShareItemHistory>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<ShareItemHistory>));
+				}
+				if(source.TryGetProperty("Settings", out token) && token.Type != JTokenType.Null)
+				{
+					Settings = (ShareSettings)serializer.Deserialize(token.CreateReader(), typeof(ShareSettings));
 				}
 			}
 		}

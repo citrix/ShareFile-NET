@@ -10,6 +10,7 @@ using FakeItEasy;
 using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
+
 using ShareFile.Api.Client.Events;
 using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.Extensions;
@@ -241,6 +242,38 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
             changeDomainRaised.Should().BeTrue();
         }
 
+        [TestCase(true)]
+        [TestCase(false)]
+        public async void DeleteRedirectionSupport(bool async)
+        {
+            // Arrange
+            var shareFileClient = GetShareFileClient(true);
+            ConfigureDomainChangedResponse();
+
+            var changeDomainRaised = false;
+            shareFileClient.AddChangeDomainHandler((message, redirect) =>
+            {
+                changeDomainRaised = true;
+                ConfigureNoContentResponse();
+                return EventHandlerResponse.Redirect(redirect);
+            });
+
+            var query = shareFileClient.Items.Delete(shareFileClient.Items.GetAlias(GetId()));
+
+            // Act
+            if (async)
+            {
+                await query.ExecuteAsync();
+            }
+            else
+            {
+                query.Execute();
+            }
+
+            // Assert
+            changeDomainRaised.Should().BeTrue();
+        }
+
         [TestCase(true, TestName = "WebAuthenticationException_Async")]
         [TestCase(false, TestName = "WebAuthenticationException_Sync")]
         public async void WebAuthenticationException(bool async)
@@ -426,6 +459,52 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
                 .ReturnsLazily(() => GenerateUnauthorizedResponse(requestMessage));
         }
 
+        protected void ConfigureODataObjectResponse(string response)
+        {
+            HttpRequestMessage requestMessage = null;
+            A.CallTo(() =>
+                    RequestExecutorFactory.GetAsyncRequestExecutor()
+                        .SendAsync(A<HttpClient>.Ignored, A<HttpRequestMessage>.Ignored, A<HttpCompletionOption>.Ignored,
+                            A<CancellationToken>.Ignored))
+                        .Invokes((HttpClient client, HttpRequestMessage message, HttpCompletionOption options, CancellationToken token) =>
+                        {
+                            requestMessage = message;
+                        })
+                .ReturnsLazily(() => GenerateODataObjectResponse(requestMessage, response));
+
+            A.CallTo(() =>
+                    RequestExecutorFactory.GetSyncRequestExecutor()
+                        .Send(A<HttpClient>.Ignored, A<HttpRequestMessage>.Ignored, A<HttpCompletionOption>.Ignored))
+                        .Invokes((HttpClient client, HttpRequestMessage message, HttpCompletionOption options) =>
+                        {
+                            requestMessage = message;
+                        })
+                .ReturnsLazily(() => GenerateODataObjectResponse(requestMessage, response));
+        }
+
+        protected void ConfigureNoContentResponse()
+        {
+            HttpRequestMessage requestMessage = null;
+            A.CallTo(() =>
+                    RequestExecutorFactory.GetAsyncRequestExecutor()
+                        .SendAsync(A<HttpClient>.Ignored, A<HttpRequestMessage>.Ignored, A<HttpCompletionOption>.Ignored,
+                            A<CancellationToken>.Ignored))
+                        .Invokes((HttpClient client, HttpRequestMessage message, HttpCompletionOption options, CancellationToken token) =>
+                        {
+                            requestMessage = message;
+                        })
+                .ReturnsLazily(() => GenerateNoContentResponse(requestMessage));
+
+            A.CallTo(() =>
+                    RequestExecutorFactory.GetSyncRequestExecutor()
+                        .Send(A<HttpClient>.Ignored, A<HttpRequestMessage>.Ignored, A<HttpCompletionOption>.Ignored))
+                        .Invokes((HttpClient client, HttpRequestMessage message, HttpCompletionOption options) =>
+                        {
+                            requestMessage = message;
+                        })
+                .ReturnsLazily(() => GenerateNoContentResponse(requestMessage));
+        }
+
         protected HttpResponseMessage GenerateODataRequestException(HttpStatusCode statusCode, string message)
         {
             return new HttpResponseMessage(statusCode)
@@ -534,6 +613,27 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
             };
 
             responseMessage.Headers.WwwAuthenticate.Add(new AuthenticationHeaderValue("Bearer"));
+
+            return responseMessage;
+        }
+
+        protected HttpResponseMessage GenerateODataObjectResponse(HttpRequestMessage requestMessage, string response)
+        {
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.OK)
+                                      {
+                                          Content = new StringContent(response, Encoding.UTF8, "application/json"),
+                                          RequestMessage = requestMessage
+                                      };
+
+            return responseMessage;
+        }
+
+        protected HttpResponseMessage GenerateNoContentResponse(HttpRequestMessage requestMessage)
+        {
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.NoContent)
+            {
+                RequestMessage = requestMessage
+            };
 
             return responseMessage;
         }

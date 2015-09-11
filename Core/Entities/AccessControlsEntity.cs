@@ -107,6 +107,91 @@ namespace ShareFile.Api.Client.Entities
         /// response indicates success.
         /// </remarks>
         IQuery Delete(Uri url);
+        
+        /// <summary>
+        /// Create or Update multiple AccessControls for a given Item
+        /// </summary>
+        /// <example>
+        /// {
+        /// "NotifyUser":true,
+        /// "NotifyMessage":"msg",
+        /// 
+        /// "AccessControlParams":
+        /// [
+        /// {
+        /// "AccessControl":
+        /// {
+        /// "Principal" : { "Id":"existing_user_id" },
+        /// "CanUpload" : true,
+        /// "CanDownload" : false,
+        /// "CanView" : true
+        /// },
+        /// "NotifyUser":false
+        /// },
+        /// {
+        /// "AccessControl":
+        /// {
+        /// "Principal" : { "Id":"group_id" },
+        /// "CanUpload" : false,
+        /// "CanDownload" : true,
+        /// "CanView" : true
+        /// },
+        /// "Recursive":true
+        /// },
+        /// {
+        /// "AccessControl":
+        /// {
+        /// "Principal" : { "Email":"new_or_existing_user@a.com" },
+        /// "CanUpload" : false,
+        /// "CanDownload" : true,
+        /// "CanView" : true
+        /// }
+        /// }
+        /// ]
+        /// }
+        /// </example>
+        /// <remarks>
+        /// All the AccessControls are created or updated for a single Item identified by the Item id in the URI. AccessControl.Item Ids are not allowed.
+        /// If an AccessControl doesn't specify NotifyUser or NotifyMessage property their values are inherited from the corresponding
+        /// top-level properties.
+        /// The Principal can be identified by Id or Email (Users). If a User with the specified email does not exist it will be created.
+        /// Defaults for NotifyUser and Recursive are false.
+        /// See AccessControlsBulkParams for other details.
+        /// </remarks>
+        /// <param name="url"></param>
+        /// <param name="bulkParams"></param>
+        /// <returns>
+        /// AccessControlBulkResult
+        /// </returns>
+        IQuery<AccessControlBulkResult> BulkSet(Uri url, AccessControlsBulkParams bulkParams);
+        
+        /// <summary>
+        /// Delete multiple access controls
+        /// </summary>
+        /// <example>
+        /// ["id1","id2",...]
+        /// </example>
+        /// <param name="folderUrl"></param>
+        /// <param name="principalIds"></param>
+        IQuery BulkDelete(Uri folderUrl, IEnumerable<string> principalIds);
+        
+        /// <summary>
+        /// Notify users that they have access to the parent folder
+        /// </summary>
+        /// <example>
+        /// [
+        /// {
+        /// UserIds: ["id1", "id2"],
+        /// CustomMessage: "Message content goes here"
+        /// }
+        /// ]
+        /// </example>
+        /// <remarks>
+        /// All users should have access to the parent folder
+        /// </remarks>
+        /// <param name="folderUrl"></param>
+        /// <param name="notifyUsersParams"></param>
+        IQuery NotifyUsers(Uri folderUrl, NotifyUsersParams notifyUsersParams);
     }
 
     public class AccessControlsEntity : EntityBase, IAccessControlsEntity
@@ -239,6 +324,118 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "DELETE";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Create or Update multiple AccessControls for a given Item
+        /// </summary>
+        /// <example>
+        /// {
+        /// "NotifyUser":true,
+        /// "NotifyMessage":"msg",
+        /// 
+        /// "AccessControlParams":
+        /// [
+        /// {
+        /// "AccessControl":
+        /// {
+        /// "Principal" : { "Id":"existing_user_id" },
+        /// "CanUpload" : true,
+        /// "CanDownload" : false,
+        /// "CanView" : true
+        /// },
+        /// "NotifyUser":false
+        /// },
+        /// {
+        /// "AccessControl":
+        /// {
+        /// "Principal" : { "Id":"group_id" },
+        /// "CanUpload" : false,
+        /// "CanDownload" : true,
+        /// "CanView" : true
+        /// },
+        /// "Recursive":true
+        /// },
+        /// {
+        /// "AccessControl":
+        /// {
+        /// "Principal" : { "Email":"new_or_existing_user@a.com" },
+        /// "CanUpload" : false,
+        /// "CanDownload" : true,
+        /// "CanView" : true
+        /// }
+        /// }
+        /// ]
+        /// }
+        /// </example>
+        /// <remarks>
+        /// All the AccessControls are created or updated for a single Item identified by the Item id in the URI. AccessControl.Item Ids are not allowed.
+        /// If an AccessControl doesn't specify NotifyUser or NotifyMessage property their values are inherited from the corresponding
+        /// top-level properties.
+        /// The Principal can be identified by Id or Email (Users). If a User with the specified email does not exist it will be created.
+        /// Defaults for NotifyUser and Recursive are false.
+        /// See AccessControlsBulkParams for other details.
+        /// </remarks>
+        /// <param name="url"></param>
+        /// <param name="bulkParams"></param>
+        /// <returns>
+        /// AccessControlBulkResult
+        /// </returns>
+        public IQuery<AccessControlBulkResult> BulkSet(Uri url, AccessControlsBulkParams bulkParams)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AccessControlBulkResult>(Client);
+		    sfApiQuery.Action("AccessControls");
+            sfApiQuery.Uri(url);
+            sfApiQuery.SubAction("BulkSet");
+            sfApiQuery.Body = bulkParams;
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Delete multiple access controls
+        /// </summary>
+        /// <example>
+        /// ["id1","id2",...]
+        /// </example>
+        /// <param name="folderUrl"></param>
+        /// <param name="principalIds"></param>
+        public IQuery BulkDelete(Uri folderUrl, IEnumerable<string> principalIds)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+		    sfApiQuery.Action("AccessControls");
+            sfApiQuery.Uri(folderUrl);
+            sfApiQuery.SubAction("BulkDelete");
+            sfApiQuery.Body = principalIds;
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Notify users that they have access to the parent folder
+        /// </summary>
+        /// <example>
+        /// [
+        /// {
+        /// UserIds: ["id1", "id2"],
+        /// CustomMessage: "Message content goes here"
+        /// }
+        /// ]
+        /// </example>
+        /// <remarks>
+        /// All users should have access to the parent folder
+        /// </remarks>
+        /// <param name="folderUrl"></param>
+        /// <param name="notifyUsersParams"></param>
+        public IQuery NotifyUsers(Uri folderUrl, NotifyUsersParams notifyUsersParams)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+		    sfApiQuery.Action("AccessControls");
+            sfApiQuery.Uri(folderUrl);
+            sfApiQuery.SubAction("NotifyUsers");
+            sfApiQuery.Body = notifyUsersParams;
+            sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
     }

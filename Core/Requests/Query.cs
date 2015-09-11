@@ -132,7 +132,7 @@ namespace ShareFile.Api.Client.Requests
         {
             if (value is DateTime)
             {
-                _QueryString(key, ((DateTime)value).ToString("u")); //Format in UTC
+                _QueryString(key, ((DateTime)value).ToString("O"));
             }
             else
             {
@@ -633,6 +633,11 @@ namespace ShareFile.Api.Client.Requests
         {
             return _filterCriteria;
         }
+
+        public string GetOrderBy()
+        {
+            return _orderBy;
+        }
     }
 
     public interface IFormQuery<T> : IQuery<T>
@@ -820,6 +825,7 @@ namespace ShareFile.Api.Client.Requests
                 var filters = readOnlyODataQuery.GetFilter();
                 var select = string.Join(",", readOnlyODataQuery.GetSelectProperties());
                 var expand = string.Join(",", readOnlyODataQuery.GetExpandProperties());
+                var orderBy = readOnlyODataQuery.GetOrderBy();
 
                 if (!string.IsNullOrEmpty(select))
                 {
@@ -839,6 +845,11 @@ namespace ShareFile.Api.Client.Requests
                     apiRequest.QueryStringCollection.Add(new ODataParameter("$skip",
                         skip.ToString(CultureInfo.InvariantCulture)));
                 }
+                if (!string.IsNullOrEmpty(orderBy))
+                {
+                    apiRequest.QueryStringCollection.Add(new ODataParameter("$orderby", orderBy));
+                }
+                
                 if (filters != null)
                 {
                     apiRequest.QueryStringCollection.Add(new ODataParameter("$filter", filters.ToString()));

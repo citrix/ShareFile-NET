@@ -45,6 +45,7 @@ namespace ShareFile.Api.Models
         UploadWithRequestParams = 29,
         SoftLock = 30,
         HardLock = 31,
-        DownloadByStream = 32
+        DownloadByStream = 32,
+        BulkDelete = 33
     }
 }

@@ -149,6 +149,31 @@ namespace ShareFile.Api.Client.Core.Tests.Requests
         }
 
         [Test]
+        public void ApiRequest_ODataPaging()
+        {
+            // Arrange
+            var query =
+                this.GetShareFileClient()
+                    .Items.GetChildren(new Uri("https://release.sf-api.com/sf/v3/Items(" + this.GetId() + ")"))
+                    .Top(5)
+                    .Skip(10)
+                    .OrderBy("FileName");
+
+            // Act
+            var apiRequest = ApiRequest.FromQuery(query);
+
+            // Assert
+            var top = Uri.EscapeDataString("$top") + "=5";
+            var skip = Uri.EscapeDataString("$skip") + "=10";
+            var orderby = Uri.EscapeDataString("$orderby") + "=FileName";
+
+            var uriString = apiRequest.GetComposedUri().ToString();
+            Assert.IsTrue(uriString.Contains(top) || uriString.Contains("$top=5"));
+            Assert.IsTrue(uriString.Contains(skip) || uriString.Contains("$skip=10"));
+            Assert.IsTrue(uriString.Contains(orderby) || uriString.Contains("$orderby=FileName"));
+        }
+
+        [Test]
         public void ApiRequest_FromQuery_CompositeActionIds()
         {
             // Arrange
@@ -252,6 +277,19 @@ namespace ShareFile.Api.Client.Core.Tests.Requests
             var composedUri = apiRequest.GetComposedUri().ToString();
             composedUri.Should().Contain("qsParam=1");
             composedUri.Should().Contain("testKey=testValue");
+        }
+
+        [Test]
+        public void ApiRequest_FromQuery_DateTimeFormat()
+        {
+            var dateTime = DateTime.Now;
+            var query = new Query<ODataObject>(GetShareFileClient())
+                .Uri(new Uri("https://release.sf-api.com/sf/v3/Items(folder)?qsParam=1"))
+                .QueryString("datetime", dateTime);
+            var apiRequest = ApiRequest.FromQuery(query);
+
+            var composedUri = apiRequest.GetComposedUri().ToString();
+            composedUri.Should().Contain("datetime=" + dateTime.ToString("O"));
         }
     }
 }

@@ -88,6 +88,12 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             return query;
         }
 
+        protected IQuery<ODataFeed<Capability>> CreateCapabilitiesQuery()
+        {
+            return Client.Capabilities.Get()
+                .WithBaseUri(UploadSpecificationRequest.Parent);
+        }
+
         protected IQuery<UploadSpecification> CreateUploadRequestParamsQuery(
             UploadSpecificationRequest uploadSpecificationRequest)
         {

@@ -13,6 +13,7 @@ namespace ShareFile.Api.Models
 {
 	public enum LockType
     {
-        SoftLock = 1
+        SoftLock = 1,
+        HardLock = 2
     }
 }

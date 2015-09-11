@@ -1,5 +1,4 @@
-﻿using System;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 
 namespace ShareFile.Api.Client.Security.Cryptography
 {
@@ -7,13 +6,15 @@ namespace ShareFile.Api.Client.Security.Cryptography
     {
         static HmacSha256Provider()
         {
-            HmacSha256ProviderFactory.Register(bytes =>
-            {
-                return new HmacSha256Provider
-                {
-                    Key = bytes
-                };
-            });
+            Register();
+        }
+
+        public static void Register()
+        {
+            HmacSha256ProviderFactory.Register(bytes => new HmacSha256Provider
+                                                            {
+                                                                Key = bytes
+                                                            });
         }
 
         public byte[] Key { get; set; }

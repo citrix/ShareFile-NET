@@ -10,9 +10,12 @@
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.Net;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Exceptions;
 
 namespace ShareFile.Api.Models 
 {
@@ -47,6 +50,11 @@ namespace ShareFile.Api.Models
 				__type = typedSource.__type;
 				Id = typedSource.Id;
 				url = typedSource.url;
+				Dictionary<string, JToken> properties;
+				if (typedSource.TryGetProperty("Properties", out properties))
+				{
+					this.AddProperty("Properties", properties);
+				}
 		}
 	}
 }

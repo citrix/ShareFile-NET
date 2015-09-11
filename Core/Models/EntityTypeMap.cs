@@ -27,14 +27,38 @@ namespace ShareFile.Api.Models
                     _entityTypeMap.Add("AccessControlsBulkParamss", typeof(AccessControlsBulkParams));
                     _entityTypeMap.Add("AccessControlParam", typeof(AccessControlParam));
                     _entityTypeMap.Add("AccessControlParams", typeof(AccessControlParam));
+                    _entityTypeMap.Add("EditingPlatformInfo", typeof(EditingPlatformInfo));
+                    _entityTypeMap.Add("EditingPlatformInfos", typeof(EditingPlatformInfo));
+                    _entityTypeMap.Add("NotifyUsersParams", typeof(NotifyUsersParams));
+                    _entityTypeMap.Add("NotifyUsersParamss", typeof(NotifyUsersParams));
+                    _entityTypeMap.Add("AccountZoneUsage", typeof(AccountZoneUsage));
+                    _entityTypeMap.Add("AccountZoneUsages", typeof(AccountZoneUsage));
+                    _entityTypeMap.Add("AccessControlBulkResult", typeof(AccessControlBulkResult));
+                    _entityTypeMap.Add("AccessControlBulkResults", typeof(AccessControlBulkResult));
+                    _entityTypeMap.Add("AccessControlFailedEntry", typeof(AccessControlFailedEntry));
+                    _entityTypeMap.Add("AccessControlFailedEntrys", typeof(AccessControlFailedEntry));
+                    _entityTypeMap.Add("ItemDlpInfo", typeof(ItemDlpInfo));
+                    _entityTypeMap.Add("ItemDlpInfos", typeof(ItemDlpInfo));
+                    _entityTypeMap.Add("ShareItemHistory", typeof(ShareItemHistory));
+                    _entityTypeMap.Add("ShareItemHistorys", typeof(ShareItemHistory));
+                    _entityTypeMap.Add("InboxMetadata", typeof(InboxMetadata));
+                    _entityTypeMap.Add("InboxMetadatas", typeof(InboxMetadata));
                     _entityTypeMap.Add("FolderTemplate", typeof(FolderTemplate));
                     _entityTypeMap.Add("FolderTemplates", typeof(FolderTemplate));
                     _entityTypeMap.Add("FolderTemplateItem", typeof(FolderTemplateItem));
                     _entityTypeMap.Add("FolderTemplateItems", typeof(FolderTemplateItem));
+                    _entityTypeMap.Add("ShareSettings", typeof(ShareSettings));
+                    _entityTypeMap.Add("ShareSettingss", typeof(ShareSettings));
+                    _entityTypeMap.Add("TenantZoneUsageReport", typeof(TenantZoneUsageReport));
+                    _entityTypeMap.Add("TenantZoneUsageReports", typeof(TenantZoneUsageReport));
+                    _entityTypeMap.Add("ZoneUsageBreakdown", typeof(ZoneUsageBreakdown));
+                    _entityTypeMap.Add("ZoneUsageBreakdowns", typeof(ZoneUsageBreakdown));
                     _entityTypeMap.Add("UserUsage", typeof(UserUsage));
                     _entityTypeMap.Add("UserUsages", typeof(UserUsage));
                     _entityTypeMap.Add("DiskSpace", typeof(DiskSpace));
                     _entityTypeMap.Add("DiskSpaces", typeof(DiskSpace));
+                    _entityTypeMap.Add("ReportRecord", typeof(ReportRecord));
+                    _entityTypeMap.Add("ReportRecords", typeof(ReportRecord));
                     _entityTypeMap.Add("BillingInfo", typeof(BillingInfo));
                     _entityTypeMap.Add("BillingInfos", typeof(BillingInfo));
                     _entityTypeMap.Add("UploadRequestParams", typeof(UploadRequestParams));
@@ -57,6 +81,8 @@ namespace ShareFile.Api.Models
                     _entityTypeMap.Add("ConnectorGroupZones", typeof(ConnectorGroupZone));
                     _entityTypeMap.Add("ConnectorGroupAccessControl", typeof(ConnectorGroupAccessControl));
                     _entityTypeMap.Add("ConnectorGroupAccessControls", typeof(ConnectorGroupAccessControl));
+                    _entityTypeMap.Add("Report", typeof(Report));
+                    _entityTypeMap.Add("Reports", typeof(Report));
                     _entityTypeMap.Add("Principal", typeof(Principal));
                     _entityTypeMap.Add("Principals", typeof(Principal));
                     _entityTypeMap.Add("PreviewPlatformInfo", typeof(PreviewPlatformInfo));
@@ -196,9 +222,15 @@ namespace ShareFile.Api.Models
         /// </summary>
         public static void AddEntity(string key, Type value)
         {
-            lock(_entityTypeMap)
+            if (!_entityTypeMap.ContainsKey(key))
             {
-                _entityTypeMap.Add(key, value);
+                lock (_entityTypeMap)
+                {
+                    if (!_entityTypeMap.ContainsKey(key))
+                    {
+                        _entityTypeMap.Add(key, value);
+                    }
+                }
             }
         }
     }

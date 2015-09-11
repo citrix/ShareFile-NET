@@ -10,9 +10,12 @@
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.Net;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Exceptions;
 
 namespace ShareFile.Api.Models 
 {
@@ -35,6 +38,8 @@ namespace ShareFile.Api.Models
 
 		public bool? IsHIPAAZone { get; set; }
 
+		public bool? IsMultiTenant { get; set; }
+
 		public IEnumerable<StorageCenter> StorageCenters { get; set; }
 
 		public IEnumerable<Metadata> Metadata { get; set; }
@@ -55,6 +60,7 @@ namespace ShareFile.Api.Models
 				Version = typedSource.Version;
 				ZoneServices = typedSource.ZoneServices;
 				IsHIPAAZone = typedSource.IsHIPAAZone;
+				IsMultiTenant = typedSource.IsMultiTenant;
 				StorageCenters = typedSource.StorageCenters;
 				Metadata = typedSource.Metadata;
 			}
@@ -92,6 +98,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("IsHIPAAZone", out token) && token.Type != JTokenType.Null)
 				{
 					IsHIPAAZone = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IsMultiTenant", out token) && token.Type != JTokenType.Null)
+				{
+					IsMultiTenant = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("StorageCenters", out token) && token.Type != JTokenType.Null)
 				{

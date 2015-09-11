@@ -14,6 +14,7 @@ namespace ShareFile.Api.Models
 	public enum ShareType
     {
         Request = 0,
-        Send = 1
+        Send = 1,
+        Both = 2
     }
 }

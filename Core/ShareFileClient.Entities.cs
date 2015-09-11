@@ -15,6 +15,7 @@ namespace ShareFile.Api.Client
     public partial interface IShareFileClient
     {
         IConnectorGroupsEntity ConnectorGroups { get; }
+        IReportsEntity Reports { get; }
         IFolderTemplatesEntity FolderTemplates { get; }
         IAccessControlsEntity AccessControls { get; }
         IAccountsEntity Accounts { get; }
@@ -36,6 +37,7 @@ namespace ShareFile.Api.Client
         private ShareFileClient()
         {
             ConnectorGroups = new ConnectorGroupsEntity(this);
+            Reports = new ReportsEntity(this);
             FolderTemplates = new FolderTemplatesEntity(this);
             AccessControls = new AccessControlsEntity(this);
             Accounts = new AccountsEntity(this);
@@ -53,6 +55,7 @@ namespace ShareFile.Api.Client
         }
 
         public IConnectorGroupsEntity ConnectorGroups { get; private set; }
+        public IReportsEntity Reports { get; private set; }
         public IFolderTemplatesEntity FolderTemplates { get; private set; }
         public IAccessControlsEntity AccessControls { get; private set; }
         public IAccountsEntity Accounts { get; private set; }

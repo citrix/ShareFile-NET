@@ -42,7 +42,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 if (action != null && action.Redirection != null && action.Redirection.Body != null)
                 {
                     apiRequest.IsComposed = true;
-                    apiRequest.Uri = action.Redirection.Uri;
+                    apiRequest.Uri = action.Redirection.GetCalculatedUri();
                     apiRequest.Body = action.Redirection.Body;
                     apiRequest.HttpMethod = action.Redirection.Method ?? "GET";
                 }
@@ -62,7 +62,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 }
                 finally
                 {
-                    requestRoundtripWatch.Stop();
+                    ShareFileClient.Logging.Trace(requestRoundtripWatch);
                 }
             } while (action != null && (action.Action == EventHandlerResponseAction.Retry || action.Action == EventHandlerResponseAction.Redirect));
         }
@@ -122,26 +122,23 @@ namespace ShareFile.Api.Client.Requests.Providers
                             string redirectUri;
                             if (response.Value is ODataObject && response.Value.TryGetProperty("Uri", out redirectUri))
                             {
-                                response.Value = new Redirection
+                                var redirect = new Redirection
                                 {
                                     Uri = new Uri(redirectUri)
                                 };
+
+                                string redirectRoot;
+                                if(response.Value.TryGetProperty("Root", out redirectRoot))
+                                {
+                                    redirect.Root = redirectRoot;
+                                }
+
+                                response.Value = redirect;
                             }
 
                             if (response.Value is Redirection && typeof(T) != typeof(Redirection))
                             {
-                                var redirection = response.Value as Redirection;
-
-                                // Removed until API is updated to provide this correctly.
-                                // !redirection.Available || 
-                                if (redirection.Uri == null)
-                                    throw new ZoneUnavailableException(responseMessage.RequestMessage.RequestUri, "Destination zone is unavailable");
-
-                                if (httpRequestMessage.RequestUri.GetAuthority() != redirection.Uri.GetAuthority())
-                                {
-                                    action = ShareFileClient.OnChangeDomain(httpRequestMessage, redirection);
-                                }
-                                else action = EventHandlerResponse.Redirect(redirection);
+                                action = GetRedirectionAction(response, responseMessage, httpRequestMessage);
                             }
                             else
                             {
@@ -162,12 +159,38 @@ namespace ShareFile.Api.Client.Requests.Providers
                 }
                 finally
                 {
-                    requestRoundtripWatch.Stop();
+                    ShareFileClient.Logging.Trace(requestRoundtripWatch);
                 }
 
             } while (action != null && (action.Action == EventHandlerResponseAction.Retry || action.Action == EventHandlerResponseAction.Redirect));
 
             return default(T);
+        }
+
+        private EventHandlerResponse GetRedirectionAction(
+            Response<ODataObject> response,
+            HttpResponseMessage responseMessage,
+            HttpRequestMessage httpRequestMessage)
+        {
+            EventHandlerResponse action;
+            var redirection = response.Value as Redirection;
+
+            // Removed until API is updated to provide this correctly.
+            // !redirection.Available || 
+            if (redirection.Uri == null)
+            {
+                throw new ZoneUnavailableException(responseMessage.RequestMessage.RequestUri, "Destination zone is unavailable");
+            }
+
+            if (httpRequestMessage.RequestUri.GetAuthority() != redirection.Uri.GetAuthority())
+            {
+                action = this.ShareFileClient.OnChangeDomain(httpRequestMessage, redirection);
+            }
+            else
+            {
+                action = EventHandlerResponse.Redirect(redirection);
+            }
+            return action;
         }
 
         public async Task<T> ExecuteAsync<T>(IFormQuery<T> query, CancellationToken? token = null)
@@ -191,7 +214,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 if (action != null && action.Redirection != null && action.Redirection.Body != null)
                 {
                     apiRequest.IsComposed = true;
-                    apiRequest.Uri = action.Redirection.Uri;
+                    apiRequest.Uri = action.Redirection.GetCalculatedUri();
                     apiRequest.Body = action.Redirection.Body;
                     apiRequest.HttpMethod = action.Redirection.Method ?? "GET";
                 }
@@ -209,7 +232,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 }
                 finally
                 {
-                    requestRoundtripWatch.Stop();
+                    ShareFileClient.Logging.Trace(requestRoundtripWatch);
                 }
 
             } while (action != null && (action.Action == EventHandlerResponseAction.Retry || action.Action == EventHandlerResponseAction.Redirect));
@@ -233,7 +256,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 var responseStream = await httpResponseMessage.Content.ReadAsStreamAsync();
                 if (responseStream != null)
                 {
-                    var result = await DeserializeStreamAsync<T>(responseStream).ConfigureAwait(false);
+                    var result = await DeserializeResponseStreamAsync<T>(responseStream, httpResponseMessage).ConfigureAwait(false);
 
                     LogResponseAsync(result, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode).ConfigureAwait(false);
 
@@ -283,6 +306,20 @@ namespace ShareFile.Api.Client.Requests.Providers
 
             if (httpResponseMessage.IsSuccessStatusCode)
             {
+                if (httpResponseMessage.HasContent())
+                {
+                    var response = await HandleTypedResponse<ODataObject>(httpResponseMessage, request, retryCount).ConfigureAwait(false);
+                    if (response.Value is Redirection)
+                    {
+                        var action = GetRedirectionAction(
+                            response,
+                            httpResponseMessage,
+                            httpResponseMessage.RequestMessage);
+
+                        return Response.CreateAction(action);
+                    }
+                }
+
                 return Response.Success;
             }
 
@@ -374,7 +411,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                     if (responseStream != null)
                     {
                         var asyncOperation =
-                            await DeserializeStreamAsync<ODataFeed<AsyncOperation>>(responseStream).ConfigureAwait(false);
+                            await DeserializeResponseStreamAsync<ODataFeed<AsyncOperation>>(responseStream, httpResponseMessage).ConfigureAwait(false);
 
                         throw new AsyncOperationScheduledException(asyncOperation);
                     }

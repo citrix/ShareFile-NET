@@ -10,9 +10,12 @@
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.Net;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Exceptions;
 
 namespace ShareFile.Api.Models 
 {
@@ -43,6 +46,16 @@ namespace ShareFile.Api.Models
 		public SafeEnum<FileVirusStatus> VirusStatus { get; set; }
 
 		/// <summary>
+		/// Data Loss Prevention information for this file.
+		/// </summary>
+		public ItemDlpInfo DlpInfo { get; set; }
+
+		/// <summary>
+		/// Effective Access Control permissions for this file
+		/// </summary>
+		public ItemInfo Info { get; set; }
+
+		/// <summary>
 		/// Indicates the user that has locked the file
 		/// </summary>
 		public User LockedBy { get; set; }
@@ -57,6 +70,11 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public float? Version { get; set; }
 
+		/// <summary>
+		/// Electronic signature object associated with this item
+		/// </summary>
+		public ESignature ESignatureDocument { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -69,9 +87,12 @@ namespace ShareFile.Api.Models
 				Hash = typedSource.Hash;
 				HasPreview = typedSource.HasPreview;
 				VirusStatus = typedSource.VirusStatus;
+				DlpInfo = typedSource.DlpInfo;
+				Info = typedSource.Info;
 				LockedBy = typedSource.LockedBy;
 				FileLockInfo = typedSource.FileLockInfo;
 				Version = typedSource.Version;
+				ESignatureDocument = typedSource.ESignatureDocument;
 			}
 			else
 			{
@@ -92,6 +113,14 @@ namespace ShareFile.Api.Models
 				{
 					VirusStatus = (SafeEnum<FileVirusStatus>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<FileVirusStatus>));
 				}
+				if(source.TryGetProperty("DlpInfo", out token) && token.Type != JTokenType.Null)
+				{
+					DlpInfo = (ItemDlpInfo)serializer.Deserialize(token.CreateReader(), typeof(ItemDlpInfo));
+				}
+				if(source.TryGetProperty("Info", out token) && token.Type != JTokenType.Null)
+				{
+					Info = (ItemInfo)serializer.Deserialize(token.CreateReader(), typeof(ItemInfo));
+				}
 				if(source.TryGetProperty("LockedBy", out token) && token.Type != JTokenType.Null)
 				{
 					LockedBy = (User)serializer.Deserialize(token.CreateReader(), typeof(User));
@@ -103,6 +132,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("Version", out token) && token.Type != JTokenType.Null)
 				{
 					Version = (float?)serializer.Deserialize(token.CreateReader(), typeof(float?));
+				}
+				if(source.TryGetProperty("ESignatureDocument", out token) && token.Type != JTokenType.Null)
+				{
+					ESignatureDocument = (ESignature)serializer.Deserialize(token.CreateReader(), typeof(ESignature));
 				}
 			}
 		}

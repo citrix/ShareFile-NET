@@ -18,7 +18,7 @@ using ShareFile.Api.Client.Transfers;
 
 namespace ShareFile.Api.Client.Core.Tests.Uploaders
 {
-    public class UploaderTests
+    public class UploaderTests : BaseTests
     {
         private object oauthTokenLock = new object();
         private OAuthToken token = null;
@@ -56,44 +56,36 @@ namespace ShareFile.Api.Client.Core.Tests.Uploaders
             }
         }
 
-        protected PlatformFileStream GetFileToUpload(int size)
+        protected PlatformFileStream GetFileToUpload(int size, bool useNonAsciiFilename)
         {
             var bytes = new byte[size];
 
             RandomNumberGenerator.Create().GetBytes(bytes);
 
-            return new PlatformFileStream(new MemoryStream(bytes), (long)size, RandomString(20));
+            return new PlatformFileStream(new MemoryStream(bytes), (long)size,
+                useNonAsciiFilename ? GetNonAsciiFilename() : RandomString(20));
         }
 
-
-        private Random Random = new Random();
-        protected string RandomString(int length)
-        {
-            var builder = new StringBuilder();
-            for (var i = 0; i < length; i++)
-            {
-                var ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * Random.NextDouble() + 65)));
-                builder.Append(ch);
-            }
-            return builder.ToString();
-        }
-
-        [TestCase(UploadMethod.Standard, 1, true)]
-        [TestCase(UploadMethod.Standard, 1, false)]
-        [TestCase(UploadMethod.Threaded, 1, true)]
-        [TestCase(UploadMethod.Threaded, 1, false)]
-        [TestCase(UploadMethod.Standard, 4, true)]
-        [TestCase(UploadMethod.Standard, 4, false)]
-        [TestCase(UploadMethod.Threaded, 4, true)]
-        [TestCase(UploadMethod.Threaded, 4, false)]
-        public async void Upload(UploadMethod uploadMethod, int megabytes, bool useAsync)
+        [TestCase(UploadMethod.Standard, 1, true, false)]
+        [TestCase(UploadMethod.Standard, 1, false, false)]
+        [TestCase(UploadMethod.Threaded, 1, true, false)]
+        [TestCase(UploadMethod.Threaded, 1, false, false)]
+        [TestCase(UploadMethod.Standard, 4, true, false)]
+        [TestCase(UploadMethod.Standard, 4, false, false)]
+        [TestCase(UploadMethod.Threaded, 4, true, false)]
+        [TestCase(UploadMethod.Threaded, 4, false, false)]
+        [TestCase(UploadMethod.Standard, 1, false, true)]
+        [TestCase(UploadMethod.Standard, 1, true, true)]
+        [TestCase(UploadMethod.Threaded, 1, false, true)]
+        [TestCase(UploadMethod.Threaded, 1, true, true)]
+        public async void Upload(UploadMethod uploadMethod, int megabytes, bool useAsync, bool useNonAsciiFilename)
         {
             var shareFileClient = GetShareFileClient();
             var rootFolder = shareFileClient.Items.Get().Execute();
             var testFolder = new Folder { Name = RandomString(30) + ".txt" };
 
             testFolder = shareFileClient.Items.CreateFolder(rootFolder.url, testFolder).Execute();
-            var file = GetFileToUpload(1024 * 1024 * megabytes);
+            var file = GetFileToUpload(1024 * 1024 * megabytes, useNonAsciiFilename);
             var uploadSpec = new UploadSpecificationRequest(file.Name, file.Length, testFolder.url, uploadMethod);
 
             UploaderBase uploader;
@@ -145,5 +137,46 @@ namespace ShareFile.Api.Client.Core.Tests.Uploaders
                         "Threaded scales, therefore byte ranges vary and are less predictable.  We should see no more expectedInvoations");
             }
         }
-    }
+
+        [TestCase(10, true, new[] { CapabilityName.StandardUploadRaw, CapabilityName.AdvancedSearch }, ExpectedResult = typeof(AsyncScalingFileUploader))]
+        [TestCase(10, false, new[] { CapabilityName.StandardUploadRaw, CapabilityName.AdvancedSearch }, ExpectedResult = typeof(ScalingFileUploader))]
+        [TestCase(10, true, null, ExpectedResult = typeof(AsyncScalingFileUploader))]
+        [TestCase(10, false, null, ExpectedResult = typeof(ScalingFileUploader))]
+        [TestCase(1, true, new[] { CapabilityName.AdvancedSearch }, ExpectedResult = typeof(AsyncScalingFileUploader))]
+        [TestCase(1, false, new[] { CapabilityName.AdvancedSearch }, ExpectedResult = typeof(ScalingFileUploader))]
+        [TestCase(1, true, new[] { CapabilityName.StandardUploadRaw, CapabilityName.AdvancedSearch }, ExpectedResult = typeof(AsyncStandardFileUploader))]
+        [TestCase(1, false, new[] { CapabilityName.StandardUploadRaw, CapabilityName.AdvancedSearch }, ExpectedResult = typeof(StandardFileUploader))]
+        [TestCase(1, true, null, ExpectedResult = typeof(AsyncScalingFileUploader))]
+        [TestCase(1, false, null, ExpectedResult = typeof(ScalingFileUploader))]
+        public Type VerifyUploader(int megabytes, bool useAsync, CapabilityName[] capabilityNames)
+        {
+            var shareFileClient = GetShareFileClient();
+            var testFolder = new Folder { Name = RandomString(30) + ".txt" };
+            var file = GetFileToUpload(1024 * 1024 * megabytes, false);
+            var uploadSpec = new UploadSpecificationRequest(file.Name, file.Length, testFolder.url);
+            if (capabilityNames != null)
+            {
+                uploadSpec.ProviderCapabilities =
+                    new List<Capability>(capabilityNames.Select(x => new Capability { Name = x }));
+            }
+
+            UploaderBase uploader;
+
+            if (useAsync)
+            {
+                uploader = shareFileClient.GetAsyncFileUploader(uploadSpec, file);
+            }
+            else
+            {
+                uploader = shareFileClient.GetFileUploader(uploadSpec, file);
+            }
+
+            return uploader.GetType();
+        }
+
+        private string GetNonAsciiFilename()
+        {
+            return @"nonascii_貴社ますますご盛栄のこととお慶び申し上げます。平素は格別のご高配を賜り、厚く御礼申し上げます。.txt";
+        }
+    } 
 }

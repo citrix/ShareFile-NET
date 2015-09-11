@@ -182,10 +182,11 @@ namespace ShareFile.Api.Client.Entities
         /// </remarks>
         /// <param name="url"></param>
         /// <param name="redirect"></param>
+        /// <param name="includeAllVersions"></param>
         /// <returns>
         /// the download link for the provided item content.
         /// </returns>
-        IQuery<Stream> Download(Uri url, bool redirect = true);
+        IQuery<Stream> Download(Uri url, bool redirect = true, bool includeAllVersions = false);
         
         /// <summary>
         /// Download Multiple Items
@@ -433,11 +434,11 @@ namespace ShareFile.Api.Client.Entities
         /// <remarks>
         /// All items in bulk delete must be children of the same parent, identified in the URI
         /// </remarks>
-        /// <param name="id"></param>
-        /// <param name="body"></param>
+        /// <param name="parentUrl"></param>
+        /// <param name="ids"></param>
         /// <param name="forceSync"></param>
         /// <param name="deletePermanently"></param>
-        IQuery BulkDelete(Uri url, IEnumerable<string> ids, bool forceSync = false, bool deletePermanently = false);
+        IQuery BulkDelete(Uri parentUrl, IEnumerable<string> ids, bool forceSync = false, bool deletePermanently = false);
         
         /// <summary>
         /// Get Thumbnail
@@ -514,7 +515,7 @@ namespace ShareFile.Api.Client.Entities
         /// append the parameters index, offset and hash to the end of the ChunkUri address. Index
         /// is a sequential number representing the data block (zero-based); Offset represents the
         /// byte offset for the block; and hash contains the MD5 hash of the block. The last HTTP
-        /// POST must also contain finish=true parameter.
+        /// POST must also contain finish=true parameter as well as filehash=[MD5 hash of entire file].
         /// 
         /// Threaded uploads use multiple HTTP POST calls to ChunkUri, and can have a number of
         /// threads issuing blocks in parallel. Clients must append index, offset and hash to
@@ -527,7 +528,7 @@ namespace ShareFile.Api.Client.Entities
         /// For all uploaders, the contents of the POST Body can either be "raw", if the "Raw" parameter
         /// was provided to the Uploader, or use MIME multi-part form encoding otherwise. Raw uploads
         /// simply put the block content in the POST body - Content-Length specifies the size. Multi-part
-        /// form encoding has to pass the File as a Form parameter named "File1".
+        /// form encoding has to pass the File as a Form parameter named "Filedata".
         /// 
         /// For streamed and threaded, if Resume options were provided to the Upload call, then the
         /// fields IsResume, ResumeIndex, ResumeOffset and ResumeFileHash MAY be populated. If they are,
@@ -726,6 +727,34 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="itemIds"></param>
         /// <param name="ids"></param>
         IQuery BulkDeletePermanently(IEnumerable<string> ids);
+        
+        /// <summary>
+        /// Create a one-time use login Uri for the Web App.
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns>
+        /// Redirection populated with link in Uri field
+        /// </returns>
+        IQuery<Redirection> WebAppLink(Uri url);
+        
+        /// <summary>
+        /// Remove folder template association from folder
+        /// </summary>
+        /// <param name="url"></param>
+        IQuery RemoveTemplateAssociation(Uri url, string id);
+        
+        /// <summary>
+        /// Check if template is already part of an existing template structure
+        /// </summary>
+        /// <param name="url"></param>
+        IQuery CheckTemplateOwned(Uri url, string id);
+        
+        /// <summary>
+        /// Check if a versioning change would result in file deletions
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="newMaxVersions"></param>
+        IQuery CheckVersioningViolation(Uri url, string id, int newMaxVersions);
     }
 
     public class ItemsEntity : EntityBase, IItemsEntity
@@ -972,15 +1001,17 @@ namespace ShareFile.Api.Client.Entities
         /// </remarks>
         /// <param name="url"></param>
         /// <param name="redirect"></param>
+        /// <param name="includeAllVersions"></param>
         /// <returns>
         /// the download link for the provided item content.
         /// </returns>
-        public IQuery<Stream> Download(Uri url, bool redirect = true)
+        public IQuery<Stream> Download(Uri url, bool redirect = true, bool includeAllVersions = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
 		    sfApiQuery.Action("Download");
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("redirect", redirect);
+            sfApiQuery.QueryString("includeAllVersions", includeAllVersions);
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
@@ -1333,15 +1364,15 @@ namespace ShareFile.Api.Client.Entities
         /// <remarks>
         /// All items in bulk delete must be children of the same parent, identified in the URI
         /// </remarks>
-        /// <param name="id"></param>
-        /// <param name="body"></param>
+        /// <param name="parentUrl"></param>
+        /// <param name="ids"></param>
         /// <param name="forceSync"></param>
         /// <param name="deletePermanently"></param>
-        public IQuery BulkDelete(Uri url, IEnumerable<string> ids, bool forceSync = false, bool deletePermanently = false)
+        public IQuery BulkDelete(Uri parentUrl, IEnumerable<string> ids, bool forceSync = false, bool deletePermanently = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 		    sfApiQuery.Action("BulkDelete");
-            sfApiQuery.Uri(url);
+            sfApiQuery.Uri(parentUrl);
             sfApiQuery.QueryString("forceSync", forceSync);
             sfApiQuery.QueryString("deletePermanently", deletePermanently);
             sfApiQuery.Body = ids;
@@ -1450,7 +1481,7 @@ namespace ShareFile.Api.Client.Entities
         /// append the parameters index, offset and hash to the end of the ChunkUri address. Index
         /// is a sequential number representing the data block (zero-based); Offset represents the
         /// byte offset for the block; and hash contains the MD5 hash of the block. The last HTTP
-        /// POST must also contain finish=true parameter.
+        /// POST must also contain finish=true parameter as well as filehash=[MD5 hash of entire file].
         /// 
         /// Threaded uploads use multiple HTTP POST calls to ChunkUri, and can have a number of
         /// threads issuing blocks in parallel. Clients must append index, offset and hash to
@@ -1463,7 +1494,7 @@ namespace ShareFile.Api.Client.Entities
         /// For all uploaders, the contents of the POST Body can either be "raw", if the "Raw" parameter
         /// was provided to the Uploader, or use MIME multi-part form encoding otherwise. Raw uploads
         /// simply put the block content in the POST body - Content-Length specifies the size. Multi-part
-        /// form encoding has to pass the File as a Form parameter named "File1".
+        /// form encoding has to pass the File as a Form parameter named "Filedata".
         /// 
         /// For streamed and threaded, if Resume options were provided to the Upload call, then the
         /// fields IsResume, ResumeIndex, ResumeOffset and ResumeFileHash MAY be populated. If they are,
@@ -1801,6 +1832,66 @@ namespace ShareFile.Api.Client.Entities
 		    sfApiQuery.From("Items");
 		    sfApiQuery.Action("BulkDeletePermanently");
             sfApiQuery.Body = ids;
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Create a one-time use login Uri for the Web App.
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns>
+        /// Redirection populated with link in Uri field
+        /// </returns>
+        public IQuery<Redirection> WebAppLink(Uri url)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Redirection>(Client);
+		    sfApiQuery.Action("WebAppLink");
+            sfApiQuery.Uri(url);
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Remove folder template association from folder
+        /// </summary>
+        /// <param name="url"></param>
+        public IQuery RemoveTemplateAssociation(Uri url, string id)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+		    sfApiQuery.Action("RemoveTemplateAssociation");
+            sfApiQuery.Uri(url);
+            sfApiQuery.QueryString("parentid", id);
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Check if template is already part of an existing template structure
+        /// </summary>
+        /// <param name="url"></param>
+        public IQuery CheckTemplateOwned(Uri url, string id)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+		    sfApiQuery.Action("CheckTemplateOwned");
+            sfApiQuery.Uri(url);
+            sfApiQuery.QueryString("parentid", id);
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Check if a versioning change would result in file deletions
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="newMaxVersions"></param>
+        public IQuery CheckVersioningViolation(Uri url, string id, int newMaxVersions)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+		    sfApiQuery.Action("CheckVersioningViolation");
+            sfApiQuery.Uri(url);
+            sfApiQuery.QueryString("parentid", id);
+            sfApiQuery.QueryString("newMaxVersions", newMaxVersions);
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }

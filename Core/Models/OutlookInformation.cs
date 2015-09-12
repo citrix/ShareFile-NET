@@ -10,9 +10,12 @@
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.Net;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Exceptions;
 
 namespace ShareFile.Api.Models 
 {
@@ -45,6 +48,12 @@ namespace ShareFile.Api.Models
 
 		public OutlookInformationOptionBool AttachPaperclip { get; set; }
 
+		public OutlookInformationOptionString EncryptedEmailRecipientVerification { get; set; }
+
+		public OutlookInformationOptionString EncryptedEmailExpiration { get; set; }
+
+		public OutlookInformationOptionBool EncryptedEmailNotifyOnRead { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -66,6 +75,9 @@ namespace ShareFile.Api.Models
 				AutoConvert = typedSource.AutoConvert;
 				ConvertAbove = typedSource.ConvertAbove;
 				AttachPaperclip = typedSource.AttachPaperclip;
+				EncryptedEmailRecipientVerification = typedSource.EncryptedEmailRecipientVerification;
+				EncryptedEmailExpiration = typedSource.EncryptedEmailExpiration;
+				EncryptedEmailNotifyOnRead = typedSource.EncryptedEmailNotifyOnRead;
 			}
 			else
 			{
@@ -121,6 +133,18 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("AttachPaperclip", out token) && token.Type != JTokenType.Null)
 				{
 					AttachPaperclip = (OutlookInformationOptionBool)serializer.Deserialize(token.CreateReader(), typeof(OutlookInformationOptionBool));
+				}
+				if(source.TryGetProperty("EncryptedEmailRecipientVerification", out token) && token.Type != JTokenType.Null)
+				{
+					EncryptedEmailRecipientVerification = (OutlookInformationOptionString)serializer.Deserialize(token.CreateReader(), typeof(OutlookInformationOptionString));
+				}
+				if(source.TryGetProperty("EncryptedEmailExpiration", out token) && token.Type != JTokenType.Null)
+				{
+					EncryptedEmailExpiration = (OutlookInformationOptionString)serializer.Deserialize(token.CreateReader(), typeof(OutlookInformationOptionString));
+				}
+				if(source.TryGetProperty("EncryptedEmailNotifyOnRead", out token) && token.Type != JTokenType.Null)
+				{
+					EncryptedEmailNotifyOnRead = (OutlookInformationOptionBool)serializer.Deserialize(token.CreateReader(), typeof(OutlookInformationOptionBool));
 				}
 			}
 		}

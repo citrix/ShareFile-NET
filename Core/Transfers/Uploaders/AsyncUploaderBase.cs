@@ -31,11 +31,11 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         {
             if (UploadSpecificationRequest.ProviderCapabilities == null)
             {
-                UploadSpecificationRequest.ProviderCapabilities =
-                    (await
-                        Client.Capabilities.Get()
-                            .WithBaseUri(UploadSpecificationRequest.Parent)
-                            .ExecuteAsync(CancellationToken)).Feed;
+                var capabilities = Client.GetCachedCapabilities(UploadSpecificationRequest.Parent)
+                        ?? (await CreateCapabilitiesQuery().ExecuteAsync()).Feed;
+                Client.SetCachedCapabilities(UploadSpecificationRequest.Parent, capabilities);
+
+                UploadSpecificationRequest.ProviderCapabilities = capabilities;
             }
 
             var query = CreateUploadSpecificationQuery(UploadSpecificationRequest);

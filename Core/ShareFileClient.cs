@@ -142,6 +142,7 @@ namespace ShareFile.Api.Client
             CredentialCache = CredentialCacheFactory.GetCredentialCache();
             Serializer = GetSerializer();
             LoggingSerializer = GetLoggingSerializer(this);
+            _capabilityCache = new Dictionary<string, IEnumerable<Capability>>();
 
             RegisterRequestProviders();
         }
@@ -151,10 +152,10 @@ namespace ShareFile.Api.Client
         public Configuration Configuration { get; set; }
 
         internal LoggingProvider Logging { get; set; }
-        internal ICredentialCache CredentialCache { get; set; }
-        internal CookieContainer CookieContainer { get; set; }
-        internal JsonSerializer Serializer { get; set; }
-        internal JsonSerializer LoggingSerializer { get; set; }
+        protected internal ICredentialCache CredentialCache { get; set; }
+        protected internal CookieContainer CookieContainer { get; set; }
+        protected internal JsonSerializer Serializer { get; set; }
+        protected internal JsonSerializer LoggingSerializer { get; set; }
         internal RequestProviderFactory RequestProviderFactory { get; set; }
 
 #if ShareFile
@@ -227,6 +228,36 @@ namespace ShareFile.Api.Client
             return UploadMethod.Standard;
         }
 
+        private Dictionary<string, IEnumerable<Capability>> _capabilityCache;
+
+        protected internal IEnumerable<Capability> GetCachedCapabilities(Uri itemUri)
+        {
+            if (itemUri == null) return null;
+
+            IEnumerable<Capability> capabilities = null;
+            _capabilityCache.TryGetValue(GetCapabilityCacheKey(itemUri), out capabilities);
+            return capabilities;
+        }
+
+        protected internal void SetCachedCapabilities(Uri itemUri, IEnumerable<Capability> capabilities)
+        {
+            if (itemUri == null) return;
+
+            if (!_capabilityCache.ContainsKey(GetCapabilityCacheKey(itemUri)))
+            {
+                lock (_capabilityCache)
+                {
+                    _capabilityCache[GetCapabilityCacheKey(itemUri)] = capabilities;
+                }
+            }
+        }
+
+        protected string GetCapabilityCacheKey(Uri itemUri)
+        {
+            return String.Format("{0}/{1}", itemUri.Host.ToLower(), GetProvider(itemUri).ToLower());
+        }
+
+
         /// <summary>
         /// Use some naive metrics for deciding which <see cref="UploadMethod"/>  should be used.
         /// </summary>
@@ -240,7 +271,23 @@ namespace ShareFile.Api.Client
 
             if (uploadSpecificationRequest.Method.HasValue) return;
 
-            uploadSpecificationRequest.Method = GetUploadMethod(uploadSpecificationRequest.FileSize);
+
+            if (uploadSpecificationRequest.ProviderCapabilities == null)
+            {
+                uploadSpecificationRequest.ProviderCapabilities = GetCachedCapabilities(uploadSpecificationRequest.Parent);
+            }
+
+            if (uploadSpecificationRequest.ProviderCapabilities != null && uploadSpecificationRequest.Method == null)
+            {
+                uploadSpecificationRequest.Method = 
+                    uploadSpecificationRequest.ProviderCapabilities.Any(x => x.Name == CapabilityName.StandardUploadRaw) 
+                    ? this.GetUploadMethod(uploadSpecificationRequest.FileSize) 
+                    : UploadMethod.Threaded;
+            }
+            else
+            {
+                uploadSpecificationRequest.Method = UploadMethod.Threaded;
+            }
         }
 
 #if Async

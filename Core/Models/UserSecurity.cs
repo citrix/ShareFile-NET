@@ -10,9 +10,12 @@
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.Net;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Exceptions;
 
 namespace ShareFile.Api.Models 
 {
@@ -28,6 +31,8 @@ namespace ShareFile.Api.Models
 		public DateTime? LastWebAppLogin { get; set; }
 
 		public DateTime? LastAnyLogin { get; set; }
+
+		public DateTime? FirstAnyLogin { get; set; }
 
 		public string UserIPRestrictions { get; set; }
 
@@ -62,6 +67,7 @@ namespace ShareFile.Api.Models
 				LockExpires = typedSource.LockExpires;
 				LastWebAppLogin = typedSource.LastWebAppLogin;
 				LastAnyLogin = typedSource.LastAnyLogin;
+				FirstAnyLogin = typedSource.FirstAnyLogin;
 				UserIPRestrictions = typedSource.UserIPRestrictions;
 				DisableLoginBefore = typedSource.DisableLoginBefore;
 				DisableLoginAfter = typedSource.DisableLoginAfter;
@@ -95,6 +101,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("LastAnyLogin", out token) && token.Type != JTokenType.Null)
 				{
 					LastAnyLogin = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("FirstAnyLogin", out token) && token.Type != JTokenType.Null)
+				{
+					FirstAnyLogin = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
 				}
 				if(source.TryGetProperty("UserIPRestrictions", out token) && token.Type != JTokenType.Null)
 				{

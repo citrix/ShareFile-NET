@@ -10,9 +10,12 @@
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.Net;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Exceptions;
 
 namespace ShareFile.Api.Models 
 {
@@ -35,6 +38,8 @@ namespace ShareFile.Api.Models
 
 		public string SFEntityID { get; set; }
 
+		public string SSOProvidersToAccountsID { get; set; }
+
 		public string SPInitatedAuthContext { get; set; }
 
 		public string SPInitatedAuthMethod { get; set; }
@@ -42,6 +47,8 @@ namespace ShareFile.Api.Models
 		public bool? UseWebAuthentication { get; set; }
 
 		public bool? IsActive { get; set; }
+
+		public bool? IsDefault { get; set; }
 
 		public string ProviderID { get; set; }
 
@@ -65,10 +72,12 @@ namespace ShareFile.Api.Models
 				Account = typedSource.Account;
 				EntityID = typedSource.EntityID;
 				SFEntityID = typedSource.SFEntityID;
+				SSOProvidersToAccountsID = typedSource.SSOProvidersToAccountsID;
 				SPInitatedAuthContext = typedSource.SPInitatedAuthContext;
 				SPInitatedAuthMethod = typedSource.SPInitatedAuthMethod;
 				UseWebAuthentication = typedSource.UseWebAuthentication;
 				IsActive = typedSource.IsActive;
+				IsDefault = typedSource.IsDefault;
 				ProviderID = typedSource.ProviderID;
 				DebugMode = typedSource.DebugMode;
 				LenientSignatures = typedSource.LenientSignatures;
@@ -108,6 +117,10 @@ namespace ShareFile.Api.Models
 				{
 					SFEntityID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
+				if(source.TryGetProperty("SSOProvidersToAccountsID", out token) && token.Type != JTokenType.Null)
+				{
+					SSOProvidersToAccountsID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
 				if(source.TryGetProperty("SPInitatedAuthContext", out token) && token.Type != JTokenType.Null)
 				{
 					SPInitatedAuthContext = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
@@ -123,6 +136,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("IsActive", out token) && token.Type != JTokenType.Null)
 				{
 					IsActive = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IsDefault", out token) && token.Type != JTokenType.Null)
+				{
+					IsDefault = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("ProviderID", out token) && token.Type != JTokenType.Null)
 				{

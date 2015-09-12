@@ -35,7 +35,7 @@ namespace ShareFile.Api.Client.Entities
         IQuery<User> Get(string id = null, string emailAddress = null);
         
         /// <summary>
-        /// Create Customer
+        /// Create Client User
         /// </summary>
         /// <example>
         /// {
@@ -56,7 +56,7 @@ namespace ShareFile.Api.Client.Entities
         /// }
         /// </example>
         /// <remarks>
-        /// Creates a new Customer User and associates it to an Account
+        /// Creates a new Client User and associates it to an Account
         /// The following parameters from the input object are used: Email, FirstName, LastName, Company,
         /// DefaultZone, Password, Preferences.CanResetPassword and Preferences.CanViewMySettingsOther parameters are ignored
         /// </remarks>
@@ -65,10 +65,11 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="addshared"></param>
         /// <param name="notify"></param>
         /// <param name="ifNecessary"></param>
+        /// <param name="addPersonal"></param>
         /// <returns>
         /// The new user
         /// </returns>
-        IQuery<User> Create(User user, bool pushCreatorDefaultSettings = false, bool addshared = false, bool notify = false, bool ifNecessary = false);
+        IQuery<User> Create(User user, bool pushCreatorDefaultSettings = false, bool addshared = false, bool notify = false, bool ifNecessary = false, bool addPersonal = false);
         
         /// <summary>
         /// Create Employee
@@ -256,7 +257,7 @@ namespace ShareFile.Api.Client.Entities
         /// <returns>
         /// User's Top Folders
         /// </returns>
-        IQuery<ODataFeed<Item>> TopFolders(Uri url);
+        IQuery<ODataFeed<Item>> GetTopFolders(Uri url);
         
         /// <summary>
         /// Get User's FileBox children
@@ -449,7 +450,7 @@ namespace ShareFile.Api.Client.Entities
         IQuery<UserInfo> GetInfo();
         
         /// <summary>
-        /// delete the email address from user
+        /// Delete the email address from user
         /// </summary>
         /// <param name="email"></param>
         /// <returns>
@@ -458,7 +459,7 @@ namespace ShareFile.Api.Client.Entities
         IQuery<User> DeleteEmailAddress(string email);
         
         /// <summary>
-        /// set email address as the primary email address for CURRENT user
+        /// Set email address as the primary email address for CURRENT user
         /// </summary>
         /// <param name="email"></param>
         /// <returns>
@@ -467,13 +468,54 @@ namespace ShareFile.Api.Client.Entities
         IQuery<User> MakePrimary(string email);
         
         /// <summary>
-        /// send notification email address to this email address for verification
+        /// Send notification email address to this email address for verification
         /// </summary>
         /// <param name="email"></param>
         /// <returns>
         /// User
         /// </returns>
         IQuery SendConfirmationEmail(string email);
+        
+        /// <summary>
+        /// Create a one-time use login Uri for the Web App.
+        /// </summary>
+        /// <returns>
+        /// Redirection populated with link in Uri field
+        /// </returns>
+        IQuery<Redirection> WebAppLink();
+        
+        /// <summary>
+        /// Get Inbox Metadata
+        /// </summary>
+        /// <remarks>
+        /// Returns metadata of the inbox.User identifier
+        /// </remarks>
+        /// <returns>
+        /// Inbox metadata
+        /// </returns>
+        IQuery<InboxMetadata> InboxMetadata(Uri url);
+        
+        /// <summary>
+        /// Get Inbox for Recipient
+        /// </summary>
+        /// <remarks>
+        /// Retrieve all outstanding Shares in the inbox.User identifier
+        /// </remarks>
+        /// <returns>
+        /// List of Shares created by the authenticated user
+        /// </returns>
+        IQuery<ODataFeed<Share>> GetInbox(Uri url, ShareType type = ShareType.Both, bool archived = false);
+        
+        /// <summary>
+        /// Get Sent Messages
+        /// </summary>
+        /// <remarks>
+        /// Returns sent messages for the given user.User identifier
+        /// </remarks>
+        /// <returns>
+        /// Feed of Shares
+        /// </returns>
+        IQuery<ODataFeed<Share>> SentMessages(Uri url);
     }
 
     public class UsersEntity : EntityBase, IUsersEntity
@@ -505,7 +547,7 @@ namespace ShareFile.Api.Client.Entities
         }
         
         /// <summary>
-        /// Create Customer
+        /// Create Client User
         /// </summary>
         /// <example>
         /// {
@@ -526,7 +568,7 @@ namespace ShareFile.Api.Client.Entities
         /// }
         /// </example>
         /// <remarks>
-        /// Creates a new Customer User and associates it to an Account
+        /// Creates a new Client User and associates it to an Account
         /// The following parameters from the input object are used: Email, FirstName, LastName, Company,
         /// DefaultZone, Password, Preferences.CanResetPassword and Preferences.CanViewMySettingsOther parameters are ignored
         /// </remarks>
@@ -535,10 +577,11 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="addshared"></param>
         /// <param name="notify"></param>
         /// <param name="ifNecessary"></param>
+        /// <param name="addPersonal"></param>
         /// <returns>
         /// The new user
         /// </returns>
-        public IQuery<User> Create(User user, bool pushCreatorDefaultSettings = false, bool addshared = false, bool notify = false, bool ifNecessary = false)
+        public IQuery<User> Create(User user, bool pushCreatorDefaultSettings = false, bool addshared = false, bool notify = false, bool ifNecessary = false, bool addPersonal = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<User>(Client);
 		    sfApiQuery.From("Users");
@@ -546,6 +589,7 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.QueryString("addshared", addshared);
             sfApiQuery.QueryString("notify", notify);
             sfApiQuery.QueryString("ifNecessary", ifNecessary);
+            sfApiQuery.QueryString("addPersonal", addPersonal);
             sfApiQuery.Body = user;
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
@@ -788,7 +832,7 @@ namespace ShareFile.Api.Client.Entities
         /// <returns>
         /// User's Top Folders
         /// </returns>
-        public IQuery<ODataFeed<Item>> TopFolders(Uri url)
+        public IQuery<ODataFeed<Item>> GetTopFolders(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
 		    sfApiQuery.Action("TopFolders");
@@ -1099,7 +1143,7 @@ namespace ShareFile.Api.Client.Entities
         }
         
         /// <summary>
-        /// delete the email address from user
+        /// Delete the email address from user
         /// </summary>
         /// <param name="email"></param>
         /// <returns>
@@ -1116,7 +1160,7 @@ namespace ShareFile.Api.Client.Entities
         }
         
         /// <summary>
-        /// set email address as the primary email address for CURRENT user
+        /// Set email address as the primary email address for CURRENT user
         /// </summary>
         /// <param name="email"></param>
         /// <returns>
@@ -1133,7 +1177,7 @@ namespace ShareFile.Api.Client.Entities
         }
         
         /// <summary>
-        /// send notification email address to this email address for verification
+        /// Send notification email address to this email address for verification
         /// </summary>
         /// <param name="email"></param>
         /// <returns>
@@ -1146,6 +1190,77 @@ namespace ShareFile.Api.Client.Entities
 		    sfApiQuery.Action("SendConfirmationEmail");
             sfApiQuery.QueryString("email", email);
             sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Create a one-time use login Uri for the Web App.
+        /// </summary>
+        /// <returns>
+        /// Redirection populated with link in Uri field
+        /// </returns>
+        public IQuery<Redirection> WebAppLink()
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Redirection>(Client);
+		    sfApiQuery.From("Users");
+		    sfApiQuery.Action("WebAppLink");
+            sfApiQuery.HttpMethod = "POST";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get Inbox Metadata
+        /// </summary>
+        /// <remarks>
+        /// Returns metadata of the inbox.User identifier
+        /// </remarks>
+        /// <returns>
+        /// Inbox metadata
+        /// </returns>
+        public IQuery<InboxMetadata> InboxMetadata(Uri url)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<InboxMetadata>(Client);
+		    sfApiQuery.Action("InboxMetadata");
+            sfApiQuery.Uri(url);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get Inbox for Recipient
+        /// </summary>
+        /// <remarks>
+        /// Retrieve all outstanding Shares in the inbox.User identifier
+        /// </remarks>
+        /// <returns>
+        /// List of Shares created by the authenticated user
+        /// </returns>
+        public IQuery<ODataFeed<Share>> GetInbox(Uri url, ShareType type = ShareType.Both, bool archived = false)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Share>>(Client);
+		    sfApiQuery.Action("Inbox");
+            sfApiQuery.Uri(url);
+            sfApiQuery.QueryString("type", type);
+            sfApiQuery.QueryString("archived", archived);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get Sent Messages
+        /// </summary>
+        /// <remarks>
+        /// Returns sent messages for the given user.User identifier
+        /// </remarks>
+        /// <returns>
+        /// Feed of Shares
+        /// </returns>
+        public IQuery<ODataFeed<Share>> SentMessages(Uri url)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Share>>(Client);
+		    sfApiQuery.Action("SentMessages");
+            sfApiQuery.Uri(url);
+            sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
     }

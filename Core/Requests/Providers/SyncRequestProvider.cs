@@ -30,7 +30,8 @@ namespace ShareFile.Api.Client.Requests.Providers
 
         public void Execute(IQuery query)
         {
-            Execute(query as QueryBase, responseMessage => Response.Success);
+            Execute(query as QueryBase,
+                responseMessage => Response.Success);
         }
 
         public T Execute<T>(IQuery<T> query) where T : class
@@ -71,7 +72,7 @@ namespace ShareFile.Api.Client.Requests.Providers
             {
                 if (typeof(T).IsSubclassOf(typeof(ODataObject)))
                 {
-                    var result = DeserializeStream<ODataObject>(responseStream);
+                    var result = DeserializeResponseStream<ODataObject>(responseStream, httpResponseMessage);
 
                     LogResponse(result, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode);
                     ShareFileClient.Logging.Trace(watch);
@@ -82,7 +83,13 @@ namespace ShareFile.Api.Client.Requests.Providers
                     string redirectUri;
                     if (result is ODataObject && result.TryGetProperty("Uri", out redirectUri))
                     {
-                        result = new Redirection { Uri = new Uri(redirectUri) };
+                        var redirect = new Redirection { Uri = new Uri(redirectUri) };
+                        string redirectRoot;
+                        if(result.TryGetProperty("Root", out redirectRoot))
+                        {
+                            redirect.Root = redirectRoot;
+                        }
+                        result = redirect;
                     }
 
                     if (result is Redirection && typeof(T) != typeof(Redirection))
@@ -114,7 +121,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 }
                 else
                 {
-                    var result = DeserializeStream<T>(responseStream);
+                    var result = DeserializeResponseStream<T>(responseStream, httpResponseMessage);
                     LogResponse(result, httpResponseMessage.RequestMessage.RequestUri, httpResponseMessage.Headers.ToString(), httpResponseMessage.StatusCode);
                     ShareFileClient.Logging.Trace(watch);
 
@@ -179,7 +186,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 }
                 finally
                 {
-                    requestRoundtripWatch.Stop();
+                    ShareFileClient.Logging.Trace(requestRoundtripWatch);
                 }
 
             } while (action != null && (action.Action == EventHandlerResponseAction.Retry || action.Action == EventHandlerResponseAction.Redirect));
@@ -194,6 +201,12 @@ namespace ShareFile.Api.Client.Requests.Providers
 
             if (httpResponseMessage.IsSuccessStatusCode)
             {
+                if (typeof(TResponse) == typeof(Response) && httpResponseMessage.HasContent())
+                {
+                    // It's weird to use Item here, however ODataObject goes down a different code path.
+                    // Using Item reduces scope of changes.
+                    return ParseTypedResponse<Item>(httpResponseMessage);
+                }
                 return parseSuccessResponse(httpResponseMessage);
             }
 
@@ -343,7 +356,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                     var responseStream = httpResponseMessage.Content.ReadAsStreamAsync().WaitForTask();
                     if (responseStream != null)
                     {
-                        var asyncOperation = DeserializeStream<ODataFeed<AsyncOperation>>(responseStream);
+                        var asyncOperation = DeserializeResponseStream<ODataFeed<AsyncOperation>>(responseStream, httpResponseMessage);
 
                         throw new AsyncOperationScheduledException(asyncOperation);
                     }

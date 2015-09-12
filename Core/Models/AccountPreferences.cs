@@ -10,9 +10,12 @@
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.Net;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Exceptions;
 
 namespace ShareFile.Api.Models 
 {
@@ -165,8 +168,6 @@ namespace ShareFile.Api.Models
 
 		public string AccountID { get; set; }
 
-		public bool? EnableGetApp { get; set; }
-
 		public bool? EnableStorageZoneConnector { get; set; }
 
 		public bool? HasAnyConnectorZones { get; set; }
@@ -184,6 +185,8 @@ namespace ShareFile.Api.Models
 		public int? ENSMaxNotificationSyncWaitCount { get; set; }
 
 		public string TrustedDomains { get; set; }
+
+		public bool? UseWebPopAsWebAppLogin { get; set; }
 
 		public bool? EnableReportingV3 { get; set; }
 
@@ -203,6 +206,8 @@ namespace ShareFile.Api.Models
 
 		public bool? DisableShareConnectForAccount { get; set; }
 
+		public bool? DisablePrintToShareFile { get; set; }
+
 		public bool? EnableWebAppConnectorBrowsing { get; set; }
 
 		public bool? EnableStrictCrossdomainPolicy { get; set; }
@@ -215,6 +220,10 @@ namespace ShareFile.Api.Models
 
 		public bool? EnableFileLocking { get; set; }
 
+		public bool? DisableWebAppAccess { get; set; }
+
+		public bool? EnableCWC { get; set; }
+
 		public bool? EnableIntegrations { get; set; }
 
 		public IEnumerable<SafeEnum<IntegrationProvider>> IntegrationProviders { get; set; }
@@ -223,13 +232,47 @@ namespace ShareFile.Api.Models
 
 		public bool? ShowDownloadLinkInUploadNotification { get; set; }
 
+		public bool? AllowDownloadNotificationsWithoutAdmin { get; set; }
+
 		public bool? EnableUserInvitations { get; set; }
 
 		public bool? EnableClickTrails { get; set; }
 
+		public bool? EnableFolderTemplates { get; set; }
+
+		public bool? EnableFileDrops { get; set; }
+
+		public int? SpamEmailThreshold { get; set; }
+
+		public bool? EnableExternalEmailArchiving { get; set; }
+
+		public bool? CreatorCanDelete { get; set; }
+
 		public bool? CanStoreItemsInShareFile { get; set; }
 
 		public bool? EnableHomeFolders { get; set; }
+
+		public bool? EnableCustomBrandingUsesS3 { get; set; }
+
+		public bool? EnablePromotions { get; set; }
+
+		public bool? CanCreateMultiTenantZones { get; set; }
+
+		public bool? EnableDLP { get; set; }
+
+		public bool? EnableOfficeOnlinePreviews { get; set; }
+
+		public bool? EnableOfficeOnlineEditing { get; set; }
+
+		public int? RecycleBinDays { get; set; }
+
+		public int? SyncConcurrentTransferThreadsLimit { get; set; }
+
+		public bool? HasPHI { get; set; }
+
+		public bool? EnableCitrixManagedStorageZones { get; set; }
+
+		public string PrimaryStorageBasePath { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
@@ -312,7 +355,6 @@ namespace ShareFile.Api.Models
 				EnableSMBConnectorForAccount = typedSource.EnableSMBConnectorForAccount;
 				EnablePersonalCloudConnectors = typedSource.EnablePersonalCloudConnectors;
 				AccountID = typedSource.AccountID;
-				EnableGetApp = typedSource.EnableGetApp;
 				EnableStorageZoneConnector = typedSource.EnableStorageZoneConnector;
 				HasAnyConnectorZones = typedSource.HasAnyConnectorZones;
 				EnableENSForAccount = typedSource.EnableENSForAccount;
@@ -322,6 +364,7 @@ namespace ShareFile.Api.Models
 				ENSFailSafePollingCount = typedSource.ENSFailSafePollingCount;
 				ENSMaxNotificationSyncWaitCount = typedSource.ENSMaxNotificationSyncWaitCount;
 				TrustedDomains = typedSource.TrustedDomains;
+				UseWebPopAsWebAppLogin = typedSource.UseWebPopAsWebAppLogin;
 				EnableReportingV3 = typedSource.EnableReportingV3;
 				EnableEncryptedEmailForOutlookPlugin = typedSource.EnableEncryptedEmailForOutlookPlugin;
 				EnableDocPreviews = typedSource.EnableDocPreviews;
@@ -331,20 +374,40 @@ namespace ShareFile.Api.Models
 				EmployeeEmailDomains = typedSource.EmployeeEmailDomains;
 				IsPremier = typedSource.IsPremier;
 				DisableShareConnectForAccount = typedSource.DisableShareConnectForAccount;
+				DisablePrintToShareFile = typedSource.DisablePrintToShareFile;
 				EnableWebAppConnectorBrowsing = typedSource.EnableWebAppConnectorBrowsing;
 				EnableStrictCrossdomainPolicy = typedSource.EnableStrictCrossdomainPolicy;
 				DisableScanSnap = typedSource.DisableScanSnap;
 				EnableFileCount = typedSource.EnableFileCount;
 				EnableAntiVirus = typedSource.EnableAntiVirus;
 				EnableFileLocking = typedSource.EnableFileLocking;
+				DisableWebAppAccess = typedSource.DisableWebAppAccess;
+				EnableCWC = typedSource.EnableCWC;
 				EnableIntegrations = typedSource.EnableIntegrations;
 				IntegrationProviders = typedSource.IntegrationProviders;
 				EnableBouncedEmailNotifications = typedSource.EnableBouncedEmailNotifications;
 				ShowDownloadLinkInUploadNotification = typedSource.ShowDownloadLinkInUploadNotification;
+				AllowDownloadNotificationsWithoutAdmin = typedSource.AllowDownloadNotificationsWithoutAdmin;
 				EnableUserInvitations = typedSource.EnableUserInvitations;
 				EnableClickTrails = typedSource.EnableClickTrails;
+				EnableFolderTemplates = typedSource.EnableFolderTemplates;
+				EnableFileDrops = typedSource.EnableFileDrops;
+				SpamEmailThreshold = typedSource.SpamEmailThreshold;
+				EnableExternalEmailArchiving = typedSource.EnableExternalEmailArchiving;
+				CreatorCanDelete = typedSource.CreatorCanDelete;
 				CanStoreItemsInShareFile = typedSource.CanStoreItemsInShareFile;
 				EnableHomeFolders = typedSource.EnableHomeFolders;
+				EnableCustomBrandingUsesS3 = typedSource.EnableCustomBrandingUsesS3;
+				EnablePromotions = typedSource.EnablePromotions;
+				CanCreateMultiTenantZones = typedSource.CanCreateMultiTenantZones;
+				EnableDLP = typedSource.EnableDLP;
+				EnableOfficeOnlinePreviews = typedSource.EnableOfficeOnlinePreviews;
+				EnableOfficeOnlineEditing = typedSource.EnableOfficeOnlineEditing;
+				RecycleBinDays = typedSource.RecycleBinDays;
+				SyncConcurrentTransferThreadsLimit = typedSource.SyncConcurrentTransferThreadsLimit;
+				HasPHI = typedSource.HasPHI;
+				EnableCitrixManagedStorageZones = typedSource.EnableCitrixManagedStorageZones;
+				PrimaryStorageBasePath = typedSource.PrimaryStorageBasePath;
 			}
 			else
 			{
@@ -641,10 +704,6 @@ namespace ShareFile.Api.Models
 				{
 					AccountID = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
-				if(source.TryGetProperty("EnableGetApp", out token) && token.Type != JTokenType.Null)
-				{
-					EnableGetApp = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
-				}
 				if(source.TryGetProperty("EnableStorageZoneConnector", out token) && token.Type != JTokenType.Null)
 				{
 					EnableStorageZoneConnector = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
@@ -680,6 +739,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("TrustedDomains", out token) && token.Type != JTokenType.Null)
 				{
 					TrustedDomains = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("UseWebPopAsWebAppLogin", out token) && token.Type != JTokenType.Null)
+				{
+					UseWebPopAsWebAppLogin = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("EnableReportingV3", out token) && token.Type != JTokenType.Null)
 				{
@@ -717,6 +780,10 @@ namespace ShareFile.Api.Models
 				{
 					DisableShareConnectForAccount = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
+				if(source.TryGetProperty("DisablePrintToShareFile", out token) && token.Type != JTokenType.Null)
+				{
+					DisablePrintToShareFile = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
 				if(source.TryGetProperty("EnableWebAppConnectorBrowsing", out token) && token.Type != JTokenType.Null)
 				{
 					EnableWebAppConnectorBrowsing = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
@@ -741,6 +808,14 @@ namespace ShareFile.Api.Models
 				{
 					EnableFileLocking = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
+				if(source.TryGetProperty("DisableWebAppAccess", out token) && token.Type != JTokenType.Null)
+				{
+					DisableWebAppAccess = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableCWC", out token) && token.Type != JTokenType.Null)
+				{
+					EnableCWC = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
 				if(source.TryGetProperty("EnableIntegrations", out token) && token.Type != JTokenType.Null)
 				{
 					EnableIntegrations = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
@@ -757,6 +832,10 @@ namespace ShareFile.Api.Models
 				{
 					ShowDownloadLinkInUploadNotification = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
+				if(source.TryGetProperty("AllowDownloadNotificationsWithoutAdmin", out token) && token.Type != JTokenType.Null)
+				{
+					AllowDownloadNotificationsWithoutAdmin = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
 				if(source.TryGetProperty("EnableUserInvitations", out token) && token.Type != JTokenType.Null)
 				{
 					EnableUserInvitations = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
@@ -765,6 +844,26 @@ namespace ShareFile.Api.Models
 				{
 					EnableClickTrails = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
+				if(source.TryGetProperty("EnableFolderTemplates", out token) && token.Type != JTokenType.Null)
+				{
+					EnableFolderTemplates = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableFileDrops", out token) && token.Type != JTokenType.Null)
+				{
+					EnableFileDrops = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("SpamEmailThreshold", out token) && token.Type != JTokenType.Null)
+				{
+					SpamEmailThreshold = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("EnableExternalEmailArchiving", out token) && token.Type != JTokenType.Null)
+				{
+					EnableExternalEmailArchiving = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CreatorCanDelete", out token) && token.Type != JTokenType.Null)
+				{
+					CreatorCanDelete = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
 				if(source.TryGetProperty("CanStoreItemsInShareFile", out token) && token.Type != JTokenType.Null)
 				{
 					CanStoreItemsInShareFile = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
@@ -772,6 +871,50 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("EnableHomeFolders", out token) && token.Type != JTokenType.Null)
 				{
 					EnableHomeFolders = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableCustomBrandingUsesS3", out token) && token.Type != JTokenType.Null)
+				{
+					EnableCustomBrandingUsesS3 = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnablePromotions", out token) && token.Type != JTokenType.Null)
+				{
+					EnablePromotions = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanCreateMultiTenantZones", out token) && token.Type != JTokenType.Null)
+				{
+					CanCreateMultiTenantZones = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableDLP", out token) && token.Type != JTokenType.Null)
+				{
+					EnableDLP = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableOfficeOnlinePreviews", out token) && token.Type != JTokenType.Null)
+				{
+					EnableOfficeOnlinePreviews = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableOfficeOnlineEditing", out token) && token.Type != JTokenType.Null)
+				{
+					EnableOfficeOnlineEditing = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("RecycleBinDays", out token) && token.Type != JTokenType.Null)
+				{
+					RecycleBinDays = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("SyncConcurrentTransferThreadsLimit", out token) && token.Type != JTokenType.Null)
+				{
+					SyncConcurrentTransferThreadsLimit = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("HasPHI", out token) && token.Type != JTokenType.Null)
+				{
+					HasPHI = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableCitrixManagedStorageZones", out token) && token.Type != JTokenType.Null)
+				{
+					EnableCitrixManagedStorageZones = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("PrimaryStorageBasePath", out token) && token.Type != JTokenType.Null)
+				{
+					PrimaryStorageBasePath = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
 			}
 		}

@@ -52,6 +52,8 @@ namespace ShareFile.Api.Client.Logging
     {
         void Start();
         void Stop();
+        void Reset();
+        void Restart();
         long ElapsedMilliseconds { get; }
         bool IsRunning { get; }
     }
@@ -91,6 +93,19 @@ namespace ShareFile.Api.Client.Logging
                 _isRunning = false;
                 _elapsedTicks = DateTime.UtcNow.Ticks;
             }
+        }
+
+        public void Reset()
+        {
+            Stop();
+            _startTicks = 0;
+            _elapsedTicks = 0;
+        }
+
+        public void Restart()
+        {
+            Reset();
+            Start();
         }
 
         public long ElapsedMilliseconds

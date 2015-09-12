@@ -242,6 +242,25 @@ to it via the SDK.
 On any transfer you can be notified of progress.  On the instance of the uploader/downloader
 you can provide a delegate to `OnTransferProgress`.
 
+### Deleting Items
+#### Delete a specific version of a file
+```
+await sfClient.Items.Delete(file.url).ExecuteAsync();
+```
+### Delete a folder
+```
+await sfClient.Items.Delete(folder.url).ExecuteAsync();
+```
+#### Delete all versions of a file
+- Requires using `StreamId` instead of `Id` which is the default identifier used in `url`
+- GetObjectUri is an extension method that will take care of building a correct `Uri`
+```
+using ShareFile.Client.Core.Extensions;
+...
+// Uses the StreamId
+await sfClient.Items.Delete(file.GetObjectUri(true)).ExecuteAsync();
+```
+
 ## Accessing a Share ##
 
 Assuming you have the url that points to the Share API resource (ex. `https://subdomain.sharefile.com/sf/v3/Shares(s0123456789)`), you can easily access the `Items` shared.  Depending on the share you may be required to already be authenticated.
@@ -259,6 +278,7 @@ Items associated with a `Share` cannot be downloaded as you normally might, inst
 
 var fileStream = await sfClient.Shares.Download(shareUri, share.AliasID, shareItems.Select(x => x.Id).First());
 ```
+
 
 ## Leveraging oData ##
 

@@ -10,9 +10,12 @@
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.Net;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Exceptions;
 
 namespace ShareFile.Api.Models 
 {
@@ -33,6 +36,8 @@ namespace ShareFile.Api.Models
 
 		public bool? IsConfirmed { get; set; }
 
+		public int? Count { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -48,6 +53,7 @@ namespace ShareFile.Api.Models
 				EmailMedium = typedSource.EmailMedium;
 				EmailShort = typedSource.EmailShort;
 				IsConfirmed = typedSource.IsConfirmed;
+				Count = typedSource.Count;
 			}
 			else
 			{
@@ -79,6 +85,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("IsConfirmed", out token) && token.Type != JTokenType.Null)
 				{
 					IsConfirmed = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("Count", out token) && token.Type != JTokenType.Null)
+				{
+					Count = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
 				}
 			}
 		}

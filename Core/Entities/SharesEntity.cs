@@ -194,7 +194,7 @@ namespace ShareFile.Api.Client.Entities
         /// <returns>
         /// Redirects the caller (302) to the download address for the share contents.
         /// </returns>
-        IQuery BulkDownload(Uri shareUrl, string aliasid, IEnumerable<string> ids, bool redirect = true);
+        IQuery<Stream> BulkDownload(Uri shareUrl, string aliasid, IEnumerable<string> ids, bool redirect = true);
         
         /// <summary>
         /// Create Share
@@ -240,7 +240,7 @@ namespace ShareFile.Api.Client.Entities
         IQuery<Share> Create(Share share, bool notify = false);
         
         /// <summary>
-        /// Modify Share
+        /// Update Share
         /// </summary>
         /// <example>
         /// {
@@ -294,7 +294,10 @@ namespace ShareFile.Api.Client.Entities
         /// The default number of expiration days is 30. -1 disables share expiration.
         /// </remarks>
         /// <param name="parameters"></param>
-        IQuery CreateSend(ShareSendParams parameters);
+        /// <returns>
+        /// The new Share
+        /// </returns>
+        IQuery<Share> CreateSend(ShareSendParams parameters);
         
         /// <summary>
         /// Deliver Request a File Email
@@ -313,7 +316,10 @@ namespace ShareFile.Api.Client.Entities
         /// Sends an Email to the specified list of addresses, containing a link to a download or an upload.
         /// </remarks>
         /// <param name="parameters"></param>
-        IQuery Resend(ShareResendParams parameters);
+        /// <returns>
+        /// The updated Share
+        /// </returns>
+        IQuery<Share> Resend(ShareResendParams parameters);
         
         /// <summary>
         /// Upload File to Request Share
@@ -405,6 +411,30 @@ namespace ShareFile.Api.Client.Entities
         /// The Redirection endpoint Information
         /// </returns>
         IQuery<Redirection> GetRedirection(Uri url);
+        
+        /// <summary>
+        /// Get Inbox for Recipient
+        /// </summary>
+        /// <remarks>
+        /// Retrieve all outstanding Shares in the inbox.User identifier
+        /// </remarks>
+        /// <returns>
+        /// List of Shares created by the authenticated user
+        /// </returns>
+        IQuery<ODataFeed<Share>> GetInbox(string id = null, ShareType type = ShareType.Both, bool archived = false);
+        
+        /// <summary>
+        /// Get Sent Message Content by Share
+        /// </summary>
+        /// <remarks>
+        /// Returns sent message content.
+        /// </remarks>
+        /// <param name="shareUrl"></param>
+        /// <param name="aliasId"></param>
+        /// <returns>
+        /// Sent Message Content
+        /// </returns>
+        IQuery<Stream> Message(Uri shareUrl, string aliasId);
     }
 
     public class SharesEntity : EntityBase, ISharesEntity
@@ -683,9 +713,9 @@ namespace ShareFile.Api.Client.Entities
         /// <returns>
         /// Redirects the caller (302) to the download address for the share contents.
         /// </returns>
-        public IQuery BulkDownload(Uri shareUrl, string aliasid, IEnumerable<string> ids, bool redirect = true)
+        public IQuery<Stream> BulkDownload(Uri shareUrl, string aliasid, IEnumerable<string> ids, bool redirect = true)
         {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
 		    sfApiQuery.Action("Recipients");
             sfApiQuery.Uri(shareUrl);
             sfApiQuery.ActionIds(aliasid);
@@ -748,7 +778,7 @@ namespace ShareFile.Api.Client.Entities
         }
         
         /// <summary>
-        /// Modify Share
+        /// Update Share
         /// </summary>
         /// <example>
         /// {
@@ -824,9 +854,12 @@ namespace ShareFile.Api.Client.Entities
         /// The default number of expiration days is 30. -1 disables share expiration.
         /// </remarks>
         /// <param name="parameters"></param>
-        public IQuery CreateSend(ShareSendParams parameters)
+        /// <returns>
+        /// The new Share
+        /// </returns>
+        public IQuery<Share> CreateSend(ShareSendParams parameters)
         {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Share>(Client);
 		    sfApiQuery.From("Shares");
 		    sfApiQuery.Action("Send");
             sfApiQuery.Body = parameters;
@@ -859,9 +892,12 @@ namespace ShareFile.Api.Client.Entities
         /// Sends an Email to the specified list of addresses, containing a link to a download or an upload.
         /// </remarks>
         /// <param name="parameters"></param>
-        public IQuery Resend(ShareResendParams parameters)
+        /// <returns>
+        /// The updated Share
+        /// </returns>
+        public IQuery<Share> Resend(ShareResendParams parameters)
         {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Share>(Client);
 		    sfApiQuery.From("Shares");
 		    sfApiQuery.Action("Resend");
             sfApiQuery.Body = parameters;
@@ -1001,6 +1037,49 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Redirection>(Client);
 		    sfApiQuery.Action("Redirection");
             sfApiQuery.Uri(url);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get Inbox for Recipient
+        /// </summary>
+        /// <remarks>
+        /// Retrieve all outstanding Shares in the inbox.User identifier
+        /// </remarks>
+        /// <returns>
+        /// List of Shares created by the authenticated user
+        /// </returns>
+        public IQuery<ODataFeed<Share>> GetInbox(string id = null, ShareType type = ShareType.Both, bool archived = false)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Share>>(Client);
+		    sfApiQuery.From("Shares");
+		    sfApiQuery.Action("Inbox");
+            sfApiQuery.ActionIds(id);
+            sfApiQuery.QueryString("type", type);
+            sfApiQuery.QueryString("archived", archived);
+            sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Get Sent Message Content by Share
+        /// </summary>
+        /// <remarks>
+        /// Returns sent message content.
+        /// </remarks>
+        /// <param name="shareUrl"></param>
+        /// <param name="aliasId"></param>
+        /// <returns>
+        /// Sent Message Content
+        /// </returns>
+        public IQuery<Stream> Message(Uri shareUrl, string aliasId)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Stream>(Client);
+		    sfApiQuery.Action("Recipients");
+            sfApiQuery.Uri(shareUrl);
+            sfApiQuery.ActionIds(aliasId);
+            sfApiQuery.SubAction("Message");
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }

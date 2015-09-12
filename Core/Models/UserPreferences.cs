@@ -10,9 +10,12 @@
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.Net;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Exceptions;
 
 namespace ShareFile.Api.Models 
 {
@@ -69,6 +72,8 @@ namespace ShareFile.Api.Models
 
 		public bool? ReceiveBouncedEmailNotifications { get; set; }
 
+		public bool? EnablePromotions { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -102,6 +107,7 @@ namespace ShareFile.Api.Models
 				DateFormat = typedSource.DateFormat;
 				EnableShareConnect = typedSource.EnableShareConnect;
 				ReceiveBouncedEmailNotifications = typedSource.ReceiveBouncedEmailNotifications;
+				EnablePromotions = typedSource.EnablePromotions;
 			}
 			else
 			{
@@ -205,6 +211,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("ReceiveBouncedEmailNotifications", out token) && token.Type != JTokenType.Null)
 				{
 					ReceiveBouncedEmailNotifications = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnablePromotions", out token) && token.Type != JTokenType.Null)
+				{
+					EnablePromotions = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 			}
 		}

@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using ShareFile.Api.Client.Converters;
 using ShareFile.Api.Client.Credentials;
 using ShareFile.Api.Client.Exceptions;
+using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Logging;
 using ShareFile.Api.Models;
 
@@ -18,7 +19,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 {
     public abstract class BaseRequestProvider
     {
-        private static class Headers
+        internal static class Headers
         {
             public const string HttpOverrideHeader = "X-Http-Method-Override";
             public const string ClientCapabilities = "X-SF-ClientCapabilities";
@@ -103,23 +104,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 requestMessage = new HttpRequestMessage(new HttpMethod(request.HttpMethod), uri);
             }
 
-            if (ShareFileClient.Configuration.SupportedCultures != null)
-            {
-                foreach (var cultureInfo in ShareFileClient.Configuration.SupportedCultures)
-                {
-                    requestMessage.Headers.AcceptLanguage.Add(new StringWithQualityHeaderValue(cultureInfo.Name));
-                }
-            }
-
-            if (ShareFileClient.Configuration.ClientCapabilities != null)
-            {
-                var provider = ShareFileClient.GetProvider(uri);
-                IEnumerable<ClientCapability> clientCapabilities;
-                if (ShareFileClient.Configuration.ClientCapabilities.TryGetValue(provider, out clientCapabilities))
-                {
-                    requestMessage.Headers.Add(Headers.ClientCapabilities, clientCapabilities.Select(x => x.ToString()));
-                }
-            }
+            requestMessage.AddDefaultHeaders(ShareFileClient);
 
             LogRequestUri(request);
 
@@ -128,10 +113,10 @@ namespace ShareFile.Api.Client.Requests.Providers
                 requestMessage.Headers.Add(kvp.Key, kvp.Value);
             }
 
+            requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
             if (request.Body != null)
             {
-                requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
                 try
                 {
                     WriteRequestBody(requestMessage, request.Body, new MediaTypeHeaderValue("application/json"));
@@ -149,8 +134,6 @@ namespace ShareFile.Api.Client.Requests.Providers
                     requestMessage.Content = new StringContent("");
                 }
             }
-
-            TryAddCookies(ShareFileClient, requestMessage);
 
 #if ShareFile
             if (ShareFileClient.CustomAuthentication != null && request.Body != null)
@@ -194,60 +177,56 @@ namespace ShareFile.Api.Client.Requests.Providers
             }
         }
 
-        protected T DeserializeStream<T>(Stream stream)
+        protected T DeserializeResponseStream<T>(Stream responseStream, HttpResponseMessage httpResponseMessage)
         {
             var watch = new ActionStopwatch("DeserializeStream", ShareFileClient.Logging);
 
-            T responseValue;
-
-            using (var responseStreamReader = new StreamReader(stream))
+            TextReader responseReader;
+            if (ShareFileClient.Logging.IsDebugEnabled)
             {
-                JsonTextReader reader;
-                if (ShareFileClient.Logging.IsDebugEnabled)
+                string response = "";
+                using (var responseStreamReader = new StreamReader(responseStream))
                 {
-                    var stringResponse = responseStreamReader.ReadToEnd();
-
-                    reader = new JsonTextReader(new StringReader(stringResponse));
-                    ShareFileClient.Logging.Debug(stringResponse);
+                    response = responseStreamReader.ReadToEnd();
                 }
-                else
-                {
-                    reader = new JsonTextReader(responseStreamReader);
-                }
-
-                responseValue = ShareFileClient.Serializer.Deserialize<T>(reader);
+                ShareFileClient.Logging.Debug(response);
+                responseReader = new StringReader(response);
+            }
+            else
+            {
+                responseReader = new StreamReader(responseStream);
             }
 
-            ShareFileClient.Logging.Trace(watch);
-
-            return responseValue;
+            try
+            {
+                using (var reader = new JsonTextReader(responseReader))
+                {
+                    return ShareFileClient.Serializer.Deserialize<T>(reader);
+                }
+            }
+            catch(JsonSerializationException jEx)
+            {
+                string contentType = httpResponseMessage.Content != null && httpResponseMessage.Content.Headers != null && httpResponseMessage.Content.Headers.ContentType != null
+                    ? httpResponseMessage.Content.Headers.ContentType.ToString() 
+                    : "(no content-type)";
+                throw new InvalidApiResponseException(httpResponseMessage.StatusCode,
+                    String.Format("Unexpected (non-JSON) response format {0}", contentType),
+                    jEx);
+            }
+            finally
+            {
+                ShareFileClient.Logging.Trace(watch);
+                if(responseReader != null)
+                {
+                    responseReader.Dispose();
+                }
+            }
         }
 
 #if Async
-        protected Task<T> DeserializeStreamAsync<T>(Stream stream)
+        protected Task<T> DeserializeResponseStreamAsync<T>(Stream responseStream, HttpResponseMessage httpResponseMessage)
         {
-            var tcs = new TaskCompletionSource<T>();
-            var task = tcs.Task;
-            var watch = new ActionStopwatch("DeserializeStreamAsync", ShareFileClient.Logging);
-
-            Task.Factory.StartNew(() =>
-            {
-                T responseValue;
-
-                using (var responseStreamReader = new StreamReader(stream))
-                {
-                    JsonTextReader reader = new JsonTextReader(responseStreamReader);
-
-                    responseValue = ShareFileClient.Serializer.Deserialize<T>(reader);
-                }
-
-
-                ShareFileClient.Logging.Trace(watch);
-                tcs.SetResult(responseValue);
-
-            }).ConfigureAwait(false);
-
-            return task;
+            return Task.Factory.StartNew(() => DeserializeResponseStream<T>(responseStream, httpResponseMessage));
         }
 
         protected Task<string> SerializeObjectAsync(object obj)

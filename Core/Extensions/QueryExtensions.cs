@@ -452,6 +452,8 @@ namespace ShareFile.Api.Client.Extensions
 
             private static IEnumerable<Expression> ExpandMethodCall(MethodCallExpression methodCallExpression)
             {
+                if (methodCallExpression.Object != null)
+                    yield return methodCallExpression.Object;
                 foreach (var arg in methodCallExpression.Arguments)
                 {
                     yield return arg;
@@ -460,7 +462,8 @@ namespace ShareFile.Api.Client.Extensions
 
             private static IEnumerable<Expression> ExpandMemberAccess(MemberExpression memberExpression)
             {
-                yield return memberExpression.Expression;
+                if (memberExpression.Expression != null)
+                    yield return memberExpression.Expression;
             }
 
             private static IEnumerable<Expression> ExpandParameter(ParameterExpression parameterExpression)

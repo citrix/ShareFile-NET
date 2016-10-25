@@ -11,6 +11,9 @@ License
 All code is licensed under the [MIT
 License](https://github.com/citrix/ShareFile-PowerShell/blob/master/ShareFileSnapIn/LICENSE.txt).
 
+## Tooling requirements ##
+* Building `ShareFile.Api.Client.DotNet.sln` requires Visual Studio 2015 Update 2 with .NET Core tooling.
+
 ## Definitions ##
 
 * `applicationControlPlane` - Describes the domain that the ShareFile account is available on.  
@@ -198,45 +201,51 @@ the SDK can help you find them.  These aliases are exposed on an enum `ItemAlias
 ### Download ###
 
       var downloader = sfClient.GetAsyncFileDownloader(itemToDownload);
-      var fileStream = File.Open(@"C:\test\newImage.png", FileMode.OpenOrCreate);
-      await downloader.DownloadToAsync(fileStream);
+      using(var fileStream = File.Open(@"C:\test\newImage.png", FileMode.OpenOrCreate))
+	  {
+        await downloader.DownloadToAsync(fileStream);
+	  }
 
 ### Upload ###
 
       var parentFolder = (Folder) await sfClient.Items.Get().ExecuteAsync();
-      var file = File.Open(@"C:\test\image.png", FileMode.OpenOrCreate);
-      var uploadRequest = new UploadSpecificationRequest
-      {
+      using(var file = File.Open(@"C:\test\image.png", FileMode.OpenOrCreate))
+	  {
+        var uploadRequest = new UploadSpecificationRequest
+        {
           FileName = file.Name,
           FileSize = file.Length,
           Details = "Sample details",
           Parent = parentFolder.url
-      };
+        };
 
-      var uploader = client.GetAsyncFileUploader(uploadRequest,
-          new PlatformFileStream(file, file.Length, file.Name));
+		var uploader = client.GetAsyncFileUploader(uploadRequest,
+		  new PlatformFileStream(file, file.Length, file.Name));
 
-      var uploadResponse = await uploader.UploadAsync();
-
+		var uploadResponse = await uploader.UploadAsync();
+	  }
+	  
 ShareFile supports a concept called `Shares` which are labeled as `Request` and `Send`.
 If you have a `Request Share`, you can fulfill the request by uploading directly
 to it via the SDK.
 
       // Assumes you have a Share object or at least a Uri to a Share
-      var file = File.Open(@"C:\test\image.png", FileMode.OpenOrCreate);
-      var uploadRequest = new UploadSpecificationRequest
-      {
+      using(var file = File.Open(@"C:\test\image.png", FileMode.OpenOrCreate))
+	  {
+        var uploadRequest = new UploadSpecificationRequest
+        {
           FileName = file.Name,
           FileSize = file.Length,
           Details = "Sample details",
           Parent = shareUri
-      };
+        };
 
-      var uploader = client.GetAsyncFileUploader(uploadRequest,
+        var uploader = client.GetAsyncFileUploader(uploadRequest,
           new PlatformFileStream(file, file.Length, file.Name));
 
-      var uploadResponse = await uploader.UploadAsync();
-
+		var uploadResponse = await uploader.UploadAsync();
+	  }
+	  
 ### Get transfer progress ###
 
 On any transfer you can be notified of progress.  On the instance of the uploader/downloader

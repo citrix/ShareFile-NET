@@ -187,8 +187,8 @@ namespace ShareFile.Sample
                 Emails = new[] { recipientEmailAddress },
                 Items = new[] {fileToShare.Id},
                 Subject = "Sample SDK Share",
-                // Allow unlimited downloads
-                MaxDownloads = -1
+                MaxDownloads = -1, // Allow unlimited downloads
+                ExpirationDays = 10 // Expires in 10 days
             };
 
             await sfClient.Shares.CreateSend(sendShare).ExecuteAsync();

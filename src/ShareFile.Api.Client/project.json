@@ -1,0 +1,104 @@
+﻿{
+  "version": "3.3.0-*",
+  "description": "A ShareFile API client library for .NET",
+  "authors": [
+    "Citrix ShareFile"
+  ],
+  "title": "ShareFile .NET Client",
+  "packOptions": {
+    "owners": [
+      "Citrix ShareFile"
+    ],
+    "projectUrl": "https://github.com/citrix/ShareFile-NET/blob/master/README.md",
+    "licenseUrl": "https://github.com/citrix/ShareFile-NET/blob/master/LICENSE.txt",
+    "tags": [
+      "ShareFile"
+    ]
+  },
+  "compilationOptions": {
+    "languageVersion": "csharp5"
+  },
+  "buildOptions": {
+    "compile": {
+      "include": [
+        "**/*.cs"
+      ]
+    },
+    "xmlDoc": true
+  },
+  "frameworks": {
+    ".NETPortable,Version=v4.5,Profile=Profile111": {
+      "buildOptions": {
+        "define": [
+          "PORTABLE",
+          "ASYNC",
+          "NETFX_CORE"
+        ]
+      },
+      "dependencies": {
+        "Newtonsoft.Json": "9.0.1"
+      },
+      "frameworkAssemblies": {
+        "mscorlib": "",
+        "System.Collections": "",
+        "System.ComponentModel": "",
+        "System.Diagnostics.Debug": "",
+        "System.Dynamic.Runtime": "",
+        "System.Globalization": "",
+        "System.IO": "",
+        "System.Linq": "",
+        "System.Linq.Expressions": "",
+        "System.Linq.Queryable": "",
+        "System.Net": "",
+        "System.Net.Http": "",
+        "System.Net.Primitives": "",
+        "System.Net.Requests": "",
+        "System.ObjectModel": "",
+        "System.Reflection": "",
+        "System.Reflection.Extensions": "",
+        "System.Runtime": "",
+        "System.Runtime.Extensions": "",
+        "System.Text.Encoding": "",
+        "System.Text.RegularExpressions": "",
+        "System.Threading": "",
+        "System.Threading.Tasks": ""
+      }
+    },
+    "net40-client": {
+      "dependencies": {
+        "Newtonsoft.Json": "9.0.1",
+        "Microsoft.Net.Http": "2.2.29"
+      },
+      "buildOptions": {
+        "define": [
+          "Net40"
+        ]
+      }
+    },
+    "net45": {
+      "dependencies": {
+        "Newtonsoft.Json": "9.0.1"
+      },
+      "frameworkAssemblies": {
+        "System.Net.Http": "4.0.0.0",
+        "System.Security": "4.0.0.0"
+      },
+      "buildOptions": {
+        "define": [
+          "ASYNC"
+        ]
+      }
+    },
+    "netstandard1.3": {
+      "dependencies": {
+        "NETStandard.Library": "1.6.0",
+        "Newtonsoft.Json": "9.0.1"
+      },
+      "buildOptions": {
+        "define": [
+          "ASYNC"
+        ]
+      }
+    }
+  }
+}

@@ -113,6 +113,16 @@ namespace ShareFile.Api.Models
 		public string InviteUrl { get; set; }
 
 		/// <summary>
+		/// User exists.
+		/// </summary>
+		public bool? IsExistingUser { get; set; }
+
+		/// <summary>
+		/// User exists and already confirmed.
+		/// </summary>
+		public bool? IsConfirmed { get; set; }
+
+		/// <summary>
 		/// Has exceeded Maximum failed attempts.
 		/// </summary>
 		public bool? HasExceededMaxFailedAttempts { get; set; }
@@ -143,6 +153,8 @@ namespace ShareFile.Api.Models
 				NotifyOnUpload = typedSource.NotifyOnUpload;
 				NotifyOnDownload = typedSource.NotifyOnDownload;
 				InviteUrl = typedSource.InviteUrl;
+				IsExistingUser = typedSource.IsExistingUser;
+				IsConfirmed = typedSource.IsConfirmed;
 				HasExceededMaxFailedAttempts = typedSource.HasExceededMaxFailedAttempts;
 			}
 			else
@@ -219,6 +231,14 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("InviteUrl", out token) && token.Type != JTokenType.Null)
 				{
 					InviteUrl = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("IsExistingUser", out token) && token.Type != JTokenType.Null)
+				{
+					IsExistingUser = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IsConfirmed", out token) && token.Type != JTokenType.Null)
+				{
+					IsConfirmed = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("HasExceededMaxFailedAttempts", out token) && token.Type != JTokenType.Null)
 				{

@@ -70,6 +70,11 @@ namespace ShareFile.Api.Models
         ScopedCopy = 54,
         ScopedMove = 55,
         StructuredDownload = 56,
-        DirectAnonymousSharingSend = 57
+        DirectAnonymousSharingSend = 57,
+        MetadataTagging = 58,
+        ItemMetadata = 59,
+        CreateMicrosoftFiles = 60,
+        DownloadSpecification = 61,
+        ItemRename = 62
     }
 }

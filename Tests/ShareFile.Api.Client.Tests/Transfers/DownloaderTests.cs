@@ -42,8 +42,9 @@ namespace ShareFile.Api.Client.Core.Tests
             shareFileClient.Items.Delete(testFolder.url).Execute();
         }
 
-        [Test]
-        public async void DownloadRangeRequest_Async()
+        [TestCase(false)]
+        [TestCase(true)]
+        public async void DownloadRangeRequest_Async(bool supportsDLSpec)
         {
             // Arrange
             var downloader = shareFileClient.GetAsyncFileDownloader(file);
@@ -83,8 +84,9 @@ namespace ShareFile.Api.Client.Core.Tests
             Assert.Throws<InvalidOperationException>(async () => await downloader.DownloadToAsync(destinationStream, rangeRequest: rangeRequest));
         }
 
-        [Test]
-        public void DownloadRangeRequest_Sync()
+        [TestCase(false)]
+        [TestCase(true)]
+        public void DownloadRangeRequest_Sync(bool supportsDLSpec)
         {
             // Arrange
             var downloader = shareFileClient.GetFileDownloader(file);

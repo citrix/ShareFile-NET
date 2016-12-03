@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ShareFile.Api.Client.Requests.Filters;
+using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Requests
 {
@@ -38,6 +39,8 @@ namespace ShareFile.Api.Client.Requests
         Query<T> Select(IEnumerable<string> selectProperties);
 
         Query<T> OrderBy(string orderByProperty);
+
+        Query<T> OrderBy(string orderByProperty, SortDirection direction);
         Query<T> Skip(int skip);
         Query<T> Top(int top);
 

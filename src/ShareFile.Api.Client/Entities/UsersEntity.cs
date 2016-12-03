@@ -387,7 +387,8 @@ namespace ShareFile.Api.Client.Entities
         /// Resends the 'welcome' email to the given user
         /// </remarks>
         /// <param name="url"></param>
-        IQuery ResendWelcome(Uri url);
+        /// <param name="customMessage"></param>
+        IQuery ResendWelcome(Uri url, string customMessage = null);
         
         /// <summary>
         /// Delete User
@@ -1100,11 +1101,13 @@ namespace ShareFile.Api.Client.Entities
         /// Resends the 'welcome' email to the given user
         /// </remarks>
         /// <param name="url"></param>
-        public IQuery ResendWelcome(Uri url)
+        /// <param name="customMessage"></param>
+        public IQuery ResendWelcome(Uri url, string customMessage = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 		    sfApiQuery.Action("ResendWelcome");
             sfApiQuery.Uri(url);
+            sfApiQuery.QueryString("customMessage", customMessage);
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }

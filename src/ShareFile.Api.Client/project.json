@@ -15,9 +15,6 @@
       "ShareFile"
     ]
   },
-  "compilationOptions": {
-    "languageVersion": "csharp5"
-  },
   "buildOptions": {
     "compile": {
       "include": [

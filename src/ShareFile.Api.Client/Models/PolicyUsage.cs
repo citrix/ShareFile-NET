@@ -19,41 +19,34 @@ using ShareFile.Api.Client.Exceptions;
 
 namespace ShareFile.Api.Models 
 {
-	public class SecurityQuestion : ODataObject 
+	public class PolicyUsage : ODataObject 
 	{
 
-		public string Question { get; set; }
+		public int? ActiveUsersCount { get; set; }
 
-		public string Answer { get; set; }
-
-		public bool? IsResetRequired { get; set; }
+		public int? InactiveUsersCount { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			var typedSource = source as SecurityQuestion;
+			var typedSource = source as PolicyUsage;
 			if(typedSource != null)
 			{
-				Question = typedSource.Question;
-				Answer = typedSource.Answer;
-				IsResetRequired = typedSource.IsResetRequired;
+				ActiveUsersCount = typedSource.ActiveUsersCount;
+				InactiveUsersCount = typedSource.InactiveUsersCount;
 			}
 			else
 			{
 				JToken token;
-				if(source.TryGetProperty("Question", out token) && token.Type != JTokenType.Null)
+				if(source.TryGetProperty("ActiveUsersCount", out token) && token.Type != JTokenType.Null)
 				{
-					Question = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+					ActiveUsersCount = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
 				}
-				if(source.TryGetProperty("Answer", out token) && token.Type != JTokenType.Null)
+				if(source.TryGetProperty("InactiveUsersCount", out token) && token.Type != JTokenType.Null)
 				{
-					Answer = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
-				}
-				if(source.TryGetProperty("IsResetRequired", out token) && token.Type != JTokenType.Null)
-				{
-					IsResetRequired = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+					InactiveUsersCount = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
 				}
 			}
 		}

@@ -19,16 +19,29 @@ using ShareFile.Api.Client.Exceptions;
 
 namespace ShareFile.Api.Models 
 {
+#if !ShareFile
 	public class FileLock : ODataObject 
 	{
 
+		/// <summary>
+		/// Lock Id
+		/// </summary>
 		public string LockId { get; set; }
 
-		public SafeEnum<LockType> LockType { get; set; }
-
+		/// <summary>
+		/// User who owns the Lock
+		/// </summary>
 		public Principal Owner { get; set; }
 
+		/// <summary>
+		/// Expiration time in minutes.
+		/// </summary>
 		public int? ExpirationTimeInMinutes { get; set; }
+
+		/// <summary>
+		/// Expiration date. Takes precedence over ExpirationTimeInMinutes if both are provided
+		/// </summary>
+		public DateTime? ExpirationDate { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
@@ -39,9 +52,9 @@ namespace ShareFile.Api.Models
 			if(typedSource != null)
 			{
 				LockId = typedSource.LockId;
-				LockType = typedSource.LockType;
 				Owner = typedSource.Owner;
 				ExpirationTimeInMinutes = typedSource.ExpirationTimeInMinutes;
+				ExpirationDate = typedSource.ExpirationDate;
 			}
 			else
 			{
@@ -49,10 +62,6 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("LockId", out token) && token.Type != JTokenType.Null)
 				{
 					LockId = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
-				}
-				if(source.TryGetProperty("LockType", out token) && token.Type != JTokenType.Null)
-				{
-					LockType = (SafeEnum<LockType>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<LockType>));
 				}
 				if(source.TryGetProperty("Owner", out token) && token.Type != JTokenType.Null)
 				{
@@ -62,7 +71,12 @@ namespace ShareFile.Api.Models
 				{
 					ExpirationTimeInMinutes = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
 				}
+				if(source.TryGetProperty("ExpirationDate", out token) && token.Type != JTokenType.Null)
+				{
+					ExpirationDate = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
 			}
 		}
 	}
+#endif
 }

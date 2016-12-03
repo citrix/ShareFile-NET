@@ -52,6 +52,11 @@ namespace ShareFile.Api.Models
 		/// </summary>
 		public string MastheadImageUrl { get; set; }
 
+		/// <summary>
+		/// Login page Background image
+		/// </summary>
+		public string LoginPageBackgroundImageUrl { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -66,6 +71,7 @@ namespace ShareFile.Api.Models
 				FavoriteIconUrl = typedSource.FavoriteIconUrl;
 				BackgroundImageUrl = typedSource.BackgroundImageUrl;
 				MastheadImageUrl = typedSource.MastheadImageUrl;
+				LoginPageBackgroundImageUrl = typedSource.LoginPageBackgroundImageUrl;
 			}
 			else
 			{
@@ -93,6 +99,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("MastheadImageUrl", out token) && token.Type != JTokenType.Null)
 				{
 					MastheadImageUrl = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("LoginPageBackgroundImageUrl", out token) && token.Type != JTokenType.Null)
+				{
+					LoginPageBackgroundImageUrl = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
 			}
 		}

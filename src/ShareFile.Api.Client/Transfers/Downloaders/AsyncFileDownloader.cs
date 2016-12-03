@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ShareFile.Api.Models;
 using System.Runtime.ExceptionServices;
+using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Requests;
 
 namespace ShareFile.Api.Client.Transfers.Downloaders
@@ -14,7 +15,7 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
     public class AsyncFileDownloader : DownloaderBase
     {
         public AsyncFileDownloader(Item item, IShareFileClient client, DownloaderConfig config = null)
-            : base (item, client, config)
+            : base(item, client, config)
         {
         }
 
@@ -57,9 +58,17 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
             {
                 await PrepareDownloadAsync();
             }
+            else if (!await SupportsDownloadSpecificationAsync(Item.GetObjectUri()))
+            {
+                throw new NotSupportedException("Provider does not support download with DownloadSpecification)");
+            }
 
             var streamQuery = CreateDownloadStreamQuery(rangeRequest);
-            var totalBytesToDownload = Item.FileSizeBytes.GetValueOrDefault();
+
+            var totalBytesToDownload = rangeRequest != null
+                ? rangeRequest.End.GetValueOrDefault() - rangeRequest.Begin.GetValueOrDefault()
+                : Item.FileSizeBytes.GetValueOrDefault();
+
             var progress = new TransferProgress(totalBytesToDownload, transferMetadata);
 
             using (var downloadStream = await streamQuery.ExecuteAsync(cancellationToken))

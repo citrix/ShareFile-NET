@@ -101,6 +101,26 @@ namespace ShareFile.Api.Client.Entities
         IQuery<Metadata> Update(Uri url, Metadata metadata);
         
         /// <summary>
+        /// Update the item corresponding to the supplied id with the provided key-value Metadata models.
+        /// </summary>
+        /// <example>
+        /// [{
+        /// "Value":"metadata value"
+        /// },{
+        /// "Value":"metadata value"
+        /// },
+        /// ...]
+        /// </example>
+        /// <remarks>
+        /// If a metadata key is not already associated with the item, the item is updated with the new key-value pair.
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <returns>
+        /// The updated Metadata list for the given object ID.
+        /// </returns>
+        IQuery<ODataFeed<Metadata>> UpdateItem(Uri url, IEnumerable<Metadata> metadata);
+        
+        /// <summary>
         /// Delete Metadata
         /// </summary>
         /// <remarks>
@@ -245,6 +265,34 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.Uri(url);
             sfApiQuery.Body = metadata;
             sfApiQuery.HttpMethod = "GET";	
+		    return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Update the item corresponding to the supplied id with the provided key-value Metadata models.
+        /// </summary>
+        /// <example>
+        /// [{
+        /// "Value":"metadata value"
+        /// },{
+        /// "Value":"metadata value"
+        /// },
+        /// ...]
+        /// </example>
+        /// <remarks>
+        /// If a metadata key is not already associated with the item, the item is updated with the new key-value pair.
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <returns>
+        /// The updated Metadata list for the given object ID.
+        /// </returns>
+        public IQuery<ODataFeed<Metadata>> UpdateItem(Uri url, IEnumerable<Metadata> metadata)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Metadata>>(Client);
+		    sfApiQuery.Action("Metadata");
+            sfApiQuery.Uri(url);
+            sfApiQuery.QueryString("metadata", metadata);
+            sfApiQuery.HttpMethod = "PATCH";	
 		    return sfApiQuery;
         }
         

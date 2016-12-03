@@ -573,6 +573,23 @@ namespace ShareFile.Api.Client.Requests
             return this;
         }
 
+        public Query<T> OrderBy(string orderByProperty, SortDirection direction)
+        {
+            switch (direction)
+            {
+                case SortDirection.Ascending:
+                    _orderBy = orderByProperty + " " + "asc";
+                    break;
+                case SortDirection.Descending:
+                    _orderBy = orderByProperty + " " + "desc";
+                    break;
+                default:
+                    _orderBy = orderByProperty;
+                    break;
+            }
+            return this;
+        }
+
         public Query<T> Skip(int skip)
         {
             _skip = skip;

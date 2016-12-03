@@ -19,13 +19,14 @@ using ShareFile.Api.Client.Exceptions;
 
 namespace ShareFile.Api.Models 
 {
-#if !ShareFile
 	public class UserPolicy : ODataObject 
 	{
 
 		public string UserId { get; set; }
 
 		public bool? Active { get; set; }
+
+		public Policy Policy { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
@@ -37,6 +38,7 @@ namespace ShareFile.Api.Models
 			{
 				UserId = typedSource.UserId;
 				Active = typedSource.Active;
+				Policy = typedSource.Policy;
 			}
 			else
 			{
@@ -49,8 +51,11 @@ namespace ShareFile.Api.Models
 				{
 					Active = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
+				if(source.TryGetProperty("Policy", out token) && token.Type != JTokenType.Null)
+				{
+					Policy = (Policy)serializer.Deserialize(token.CreateReader(), typeof(Policy));
+				}
 			}
 		}
 	}
-#endif
 }

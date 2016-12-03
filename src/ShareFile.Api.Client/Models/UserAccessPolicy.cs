@@ -19,41 +19,27 @@ using ShareFile.Api.Client.Exceptions;
 
 namespace ShareFile.Api.Models 
 {
-	public class SecurityQuestion : ODataObject 
+	public class UserAccessPolicy : Policy 
 	{
 
-		public string Question { get; set; }
-
-		public string Answer { get; set; }
-
-		public bool? IsResetRequired { get; set; }
+		public UserAccessSettings Settings { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
 			base.Copy(source, serializer);
 
-			var typedSource = source as SecurityQuestion;
+			var typedSource = source as UserAccessPolicy;
 			if(typedSource != null)
 			{
-				Question = typedSource.Question;
-				Answer = typedSource.Answer;
-				IsResetRequired = typedSource.IsResetRequired;
+				Settings = typedSource.Settings;
 			}
 			else
 			{
 				JToken token;
-				if(source.TryGetProperty("Question", out token) && token.Type != JTokenType.Null)
+				if(source.TryGetProperty("Settings", out token) && token.Type != JTokenType.Null)
 				{
-					Question = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
-				}
-				if(source.TryGetProperty("Answer", out token) && token.Type != JTokenType.Null)
-				{
-					Answer = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
-				}
-				if(source.TryGetProperty("IsResetRequired", out token) && token.Type != JTokenType.Null)
-				{
-					IsResetRequired = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+					Settings = (UserAccessSettings)serializer.Deserialize(token.CreateReader(), typeof(UserAccessSettings));
 				}
 			}
 		}

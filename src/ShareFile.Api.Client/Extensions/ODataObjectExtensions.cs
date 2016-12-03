@@ -151,6 +151,11 @@ namespace ShareFile.Api.Client.Extensions
             return capabilities.Any(x => x.Name == CapabilityName.UploadWithRequestParams);
         }
 
+        public static bool SupportsDownloadWithSpecificaton(this IEnumerable<Capability> capabilities)
+        {
+            return capabilities != null && capabilities.Any(x => x.Name == CapabilityName.DownloadSpecification);
+        }
+
         public static Uri GetCalculatedUri(this Redirection redirection)
         {
             var uri = redirection.Uri;

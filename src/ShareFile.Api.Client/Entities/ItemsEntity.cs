@@ -752,7 +752,7 @@ namespace ShareFile.Api.Client.Entities
         /// Get a collection of recoverable/deleted items in a folder
         /// </summary>
         /// <param name="url"></param>
-        IQuery<ODataFeed<Item>> GetDeletedChildren(Uri url, string id);
+        IQuery<ODataFeed<Item>> GetDeletedChildren(Uri url);
         
         /// <summary>
         /// Get a collection of recoverable/deleted items for a user
@@ -790,20 +790,20 @@ namespace ShareFile.Api.Client.Entities
         /// Remove folder template association from folder
         /// </summary>
         /// <param name="url"></param>
-        IQuery RemoveTemplateAssociation(Uri url, string id);
+        IQuery RemoveTemplateAssociation(Uri url);
         
         /// <summary>
         /// Check if template is already part of an existing template structure
         /// </summary>
         /// <param name="url"></param>
-        IQuery CheckTemplateOwned(Uri url, string id);
+        IQuery CheckTemplateOwned(Uri url);
         
         /// <summary>
         /// Check if a versioning change would result in file deletions
         /// </summary>
         /// <param name="url"></param>
         /// <param name="newMaxVersions"></param>
-        IQuery CheckVersioningViolation(Uri url, string id, int newMaxVersions);
+        IQuery CheckVersioningViolation(Uri url, int newMaxVersions);
     }
 
     public class ItemsEntity : EntityBase, IItemsEntity
@@ -1888,12 +1888,11 @@ namespace ShareFile.Api.Client.Entities
         /// Get a collection of recoverable/deleted items in a folder
         /// </summary>
         /// <param name="url"></param>
-        public IQuery<ODataFeed<Item>> GetDeletedChildren(Uri url, string id)
+        public IQuery<ODataFeed<Item>> GetDeletedChildren(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
 		    sfApiQuery.Action("DeletedChildren");
             sfApiQuery.Uri(url);
-            sfApiQuery.QueryString("parentid", id);
             sfApiQuery.HttpMethod = "GET";	
 		    return sfApiQuery;
         }
@@ -1966,12 +1965,11 @@ namespace ShareFile.Api.Client.Entities
         /// Remove folder template association from folder
         /// </summary>
         /// <param name="url"></param>
-        public IQuery RemoveTemplateAssociation(Uri url, string id)
+        public IQuery RemoveTemplateAssociation(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 		    sfApiQuery.Action("RemoveTemplateAssociation");
             sfApiQuery.Uri(url);
-            sfApiQuery.QueryString("parentid", id);
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
@@ -1980,12 +1978,11 @@ namespace ShareFile.Api.Client.Entities
         /// Check if template is already part of an existing template structure
         /// </summary>
         /// <param name="url"></param>
-        public IQuery CheckTemplateOwned(Uri url, string id)
+        public IQuery CheckTemplateOwned(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 		    sfApiQuery.Action("CheckTemplateOwned");
             sfApiQuery.Uri(url);
-            sfApiQuery.QueryString("parentid", id);
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;
         }
@@ -1995,12 +1992,11 @@ namespace ShareFile.Api.Client.Entities
         /// </summary>
         /// <param name="url"></param>
         /// <param name="newMaxVersions"></param>
-        public IQuery CheckVersioningViolation(Uri url, string id, int newMaxVersions)
+        public IQuery CheckVersioningViolation(Uri url, int newMaxVersions)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
 		    sfApiQuery.Action("CheckVersioningViolation");
             sfApiQuery.Uri(url);
-            sfApiQuery.QueryString("parentid", id);
             sfApiQuery.QueryString("newMaxVersions", newMaxVersions);
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;

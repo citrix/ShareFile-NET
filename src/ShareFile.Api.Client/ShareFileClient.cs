@@ -48,12 +48,16 @@ namespace ShareFile.Api.Client
         AsyncFileDownloader GetAsyncFileDownloader(Item itemToDownload, DownloaderConfig config = null);
 
         AsyncFileDownloader GetAsyncFileDownloader(DownloadSpecification downloadSpecification, DownloaderConfig config = null);
+
+        void RegisterAsyncRequestExecutor(IAsyncRequestExecutor asyncRequestExecutor);
 #endif
         SyncUploaderBase GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null);
 
         FileDownloader GetFileDownloader(Item itemToDownload, DownloaderConfig config = null);
 
         FileDownloader GetFileDownloader(DownloadSpecification downloadSpecification, DownloaderConfig config = null);
+
+        void RegisterSyncRequestExecutor(ISyncRequestExecutor syncRequestExecutor);
 
         void AddCookie(Uri host, Cookie cookie);
 
@@ -132,6 +136,9 @@ namespace ShareFile.Api.Client
         T Execute<T>(IQuery<T> query)
             where T : class;
         void Execute(IQuery query);
+
+        IEnumerable<Capability> GetCachedCapabilities(Uri itemUri);
+        void SetCachedCapabilities(Uri itemUri, IEnumerable<Capability> capabilities);
     }
 
     public partial class ShareFileClient : IShareFileClient
@@ -286,7 +293,7 @@ namespace ShareFile.Api.Client
 
         private Dictionary<string, IEnumerable<Capability>> _capabilityCache;
 
-        protected internal IEnumerable<Capability> GetCachedCapabilities(Uri itemUri)
+        public IEnumerable<Capability> GetCachedCapabilities(Uri itemUri)
         {
             if (itemUri == null) return null;
 
@@ -295,7 +302,7 @@ namespace ShareFile.Api.Client
             return capabilities;
         }
 
-        protected internal void SetCachedCapabilities(Uri itemUri, IEnumerable<Capability> capabilities)
+        public void SetCachedCapabilities(Uri itemUri, IEnumerable<Capability> capabilities)
         {
             if (itemUri == null) return;
 

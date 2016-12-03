@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
 using ShareFile.Api.Client.Extensions;
@@ -79,6 +80,120 @@ namespace ShareFile.Api.Client.Core.Tests.Extensions
             var uri = redirection.GetCalculatedUri();
 
             uri.ToString().Should().Be(BaseUriString + expectedUri);
+        }
+
+        public void SupportsUploadWithRequestParams_Null_False()
+        {
+            // Arrange
+            IEnumerable<Capability> capabilities = null;
+
+            // Act
+            var res = capabilities.SupportsUploadWithRequestParams();
+
+            // Assert
+            res.Should().BeFalse();
+        }
+
+        public void SupportsUploadWithRequestParams_Empty_False()
+        {
+            // Arrange
+            IEnumerable<Capability> capabilities = new List<Capability>();
+
+            // Act
+            var res = capabilities.SupportsUploadWithRequestParams();
+
+            // Assert
+            res.Should().BeFalse();
+        }
+
+        public void SupportsUploadWithRequestParams_False()
+        {
+            // Arrange
+            IEnumerable<Capability> capabilities = new List<Capability>
+            {
+               new Capability { Name = CapabilityName.ItemDescription },
+               new Capability { Name = CapabilityName.Search }
+            };
+
+            // Act
+            var res = capabilities.SupportsUploadWithRequestParams();
+
+            // Assert
+            res.Should().BeFalse();
+        }
+
+        public void SupportsUploadWithRequestParams_True()
+        {
+            // Arrange
+            IEnumerable<Capability> capabilities = new List<Capability>
+            {
+               new Capability { Name = CapabilityName.ItemDescription },
+               new Capability { Name = CapabilityName.Search },
+               new Capability { Name = CapabilityName.UploadWithRequestParams }
+            };
+
+            // Act
+            var res = capabilities.SupportsUploadWithRequestParams();
+
+            // Assert
+            res.Should().BeFalse();
+        }
+
+        public void SupportsDownloadWithSpecificaton_Null_False()
+        {
+            // Arrange
+            IEnumerable<Capability> capabilities = null;
+
+            // Act
+            var res = capabilities.SupportsDownloadWithSpecificaton();
+
+            // Assert
+            res.Should().BeFalse();
+        }
+
+        public void SupportsDownloadWithSpecificaton_Empty_False()
+        {
+            // Arrange
+            IEnumerable<Capability> capabilities = new List<Capability>();
+
+            // Act
+            var res = capabilities.SupportsDownloadWithSpecificaton();
+
+            // Assert
+            res.Should().BeFalse();
+        }
+
+        public void SupportsDownloadWithSpecificaton_False()
+        {
+            // Arrange
+            IEnumerable<Capability> capabilities = new List<Capability>
+            {
+               new Capability { Name = CapabilityName.ItemDescription },
+               new Capability { Name = CapabilityName.Search }
+            };
+
+            // Act
+            var res = capabilities.SupportsDownloadWithSpecificaton();
+
+            // Assert
+            res.Should().BeFalse();
+        }
+
+        public void SupportsDownloadWithSpecificaton_True()
+        {
+            // Arrange
+            IEnumerable<Capability> capabilities = new List<Capability>
+            {
+               new Capability { Name = CapabilityName.ItemDescription },
+               new Capability { Name = CapabilityName.Search },
+               new Capability { Name = CapabilityName.DownloadSpecification }
+            };
+
+            // Act
+            var res = capabilities.SupportsDownloadWithSpecificaton();
+
+            // Assert
+            res.Should().BeFalse();
         }
     }
 }

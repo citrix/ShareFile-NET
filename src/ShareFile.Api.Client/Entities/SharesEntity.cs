@@ -254,10 +254,11 @@ namespace ShareFile.Api.Client.Entities
         /// </remarks>
         /// <param name="share"></param>
         /// <param name="notify"></param>
+        /// <param name="direct"></param>
         /// <returns>
         /// The new Share
         /// </returns>
-        IQuery<Share> Create(Share share, bool notify = false);
+        IQuery<Share> Create(Share share, bool notify = false, bool direct = false);
         
         /// <summary>
         /// Update Share
@@ -861,14 +862,16 @@ namespace ShareFile.Api.Client.Entities
         /// </remarks>
         /// <param name="share"></param>
         /// <param name="notify"></param>
+        /// <param name="direct"></param>
         /// <returns>
         /// The new Share
         /// </returns>
-        public IQuery<Share> Create(Share share, bool notify = false)
+        public IQuery<Share> Create(Share share, bool notify = false, bool direct = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Share>(Client);
 		    sfApiQuery.From("Shares");
             sfApiQuery.QueryString("notify", notify);
+            sfApiQuery.QueryString("direct", direct);
             sfApiQuery.Body = share;
             sfApiQuery.HttpMethod = "POST";	
 		    return sfApiQuery;

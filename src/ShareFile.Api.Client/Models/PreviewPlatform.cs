@@ -16,7 +16,6 @@ namespace ShareFile.Api.Models
         Web = 0,
         WebAndMobile = 1,
         Mobile = 2,
-        All = 3,
-        ContentViewer = 4
+        All = 3
     }
 }

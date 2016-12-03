@@ -4,6 +4,7 @@ using ShareFile.Api.Models;
 using System.Threading;
 using ShareFile.Api.Client.Extensions.Tasks;
 using System;
+using ShareFile.Api.Client.Extensions;
 
 namespace ShareFile.Api.Client.Transfers.Downloaders
 {
@@ -19,8 +20,8 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
         {
         }
 
-        public override void DownloadTo(Stream fileStream, 
-            Dictionary<string, object> transferMetadata = null, 
+        public override void DownloadTo(Stream fileStream,
+            Dictionary<string, object> transferMetadata = null,
             CancellationToken? cancellationToken = null,
             RangeRequest rangeRequest = null)
         {
@@ -33,9 +34,17 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
             {
                 PrepareDownload();
             }
+            else if (!SupportsDownloadSpecification(Item.GetObjectUri()))
+            {
+                throw new NotSupportedException("Provider does not support download with DownloadSpecification)");
+            }
 
             var downloadQuery = CreateDownloadStreamQuery(rangeRequest);
-            var totalBytesToDownload = Item.FileSizeBytes.GetValueOrDefault();
+
+            var totalBytesToDownload = rangeRequest != null
+                ? rangeRequest.End.GetValueOrDefault() - rangeRequest.Begin.GetValueOrDefault()
+                : Item.FileSizeBytes.GetValueOrDefault();
+
             var progress = new TransferProgress(totalBytesToDownload, transferMetadata);
 
             using (var stream = downloadQuery.Execute())

@@ -35,8 +35,8 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
         ///     Overrides Config.RangeRequest. ShareFile may have some restrictions on the number of times a range request can be issued for a given download session.  
         ///     There is a chance that providing this can result in failures.
         /// </param>
-        public abstract void DownloadTo(Stream stream, 
-            Dictionary<string, object> transferMetadata = null, 
+        public abstract void DownloadTo(Stream stream,
+            Dictionary<string, object> transferMetadata = null,
             CancellationToken? cancellationToken = null,
             RangeRequest rangeRequest = null);
     }

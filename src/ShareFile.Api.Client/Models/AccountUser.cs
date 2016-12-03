@@ -42,6 +42,8 @@ namespace ShareFile.Api.Models
 
 		public bool? EnableHardLimit { get; set; }
 
+		public IEnumerable<UserPolicy> Policies { get; set; }
+
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
 			if(source == null || serializer == null) return;
@@ -60,6 +62,7 @@ namespace ShareFile.Api.Models
 				StorageQuotaLimitGB = typedSource.StorageQuotaLimitGB;
 				StorageQuotaPercent = typedSource.StorageQuotaPercent;
 				EnableHardLimit = typedSource.EnableHardLimit;
+				Policies = typedSource.Policies;
 			}
 			else
 			{
@@ -103,6 +106,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("EnableHardLimit", out token) && token.Type != JTokenType.Null)
 				{
 					EnableHardLimit = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("Policies", out token) && token.Type != JTokenType.Null)
+				{
+					Policies = (IEnumerable<UserPolicy>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<UserPolicy>));
 				}
 			}
 		}

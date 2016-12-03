@@ -14,7 +14,9 @@ namespace ShareFile.Api.Client
 {
     public partial interface IShareFileClient
     {
+        IPoliciesEntity Policies { get; }
         IConnectorGroupsEntity ConnectorGroups { get; }
+        IFileLockEntity FileLock { get; }
         IIrmClassificationsEntity IrmClassifications { get; }
         IRemoteUploadsEntity RemoteUploads { get; }
         IReportsEntity Reports { get; }
@@ -23,6 +25,8 @@ namespace ShareFile.Api.Client
         IAccountsEntity Accounts { get; }
         IAsyncOperationsEntity AsyncOperations { get; }
         ICapabilitiesEntity Capabilities { get; }
+        IConfigsEntity Configs { get; }
+        IDevicesEntity Devices { get; }
         IFavoriteFoldersEntity FavoriteFolders { get; }
         IGroupsEntity Groups { get; }
         IItemsEntity Items { get; }
@@ -38,7 +42,9 @@ namespace ShareFile.Api.Client
     {
         private ShareFileClient()
         {
+            Policies = new PoliciesEntity(this);
             ConnectorGroups = new ConnectorGroupsEntity(this);
+            FileLock = new FileLockEntity(this);
             IrmClassifications = new IrmClassificationsEntity(this);
             RemoteUploads = new RemoteUploadsEntity(this);
             Reports = new ReportsEntity(this);
@@ -47,6 +53,8 @@ namespace ShareFile.Api.Client
             Accounts = new AccountsEntity(this);
             AsyncOperations = new AsyncOperationsEntity(this);
             Capabilities = new CapabilitiesEntity(this);
+            Configs = new ConfigsEntity(this);
+            Devices = new DevicesEntity(this);
             FavoriteFolders = new FavoriteFoldersEntity(this);
             Groups = new GroupsEntity(this);
             Items = new ItemsEntity(this);
@@ -58,7 +66,9 @@ namespace ShareFile.Api.Client
             Zones = new ZonesEntity(this);
         }
 
+        public IPoliciesEntity Policies { get; private set; }
         public IConnectorGroupsEntity ConnectorGroups { get; private set; }
+        public IFileLockEntity FileLock { get; private set; }
         public IIrmClassificationsEntity IrmClassifications { get; private set; }
         public IRemoteUploadsEntity RemoteUploads { get; private set; }
         public IReportsEntity Reports { get; private set; }
@@ -67,6 +77,8 @@ namespace ShareFile.Api.Client
         public IAccountsEntity Accounts { get; private set; }
         public IAsyncOperationsEntity AsyncOperations { get; private set; }
         public ICapabilitiesEntity Capabilities { get; private set; }
+        public IConfigsEntity Configs { get; private set; }
+        public IDevicesEntity Devices { get; private set; }
         public IFavoriteFoldersEntity FavoriteFolders { get; private set; }
         public IGroupsEntity Groups { get; private set; }
         public IItemsEntity Items { get; private set; }

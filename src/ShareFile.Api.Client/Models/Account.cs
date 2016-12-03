@@ -181,6 +181,8 @@ namespace ShareFile.Api.Models
 
 		public SafeEnum<AccountSubType> AccountSubType { get; set; }
 
+		public string ConversionType { get; set; }
+
 		public ServicesCollection Services { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
@@ -270,6 +272,7 @@ namespace ShareFile.Api.Models
 				ToolInformation = typedSource.ToolInformation;
 				BillingInformation = typedSource.BillingInformation;
 				AccountSubType = typedSource.AccountSubType;
+				ConversionType = typedSource.ConversionType;
 				Services = typedSource.Services;
 			}
 			else
@@ -590,6 +593,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("AccountSubType", out token) && token.Type != JTokenType.Null)
 				{
 					AccountSubType = (SafeEnum<AccountSubType>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<AccountSubType>));
+				}
+				if(source.TryGetProperty("ConversionType", out token) && token.Type != JTokenType.Null)
+				{
+					ConversionType = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
 				if(source.TryGetProperty("Services", out token) && token.Type != JTokenType.Null)
 				{

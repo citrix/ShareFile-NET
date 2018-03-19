@@ -12,7 +12,7 @@ All code is licensed under the [MIT
 License](https://github.com/citrix/ShareFile-PowerShell/blob/master/ShareFileSnapIn/LICENSE.txt).
 
 ## Tooling requirements ##
-* Building `ShareFile.Api.Client.DotNet.sln` requires Visual Studio 2015 Update 2 with .NET Core tooling.
+* Building `ShareFile.Api.Client.DotNet.sln` requires Visual Studio 2017 with .NET Core tooling.
 
 ## Definitions ##
 

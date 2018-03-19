@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,56 +17,49 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// ShareRequestParams
+	/// </summary>
 	public class ShareRequestParams : ODataObject 
 	{
-
 		/// <summary>
 		/// The Folder Id for this Request. Has precedence over FolderPath
 		/// </summary>
 		public string FolderId { get; set; }
-
 		/// <summary>
 		/// The path to the Folder for this Request
 		/// </summary>
 		public string FolderPath { get; set; }
-
 		/// <summary>
 		/// List of emails to whom this Share should be sent
 		/// </summary>
 		public IEnumerable<string> Emails { get; set; }
-
 		/// <summary>
 		/// The subject of the Share email
 		/// </summary>
 		public string Subject { get; set; }
-
 		/// <summary>
 		/// A message to be included in the Share email body
 		/// </summary>
 		public string Body { get; set; }
-
 		/// <summary>
 		/// If true, the Share sender will be cc'd in the Share email
 		/// </summary>
 		public bool CcSender { get; set; }
-
 		/// <summary>
 		/// If true, recipients will need to login to access the Share
 		/// </summary>
 		public bool RequireLogin { get; set; }
-
 		/// <summary>
 		/// Number of days until access to this Share expires
 		/// </summary>
 		public int ExpirationDays { get; set; }
-
 		/// <summary>
 		/// If true, the sender will receive an email notification when files are uploaded to the Share
 		/// </summary>
 		public bool NotifyOnUpload { get; set; }
-
 		/// <summary>
 		/// If true, the Share items can only be viewed but not downloaded. Not applicable for Request Shares
 		/// </summary>

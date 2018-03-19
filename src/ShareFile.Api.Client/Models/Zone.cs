@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,31 +17,68 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Zones represent sites that can hold ShareFile data. Zones can be either
+	/// Private - installed at customer's premisses - or Public - managed by
+	/// ShareFile. ShareFile Items are always associated with a given Zone.
+	/// 
+	/// Zones have multiple StorageCenters - each represents a physical server
+	/// in that zone.
+	/// </summary>
 	public class Zone : Principal 
 	{
-
+		/// <summary>
+		/// Zone secret used for securing communications.
+		/// </summary>
 		public string Secret { get; set; }
-
+		/// <summary>
+		/// Zone type
+		/// </summary>
 		public SafeEnum<ZoneType> ZoneType { get; set; }
-
+		/// <summary>
+		/// Zone account - only set on Private zones
+		/// </summary>
 		public Account Account { get; set; }
-
+		/// <summary>
+		/// Specifies how much time between heartbeats before sharefile.com will remove
+		/// a Storage Center from load balancing
+		/// </summary>
 		public int? HeartBeatTolerance { get; set; }
-
+		/// <summary>
+		/// Specifies how often sharefile.com will attempt to connect back to the Zone
+		/// and determine if the zone is healthy.
+		/// </summary>
 		public int? PingBackInterval { get; set; }
-
+		/// <summary>
+		/// Zone version - this parameter cannot be set, it is determined from the version
+		/// of its storage centers. A zone version is the lowest version of a storage center
+		/// in that zone
+		/// </summary>
 		public string Version { get; set; }
-
+		/// <summary>
+		/// Comma-delimited list of services enabled in this zone.
+		/// </summary>
 		public SafeEnum<ZoneService> ZoneServices { get; set; }
-
+		/// <summary>
+		/// Specifies if the zone is a HIPAA zone
+		/// </summary>
 		public bool? IsHIPAAZone { get; set; }
-
+		/// <summary>
+		/// Specifies if the zone is a multi-tenant zone
+		/// </summary>
 		public bool? IsMultiTenant { get; set; }
-
+		/// <summary>
+		/// List of Storage Centers created on this zone. A Storage Center is a stateless
+		/// server that performs the zone services. Operations to this zone will be
+		/// redirected to one of the storage centers - using the configured external
+		/// address.
+		/// </summary>
 		public IEnumerable<StorageCenter> StorageCenters { get; set; }
-
+		/// <summary>
+		/// List of metadata objects associated with this zone
+		/// </summary>
 		public IEnumerable<Metadata> Metadata { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

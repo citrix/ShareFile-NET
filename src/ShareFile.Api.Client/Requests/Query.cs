@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Requests.Filters;
 using ShareFile.Api.Client.Requests.Providers;
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
 
 namespace ShareFile.Api.Client.Requests
 {
@@ -23,6 +23,7 @@ namespace ShareFile.Api.Client.Requests
         protected readonly ODataParameterCollection _queryString;
         protected IDictionary<string, string> _headerCollection;
         protected Uri _baseUri;
+        protected QueryMetadata _metadata;
 // ReSharper restore InconsistentNaming
 
         protected QueryBase(IShareFileClient client)
@@ -38,6 +39,8 @@ namespace ShareFile.Api.Client.Requests
         }
 
         public IShareFileClient Client { get; internal set; }
+
+        public QueryMetadata Metadata => _metadata;
         public string HttpMethod { get; set; }
         public object Body { get; set; }
 
@@ -332,12 +335,11 @@ namespace ShareFile.Api.Client.Requests
             Client.Execute(this);
         }
 
-#if ASYNC
-        public Task ExecuteAsync(CancellationToken? token = null)
+        [NotNull]
+        public Task ExecuteAsync(CancellationToken token = default(CancellationToken))
         {
             return Client.ExecuteAsync(this, token);
         }
-#endif
 
         public Query AddHeader(string key, string value)
         {
@@ -348,6 +350,12 @@ namespace ShareFile.Api.Client.Requests
         public Query WithBaseUri(Uri uri)
         {
             SetBaseUri(uri);
+            return this;
+        }
+
+        public IQuery WithMetadata(QueryMetadata metadata)
+        {
+            _metadata = metadata;
             return this;
         }
     }
@@ -623,16 +631,15 @@ namespace ShareFile.Api.Client.Requests
             return Client.Execute(this);
         }
 
-#if ASYNC
-        public virtual Task<T> ExecuteAsync(CancellationToken? token = null)
+		[NotNull]
+        public virtual Task<T> ExecuteAsync(CancellationToken token = default(CancellationToken))
         {
             if (this is IQuery<Stream>)
             {
-                return Client.ExecuteAsync((IQuery<Stream>)this, token) as Task<T>;
+                return (Task<T>)(object)Client.ExecuteAsync((IQuery<Stream>)this, token);
             }
             return Client.ExecuteAsync(this, token);
         }
-#endif
 
         public int GetTop()
         {
@@ -662,6 +669,12 @@ namespace ShareFile.Api.Client.Requests
         public string GetOrderBy()
         {
             return _orderBy;
+        }
+
+        public IQuery<T> WithMetadata(QueryMetadata metadata)
+        {
+            _metadata = metadata;
+            return this;
         }
     }
 
@@ -695,13 +708,12 @@ namespace ShareFile.Api.Client.Requests
         {
             return Client.Execute(this);
         }
-
-#if ASYNC
-        public override Task<Stream> ExecuteAsync(CancellationToken? token = null)
+		
+        [NotNull]
+        public override Task<Stream> ExecuteAsync(CancellationToken token = default(CancellationToken))
         {
             return Client.ExecuteAsync(this, token);
         }
-#endif
     }
 
     internal class MappedQuery<SourceType, TargetType> : Query<TargetType>
@@ -722,15 +734,15 @@ namespace ShareFile.Api.Client.Requests
             SourceType result = query.Execute();
             return map(result);
         }
-
-#if ASYNC
-        public override async Task<TargetType> ExecuteAsync(CancellationToken? token = null)
+		
+        [NotNull]
+        public override async Task<TargetType> ExecuteAsync(CancellationToken token = default(CancellationToken))
         {
             Query<SourceType> query = Query<TargetType>.Copy(this, new Query<SourceType>(this.Client));
             SourceType result = await query.ExecuteAsync(token).ConfigureAwait(false);
-            return map(result);
+            var targetResult = map(result);
+            return Constraint.NotNull(() => targetResult);
         }
-#endif
     }
 
     public class ApiRequest
@@ -794,7 +806,7 @@ namespace ShareFile.Api.Client.Requests
                         queryString.Add(odataParameter);
                     }
 
-                    url = new StringBuilder(idsUri.ToString().Substring(0, ids.IndexOf('?')));
+                    url = new StringBuilder(ids.Substring(0, ids.IndexOf('?')));
                 }
             }
             else

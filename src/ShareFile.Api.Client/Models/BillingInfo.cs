@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,40 +17,28 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
 	public class BillingInfo : ODataObject 
 	{
-
 		public User BillingContact { get; set; }
-
 		public string Address1 { get; set; }
-
 		public string Address2 { get; set; }
-
 		public string City { get; set; }
-
 		public string State { get; set; }
-
 		public string Country { get; set; }
-
 		public string Zip { get; set; }
-
 		public string TaxAreaId { get; set; }
-
 		public string CreditCardFirstName { get; set; }
-
 		public string CreditCardLastName { get; set; }
-
 		public string CreditCardType { get; set; }
-
 		public string CreditCardToken { get; set; }
-
 		public string CreditCardExpirationMonth { get; set; }
-
 		public string CreditCardExpirationYear { get; set; }
-
 		public string CreditCardSecurityCode { get; set; }
+		public string VatId { get; set; }
+		public string CurrencyCode { get; set; }
+		public bool? IsCreditCardPaymentApplicable { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
@@ -75,6 +63,9 @@ namespace ShareFile.Api.Models
 				CreditCardExpirationMonth = typedSource.CreditCardExpirationMonth;
 				CreditCardExpirationYear = typedSource.CreditCardExpirationYear;
 				CreditCardSecurityCode = typedSource.CreditCardSecurityCode;
+				VatId = typedSource.VatId;
+				CurrencyCode = typedSource.CurrencyCode;
+				IsCreditCardPaymentApplicable = typedSource.IsCreditCardPaymentApplicable;
 			}
 			else
 			{
@@ -138,6 +129,18 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("CreditCardSecurityCode", out token) && token.Type != JTokenType.Null)
 				{
 					CreditCardSecurityCode = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("VatId", out token) && token.Type != JTokenType.Null)
+				{
+					VatId = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("CurrencyCode", out token) && token.Type != JTokenType.Null)
+				{
+					CurrencyCode = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("IsCreditCardPaymentApplicable", out token) && token.Type != JTokenType.Null)
+				{
+					IsCreditCardPaymentApplicable = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 			}
 		}

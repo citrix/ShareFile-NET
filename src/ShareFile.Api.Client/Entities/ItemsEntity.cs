@@ -5,15 +5,15 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
-using ShareFile.Api.Models;
 using ShareFile.Api.Client;
-using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Models;
+using ShareFile.Api.Client.Requests;
 
 
 namespace ShareFile.Api.Client.Entities
@@ -186,16 +186,17 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="url"></param>
         /// <param name="redirect"></param>
         /// <param name="includeAllVersions"></param>
+        /// <param name="includeDeleted"></param>
         /// <returns>
         /// the download link for the provided item content.
         /// </returns>
-        IQuery<System.IO.Stream> Download(Uri url, bool redirect = true, bool includeAllVersions = false);
+        IQuery<System.IO.Stream> Download(Uri url, bool redirect = true, bool includeAllVersions = false, bool includeDeleted = false);
         
         /// <summary>
         /// Download Multiple Items
         /// </summary>
         /// <example>
-        /// ["id1","id2",...]
+        /// ["id1","id2"]
         /// </example>
         /// <remarks>
         /// Initiate the download operation for items. It will return 302 redirection to the
@@ -216,7 +217,8 @@ namespace ShareFile.Api.Client.Entities
         /// {
         /// "Name":"Folder Name",
         /// "Description":"Description",
-        /// "Zone":{ "Id":"z014766e-8e96-4615-86aa-57132a69843c" }
+        /// "Zone":{ "Id":"ZoneId" },
+        /// "ExpirationDate": "9999-12-31T23:59:59.9999999Z"
         /// }
         /// </example>
         /// <remarks>
@@ -363,7 +365,7 @@ namespace ShareFile.Api.Client.Entities
         /// "Name":"Name",
         /// "Uri":"https://server/path",
         /// "Description":"Description",
-        /// "Parent": { "Id": "parentid" },
+        /// "Parent": { "Id": "parentid" }
         /// }
         /// </example>
         /// <remarks>
@@ -384,7 +386,7 @@ namespace ShareFile.Api.Client.Entities
         /// {
         /// "Name":"Name",
         /// "Description":"Description",
-        /// "Parent": { "Id": "parentid" },
+        /// "Parent": { "Id": "parentid" }
         /// }
         /// </example>
         /// <remarks>
@@ -433,7 +435,7 @@ namespace ShareFile.Api.Client.Entities
         /// Delete Multiple Items
         /// </summary>
         /// <example>
-        /// ["id1","id2",...]
+        /// ["id1","id2"]
         /// </example>
         /// <remarks>
         /// All items in bulk delete must be children of the same parent, identified in the URI
@@ -468,10 +470,11 @@ namespace ShareFile.Api.Client.Entities
         /// </remarks>
         /// <param name="url"></param>
         /// <param name="path"></param>
+        /// <param name="bubbleSharedPassthroughs"></param>
         /// <returns>
         /// A feed containing the path of folders from the specified root to the item, in order
         /// </returns>
-        IQuery<ODataFeed<Item>> GetBreadcrumbs(Uri url, string path = null);
+        IQuery<ODataFeed<Item>> GetBreadcrumbs(Uri url, string path = null, bool bubbleSharedPassthroughs = false);
         
         /// <summary>
         /// Copy Item
@@ -497,8 +500,8 @@ namespace ShareFile.Api.Client.Entities
         /// {
         /// "Method":"Method",
         /// "Raw": false,
-        /// "FileName":"FileName"
-        /// "FileLength": length
+        /// "FileName":"FileName",
+        /// "FileSize": 2048
         /// }
         /// </example>
         /// <remarks>
@@ -571,12 +574,13 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="notify"></param>
         /// <param name="clientCreatedDateUTC"></param>
         /// <param name="clientModifiedDateUTC"></param>
+        /// <param name="baseFileId"></param>
         /// <returns>
         /// an Upload Specification element, containing the links for uploading, and the parameters for resume.
         /// The caller must know the protocol for sending the prepare, chunk and finish URLs returned in the spec; as well as
         /// negotiate the resume upload.
         /// </returns>
-        IQuery<UploadSpecification> Upload(Uri url, UploadMethod method = UploadMethod.Standard, bool raw = false, string fileName = null, long fileSize = 0, string batchId = null, bool batchLast = false, bool canResume = false, bool startOver = false, bool unzip = false, string tool = "apiv3", bool overwrite = false, string title = null, string details = null, bool isSend = false, string sendGuid = null, string opid = null, int threadCount = 4, string responseFormat = "json", bool notify = false, DateTime? clientCreatedDateUTC = null, DateTime? clientModifiedDateUTC = null, int? expirationDays = null);
+        IQuery<UploadSpecification> Upload(Uri url, UploadMethod method = UploadMethod.Standard, bool raw = false, string fileName = null, long fileSize = 0, string batchId = null, bool batchLast = false, bool canResume = false, bool startOver = false, bool unzip = false, string tool = "apiv3", bool overwrite = false, string title = null, string details = null, bool isSend = false, string sendGuid = null, string opid = null, int threadCount = 4, string responseFormat = "json", bool notify = false, DateTime? clientCreatedDateUTC = null, DateTime? clientModifiedDateUTC = null, int? expirationDays = null, string baseFileId = "");
         IQuery<UploadSpecification> Upload2(Uri url, UploadRequestParams uploadParams, int? expirationDays = null);
         
         /// <summary>
@@ -656,20 +660,18 @@ namespace ShareFile.Api.Client.Entities
         /// "ItemNameOnly":false
         /// },
         /// "Paging":{
-        /// "PageNumber":1, (Deprecated)
-        /// "PageSize":10, (Deprecated)
-        /// "Count": 50
+        /// "Count": 50,
         /// "Skip": 0
         /// },
         /// "Sort":{
         /// "SortBy":"",
-        /// "Ascending":false,
+        /// "Ascending":false
         /// },
         /// "TimeoutInSeconds":10
         /// }
         /// </example>
         /// <remarks>
-        /// Search for Items matching the criteria of the query parameter
+        /// Search for Items matching the criteria of the query parameter. Paging.PageNumber and Paging.PageSize are deprecated.
         /// </remarks>
         /// <param name="simpleSearchQuery"></param>
         /// <returns>
@@ -683,29 +685,28 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "Query":{
-        /// "ItemTypes":["type1", "type2", ...],
-        /// "ParentID":["id1", "id2", ...],
-        /// "CreatorID":["id1", "id2", ...],
+        /// "ItemTypes":["type1", "type2"],
+        /// "ParentID":["id1", "id2"],
+        /// "CreatorID":["id1", "id2"],
         /// "SearchQuery":"",
         /// "CreateStartDate":"",
         /// "CreateEndDate":"",
         /// "ItemNameOnly":false
         /// },
         /// "Paging":{
-        /// "PageNumber":1, (deprecated)
-        /// "PageSize":10, (deprecated)
-        /// "Count":50, (default value)
-        /// "Skip":0, (default value)
+        /// "Count":50,
+        /// "Skip":0
         /// },
         /// "Sort":{
         /// "SortBy":"",
-        /// "Ascending":false,
+        /// "Ascending":false
         /// },
         /// "TimeoutInSeconds":10
         /// }
         /// </example>
         /// <remarks>
-        /// Search for Items matching the criteria of the query parameter
+        /// Search for Items matching the criteria of the query parameter. Paging.PageNumber and Paging.PageSize are deprecated.
+        /// Default values for Paging.Count is 50 and Paging.Skip is 0.
         /// </remarks>
         /// <param name="searchQuery"></param>
         /// <returns>
@@ -826,9 +827,9 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Item> Get()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
-		    sfApiQuery.From("Items");
+            sfApiQuery.From("Items");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -853,7 +854,7 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("includeDeleted", includeDeleted);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -884,7 +885,7 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.QueryString("canCreateRootFolder", canCreateRootFolder);
             sfApiQuery.QueryString("fileBox", fileBox);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -903,10 +904,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Item>> GetChildrenByConnectorGroup(Uri parentUrl)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
-		    sfApiQuery.Action("Children");
+            sfApiQuery.Action("Children");
             sfApiQuery.Uri(parentUrl);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -927,11 +928,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Item>> Stream(Uri url, bool includeDeleted = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
-		    sfApiQuery.Action("Stream");
+            sfApiQuery.Action("Stream");
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("includeDeleted", includeDeleted);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -949,11 +950,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Item> ByPath(string path)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
-		    sfApiQuery.From("Items");
-		    sfApiQuery.Action("ByPath");
+            sfApiQuery.From("Items");
+            sfApiQuery.Action("ByPath");
             sfApiQuery.QueryString("path", path);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -973,11 +974,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Item> ByPath(Uri url, string path)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
-		    sfApiQuery.Action("ByPath");
+            sfApiQuery.Action("ByPath");
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("path", path);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -993,10 +994,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Item> GetParent(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
-		    sfApiQuery.Action("Parent");
+            sfApiQuery.Action("Parent");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1016,12 +1017,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Item>> GetChildren(Uri url, bool includeDeleted = false, ItemOrderingMode orderingMode = ItemOrderingMode.Default)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
-		    sfApiQuery.Action("Children");
+            sfApiQuery.Action("Children");
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("includeDeleted", includeDeleted);
             sfApiQuery.QueryString("orderingMode", orderingMode);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1038,10 +1039,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ItemInfo> GetInfo(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ItemInfo>(Client);
-		    sfApiQuery.Action("Info");
+            sfApiQuery.Action("Info");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1055,25 +1056,27 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="url"></param>
         /// <param name="redirect"></param>
         /// <param name="includeAllVersions"></param>
+        /// <param name="includeDeleted"></param>
         /// <returns>
         /// the download link for the provided item content.
         /// </returns>
-        public IQuery<System.IO.Stream> Download(Uri url, bool redirect = true, bool includeAllVersions = false)
+        public IQuery<System.IO.Stream> Download(Uri url, bool redirect = true, bool includeAllVersions = false, bool includeDeleted = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<System.IO.Stream>(Client);
-		    sfApiQuery.Action("Download");
+            sfApiQuery.Action("Download");
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("redirect", redirect);
             sfApiQuery.QueryString("includeAllVersions", includeAllVersions);
+            sfApiQuery.QueryString("includeDeleted", includeDeleted);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
         /// Download Multiple Items
         /// </summary>
         /// <example>
-        /// ["id1","id2",...]
+        /// ["id1","id2"]
         /// </example>
         /// <remarks>
         /// Initiate the download operation for items. It will return 302 redirection to the
@@ -1088,12 +1091,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<System.IO.Stream> BulkDownload(Uri parentUrl, IEnumerable<string> ids, bool redirect = true)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<System.IO.Stream>(Client);
-		    sfApiQuery.Action("BulkDownload");
+            sfApiQuery.Action("BulkDownload");
             sfApiQuery.Uri(parentUrl);
             sfApiQuery.QueryString("redirect", redirect);
             sfApiQuery.Body = ids;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1103,7 +1106,8 @@ namespace ShareFile.Api.Client.Entities
         /// {
         /// "Name":"Folder Name",
         /// "Description":"Description",
-        /// "Zone":{ "Id":"z014766e-8e96-4615-86aa-57132a69843c" }
+        /// "Zone":{ "Id":"ZoneId" },
+        /// "ExpirationDate": "9999-12-31T23:59:59.9999999Z"
         /// }
         /// </example>
         /// <remarks>
@@ -1123,13 +1127,13 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Folder> CreateFolder(Uri parentUrl, Folder folder, bool overwrite = false, bool passthrough = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Folder>(Client);
-		    sfApiQuery.Action("Folder");
+            sfApiQuery.Action("Folder");
             sfApiQuery.Uri(parentUrl);
             sfApiQuery.QueryString("overwrite", overwrite);
             sfApiQuery.QueryString("passthrough", passthrough);
             sfApiQuery.Body = folder;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1152,11 +1156,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Note> CreateNote(Uri parentUrl, Note note)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Note>(Client);
-		    sfApiQuery.Action("Note");
+            sfApiQuery.Action("Note");
             sfApiQuery.Uri(parentUrl);
             sfApiQuery.Body = note;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1180,11 +1184,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Link> CreateLink(Uri parentUrl, Link link)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Link>(Client);
-		    sfApiQuery.Action("Link");
+            sfApiQuery.Action("Link");
             sfApiQuery.Uri(parentUrl);
             sfApiQuery.Body = link;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1220,12 +1224,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<SymbolicLink> CreateSymbolicLink(Uri parentUrl, SymbolicLink symlink, bool overwrite = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<SymbolicLink>(Client);
-		    sfApiQuery.Action("SymbolicLink");
+            sfApiQuery.Action("SymbolicLink");
             sfApiQuery.Uri(parentUrl);
             sfApiQuery.QueryString("overwrite", overwrite);
             sfApiQuery.Body = symlink;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1249,12 +1253,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<SymbolicLink> CreateChildrenByConnectorGroup(Uri url, SymbolicLink symlink, bool overwrite = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<SymbolicLink>(Client);
-		    sfApiQuery.Action("Children");
+            sfApiQuery.Action("Children");
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("overwrite", overwrite);
             sfApiQuery.Body = symlink;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1296,7 +1300,7 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.QueryString("notify", notify);
             sfApiQuery.Body = item;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1307,7 +1311,7 @@ namespace ShareFile.Api.Client.Entities
         /// "Name":"Name",
         /// "Uri":"https://server/path",
         /// "Description":"Description",
-        /// "Parent": { "Id": "parentid" },
+        /// "Parent": { "Id": "parentid" }
         /// }
         /// </example>
         /// <remarks>
@@ -1322,13 +1326,13 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Link> UpdateLink(string id, Link link, bool notify = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Link>(Client);
-		    sfApiQuery.From("Items");
-		    sfApiQuery.Action("Link");
+            sfApiQuery.From("Items");
+            sfApiQuery.Action("Link");
             sfApiQuery.ActionIds(id);
             sfApiQuery.QueryString("notify", notify);
             sfApiQuery.Body = link;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1338,7 +1342,7 @@ namespace ShareFile.Api.Client.Entities
         /// {
         /// "Name":"Name",
         /// "Description":"Description",
-        /// "Parent": { "Id": "parentid" },
+        /// "Parent": { "Id": "parentid" }
         /// }
         /// </example>
         /// <remarks>
@@ -1353,13 +1357,13 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Note> UpdateNote(string id, Note note, bool notify = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Note>(Client);
-		    sfApiQuery.From("Items");
-		    sfApiQuery.Action("Note");
+            sfApiQuery.From("Items");
+            sfApiQuery.Action("Note");
             sfApiQuery.ActionIds(id);
             sfApiQuery.QueryString("notify", notify);
             sfApiQuery.Body = note;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1383,12 +1387,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<SymbolicLink> UpdateSymbolicLink(string id, SymbolicLink symlink)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<SymbolicLink>(Client);
-		    sfApiQuery.From("Items");
-		    sfApiQuery.Action("SymbolicLink");
+            sfApiQuery.From("Items");
+            sfApiQuery.Action("SymbolicLink");
             sfApiQuery.ActionIds(id);
             sfApiQuery.Body = symlink;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1407,14 +1411,14 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.QueryString("singleversion", singleversion);
             sfApiQuery.QueryString("forceSync", forceSync);
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
         /// Delete Multiple Items
         /// </summary>
         /// <example>
-        /// ["id1","id2",...]
+        /// ["id1","id2"]
         /// </example>
         /// <remarks>
         /// All items in bulk delete must be children of the same parent, identified in the URI
@@ -1426,13 +1430,13 @@ namespace ShareFile.Api.Client.Entities
         public IQuery BulkDelete(Uri parentUrl, IEnumerable<string> ids, bool forceSync = false, bool deletePermanently = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("BulkDelete");
+            sfApiQuery.Action("BulkDelete");
             sfApiQuery.Uri(parentUrl);
             sfApiQuery.QueryString("forceSync", forceSync);
             sfApiQuery.QueryString("deletePermanently", deletePermanently);
             sfApiQuery.Body = ids;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1450,12 +1454,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<System.IO.Stream> GetThumbnail(Uri url, int size = 75, bool redirect = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<System.IO.Stream>(Client);
-		    sfApiQuery.Action("Thumbnail");
+            sfApiQuery.Action("Thumbnail");
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("size", size);
             sfApiQuery.QueryString("redirect", redirect);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1468,17 +1472,19 @@ namespace ShareFile.Api.Client.Entities
         /// </remarks>
         /// <param name="url"></param>
         /// <param name="path"></param>
+        /// <param name="bubbleSharedPassthroughs"></param>
         /// <returns>
         /// A feed containing the path of folders from the specified root to the item, in order
         /// </returns>
-        public IQuery<ODataFeed<Item>> GetBreadcrumbs(Uri url, string path = null)
+        public IQuery<ODataFeed<Item>> GetBreadcrumbs(Uri url, string path = null, bool bubbleSharedPassthroughs = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
-		    sfApiQuery.Action("Breadcrumbs");
+            sfApiQuery.Action("Breadcrumbs");
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("path", path);
+            sfApiQuery.QueryString("bubbleSharedPassthroughs", bubbleSharedPassthroughs);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1498,12 +1504,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Item> Copy(Uri url, string targetid, bool overwrite = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
-		    sfApiQuery.Action("Copy");
+            sfApiQuery.Action("Copy");
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("targetid", targetid);
             sfApiQuery.QueryString("overwrite", overwrite);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1514,8 +1520,8 @@ namespace ShareFile.Api.Client.Entities
         /// {
         /// "Method":"Method",
         /// "Raw": false,
-        /// "FileName":"FileName"
-        /// "FileLength": length
+        /// "FileName":"FileName",
+        /// "FileSize": 2048
         /// }
         /// </example>
         /// <remarks>
@@ -1588,15 +1594,16 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="notify"></param>
         /// <param name="clientCreatedDateUTC"></param>
         /// <param name="clientModifiedDateUTC"></param>
+        /// <param name="baseFileId"></param>
         /// <returns>
         /// an Upload Specification element, containing the links for uploading, and the parameters for resume.
         /// The caller must know the protocol for sending the prepare, chunk and finish URLs returned in the spec; as well as
         /// negotiate the resume upload.
         /// </returns>
-        public IQuery<UploadSpecification> Upload(Uri url, UploadMethod method = UploadMethod.Standard, bool raw = false, string fileName = null, long fileSize = 0, string batchId = null, bool batchLast = false, bool canResume = false, bool startOver = false, bool unzip = false, string tool = "apiv3", bool overwrite = false, string title = null, string details = null, bool isSend = false, string sendGuid = null, string opid = null, int threadCount = 4, string responseFormat = "json", bool notify = false, DateTime? clientCreatedDateUTC = null, DateTime? clientModifiedDateUTC = null, int? expirationDays = null)
+        public IQuery<UploadSpecification> Upload(Uri url, UploadMethod method = UploadMethod.Standard, bool raw = false, string fileName = null, long fileSize = 0, string batchId = null, bool batchLast = false, bool canResume = false, bool startOver = false, bool unzip = false, string tool = "apiv3", bool overwrite = false, string title = null, string details = null, bool isSend = false, string sendGuid = null, string opid = null, int threadCount = 4, string responseFormat = "json", bool notify = false, DateTime? clientCreatedDateUTC = null, DateTime? clientModifiedDateUTC = null, int? expirationDays = null, string baseFileId = "")
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<UploadSpecification>(Client);
-		    sfApiQuery.Action("Upload");
+            sfApiQuery.Action("Upload");
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("method", method);
             sfApiQuery.QueryString("raw", raw);
@@ -1620,18 +1627,19 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.QueryString("clientCreatedDateUTC", clientCreatedDateUTC);
             sfApiQuery.QueryString("clientModifiedDateUTC", clientModifiedDateUTC);
             sfApiQuery.QueryString("expirationDays", expirationDays);
+            sfApiQuery.QueryString("baseFileId", baseFileId);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         public IQuery<UploadSpecification> Upload2(Uri url, UploadRequestParams uploadParams, int? expirationDays = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<UploadSpecification>(Client);
-		    sfApiQuery.Action("Upload2");
+            sfApiQuery.Action("Upload2");
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("expirationDays", expirationDays);
             sfApiQuery.Body = uploadParams;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1646,11 +1654,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery CheckIn(Uri url, string message = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("CheckIn");
+            sfApiQuery.Action("CheckIn");
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("message", message);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1665,10 +1673,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery CheckOut(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("CheckOut");
+            sfApiQuery.Action("CheckOut");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1682,10 +1690,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery DiscardCheckOut(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("DiscardCheckOut");
+            sfApiQuery.Action("DiscardCheckOut");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1704,14 +1712,14 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<SearchResults> Search(string query, int maxResults = 50, int skip = 0, bool homeFolderOnly = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<SearchResults>(Client);
-		    sfApiQuery.From("Items");
-		    sfApiQuery.Action("Search");
+            sfApiQuery.From("Items");
+            sfApiQuery.Action("Search");
             sfApiQuery.QueryString("query", query);
             sfApiQuery.QueryString("maxResults", maxResults);
             sfApiQuery.QueryString("skip", skip);
             sfApiQuery.QueryString("homeFolderOnly", homeFolderOnly);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1730,13 +1738,13 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<SearchResults> Search(Uri url, string query, int maxResults = 50, int skip = 0)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<SearchResults>(Client);
-		    sfApiQuery.Action("Search");
+            sfApiQuery.Action("Search");
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("query", query);
             sfApiQuery.QueryString("maxResults", maxResults);
             sfApiQuery.QueryString("skip", skip);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1754,20 +1762,18 @@ namespace ShareFile.Api.Client.Entities
         /// "ItemNameOnly":false
         /// },
         /// "Paging":{
-        /// "PageNumber":1, (Deprecated)
-        /// "PageSize":10, (Deprecated)
-        /// "Count": 50
+        /// "Count": 50,
         /// "Skip": 0
         /// },
         /// "Sort":{
         /// "SortBy":"",
-        /// "Ascending":false,
+        /// "Ascending":false
         /// },
         /// "TimeoutInSeconds":10
         /// }
         /// </example>
         /// <remarks>
-        /// Search for Items matching the criteria of the query parameter
+        /// Search for Items matching the criteria of the query parameter. Paging.PageNumber and Paging.PageSize are deprecated.
         /// </remarks>
         /// <param name="simpleSearchQuery"></param>
         /// <returns>
@@ -1776,11 +1782,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<AdvancedSearchResults> AdvancedSimpleSearch(SimpleSearchQuery simpleSearchQuery)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AdvancedSearchResults>(Client);
-		    sfApiQuery.From("Items");
-		    sfApiQuery.Action("AdvancedSimpleSearch");
+            sfApiQuery.From("Items");
+            sfApiQuery.Action("AdvancedSimpleSearch");
             sfApiQuery.Body = simpleSearchQuery;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1789,29 +1795,28 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "Query":{
-        /// "ItemTypes":["type1", "type2", ...],
-        /// "ParentID":["id1", "id2", ...],
-        /// "CreatorID":["id1", "id2", ...],
+        /// "ItemTypes":["type1", "type2"],
+        /// "ParentID":["id1", "id2"],
+        /// "CreatorID":["id1", "id2"],
         /// "SearchQuery":"",
         /// "CreateStartDate":"",
         /// "CreateEndDate":"",
         /// "ItemNameOnly":false
         /// },
         /// "Paging":{
-        /// "PageNumber":1, (deprecated)
-        /// "PageSize":10, (deprecated)
-        /// "Count":50, (default value)
-        /// "Skip":0, (default value)
+        /// "Count":50,
+        /// "Skip":0
         /// },
         /// "Sort":{
         /// "SortBy":"",
-        /// "Ascending":false,
+        /// "Ascending":false
         /// },
         /// "TimeoutInSeconds":10
         /// }
         /// </example>
         /// <remarks>
-        /// Search for Items matching the criteria of the query parameter
+        /// Search for Items matching the criteria of the query parameter. Paging.PageNumber and Paging.PageSize are deprecated.
+        /// Default values for Paging.Count is 50 and Paging.Skip is 0.
         /// </remarks>
         /// <param name="searchQuery"></param>
         /// <returns>
@@ -1820,11 +1825,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<AdvancedSearchResults> AdvancedSearch(SearchQuery searchQuery)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AdvancedSearchResults>(Client);
-		    sfApiQuery.From("Items");
-		    sfApiQuery.Action("AdvancedSearch");
+            sfApiQuery.From("Items");
+            sfApiQuery.Action("AdvancedSearch");
             sfApiQuery.Body = searchQuery;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1841,10 +1846,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Redirection> WebView(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Redirection>(Client);
-		    sfApiQuery.Action("WebView");
+            sfApiQuery.Action("WebView");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1858,11 +1863,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<ItemProtocolLink>> GetProtocolLinks(Uri url, PreviewPlatform platform)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<ItemProtocolLink>>(Client);
-		    sfApiQuery.Action("ProtocolLinks");
+            sfApiQuery.Action("ProtocolLinks");
             sfApiQuery.Uri(url);
             sfApiQuery.ActionIds(platform);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1878,10 +1883,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Redirection> GetRedirection(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Redirection>(Client);
-		    sfApiQuery.Action("Redirection");
+            sfApiQuery.Action("Redirection");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1891,10 +1896,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Item>> GetDeletedChildren(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
-		    sfApiQuery.Action("DeletedChildren");
+            sfApiQuery.Action("DeletedChildren");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1905,12 +1910,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Item>> GetUserDeletedItems(string userid = null, string zone = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
-		    sfApiQuery.From("Items");
-		    sfApiQuery.Action("UserDeletedItems");
+            sfApiQuery.From("Items");
+            sfApiQuery.Action("UserDeletedItems");
             sfApiQuery.QueryString("userid", userid);
             sfApiQuery.QueryString("zone", zone);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1920,11 +1925,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery BulkRestore(IEnumerable<string> ids)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.From("Items");
-		    sfApiQuery.Action("BulkRestore");
+            sfApiQuery.From("Items");
+            sfApiQuery.Action("BulkRestore");
             sfApiQuery.Body = ids;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1935,11 +1940,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery BulkDeletePermanently(IEnumerable<string> ids)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.From("Items");
-		    sfApiQuery.Action("BulkDeletePermanently");
+            sfApiQuery.From("Items");
+            sfApiQuery.Action("BulkDeletePermanently");
             sfApiQuery.Body = ids;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1955,10 +1960,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Redirection> WebAppLink(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Redirection>(Client);
-		    sfApiQuery.Action("WebAppLink");
+            sfApiQuery.Action("WebAppLink");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1968,10 +1973,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery RemoveTemplateAssociation(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("RemoveTemplateAssociation");
+            sfApiQuery.Action("RemoveTemplateAssociation");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1981,10 +1986,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery CheckTemplateOwned(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("CheckTemplateOwned");
+            sfApiQuery.Action("CheckTemplateOwned");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1995,11 +2000,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery CheckVersioningViolation(Uri url, int newMaxVersions)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("CheckVersioningViolation");
+            sfApiQuery.Action("CheckVersioningViolation");
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("newMaxVersions", newMaxVersions);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
     }
 }

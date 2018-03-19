@@ -61,17 +61,9 @@ namespace ShareFile.Api.Client.Extensions.Tasks
             }
         }
 
-        public static void ThrowIfRequested(this CancellationToken? cancellationToken)
-        {
-            if ((cancellationToken ?? CancellationToken.None).IsCancellationRequested)
-                throw new TaskCanceledException();
-        }
-
-#if ASYNC
         public static void Forget(this Task task)
         {
             task.ConfigureAwait(false);
         }
-#endif
     }
 }

@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,361 +17,237 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
 #if !ShareFile
+	/// <summary>
+	/// The preferences an admin can set for a ShareFile Account.
+	/// </summary>
 	public class AccountPreferences : ODataObject 
 	{
-
 		public bool? EnableViewOnly { get; set; }
-
 		public bool? EnableWatermarkOnViewOnly { get; set; }
-
 		public bool? AllowProactiveNotifications { get; set; }
-
 		public bool? ShowUserListToClients { get; set; }
-
+		/// <summary>
+		/// Enforce RequireLogin requirement for all Send Shares
+		/// </summary>
 		public bool? RequireLoginOnDownload { get; set; }
-
+		/// <summary>
+		/// Enforce RequireLogin requirement for all Request Shares
+		/// </summary>
+		public bool? RequireLoginOnUpload { get; set; }
 		public bool? RequireLoginByDefault { get; set; }
-
 		public bool? EnableClientSend { get; set; }
-
 		public bool? EnableThumbnails { get; set; }
-
 		public bool? EnableSSO { get; set; }
-
 		public int? VirusStrictness { get; set; }
-
 		public bool? EnableSfAdi { get; set; }
-
 		public bool? EnableMultipleZones { get; set; }
-
 		public Zone DefaultZone { get; set; }
-
 		public bool? EnableVersioning { get; set; }
-
 		public string SystemType { get; set; }
-
 		public bool? EnableSync { get; set; }
-
 		public bool? EnableSyncAutoUpdate { get; set; }
-
 		public string SystemName { get; set; }
-
 		public string HomeScreenName { get; set; }
-
 		public bool? ShowTermsCheckbox { get; set; }
-
 		public string TermsCheckboxText { get; set; }
-
 		public int? TermsCheckboxStrictness { get; set; }
-
 		public bool? RequireCompanyNameWithUserInfo { get; set; }
-
 		public bool? EnableEditor { get; set; }
-
 		public int? ShareIDMaxExpirationDays { get; set; }
-
 		public bool? AdminIsSuperUser { get; set; }
-
 		public bool? ShowFolderAccessList { get; set; }
-
 		public bool? FromEmailIsShareFile { get; set; }
-
 		public bool? UseAlternateSMTP { get; set; }
-
 		public bool? ShowPasswordInEmail { get; set; }
-
 		public string EmailPasswordText { get; set; }
-
 		public bool? EnableSelfNotificationsUpload { get; set; }
-
 		public bool? EnableSelfNotificationsDownload { get; set; }
-
 		public bool? EnableUploadShareIDReceipt { get; set; }
-
 		public int? DefaultConsolidatedNotificationInterval { get; set; }
-
 		public int? ExpirationDays { get; set; }
-
 		/// <summary>
 		/// Valid Values: string.Empty, Name, CreatorNameShort, FileSize, CreationDate
 		/// </summary>
 		public string DefaultSortField { get; set; }
-
 		/// <summary>
 		/// Valid Values: string.Empty, asc, desc
 		/// </summary>
 		public string DefaultSortOrder { get; set; }
-
 		public bool? DefaultIsVersioned { get; set; }
-
 		public int? DefaultMaxVersions { get; set; }
-
 		public string ViewOnlyWatermarkText { get; set; }
-
 		public bool? EnableDocViewerPrinting { get; set; }
-
 		public bool? EnableWatermarkedDownloads { get; set; }
-
 		public bool? EnableTwoFactorAuth { get; set; }
-
 		public int? LoginFailMaxAttempts { get; set; }
-
 		public int? LoginFailLockoutSecs { get; set; }
-
 		public string IPRestrictions { get; set; }
-
 		public int? InactiveTimeoutMins { get; set; }
-
 		public int? OAuth2RefreshTokenLifetimeMinutes { get; set; }
-
 		public string PasswordRegEx { get; set; }
-
 		public string PasswordRegExFormula { get; set; }
-
 		public string PasswordRegExDescription { get; set; }
-
 		public bool? EnableActivationLinks { get; set; }
-
 		public bool? IsFINRA { get; set; }
-
 		public bool? EnableOAuth { get; set; }
-
 		public bool EnableQandA { get; set; }
-
 		public bool? EnableQandATextInNotifications { get; set; }
-
 		public SafeEnum<UXMode> UXMode { get; set; }
-
 		public int? IndustryCode { get; set; }
-
+		[Obsolete("Please use the MaxAgeDays field in PasswordPolicy field below.", false)] 
 		public int PasswordMaxAgeDays { get; set; }
-
+		[Obsolete("Please use the HistoryCount field in PasswordPolicy field below.", false)] 
 		public int PasswordHistoryCount { get; set; }
-
+		[Obsolete("Please use the MinimumLength field in PasswordPolicy field below.", false)] 
 		public int MinimumLength { get; set; }
-
+		[Obsolete("Please use the MinimumSpecialCharacters field in PasswordPolicy field below.", false)] 
 		public int MinimumSpecialCharacters { get; set; }
-
+		[Obsolete("Please use the MinimumNumeric field in PasswordPolicy field below.", false)] 
 		public int MinimumNumeric { get; set; }
-
+		[Obsolete("Please use the AllowedSpecialCharacters field in PasswordPolicy field below.", false)] 
 		public string AllowedSpecialCharacters { get; set; }
-
 		/// <summary>
 		/// The password policy for the Account, specifying password strength, age, and reuse policies.
 		/// </summary>
 		public PasswordPolicy PasswordPolicy { get; set; }
-
 		public bool? EnableWebDAV { get; set; }
-
 		/// <summary>
 		/// ShareFile allows users on certain plans to connect with your ShareFile account through WebDAV to various clients.
 		/// ShareFile WebDAV is not available for Enterprise accounts. This tool is not compatible with on-premise storage and cannot be used with company credentials.
 		/// This property describes WebDAV server information. It cannot be modified.
 		/// </summary>
 		public string WebDAVServerName { get; set; }
-
 		public bool? EnableFTP { get; set; }
-
 		public bool? EnableSFTP { get; set; }
-
 		/// <summary>
 		/// ShareFile is compatible with most well-known FTP clients, enabling you to connect to your ShareFile account directly from an FTP program.
 		/// This property describes FTP server information. It cannot be modified.
 		/// </summary>
 		public string FtpServerName { get; set; }
-
 		public bool? DisableMarketing { get; set; }
-
 		public string VDRDocViewerURL { get; set; }
-
 		public bool? EnableSMBConnectorForAccount { get; set; }
-
 		public bool? EnablePersonalCloudConnectors { get; set; }
-
 		public string AccountID { get; set; }
-
 		public bool? EnableStorageZoneConnector { get; set; }
-
 		public bool? HasAnyConnectorZones { get; set; }
-
 		public bool? EnableENSForAccount { get; set; }
-
 		public string ENSRecommendedPollingSyncInterval { get; set; }
-
 		public string ENSRecommendedNotificationSyncInterval { get; set; }
-
 		public int? ENSNotificationConfigurationCount { get; set; }
-
 		public int? ENSFailSafePollingCount { get; set; }
-
 		public int? ENSMaxNotificationSyncWaitCount { get; set; }
-
 		public string TrustedDomains { get; set; }
-
 		public bool? UseWebPopAsWebAppLogin { get; set; }
-
 		public bool? EnableReportingV3 { get; set; }
-
 		public bool? EnableEncryptedEmailForOutlookPlugin { get; set; }
-
 		public bool? EnableDocPreviews { get; set; }
-
 		public bool? DisablePasswordAutocompleteInWebApp { get; set; }
-
 		public bool? EnableDesktopEditorForAccount { get; set; }
-
 		public bool? UseStrictEmployeeDefinition { get; set; }
-
 		public string EmployeeEmailDomains { get; set; }
-
 		public bool? IsPremier { get; set; }
-
 		public bool? DisableShareConnectForAccount { get; set; }
-
 		public bool? DisablePrintToShareFile { get; set; }
-
 		public bool? EnableWebAppConnectorBrowsing { get; set; }
-
 		public bool? EnableStrictCrossdomainPolicy { get; set; }
-
 		public bool? DisableScanSnap { get; set; }
-
 		public bool? EnableFileCount { get; set; }
-
 		public bool? EnableAntiVirus { get; set; }
-
 		public bool? EnableFileLocking { get; set; }
-
 		public bool? DisableWebAppAccess { get; set; }
-
 		public bool? EnableCWC { get; set; }
-
+		public bool? EnableEnterpriseArchive { get; set; }
+		public DateTime? EnterpriseArchiveActivationDate { get; set; }
 		public bool? EnableIntegrations { get; set; }
-
 		public IEnumerable<SafeEnum<IntegrationProvider>> IntegrationProviders { get; set; }
-
 		public bool? EnableBouncedEmailNotifications { get; set; }
-
 		public bool? ShowDownloadLinkInUploadNotification { get; set; }
-
 		public bool? AllowDownloadNotificationsWithoutAdmin { get; set; }
-
 		public bool? EnableUserInvitations { get; set; }
-
 		public bool? EnableClickTrails { get; set; }
-
 		public bool? EnableFolderTemplates { get; set; }
-
 		public bool? EnableFileDrops { get; set; }
-
 		public int? SpamEmailThreshold { get; set; }
-
 		public bool? EnableExternalEmailArchiving { get; set; }
-
 		public bool? CreatorCanDelete { get; set; }
-
 		/// <summary>
 		/// Whether the account can store items in the ShareFile control plane (as opposed to
 		/// Connectors). Driven by the EnableCloudStorage and EnablePrivateZones account preferences.
 		/// </summary>
 		public bool? CanStoreItemsInShareFile { get; set; }
-
 		public bool? EnableHomeFolders { get; set; }
-
 		public bool? EnableCustomBrandingUsesS3 { get; set; }
-
 		public bool? EnablePromotions { get; set; }
-
 		public bool? CanCreateMultiTenantZones { get; set; }
-
 		public bool? EnableDLP { get; set; }
-
 		public bool? EnableIRM { get; set; }
-
 		public bool? EnableECMConnectors { get; set; }
-
 		public bool? EnableOfficeOnlinePreviews { get; set; }
-
 		public bool? EnableOfficeOnlineEditing { get; set; }
-
 		/// <summary>
 		/// Retention period of items in the recycle bin.
 		/// </summary>
 		public int? RecycleBinDays { get; set; }
-
 		/// <summary>
 		/// Maximum number of concurrent uploads and downloads a Sync client should be creating, at any one time.
 		/// </summary>
 		public int? SyncConcurrentTransferThreadsLimit { get; set; }
-
 		public bool? HasPHI { get; set; }
-
 		public bool? EnableCitrixManagedStorageZones { get; set; }
-
 		public string PrimaryStorageBasePath { get; set; }
-
 		public bool? EnableSharingConnectorItems { get; set; }
-
 		public AccountMessageCode AccountMessageCode { get; set; }
-
 		/// <summary>
 		/// Enable use of Single Identity authentication service for this account
 		/// </summary>
 		public bool? EnableSingleIdentity { get; set; }
-
 		/// <summary>
 		/// Enable the use of the Drive Mapper utility for this account
 		/// </summary>
 		public bool? EnableDriveMapping { get; set; }
-
 		/// <summary>
 		/// Email notification locale. Values: Invariant, English, German, Spanish, French, Dutch, Chinese, Russian, Japanese, Korean, or Portuguese
 		/// </summary>
 		public SafeEnum<NotificationLocale> NotificationLocale { get; set; }
-
 		/// <summary>
 		/// If true, only Account Admins can update a folder's retention policy
 		/// </summary>
 		public bool? RetentionPolicySysAdminOnly { get; set; }
-
 		public bool? EnableDocumentApprovalWorkflow { get; set; }
-
 		/// <summary>
 		/// Enable localization
 		/// </summary>
 		public bool? EnableLocalization { get; set; }
-
 		public bool? EnableSecondaryDbContacts { get; set; }
-
-		public bool? EnableCADPreview { get; set; }
-
 		/// <summary>
 		/// Can Account enable/disable quota limit feature
 		/// </summary>
 		public bool? IsQuotaLimitAvailable { get; set; }
-
 		/// <summary>
 		/// Has the account enabled the quota limit
 		/// </summary>
 		public bool? EnableQuotaLimit { get; set; }
-
 		/// <summary>
 		/// Quota Limit in gigabytes
 		/// </summary>
 		public int? QuotaLimitInGB { get; set; }
-
 		/// <summary>
 		/// Enables getting thumbnails from Renderer X service
 		/// </summary>
 		public bool? EnableRenderLibXThumbnails { get; set; }
-
+		/// <summary>
+		/// Enables getting thumbnails from RenderAPI service
+		/// </summary>
+		public bool? EnableRenderAPIThumbnails { get; set; }
 		/// <summary>
 		/// Enables Provided By Client Request List feature
 		/// </summary>
 		public bool? EnableRequestList { get; set; }
+		public bool? IsArchiveAccount { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
@@ -386,6 +262,7 @@ namespace ShareFile.Api.Models
 				AllowProactiveNotifications = typedSource.AllowProactiveNotifications;
 				ShowUserListToClients = typedSource.ShowUserListToClients;
 				RequireLoginOnDownload = typedSource.RequireLoginOnDownload;
+				RequireLoginOnUpload = typedSource.RequireLoginOnUpload;
 				RequireLoginByDefault = typedSource.RequireLoginByDefault;
 				EnableClientSend = typedSource.EnableClientSend;
 				EnableThumbnails = typedSource.EnableThumbnails;
@@ -485,6 +362,8 @@ namespace ShareFile.Api.Models
 				EnableFileLocking = typedSource.EnableFileLocking;
 				DisableWebAppAccess = typedSource.DisableWebAppAccess;
 				EnableCWC = typedSource.EnableCWC;
+				EnableEnterpriseArchive = typedSource.EnableEnterpriseArchive;
+				EnterpriseArchiveActivationDate = typedSource.EnterpriseArchiveActivationDate;
 				EnableIntegrations = typedSource.EnableIntegrations;
 				IntegrationProviders = typedSource.IntegrationProviders;
 				EnableBouncedEmailNotifications = typedSource.EnableBouncedEmailNotifications;
@@ -521,12 +400,13 @@ namespace ShareFile.Api.Models
 				EnableDocumentApprovalWorkflow = typedSource.EnableDocumentApprovalWorkflow;
 				EnableLocalization = typedSource.EnableLocalization;
 				EnableSecondaryDbContacts = typedSource.EnableSecondaryDbContacts;
-				EnableCADPreview = typedSource.EnableCADPreview;
 				IsQuotaLimitAvailable = typedSource.IsQuotaLimitAvailable;
 				EnableQuotaLimit = typedSource.EnableQuotaLimit;
 				QuotaLimitInGB = typedSource.QuotaLimitInGB;
 				EnableRenderLibXThumbnails = typedSource.EnableRenderLibXThumbnails;
+				EnableRenderAPIThumbnails = typedSource.EnableRenderAPIThumbnails;
 				EnableRequestList = typedSource.EnableRequestList;
+				IsArchiveAccount = typedSource.IsArchiveAccount;
 			}
 			else
 			{
@@ -550,6 +430,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("RequireLoginOnDownload", out token) && token.Type != JTokenType.Null)
 				{
 					RequireLoginOnDownload = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("RequireLoginOnUpload", out token) && token.Type != JTokenType.Null)
+				{
+					RequireLoginOnUpload = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("RequireLoginByDefault", out token) && token.Type != JTokenType.Null)
 				{
@@ -947,6 +831,14 @@ namespace ShareFile.Api.Models
 				{
 					EnableCWC = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
+				if(source.TryGetProperty("EnableEnterpriseArchive", out token) && token.Type != JTokenType.Null)
+				{
+					EnableEnterpriseArchive = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnterpriseArchiveActivationDate", out token) && token.Type != JTokenType.Null)
+				{
+					EnterpriseArchiveActivationDate = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
 				if(source.TryGetProperty("EnableIntegrations", out token) && token.Type != JTokenType.Null)
 				{
 					EnableIntegrations = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
@@ -1091,10 +983,6 @@ namespace ShareFile.Api.Models
 				{
 					EnableSecondaryDbContacts = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
-				if(source.TryGetProperty("EnableCADPreview", out token) && token.Type != JTokenType.Null)
-				{
-					EnableCADPreview = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
-				}
 				if(source.TryGetProperty("IsQuotaLimitAvailable", out token) && token.Type != JTokenType.Null)
 				{
 					IsQuotaLimitAvailable = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
@@ -1111,9 +999,17 @@ namespace ShareFile.Api.Models
 				{
 					EnableRenderLibXThumbnails = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
+				if(source.TryGetProperty("EnableRenderAPIThumbnails", out token) && token.Type != JTokenType.Null)
+				{
+					EnableRenderAPIThumbnails = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
 				if(source.TryGetProperty("EnableRequestList", out token) && token.Type != JTokenType.Null)
 				{
 					EnableRequestList = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IsArchiveAccount", out token) && token.Type != JTokenType.Null)
+				{
+					IsArchiveAccount = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 			}
 		}

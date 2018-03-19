@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,16 +17,23 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
 	public class Capability : ODataObject 
 	{
-
 		public SafeEnum<CapabilityName> Name { get; set; }
-
 		public string Version { get; set; }
-
+		/// <summary>
+		/// Indicates the list of hosts and providers with which the associated capability can operate.
+		/// There are two known constants that offer a convenient way to refer to the current provider (self) and ShareFile (sf)
+		/// Otherwise, values will be prefixed with https protocol.
+		/// </summary>
 		public IEnumerable<string> ScopedHostsAndProviders { get; set; }
+		/// <summary>
+		/// Indicates the data types are supported based on this capability. If there are no restrictions, this value will be empty or null.
+		/// For backwards compatibility, for an empty list will imply only Folders are supported.
+		/// </summary>
+		public IEnumerable<string> SupportedDataTypes { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
@@ -39,6 +46,7 @@ namespace ShareFile.Api.Models
 				Name = typedSource.Name;
 				Version = typedSource.Version;
 				ScopedHostsAndProviders = typedSource.ScopedHostsAndProviders;
+				SupportedDataTypes = typedSource.SupportedDataTypes;
 			}
 			else
 			{
@@ -54,6 +62,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("ScopedHostsAndProviders", out token) && token.Type != JTokenType.Null)
 				{
 					ScopedHostsAndProviders = (IEnumerable<string>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<string>));
+				}
+				if(source.TryGetProperty("SupportedDataTypes", out token) && token.Type != JTokenType.Null)
+				{
+					SupportedDataTypes = (IEnumerable<string>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<string>));
 				}
 			}
 		}

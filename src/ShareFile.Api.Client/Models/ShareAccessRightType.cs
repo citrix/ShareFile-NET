@@ -5,16 +5,22 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
-	public enum ShareAccessRightType
+    
+    /// <summary>
+    /// Share type
+    /// </summary>
+    public enum ShareAccessRightType
     {
         ViewOnline = 0,
-        IRM = 1,
-        FullControl = 2
+        ViewWatermarked = 1,
+        DownloadWatermarked = 2,
+        IRM = 3,
+        FullControl = 4
     }
 }

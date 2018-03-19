@@ -5,24 +5,92 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
-	public enum AsyncOperationType
+    
+    /// <summary>
+    /// Support Async Operation types
+    /// </summary>
+    public enum AsyncOperationType
     {
+        
+        /// <summary>
+        /// Item Copy Operation
+        /// </summary>
         Copy = 0,
+        
+        /// <summary>
+        /// Item Move Operation
+        /// </summary>
         Move = 1,
+        
+        /// <summary>
+        /// Item Change Zone Operation - Scheduled Synchronously
+        /// </summary>
         ChangeZone = 2,
+        
+        /// <summary>
+        /// Item Change Zone Operation - Scheduled Asynchronously through the Async Bot
+        /// </summary>
         ScheduleChangeZone = 3,
+        
+        /// <summary>
+        /// Item Recovery Operation
+        /// </summary>
         Recovery = 4,
+        
+        /// <summary>
+        /// Item Delete Operation
+        /// </summary>
         Delete = 5,
+        
+        /// <summary>
+        /// Item Delete Permanent Operation
+        /// </summary>
         DeletePermanent = 6,
+        
+        /// <summary>
+        /// Item Connector Copy - scheduled by the active client
+        /// </summary>
         CloudConnectorCopy = 7,
+        
+        /// <summary>
+        /// Item Connector File Copy - scheduled by the Asyncbot
+        /// </summary>
         CloudConnectorFileCopy = 8,
+        
+        /// <summary>
+        /// Item Connector Move - scheduled by the active client
+        /// </summary>
         CloudConnectorMove = 9,
-        CloudConnectorFileMove = 10
+        
+        /// <summary>
+        /// Item Connector File Move - scheduled by the Asyncbot
+        /// </summary>
+        CloudConnectorFileMove = 10,
+        
+        /// <summary>
+        /// Access Controls Insert
+        /// </summary>
+        AccessControlsUpdate = 11,
+        
+        /// <summary>
+        /// Async Copy Operation within same zone
+        /// </summary>
+        IntraZoneCopy = 12,
+        
+        /// <summary>
+        /// Async Move Operation within same zone
+        /// </summary>
+        IntraZoneMove = 13,
+        
+        /// <summary>
+        /// File Box Change Zone Operation for All File Boxes in a zone
+        /// </summary>
+        ScheduleChangeZoneFileBoxes = 14
     }
 }

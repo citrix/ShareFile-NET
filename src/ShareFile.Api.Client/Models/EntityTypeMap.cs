@@ -5,13 +5,13 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
 
-namespace ShareFile.Api.Models
+namespace ShareFile.Api.Client.Models
 {
 	public static class EntityTypeMap
 	{
@@ -27,16 +27,64 @@ namespace ShareFile.Api.Models
                     _entityTypeMap.Add("AccessControlsBulkParamss", typeof(AccessControlsBulkParams));
                     _entityTypeMap.Add("AccessControlParam", typeof(AccessControlParam));
                     _entityTypeMap.Add("AccessControlParams", typeof(AccessControlParam));
+                    _entityTypeMap.Add("BaseAccountCreationParameters", typeof(BaseAccountCreationParameters));
+                    _entityTypeMap.Add("BaseAccountCreationParameterss", typeof(BaseAccountCreationParameters));
+                    _entityTypeMap.Add("BaseCspAccountParameters", typeof(BaseCspAccountParameters));
+                    _entityTypeMap.Add("BaseCspAccountParameterss", typeof(BaseCspAccountParameters));
+                    _entityTypeMap.Add("CspTenantAccountParameters", typeof(CspTenantAccountParameters));
+                    _entityTypeMap.Add("CspTenantAccountParameterss", typeof(CspTenantAccountParameters));
+                    _entityTypeMap.Add("BillingContact", typeof(BillingContact));
+                    _entityTypeMap.Add("BillingContacts", typeof(BillingContact));
+                    _entityTypeMap.Add("CompanyContactInformation", typeof(CompanyContactInformation));
+                    _entityTypeMap.Add("CompanyContactInformations", typeof(CompanyContactInformation));
+                    _entityTypeMap.Add("RequestedPlan", typeof(RequestedPlan));
+                    _entityTypeMap.Add("RequestedPlans", typeof(RequestedPlan));
                     _entityTypeMap.Add("AccountMessageCode", typeof(AccountMessageCode));
                     _entityTypeMap.Add("AccountMessageCodes", typeof(AccountMessageCode));
                     _entityTypeMap.Add("AccessControlsCloneParams", typeof(AccessControlsCloneParams));
                     _entityTypeMap.Add("AccessControlsCloneParamss", typeof(AccessControlsCloneParams));
+                    _entityTypeMap.Add("ActivationToken", typeof(ActivationToken));
+                    _entityTypeMap.Add("ActivationTokens", typeof(ActivationToken));
+                    _entityTypeMap.Add("Bandwidth", typeof(Bandwidth));
+                    _entityTypeMap.Add("Bandwidths", typeof(Bandwidth));
+                    _entityTypeMap.Add("Cancellation", typeof(Cancellation));
+                    _entityTypeMap.Add("Cancellations", typeof(Cancellation));
+                    _entityTypeMap.Add("CustomMessage", typeof(CustomMessage));
+                    _entityTypeMap.Add("CustomMessages", typeof(CustomMessage));
+                    _entityTypeMap.Add("EmailAddress", typeof(EmailAddress));
+                    _entityTypeMap.Add("EmailAddresss", typeof(EmailAddress));
+                    _entityTypeMap.Add("Favorite", typeof(Favorite));
+                    _entityTypeMap.Add("Favorites", typeof(Favorite));
+                    _entityTypeMap.Add("FileAndFolderSettingOptions", typeof(FileAndFolderSettingOptions));
+                    _entityTypeMap.Add("FileAndFolderSettingOptionss", typeof(FileAndFolderSettingOptions));
+                    _entityTypeMap.Add("ForbiddenOAuthClientNameWords", typeof(ForbiddenOAuthClientNameWords));
+                    _entityTypeMap.Add("ForbiddenOAuthClientNameWordss", typeof(ForbiddenOAuthClientNameWords));
+                    _entityTypeMap.Add("ReportFilter", typeof(ReportFilter));
+                    _entityTypeMap.Add("ReportFilters", typeof(ReportFilter));
+                    _entityTypeMap.Add("ActivityReportFilter", typeof(ActivityReportFilter));
+                    _entityTypeMap.Add("ActivityReportFilters", typeof(ActivityReportFilter));
+                    _entityTypeMap.Add("UserSummaryReportFilter", typeof(UserSummaryReportFilter));
+                    _entityTypeMap.Add("UserSummaryReportFilters", typeof(UserSummaryReportFilter));
+                    _entityTypeMap.Add("StorageCenterUrls", typeof(StorageCenterUrls));
+                    _entityTypeMap.Add("StorageCenterUrlss", typeof(StorageCenterUrls));
+                    _entityTypeMap.Add("TenantAccountCreationParameters", typeof(TenantAccountCreationParameters));
+                    _entityTypeMap.Add("TenantAccountCreationParameterss", typeof(TenantAccountCreationParameters));
+                    _entityTypeMap.Add("UserBulkOperationRequest", typeof(UserBulkOperationRequest));
+                    _entityTypeMap.Add("UserBulkOperationRequests", typeof(UserBulkOperationRequest));
+                    _entityTypeMap.Add("UserBulkDowngradeRequest", typeof(UserBulkDowngradeRequest));
+                    _entityTypeMap.Add("UserBulkDowngradeRequests", typeof(UserBulkDowngradeRequest));
+                    _entityTypeMap.Add("ResetPasswordRequest", typeof(ResetPasswordRequest));
+                    _entityTypeMap.Add("ResetPasswordRequests", typeof(ResetPasswordRequest));
+                    _entityTypeMap.Add("SubdomainAvailabilityResult", typeof(SubdomainAvailabilityResult));
+                    _entityTypeMap.Add("SubdomainAvailabilityResults", typeof(SubdomainAvailabilityResult));
                     _entityTypeMap.Add("BrandingLinks", typeof(BrandingLinks));
                     _entityTypeMap.Add("BrandingLinkss", typeof(BrandingLinks));
                     _entityTypeMap.Add("PolicyUsage", typeof(PolicyUsage));
                     _entityTypeMap.Add("PolicyUsages", typeof(PolicyUsage));
                     _entityTypeMap.Add("FileAndFolderSettings", typeof(FileAndFolderSettings));
                     _entityTypeMap.Add("FileAndFolderSettingss", typeof(FileAndFolderSettings));
+                    _entityTypeMap.Add("ConnectedApp", typeof(ConnectedApp));
+                    _entityTypeMap.Add("ConnectedApps", typeof(ConnectedApp));
                     _entityTypeMap.Add("EditingPlatformInfo", typeof(EditingPlatformInfo));
                     _entityTypeMap.Add("EditingPlatformInfos", typeof(EditingPlatformInfo));
                     _entityTypeMap.Add("FolderInvite", typeof(FolderInvite));
@@ -86,6 +134,8 @@ namespace ShareFile.Api.Models
                     _entityTypeMap.Add("FolderTemplateItems", typeof(FolderTemplateItem));
                     _entityTypeMap.Add("ShareSettings", typeof(ShareSettings));
                     _entityTypeMap.Add("ShareSettingss", typeof(ShareSettings));
+                    _entityTypeMap.Add("TwoFactorAuthApp", typeof(TwoFactorAuthApp));
+                    _entityTypeMap.Add("TwoFactorAuthApps", typeof(TwoFactorAuthApp));
                     _entityTypeMap.Add("UserAccessSettings", typeof(UserAccessSettings));
                     _entityTypeMap.Add("UserAccessSettingss", typeof(UserAccessSettings));
                     _entityTypeMap.Add("UserConfirmRequirement", typeof(UserConfirmRequirement));
@@ -104,12 +154,26 @@ namespace ShareFile.Api.Models
                     _entityTypeMap.Add("UploadRequestParamss", typeof(UploadRequestParams));
                     _entityTypeMap.Add("RemoteUploadRequestParams", typeof(RemoteUploadRequestParams));
                     _entityTypeMap.Add("RemoteUploadRequestParamss", typeof(RemoteUploadRequestParams));
+                    _entityTypeMap.Add("EncryptedEmail", typeof(EncryptedEmail));
+                    _entityTypeMap.Add("EncryptedEmails", typeof(EncryptedEmail));
+                    _entityTypeMap.Add("EncryptedEmailParams", typeof(EncryptedEmailParams));
+                    _entityTypeMap.Add("EncryptedEmailParamss", typeof(EncryptedEmailParams));
+                    _entityTypeMap.Add("EncryptedEmailReplyParams", typeof(EncryptedEmailReplyParams));
+                    _entityTypeMap.Add("EncryptedEmailReplyParamss", typeof(EncryptedEmailReplyParams));
+                    _entityTypeMap.Add("EncryptedEmailCreateParams", typeof(EncryptedEmailCreateParams));
+                    _entityTypeMap.Add("EncryptedEmailCreateParamss", typeof(EncryptedEmailCreateParams));
+                    _entityTypeMap.Add("EncryptedEmailSendParams", typeof(EncryptedEmailSendParams));
+                    _entityTypeMap.Add("EncryptedEmailSendParamss", typeof(EncryptedEmailSendParams));
+                    _entityTypeMap.Add("EncryptedEmailRecipient", typeof(EncryptedEmailRecipient));
+                    _entityTypeMap.Add("EncryptedEmailRecipients", typeof(EncryptedEmailRecipient));
                     _entityTypeMap.Add("ESignature", typeof(ESignature));
                     _entityTypeMap.Add("ESignatures", typeof(ESignature));
                     _entityTypeMap.Add("MarketAnalytics", typeof(MarketAnalytics));
                     _entityTypeMap.Add("MarketAnalyticss", typeof(MarketAnalytics));
                     _entityTypeMap.Add("FileLock", typeof(FileLock));
                     _entityTypeMap.Add("FileLocks", typeof(FileLock));
+                    _entityTypeMap.Add("ClientUpgradeWeb", typeof(ClientUpgradeWeb));
+                    _entityTypeMap.Add("ClientUpgradeWebs", typeof(ClientUpgradeWeb));
                     _entityTypeMap.Add("PowerTools", typeof(PowerTools));
                     _entityTypeMap.Add("PowerToolss", typeof(PowerTools));
                     _entityTypeMap.Add("ConnectorGroupZone", typeof(ConnectorGroupZone));
@@ -121,6 +185,16 @@ namespace ShareFile.Api.Models
                     _entityTypeMap.Add("PreviewPlatformInfo", typeof(PreviewPlatformInfo));
                     _entityTypeMap.Add("PreviewPlatformInfos", typeof(PreviewPlatformInfo));
                     _entityTypeMap.Add("ShareResendParams", typeof(ShareResendParams));
+                    _entityTypeMap.Add("Support", typeof(Support));
+                    _entityTypeMap.Add("Supports", typeof(Support));
+                    _entityTypeMap.Add("SupportMethod", typeof(SupportMethod));
+                    _entityTypeMap.Add("SupportMethods", typeof(SupportMethod));
+                    _entityTypeMap.Add("PhoneSupport", typeof(PhoneSupport));
+                    _entityTypeMap.Add("PhoneSupports", typeof(PhoneSupport));
+                    _entityTypeMap.Add("EmailSupport", typeof(EmailSupport));
+                    _entityTypeMap.Add("EmailSupports", typeof(EmailSupport));
+                    _entityTypeMap.Add("DailyAvailability", typeof(DailyAvailability));
+                    _entityTypeMap.Add("DailyAvailabilitys", typeof(DailyAvailability));
                     _entityTypeMap.Add("ToolInformation", typeof(ToolInformation));
                     _entityTypeMap.Add("ToolInformations", typeof(ToolInformation));
                     _entityTypeMap.Add("AccessControl", typeof(AccessControl));
@@ -183,8 +257,8 @@ namespace ShareFile.Api.Models
                     _entityTypeMap.Add("Metadata", typeof(Metadata));
                     _entityTypeMap.Add("Metadatas", typeof(Metadata));
                     _entityTypeMap.Add("MobileSecuritySettings", typeof(MobileSecuritySettings));
-                    _entityTypeMap.Add("Notification", typeof(Notification));
-                    _entityTypeMap.Add("Notifications", typeof(Notification));
+                    _entityTypeMap.Add("SentNotification", typeof(SentNotification));
+                    _entityTypeMap.Add("SentNotifications", typeof(SentNotification));
                     _entityTypeMap.Add("OutlookInformation", typeof(OutlookInformation));
                     _entityTypeMap.Add("OutlookInformations", typeof(OutlookInformation));
                     _entityTypeMap.Add("OutlookInformationOptionBool", typeof(OutlookInformationOptionBool));
@@ -252,6 +326,30 @@ namespace ShareFile.Api.Models
                     _entityTypeMap.Add("UserPreferences", typeof(UserPreferences));
                     _entityTypeMap.Add("UserSecurity", typeof(UserSecurity));
                     _entityTypeMap.Add("UserSecurities", typeof(UserSecurity));
+                    _entityTypeMap.Add("WebhookCapabilities", typeof(WebhookCapabilities));
+                    _entityTypeMap.Add("WebhookCapabilitiess", typeof(WebhookCapabilities));
+                    _entityTypeMap.Add("WebhookClient", typeof(WebhookClient));
+                    _entityTypeMap.Add("WebhookClients", typeof(WebhookClient));
+                    _entityTypeMap.Add("WebhookSignatureKeys", typeof(WebhookSignatureKeys));
+                    _entityTypeMap.Add("WebhookSignatureKeyss", typeof(WebhookSignatureKeys));
+                    _entityTypeMap.Add("WebhookSubscription", typeof(WebhookSubscription));
+                    _entityTypeMap.Add("WebhookSubscriptions", typeof(WebhookSubscription));
+                    _entityTypeMap.Add("SubscribedResourceEvent", typeof(SubscribedResourceEvent));
+                    _entityTypeMap.Add("SubscribedResourceEvents", typeof(SubscribedResourceEvent));
+                    _entityTypeMap.Add("SubscriptionContext", typeof(SubscriptionContext));
+                    _entityTypeMap.Add("SubscriptionContexts", typeof(SubscriptionContext));
+                    _entityTypeMap.Add("WebhookSupportedContext", typeof(WebhookSupportedContext));
+                    _entityTypeMap.Add("WebhookSupportedContexts", typeof(WebhookSupportedContext));
+                    _entityTypeMap.Add("WebhookSupportedEvents", typeof(WebhookSupportedEvents));
+                    _entityTypeMap.Add("WebhookSupportedEventss", typeof(WebhookSupportedEvents));
+                    _entityTypeMap.Add("CreateWorkflowParams", typeof(CreateWorkflowParams));
+                    _entityTypeMap.Add("CreateWorkflowParamss", typeof(CreateWorkflowParams));
+                    _entityTypeMap.Add("WorkflowParticipant", typeof(WorkflowParticipant));
+                    _entityTypeMap.Add("WorkflowParticipants", typeof(WorkflowParticipant));
+                    _entityTypeMap.Add("Workflow", typeof(Workflow));
+                    _entityTypeMap.Add("Workflows", typeof(Workflow));
+                    _entityTypeMap.Add("SupportFeedback", typeof(SupportFeedback));
+                    _entityTypeMap.Add("SupportFeedbacks", typeof(SupportFeedback));
                     _entityTypeMap.Add("AccountZoneUsage", typeof(AccountZoneUsage));
                     _entityTypeMap.Add("AccountZoneUsages", typeof(AccountZoneUsage));
                     _entityTypeMap.Add("TenantZoneUsageReport", typeof(TenantZoneUsageReport));

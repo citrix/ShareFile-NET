@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using NUnit.Framework;
 using ShareFile.Api.Client.Core.Tests;
-using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Security.Authentication.OAuth2;
 using System;
 using System.IO;
@@ -18,7 +17,8 @@ namespace ShareFile.Api.Client.Tests.Transfers
         {
             try
             {
-                using (var fileStream = System.IO.File.OpenRead("TestConfig.json"))
+                var testConfigFilePath = "TestConfig.json";
+                using (var fileStream = System.IO.File.OpenRead(testConfigFilePath))
                 using (var streamReader = new StreamReader(fileStream))
                 {
                     var info = streamReader.ReadToEnd();
@@ -46,14 +46,13 @@ namespace ShareFile.Api.Client.Tests.Transfers
             }
         }
 
-        protected PlatformFileStream GetFileToUpload(int size, bool useNonAsciiFilename)
+        protected Stream GetFileToUpload(int size, bool useNonAsciiFilename)
         {
             var bytes = new byte[size];
 
             RandomNumberGenerator.Create().GetBytes(bytes);
 
-            return new PlatformFileStream(new MemoryStream(bytes), (long)size,
-                useNonAsciiFilename ? GetNonAsciiFilename() : RandomString(20));
+            return new MemoryStream(bytes);
         }
 
         private string GetNonAsciiFilename()

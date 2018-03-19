@@ -5,25 +5,73 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+    
+    /// <summary>
+    /// IRM ShareFile specific access rights
+    /// </summary>
     [Flags]
-	public enum ShareFileAccessRights
+    public enum ShareFileAccessRights
     {
+        
+        /// <summary>
+        /// No Access
+        /// </summary>
         NoAccess = 0,
+        
+        /// <summary>
+        /// User can only view.
+        /// </summary>
         View = 1,
+        
+        /// <summary>
+        /// Can use Light viewer by Seclore to access protected file.
+        /// </summary>
         LightViewer = 2,
+        
+        /// <summary>
+        /// User can print
+        /// </summary>
         Print = 4,
+        
+        /// <summary>
+        /// User can edit
+        /// </summary>
         Edit = 8,
+        
+        /// <summary>
+        /// Give user the full control on protected file.
+        /// </summary>
         FullControl = 16,
+        
+        /// <summary>
+        /// Disable copying data
+        /// </summary>
         CopyData = 32,
+        
+        /// <summary>
+        /// Disable screen Capture
+        /// </summary>
         ScreenCapture = 64,
+        
+        /// <summary>
+        /// Disable macros.
+        /// </summary>
         Macro = 128,
+        
+        /// <summary>
+        /// Provide offline access.
+        /// </summary>
         OfflineAccess = 256,
+        
+        /// <summary>
+        /// Allow users to redistribute protected files.
+        /// </summary>
         Redistribute = 512
     }
 }

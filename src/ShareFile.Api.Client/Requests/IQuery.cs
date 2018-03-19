@@ -3,28 +3,33 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ShareFile.Api.Client.Requests.Filters;
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
 
 namespace ShareFile.Api.Client.Requests
 {
     public interface IQuery
     {
+        QueryMetadata Metadata { get; }
+
         void Execute();
-#if ASYNC
-        Task ExecuteAsync(CancellationToken? token = null);
-#endif
+
+        [NotNull]
+        Task ExecuteAsync(CancellationToken token = default(CancellationToken));
 
         Query AddHeader(string key, string value);
         Query WithBaseUri(Uri uri);
+        IQuery WithMetadata(QueryMetadata metadata);
     }
 
     public interface IQuery<T>
         where T : class
     {
+        QueryMetadata Metadata { get; }
+
         T Execute();
-#if ASYNC
-        Task<T> ExecuteAsync(CancellationToken? token = null);
-#endif
+
+        [NotNull]
+        Task<T> ExecuteAsync(CancellationToken token = default(CancellationToken));
         
         /// <summary>
         /// If a Filter has already been added, it will implicitly converted to a <see cref="AndFilter"/> 
@@ -46,6 +51,7 @@ namespace ShareFile.Api.Client.Requests
 
         Query<T> AddHeader(string key, string value);
         Query<T> WithBaseUri(Uri uri);
+        IQuery<T> WithMetadata(QueryMetadata metadata);
         IQuery<U> Expect<U>() where U : class;
     }
 

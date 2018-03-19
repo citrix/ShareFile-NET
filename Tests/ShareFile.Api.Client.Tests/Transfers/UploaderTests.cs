@@ -13,12 +13,13 @@ using NUnit.Framework;
 using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.Requests.Executors;
 using ShareFile.Api.Client.Transfers.Uploaders;
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
 using ShareFile.Api.Client.Transfers;
 using ShareFile.Api.Client.Tests.Transfers;
 
 namespace ShareFile.Api.Client.Core.Tests
 {
+    [TestFixture(Category = "Transfers")]
     public class UploaderTests : TransferBaseTests
     {
         [TestCase(UploadMethod.Standard, 1, true, false, true)]
@@ -45,7 +46,7 @@ namespace ShareFile.Api.Client.Core.Tests
         [TestCase(UploadMethod.Standard, 1, true, true, false)]
         [TestCase(UploadMethod.Threaded, 1, false, true, false)]
         [TestCase(UploadMethod.Threaded, 1, true, true, false)]
-        public async void Upload(UploadMethod uploadMethod, int megabytes, bool useAsync, bool useNonAsciiFilename, bool useRaw)
+        public async Task Upload(UploadMethod uploadMethod, int megabytes, bool useAsync, bool useNonAsciiFilename, bool useRaw)
         {
             var shareFileClient = GetShareFileClient();
             var rootFolder = shareFileClient.Items.Get().Execute();
@@ -56,7 +57,7 @@ namespace ShareFile.Api.Client.Core.Tests
             //var uploadSpec = new UploadSpecificationRequest(file.Name, file.Length, testFolder.url, uploadMethod);
             var uploadSpec = new UploadSpecificationRequest
             {
-                FileName = file.Name,
+                FileName = "name.png",
                 FileSize = file.Length,
                 Parent = testFolder.url,
                 Method = uploadMethod,
@@ -136,7 +137,7 @@ namespace ShareFile.Api.Client.Core.Tests
             var useRaw = !(capabilityNames != null && (capabilityNames.Contains(CapabilityName.StandardUploadForms)));
             var uploadSpec = new UploadSpecificationRequest
             {
-                FileName = file.Name,
+                FileName = "name.png",
                 FileSize = file.Length,
                 Parent = testFolder.url,              
                 Raw=useRaw,
@@ -171,7 +172,7 @@ namespace ShareFile.Api.Client.Core.Tests
             //var uploadSpec = new UploadSpecificationRequest(file.Name, file.Length, testFolder.url);
             var uploadSpec = new UploadSpecificationRequest
             {
-                FileName = file.Name,
+                FileName = "name.png",
                 FileSize = file.Length,
                 Parent = testFolder.url,
                 Raw = useRaw
@@ -205,7 +206,7 @@ namespace ShareFile.Api.Client.Core.Tests
         [TestCase(4, 2, 2, false)]
         [TestCase(4, 8, 4, false)]
         [TestCase(4, 0, 1, false)]
-        public async void AsyncScalingFileUploader_LimitThreads(int max, int specified, int expected, bool useRaw)
+        public async Task AsyncScalingFileUploader_LimitThreads(int max, int specified, int expected, bool useRaw)
         {
             // Arrange
             var uploader = SetupUploader(max, specified, 10, useRaw);            
@@ -271,7 +272,7 @@ namespace ShareFile.Api.Client.Core.Tests
             //var uploadSpec = new UploadSpecificationRequest(file.Name, file.Length, testFolder.url);
             var uploadSpec = new UploadSpecificationRequest
             {
-                FileName = file.Name,
+                FileName = "name.png",
                 FileSize = file.Length,
                 Parent = testFolder.url,
                 Raw = useRaw
@@ -286,6 +287,70 @@ namespace ShareFile.Api.Client.Core.Tests
 
             // Assert
             uploader.PartUploader.NumberOfThreads.Should().Be(expected);
+        }
+
+        [TestCase(UploadMethod.Standard, true, false)]
+        [TestCase(UploadMethod.Threaded, true, false)]
+        [TestCase(UploadMethod.Standard, false, false)]
+        [TestCase(UploadMethod.Threaded, false, false)]
+        [TestCase(UploadMethod.Threaded, true, true)]
+        public async Task UploadZeroByteFile(UploadMethod uploadMethod, bool useAsync, bool useMemmapForAsyncThreaded)
+        {
+            string filename = "0byte";
+            var shareFileClient = (ShareFileClient)GetShareFileClient();
+            var rootFolder = shareFileClient.Items.Get().Execute();
+            var testFolder = new Folder { Name = RandomString(30) + ".txt" };
+
+            testFolder = shareFileClient.Items.CreateFolder(rootFolder.url, testFolder).Execute();
+            //var uploadSpec = new UploadSpecificationRequest(file.Name, file.Length, testFolder.url, uploadMethod);
+            var uploadSpec = new UploadSpecificationRequest
+            {
+                FileName = filename,
+                FileSize = 0,
+                Parent = testFolder.url,
+                Method = uploadMethod,
+                Raw = true,
+            };
+
+            UploaderBase uploader;
+            if(uploadMethod == UploadMethod.Threaded && useAsync && useMemmapForAsyncThreaded)
+            {
+                System.IO.FileStream fileStream = null;
+                try
+                {
+                    fileStream = System.IO.File.Create(filename);
+                    fileStream.Close();
+                    fileStream = System.IO.File.OpenRead(filename);
+                    uploader = new AsyncMemoryMappedFileUploader(shareFileClient, uploadSpec, fileStream);
+                }
+                finally
+                {
+                    fileStream?.Close();
+                }
+            }
+            else if (useAsync)
+            {
+                uploader = shareFileClient.GetAsyncFileUploader(uploadSpec, new System.IO.MemoryStream());
+            }
+            else
+            {
+                uploader = shareFileClient.GetFileUploader(uploadSpec, new System.IO.MemoryStream());
+            }
+
+            UploadResponse uploadResponse;
+            if (useAsync)
+            {
+                uploadResponse = await((AsyncUploaderBase)uploader).UploadAsync();
+            }
+            else
+            {
+                uploadResponse = ((SyncUploaderBase)uploader).Upload();
+            }
+
+            shareFileClient.Items.Delete(testFolder.url);
+            if(System.IO.File.Exists(filename)) { try { System.IO.File.Delete(filename); } catch { } }
+
+            uploadResponse.FirstOrDefault().Should().NotBeNull();
         }
     } 
 }

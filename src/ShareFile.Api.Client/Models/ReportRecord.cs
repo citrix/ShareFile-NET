@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,37 +17,32 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Represents a ShareFile ReportRecord: an individual execution of a ShareFile Report
+	/// </summary>
 	public class ReportRecord : ODataObject 
 	{
-
 		public Report Report { get; set; }
-
 		/// <summary>
 		/// The Start Date of the range the ReportRecord will be run against
 		/// </summary>
 		public DateTime? StartDate { get; set; }
-
 		/// <summary>
 		/// The End Date of the range the ReportRecord will be run against
 		/// </summary>
 		public DateTime? EndDate { get; set; }
-
 		/// <summary>
 		/// The Time this ReportRecord began processing
 		/// </summary>
 		public DateTime? StartRunTime { get; set; }
-
 		/// <summary>
 		/// The Time this ReportRecord finished processing
 		/// </summary>
 		public DateTime? EndRunTime { get; set; }
-
 		public SafeEnum<ReportRunStatus> Status { get; set; }
-
 		public bool? HasData { get; set; }
-
 		public string Message { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

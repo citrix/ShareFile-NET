@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,26 +17,27 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Paging information for a search query's results
+	/// </summary>
 	public class QueryPaging : ODataObject 
 	{
-
 		/// <summary>
 		/// Deprecated, use the Skip property to skip some number of results
 		/// </summary>
+		[Obsolete("Use Skip property", false)] 
 		public int PageNumber { get; set; }
-
 		/// <summary>
 		/// Deprecated, use the Count property
 		/// </summary>
+		[Obsolete("Use Count property", false)] 
 		public int PageSize { get; set; }
-
 		/// <summary>
 		/// The number of search results to get
 		/// </summary>
 		public int Count { get; set; }
-
 		/// <summary>
 		/// How many results to skip before returning "Count" number results.
 		/// </summary>

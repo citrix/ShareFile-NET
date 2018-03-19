@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,15 +17,24 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Represents a Policy assignment to a User
+	/// </summary>
 	public class UserPolicy : ODataObject 
 	{
-
+		/// <summary>
+		/// User Identifier
+		/// </summary>
 		public string UserId { get; set; }
-
+		/// <summary>
+		/// Flag to indicate if this Policy is turned on for this User
+		/// </summary>
 		public bool? Active { get; set; }
-
+		/// <summary>
+		/// The Policy assigned
+		/// </summary>
 		public Policy Policy { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

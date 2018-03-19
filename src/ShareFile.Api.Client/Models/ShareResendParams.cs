@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,33 +17,30 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Parameters used to re-send an existing share
+	/// </summary>
 	public class ShareResendParams : ODataObject 
 	{
-
 		/// <summary>
 		/// The ID of the existing share
 		/// </summary>
 		public string ShareId { get; set; }
-
 		/// <summary>
 		/// These can be email addresses or group IDs
 		/// </summary>
 		public IEnumerable<string> Recipients { get; set; }
-
 		public string Subject { get; set; }
-
 		/// <summary>
 		/// Message included in the share notification
 		/// </summary>
 		public string Body { get; set; }
-
 		/// <summary>
 		/// Send a copy of the notification to the cender
 		/// </summary>
 		public bool CcSender { get; set; }
-
 		public bool NotifyOnUse { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

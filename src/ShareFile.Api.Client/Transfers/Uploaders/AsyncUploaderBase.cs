@@ -8,27 +8,24 @@ using Newtonsoft.Json;
 
 using ShareFile.Api.Client.Enums;
 using ShareFile.Api.Client.Exceptions;
-using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Requests.Executors;
 using ShareFile.Api.Client.Security.Cryptography;
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
 
 namespace ShareFile.Api.Client.Transfers.Uploaders
 {
-#if ASYNC
     public abstract class AsyncUploaderBase : UploaderBase
     {
-        protected AsyncUploaderBase(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
-            : base(client, uploadSpecificationRequest, file, expirationDays)
+        protected AsyncUploaderBase(
+            ShareFileClient client, 
+            UploadSpecificationRequest uploadSpecificationRequest, 
+            Stream stream,
+            FileUploaderConfig config = null, 
+            int? expirationDays = null)
+            : base(client, uploadSpecificationRequest, stream, config, expirationDays)
         {
-            Config = config ?? new FileUploaderConfig();
-
             HashProvider = MD5HashProviderFactory.GetHashProvider().CreateHash();
         }
-
-        public FileUploaderConfig Config { get; protected set; }
-
-        protected CancellationToken? CancellationToken { get; set; }
 
         protected internal IAsyncRequestExecutor RequestExecutor
         {
@@ -38,7 +35,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             }
         }
 
-        protected async Task<UploadSpecification> CreateUpload()
+        protected async Task<UploadSpecification> CreateUpload(CancellationToken cancellationToken)
         {
             if (UploadSpecificationRequest.ProviderCapabilities == null)
             {
@@ -51,7 +48,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
             var query = CreateUploadSpecificationQuery(UploadSpecificationRequest);
 
-            return await query.ExecuteAsync(CancellationToken).ConfigureAwait(false);
+            return await query.ExecuteAsync(cancellationToken).ConfigureAwait(false);
         }
 
         protected async Task CheckResumeAsync()
@@ -74,40 +71,44 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         protected async Task<string> CalculateHashAsync(long count)
         {
             var localHash = MD5HashProviderFactory.GetHashProvider().CreateHash();
-            var fileStream = await File.OpenReadAsync().ConfigureAwait(false);
+            var buffer = new byte[Configuration.BufferSize];
+            do
             {
-                var buffer = new byte[DefaultBufferLength];
-                do
+                var bytesToRead = count < Configuration.BufferSize ? (int)count : Configuration.BufferSize;
+                var bytesRead = await FileStream.ReadAsync(buffer, 0, bytesToRead);
+                if (bytesRead > 0)
                 {
-                    var bytesToRead = count < DefaultBufferLength ? (int)count : DefaultBufferLength;
-                    var bytesRead = fileStream.Read(buffer, 0, bytesToRead);
-                    if (bytesRead > 0)
-                    {
-                        localHash.Append(buffer, 0, bytesToRead);
-                        HashProvider.Append(buffer, 0, bytesToRead);
-                    }
-                    count -= bytesRead;
-                } while (count > 0);
-            }
+                    localHash.Append(buffer, 0, bytesToRead);
+                    HashProvider.Append(buffer, 0, bytesToRead);
+                }
+                count -= bytesRead;
+            } while (count > 0);
             localHash.Finalize(new byte[1], 0, 0);
-            fileStream.Seek(0, SeekOrigin.Begin);
+            FileStream.Seek(0, SeekOrigin.Begin);
             return localHash.GetComputedHashAsString();
         }
 
-        public async Task<UploadResponse> UploadAsync(Dictionary<string, object> transferMetadata = null, CancellationToken? cancellationToken = null)
+        public async Task<UploadResponse> UploadAsync(Dictionary<string, object> transferMetadata = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await PrepareAsync().ConfigureAwait(false);
+            await PrepareAsync(cancellationToken).ConfigureAwait(false);
 
-            TransferMetadata = transferMetadata ?? new Dictionary<string, object>();
-            Progress.TransferMetadata = TransferMetadata;
-            CancellationToken = cancellationToken;
-
-            var response = await InternalUploadAsync().ConfigureAwait(false);
+            CancellationTokenSource uploadCancellationSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            UploadResponse response = null;
+            try
+            {
+                progressReporter.StartReporting(transferMetadata, uploadCancellationSource.Token);
+                response = await InternalUploadAsync(uploadCancellationSource.Token).ConfigureAwait(false);
+            }
+            finally
+            {
+                uploadCancellationSource.Cancel();
+                uploadCancellationSource.Dispose();
+            }
+            progressReporter.ReportCompletion();
 
             try
             {
-                var stream = await File.OpenReadAsync().ConfigureAwait(false);
-                stream.Dispose();
+                FileStream.Dispose();
             }
             catch (Exception)
             {
@@ -117,36 +118,14 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             return response;
         }
 
-        protected abstract Task<UploadResponse> InternalUploadAsync();
+        protected abstract Task<UploadResponse> InternalUploadAsync(CancellationToken cancellationToken);
 
-        public abstract Task PrepareAsync();
-
-        protected bool IsCancellationRequested()
-        {
-            if (CancellationToken == null) return false;
-
-            return CancellationToken.Value.IsCancellationRequested;
-        }
-
-        private HttpClient httpClient;
-
-        protected internal override HttpClient GetHttpClient()
-        {
-            if (httpClient == null)
-            {
-                httpClient = new HttpClient(GetHttpClientHandler())
-                {
-                    Timeout = new TimeSpan(0, 0, 0, 0, Config.HttpTimeout)
-                };
-            }
-            return httpClient;
-        }
-
+        public abstract Task PrepareAsync(CancellationToken cancellationToken = default(CancellationToken));
+        
         protected async Task<UploadResponse> GetUploadResponseAsync(HttpResponseMessage responseMessage, string localHash = null)
         {
             var responseContent = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
             return ValidateUploadResponse(responseMessage, responseContent, localHash);
         }
     }
-#endif
 }

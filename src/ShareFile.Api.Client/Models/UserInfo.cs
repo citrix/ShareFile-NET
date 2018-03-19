@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,31 +17,29 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// UserInfo
+	/// </summary>
 	public class UserInfo : ODataObject 
 	{
-
 		/// <summary>
 		/// Company Name
 		/// </summary>
 		public string CompanyName { get; set; }
-
 		/// <summary>
 		/// Plan Name
 		/// </summary>
 		public string PlanName { get; set; }
-
 		/// <summary>
 		/// Plan Features
 		/// </summary>
 		public PlanFeatures PlanFeatures { get; set; }
-
 		/// <summary>
 		/// Application URL
 		/// </summary>
 		public string ApplicationUrl { get; set; }
-
 		/// <summary>
 		/// Default Storage Center Url
 		/// </summary>

@@ -17,9 +17,10 @@ using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Requests.Executors;
 using ShareFile.Api.Client.Requests.Filters;
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
 {
@@ -27,7 +28,7 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
     {
         [TestCase(true, TestName = "GetStream_Async")]
         [TestCase(false, TestName = "GetStream_Sync")]
-        public async void GetStream(bool async)
+        public async Task GetStream(bool async)
         {
             // Arrange
             var query = this.GetThumbnailQuery();
@@ -51,7 +52,7 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
 
         [TestCase(true, TestName = "Query_ItemNotFound_Async")]
         [TestCase(false, TestName = "Query_ItemNotFound_Sync")]
-        public async void Query_ItemNotFound(bool async)
+        public async Task Query_ItemNotFound(bool async)
         {
             // Arrange
             var query = GetItemDeleteQuery();
@@ -76,7 +77,7 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
 
         [TestCase(true, TestName = "QueryT_ItemNotFound_Async")]
         [TestCase(false, TestName = "QueryT_ItemNotFound_Sync")]
-        public async void QueryT_ItemNotFound(bool async)
+        public async Task QueryT_ItemNotFound(bool async)
         {
             var query = GetItemQuery();
             ConfigureNotFound();
@@ -98,7 +99,7 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
 
         [TestCase(true, TestName = "QueryStream_ItemNotFound_Async")]
         [TestCase(false, TestName = "QueryStream_ItemNotFound_Sync")]
-        public async void QueryStream_ItemNotFound(bool async)
+        public async Task QueryStream_ItemNotFound(bool async)
         {
             var query = GetThumbnailQuery();
             ConfigureNotFound();
@@ -120,7 +121,7 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
 
         [TestCase(true, TestName = "AsyncOperationScheduled_Async")]
         [TestCase(false, TestName = "AsyncOperationScheduled_Sync")]
-        public async void AsyncOperationScheduled(bool async)
+        public async Task AsyncOperationScheduled(bool async)
         {
             // Arrange
             var shareFileClient = GetShareFileClient(true);
@@ -156,7 +157,7 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
 
         [TestCase(true, TestName="ZoneUnavailableThrown_Async")]
         [TestCase(false, TestName="ZoneUnavailableThrown_Sync")]
-        public async void ZoneUnvailableThrown(bool async)
+        public async Task ZoneUnvailableThrown(bool async)
         {
             var shareFileClient = GetShareFileClient(true);
             ConfigureZoneUnavailableResponse();
@@ -181,7 +182,7 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
         [TestCase(false, null)]
         [TestCase(true, "123")]
         [TestCase(false, "123")]
-        public async void RedirectionWithRoot(bool async, string root)
+        public async Task RedirectionWithRoot(bool async, string root)
         {
             // Arrange
             var shareFileClient = GetShareFileClient(true);
@@ -213,7 +214,7 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
 
         [TestCase(true, TestName = "OnDomainChangeRaise_Async")]
         [TestCase(false, TestName = "OnDomainChangeRaise_Sync")]
-        public async void OnDomainChangeRaised(bool async)
+        public async Task OnDomainChangeRaised(bool async)
         {
             // Arrange
             var shareFileClient = GetShareFileClient(true);
@@ -245,7 +246,7 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
 
         [TestCase(true)]
         [TestCase(false)]
-        public async void DeleteRedirectionSupport(bool async)
+        public async Task DeleteRedirectionSupport(bool async)
         {
             // Arrange
             var shareFileClient = GetShareFileClient(true);
@@ -277,7 +278,7 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
 
         [TestCase(true, TestName = "WebAuthenticationException_Async")]
         [TestCase(false, TestName = "WebAuthenticationException_Sync")]
-        public async void WebAuthenticationException(bool async)
+        public async Task WebAuthenticationException(bool async)
         {
             // Arrange
             var query = GetItemQuery();
@@ -344,6 +345,8 @@ namespace ShareFile.Api.Client.Core.Tests.Requests.Providers
 
             // Act
             Action a = () => query.ExecuteAsync().Wait();
+
+            // Assert
             a.ShouldThrow<AggregateException>().WithInnerException<HttpsExpectedException>();
         }
 

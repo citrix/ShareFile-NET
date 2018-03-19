@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,41 +17,25 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
 	public class ProductDefaults : ODataObject 
 	{
-
 		public string ProductName { get; set; }
-
 		public string DefaultWindowTitle { get; set; }
-
 		public string TopLevelDomain { get; set; }
-
 		public string APITopLevelDomain { get; set; }
-
 		public string DefaultApiVersion { get; set; }
-
 		public string DefaultSmtpServer { get; set; }
-
 		public string NoReplyUserName { get; set; }
-
 		public string NoReplyUserEmail { get; set; }
-
 		public string SupportUserName { get; set; }
-
 		public string SupportUserEmail { get; set; }
-
 		public string DefaultEmailFooter { get; set; }
-
 		public string DefaultEmailFooterHtml { get; set; }
-
 		public string DefaultEmailFooterPlaintext { get; set; }
-
 		public string DefaultEmailOverview { get; set; }
-
 		public string SupportUserNotificationEmail { get; set; }
-
 		public string SystemType { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

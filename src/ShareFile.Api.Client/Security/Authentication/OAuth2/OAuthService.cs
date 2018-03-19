@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Requests;
 
 namespace ShareFile.Api.Client.Security.Authentication.OAuth2
 {
-    public interface IOAuthService
+    public partial interface IOAuthService
     {
         string ClientId { get; set; }
         string ClientSecret { get; set; }
@@ -20,17 +19,16 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
         FormQuery<OAuthToken> GetPasswordGrantRequestQuery(string username, string password, string subdomain,
             string applicationControlPlane);
 
-#if ASYNC
         Task<OAuthToken> ExchangeAuthorizationCodeAsync(OAuthAuthorizationCode code);
+        [NotNull]
         Task<OAuthToken> RefreshOAuthTokenAsync(OAuthToken token);
         Task<OAuthToken> ExchangeSamlAssertionAsync(string samlAssertion, string subdomain, string applicationControlPlane, string samlProviderId = "");
         Task<OAuthToken> PasswordGrantAsync(string username, string password, string subdomain,
             string applicationControlPlane);
-#endif
         string GetAuthorizationUrl(string tld, string responseType, string clientId, string redirectUri, string state, Dictionary<string, string> additionalQueryStringParams = null, string subdomain = "secure");
     }
 
-    public class OAuthService : IOAuthService
+    public partial class OAuthService : IOAuthService
     {
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }
@@ -98,12 +96,12 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
                 }, subdomain);
         }
 
-#if ASYNC
         public Task<OAuthToken> ExchangeAuthorizationCodeAsync(OAuthAuthorizationCode code)
         {
             return RequestOAuthTokenAsync(GetAuthorizationCodeForTokenQuery(code));
         }
 
+        [NotNull]
         public Task<OAuthToken> RefreshOAuthTokenAsync(OAuthToken token)
         {
             return RequestOAuthTokenAsync(GetRefreshOAuthTokenQuery(token));
@@ -124,6 +122,7 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
                     applicationControlPlane));
         }
 
+        [NotNull]
         private Task<OAuthToken> RequestOAuthTokenAsync(FormQuery<OAuthToken> oauthTokenQuery)
         {
             for (int i = 0; i < 2; i++)
@@ -147,7 +146,6 @@ namespace ShareFile.Api.Client.Security.Authentication.OAuth2
 
             throw new Exception();
         }
-#endif
 
         private FormQuery<OAuthToken> CreateOAuthTokenRequestQuery(string applicationControlPlane,
             IEnumerable<KeyValuePair<string, string>> requestFormData, string subdomain = "secure")

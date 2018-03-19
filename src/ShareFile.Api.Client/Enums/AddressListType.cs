@@ -1,5 +1,5 @@
 ﻿// ReSharper disable once CheckNamespace
-namespace ShareFile.Api.Models
+namespace ShareFile.Api.Client.Models
 {
     public enum AddressListType
     {

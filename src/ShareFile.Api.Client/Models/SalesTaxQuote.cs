@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,15 +17,21 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
 	public class SalesTaxQuote : ODataObject 
 	{
-
+		/// <summary>
+		/// Tax rate used to calculate the Total Tax, in decimal form, e.g, 7% is 0.07
+		/// </summary>
 		public decimal? TaxRate { get; set; }
-
+		/// <summary>
+		/// Total Tax quoted, in $US
+		/// </summary>
 		public decimal? TotalTax { get; set; }
-
+		/// <summary>
+		/// If Tax could not be calculated, this property will provide a message
+		/// </summary>
 		public string ErrorMessage { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

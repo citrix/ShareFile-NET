@@ -5,13 +5,13 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
-	public enum ReportType
+    public enum ReportType
     {
         Access = 0,
         Activity = 1,
@@ -19,6 +19,11 @@ namespace ShareFile.Api.Models
         Messaging = 3,
         BandwidthDetail = 4,
         BandwidthSummary = 5,
-        EncryptedEmail = 6
+        EncryptedEmail = 6,
+        StorageSummary = 7,
+        UserSummary = 8,
+        AccessChange = 9,
+        SharesSend = 10,
+        SharesRequest = 11
     }
 }

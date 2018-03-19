@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,24 +17,40 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
 #if !ShareFile
+	/// <summary>
+	/// Represents a ShareFile Folder container. Folder is a subclass of Item. A Folder
+	/// contains a list of Children.
+	/// </summary>
 	public class Folder : Item 
 	{
-
+		/// <summary>
+		/// Number of Items defined under this Folder, including sub-folder counts.
+		/// </summary>
 		public int? FileCount { get; set; }
-
+		/// <summary>
+		/// List of Children defined under this folder.
+		/// </summary>
 		public IEnumerable<Item> Children { get; set; }
-
+		/// <summary>
+		/// Defines whether the request to retreive Children is to be navigated to a remote endpoint.
+		/// </summary>
 		public bool? HasRemoteChildren { get; set; }
-
+		/// <summary>
+		/// Effective Access Control Permissions for this Folder
+		/// </summary>
 		public ItemInfo Info { get; set; }
-
+		/// <summary>
+		/// Redirection endpoint for this Item.
+		/// </summary>
 		public Redirection Redirection { get; set; }
-
+		/// <summary>
+		/// Favorite Folder object associated to this item
+		/// (This property would be deprecated in favor of the new 'Favorite' property under Item)
+		/// </summary>
 		public FavoriteFolder FavoriteFolder { get; set; }
-
 		public SafeEnum<ZoneService> ZoneService { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

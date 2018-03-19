@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,166 +17,137 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// PlanFeatures
+	/// </summary>
 	public class PlanFeatures : ODataObject 
 	{
-
 		/// <summary>
 		/// PlanType
 		/// </summary>
 		public string PlanType { get; set; }
-
 		/// <summary>
 		/// API
 		/// </summary>
 		public bool API { get; set; }
-
 		/// <summary>
 		/// Outlook enabled
 		/// </summary>
 		public bool Outlook { get; set; }
-
 		/// <summary>
 		/// DriveMapping enabled
 		/// </summary>
 		public bool DriveMapping { get; set; }
-
 		/// <summary>
 		/// ShareFile CLI enabled
 		/// </summary>
 		public bool CLI { get; set; }
-
 		/// <summary>
 		/// FTP access enabled
 		/// </summary>
 		public bool FTP { get; set; }
-
 		/// <summary>
 		/// FTPS access enabled
 		/// </summary>
 		public bool FTPS { get; set; }
-
 		/// <summary>
 		/// Sync tool enabled
 		/// </summary>
 		public bool Sync { get; set; }
-
 		/// <summary>
 		/// Virus scanning enabled
 		/// </summary>
 		public bool AntiVirus { get; set; }
-
 		/// <summary>
 		/// Require login on share downloads
 		/// </summary>
 		public bool RequireLoginOnDownload { get; set; }
-
 		/// <summary>
 		/// Max File Size supported in megabytes
 		/// </summary>
 		public int MaxFileMB { get; set; }
-
 		/// <summary>
 		/// Max plan storage in megabytes
 		/// </summary>
 		public int PlanStorMB { get; set; }
-
 		/// <summary>
 		/// Max plan bandwidth in megabytes
 		/// </summary>
 		public int PlanBandMB { get; set; }
-
 		/// <summary>
 		/// SystemName
 		/// </summary>
 		public string SystemName { get; set; }
-
 		/// <summary>
 		/// SystemType
 		/// </summary>
 		public string SystemType { get; set; }
-
 		/// <summary>
 		/// HasOutlookOptions configured
 		/// </summary>
 		public bool HasOutlookOptions { get; set; }
-
 		/// <summary>
 		/// Outlook Options - SimpleMAPI
 		/// </summary>
 		public bool? SimpleMAPI { get; set; }
-
 		/// <summary>
 		/// Outlook Options - Force Attach Links
 		/// </summary>
 		public bool? ForceAttachLink { get; set; }
-
 		/// <summary>
 		/// Current storage used in megabytes
 		/// </summary>
 		public string UsedStorMB { get; set; }
-
 		/// <summary>
 		/// Last time storage used calculated.
 		/// </summary>
 		public string UsedStorUtcTicks { get; set; }
-
 		/// <summary>
 		/// Current storage used in bytes.
 		/// </summary>
 		public string UsedStorBytes { get; set; }
-
 		/// <summary>
 		/// User is Employee
 		/// </summary>
 		public bool IsEmployee { get; set; }
-
 		/// <summary>
 		/// User is Administrator
 		/// </summary>
 		public bool IsAdministrator { get; set; }
-
 		/// <summary>
 		/// Can create root folders
 		/// </summary>
 		public bool CanCreateRootFolders { get; set; }
-
 		/// <summary>
 		/// Can use file box
 		/// </summary>
 		public bool CanUseFileBox { get; set; }
-
 		/// <summary>
 		/// User is confirmed
 		/// </summary>
 		public bool IsConfirmed { get; set; }
-
 		/// <summary>
 		/// Can reset password
 		/// </summary>
 		public bool CanResetPassword { get; set; }
-
 		/// <summary>
 		/// Password requirements as regular expression
 		/// </summary>
 		public string PasswordRegEx { get; set; }
-
 		/// <summary>
 		/// Can manage my settings
 		/// </summary>
 		public bool CanManageMySettings { get; set; }
-
 		/// <summary>
 		/// Home Folder Id
 		/// </summary>
 		public string HomeFolder { get; set; }
-
 		/// <summary>
 		/// Enable Auto Update for tools
 		/// </summary>
 		public bool? EnableAutoUpdate { get; set; }
-
 		public bool EnableTopLevelView { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,12 +17,18 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Represents the settings applicable to a File and Folder Category Policy definition for use within ShareFile's Policy Based Administration
+	/// </summary>
 	public class FileAndFolderSettings : ODataObject 
 	{
-
 		public int? QuotaLimitInGB { get; set; }
+		public bool? CanEditFolderExpirationDate { get; set; }
+		public bool? CanEditFolderVersioning { get; set; }
+		public FileAndFolderSettingOptions FileRetention { get; set; }
+		public FileAndFolderSettingOptions FileMaxVersion { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
@@ -33,6 +39,10 @@ namespace ShareFile.Api.Models
 			if(typedSource != null)
 			{
 				QuotaLimitInGB = typedSource.QuotaLimitInGB;
+				CanEditFolderExpirationDate = typedSource.CanEditFolderExpirationDate;
+				CanEditFolderVersioning = typedSource.CanEditFolderVersioning;
+				FileRetention = typedSource.FileRetention;
+				FileMaxVersion = typedSource.FileMaxVersion;
 			}
 			else
 			{
@@ -40,6 +50,22 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("QuotaLimitInGB", out token) && token.Type != JTokenType.Null)
 				{
 					QuotaLimitInGB = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("CanEditFolderExpirationDate", out token) && token.Type != JTokenType.Null)
+				{
+					CanEditFolderExpirationDate = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanEditFolderVersioning", out token) && token.Type != JTokenType.Null)
+				{
+					CanEditFolderVersioning = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("FileRetention", out token) && token.Type != JTokenType.Null)
+				{
+					FileRetention = (FileAndFolderSettingOptions)serializer.Deserialize(token.CreateReader(), typeof(FileAndFolderSettingOptions));
+				}
+				if(source.TryGetProperty("FileMaxVersion", out token) && token.Type != JTokenType.Null)
+				{
+					FileMaxVersion = (FileAndFolderSettingOptions)serializer.Deserialize(token.CreateReader(), typeof(FileAndFolderSettingOptions));
 				}
 			}
 		}

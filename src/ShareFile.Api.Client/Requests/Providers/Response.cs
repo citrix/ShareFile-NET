@@ -18,7 +18,7 @@ using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Logging;
 using ShareFile.Api.Client.Security.Authentication.OAuth2;
 using ShareFile.Api.Client.Security.Cryptography;
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
 
 namespace ShareFile.Api.Client.Requests.Providers
 {

@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,23 +17,19 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Device
+	/// </summary>
 	public class Device : ODataObject 
 	{
-
 		public SafeEnum<SFTool> Tool { get; set; }
-
 		public string ToolRaw { get; set; }
-
 		public User Owner { get; set; }
-
 		public DateTime? Created { get; set; }
-
 		public string ToolVersion { get; set; }
-
 		public bool JustRegistered { get; set; }
-
 		public bool? IsRemoteWipeReady { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

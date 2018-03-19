@@ -5,15 +5,15 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
-using ShareFile.Api.Models;
 using ShareFile.Api.Client;
-using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Models;
+using ShareFile.Api.Client.Requests;
 
 
 namespace ShareFile.Api.Client.Entities
@@ -98,9 +98,9 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Session> Get()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Session>(Client);
-		    sfApiQuery.From("Sessions");
+            sfApiQuery.From("Sessions");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -112,9 +112,9 @@ namespace ShareFile.Api.Client.Entities
         public IQuery Delete()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.From("Sessions");
+            sfApiQuery.From("Sessions");
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -147,12 +147,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Session> Login(string authmethod = null, string authcomparison = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Session>(Client);
-		    sfApiQuery.From("Sessions");
-		    sfApiQuery.Action("Login");
+            sfApiQuery.From("Sessions");
+            sfApiQuery.Action("Login");
             sfApiQuery.QueryString("authmethod", authmethod);
             sfApiQuery.QueryString("authcomparison", authcomparison);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -161,10 +161,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Session> Acs()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Session>(Client);
-		    sfApiQuery.From("Sessions");
-		    sfApiQuery.Action("Acs");
+            sfApiQuery.From("Sessions");
+            sfApiQuery.Action("Acs");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
     }
 }

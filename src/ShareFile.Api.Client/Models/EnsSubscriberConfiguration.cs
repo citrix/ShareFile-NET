@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,25 +17,43 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
 	public class EnsSubscriberConfiguration : ODataObject 
 	{
-
+		/// <summary>
+		/// Is ENS enabled?
+		/// </summary>
 		public bool IsEnsEnabled { get; set; }
-
+		/// <summary>
+		/// The ENS Server URL
+		/// </summary>
 		public string EnsServerUrl { get; set; }
-
+		/// <summary>
+		/// Version string
+		/// </summary>
 		public string Version { get; set; }
-
+		/// <summary>
+		/// RecommendedPollingSyncInterval will control how often a cloud check is done when we are not using ENS.
+		/// </summary>
 		public TimeSpan RecommendedPollingSyncInterval { get; set; }
-
+		/// <summary>
+		/// RecommendedNotificationSyncInterval will control how soon we respond to notification events with a cloud check when we are using ENS.
+		/// </summary>
 		public TimeSpan RecommendedNotificationSyncInterval { get; set; }
-
+		/// <summary>
+		/// NotificationConfigurationCount will control how often we check to see if we should be using ENS or not.
+		/// This value is a count that gets multiplied by the RecommendedPollingSyncInterval to determine the actual interval.
+		/// </summary>
 		public int NotificationConfigurationCount { get; set; }
-
+		/// <summary>
+		/// FailSafePollingCount will only be used when ENS is enabled and will get multiplied by the RecommendedNotificationSyncInterval
+		/// to determine how often we do a cloudcheck if we have not received any notifications.
+		/// </summary>
 		public int FailSafePollingCount { get; set; }
-
+		/// <summary>
+		/// MaxNotificationSyncWaitCount will control how long the sync client waits before doing a cloud check after receiving a series of notification events.
+		/// </summary>
 		public int MaxNotificationSyncWaitCount { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

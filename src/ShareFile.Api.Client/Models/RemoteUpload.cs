@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,38 +17,35 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// This class represents Users and the Options like IsPublic, RequireUserInfo and SelectRecipient in a Remote Upload.
+	/// </summary>
 	public class RemoteUpload : ODataObject 
 	{
-
 		/// <summary>
 		/// The Name of this Remote Upload.
 		/// </summary>
 		public string Name { get; set; }
-
 		/// <summary>
 		/// Uri to access the Remote Upload through the Web portal
 		/// </summary>
 		public string Uri { get; set; }
-
 		/// <summary>
 		/// Indicates whether the Remote Upload is public or not.
 		/// One File Drop on your account can be marked as public, meaning that it is accessible from the short link https://example.sharefile.com/filedrop.
 		/// Any additional File Drops on your account can be linked to on your web site using the link at the top of this page
 		/// </summary>
 		public bool? IsPublic { get; set; }
-
 		/// <summary>
 		/// Indicates whether the Remote Upload requires user information ( first name, last name, email , company).
 		/// </summary>
 		public bool? RequireUserInfo { get; set; }
-
 		/// <summary>
 		/// When it's true, visitors of this Remote Upload can select a recipient from a list.
 		/// </summary>
 		public bool? SelectRecipient { get; set; }
-
 		/// <summary>
 		/// Users who can have access to this Remote Upload.
 		/// </summary>

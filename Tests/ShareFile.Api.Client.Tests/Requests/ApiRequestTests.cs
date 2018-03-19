@@ -2,7 +2,7 @@
 using FluentAssertions;
 using NUnit.Framework;
 using ShareFile.Api.Client.Requests;
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
 
 namespace ShareFile.Api.Client.Core.Tests.Requests
 {

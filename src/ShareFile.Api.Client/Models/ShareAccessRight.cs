@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,16 +17,17 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Model that contains share option type, properties and display names
+	/// </summary>
 	public class ShareAccessRight : ODataObject 
 	{
-
 		/// <summary>
 		/// Localized text for downstream clients to use for displaying options
 		/// </summary>
 		public string DisplayText { get; set; }
-
 		/// <summary>
 		/// Share Access Right Type
 		/// </summary>

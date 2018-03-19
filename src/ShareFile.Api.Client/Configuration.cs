@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
+using ShareFile.Api.Client.Credentials;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Logging;
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
+using System.Buffers;
 
 namespace ShareFile.Api.Client
 {
@@ -25,6 +29,11 @@ namespace ShareFile.Api.Client
         /// Timeout, in milliseconds, for API requests (excluding uploads transfer)
         /// </summary>
         public int HttpTimeout { get; set; }
+
+        /// <summary>
+        /// Optional. If set, all non-upload API requests use the HttpClient instance provided by this factory
+        /// </summary>
+        public Func<ICredentialCache, CookieContainer, HttpClient> HttpClientFactory { get; set; }
 
         /// <summary>
         /// Register ProxyConfiguration to be used for all requests
@@ -115,7 +124,7 @@ namespace ShareFile.Api.Client
                 LogPersonalInformation = false,
                 LogFullResponse = false,
                 UserAgent = "NET Client SDK/" + GetDefaultToolVersion(),
-                AlwaysPresentCredentials = false
+                AlwaysPresentCredentials = false,
             };
         }
 
@@ -147,5 +156,8 @@ namespace ShareFile.Api.Client
 
             return _defaultToolVersion;
         }
+        
+        // must be less than 85k to avoid LOH allocation
+        internal const int BufferSize = 64 * 1024;
     }
 }

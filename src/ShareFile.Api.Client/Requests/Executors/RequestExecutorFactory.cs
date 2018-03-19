@@ -13,8 +13,7 @@
         {
             return _syncRequestExecutor;
         }
-
-#if ASYNC
+		
         private static IAsyncRequestExecutor _asyncRequestExecutor;
         public static void RegisterAsyncRequestProvider(IAsyncRequestExecutor asyncRequestExecutor)
         {
@@ -25,6 +24,5 @@
         {
             return _asyncRequestExecutor;
         }
-#endif
     }
 }

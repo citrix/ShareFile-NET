@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,41 +17,37 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Device Log Entry
+	/// </summary>
 	public class DeviceLogEntry : ODataObject 
 	{
-
 		/// <summary>
 		/// File name
 		/// </summary>
 		public string FileName { get; set; }
-
 		/// <summary>
 		/// File Id
 		/// </summary>
 		public string FileID { get; set; }
-
 		/// <summary>
 		/// Timestamp in milliseconds since epoch
 		/// </summary>
 		public long? Timestamp { get; set; }
-
 		/// <summary>
 		/// Account Id
 		/// </summary>
 		public string AccountID { get; set; }
-
 		/// <summary>
 		/// User Id
 		/// </summary>
 		public string UserID { get; set; }
-
 		/// <summary>
 		/// Action
 		/// </summary>
 		public SafeEnum<DeviceLogEntryAction> Action { get; set; }
-
 		/// <summary>
 		/// Additional Info
 		/// </summary>

@@ -5,18 +5,38 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+    
+    /// <summary>
+    /// Enumeration for listing which services are enabled on the Zone
+    /// </summary>
     [Flags]
-	public enum ZoneService
+    public enum ZoneService
     {
+        
+        /// <summary>
+        /// No Services
+        /// </summary>
         None = 0,
+        
+        /// <summary>
+        /// Object Storage Zone (ShareFile storage)
+        /// </summary>
         StorageZone = 1,
+        
+        /// <summary>
+        /// Connector to Network Shares (cifs)
+        /// </summary>
         NetworkShareConnector = 2,
+        
+        /// <summary>
+        /// Connector to SharePoint Sites (sp)
+        /// </summary>
         SharepointConnector = 4,
         AzureStorageZone = 8,
         SharePointOnlineConnector = 16,
@@ -28,12 +48,50 @@ namespace ShareFile.Api.Models
         GenericConnector = 1024,
         OneDriveBusinessConnector = 2048,
         ShareConnectConnector = 4096,
+        
+        /// <summary>
+        /// Supports Preview
+        /// </summary>
         Preview = 8192,
+        
+        /// <summary>
+        /// Highly concurrent zone
+        /// </summary>
         HighConcurrency = 16384,
+        
+        /// <summary>
+        /// Supports Information Rights Management
+        /// </summary>
         InformationRightsManagement = 32768,
+        
+        /// <summary>
+        /// Supports Documentum ECM Connector
+        /// </summary>
         DocumentumConnector = 65536,
+        
+        /// <summary>
+        /// Supports OpenText ECM Connector
+        /// </summary>
         AlfrescoConnector = 131072,
+        
+        /// <summary>
+        /// Supports FileNet ECM Connector
+        /// </summary>
         OpenTextConnector = 262144,
-        FileNetConnector = 524288
+        
+        /// <summary>
+        /// Supports Alfresco ECM Connector
+        /// </summary>
+        FileNetConnector = 524288,
+        
+        /// <summary>
+        /// Supports Editing
+        /// </summary>
+        Editing = 1048576,
+        
+        /// <summary>
+        /// Supports DirectToFile (ShareFile - Office mobile apps integration)
+        /// </summary>
+        DirectToFile = 2097152
     }
 }

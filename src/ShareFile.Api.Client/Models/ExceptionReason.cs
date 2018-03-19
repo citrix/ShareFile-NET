@@ -5,13 +5,13 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
-	public enum ExceptionReason
+    public enum ExceptionReason
     {
         Unspecified = 0,
         FileTooLarge = 1,
@@ -29,9 +29,21 @@ namespace ShareFile.Api.Models
         Throttled = 13,
         EmployeeLicensesExceeded = 14,
         ClientMustBeCreatedAsEmployee = 15,
+        
+        /// <summary>
+        /// Preview is not supported for View-only shares
+        /// </summary>
         VosPreviewNotAvailable = 16,
+        
+        /// <summary>
+        /// View-only permissions are available only for PDFs and Microsoft Office files.
+        /// </summary>
         UnsupportedVosFileType = 17,
         ErrorGeneratingPreview = 18,
+        
+        /// <summary>
+        /// Checked out files do not support this operation
+        /// </summary>
         FileIsLocked = 19,
         ViewLimitReached = 20,
         DownloadLimitReached = 21,
@@ -44,23 +56,112 @@ namespace ShareFile.Api.Models
         UpdateSecurityQuestionError = 28,
         InvalidPassword = 29,
         ServiceUnavailable = 30,
+        
+        /// <summary>
+        /// View-only permissions are available only for PDFs, Microsoft Office and Image files.
+        /// </summary>
         UnsupportedVosWithImgFileType = 31,
         EmailWhitelistViolation = 32,
         EmailBlacklistViolation = 33,
+        
+        /// <summary>
+        /// Default IRM Classification error
+        /// </summary>
         IrmClassificationError = 34,
+        
+        /// <summary>
+        /// File type not supported by IRM
+        /// </summary>
         UnsupportedIrmFileType = 35,
+        
+        /// <summary>
+        /// IRM classification disabled
+        /// </summary>
         IrmClassificationDisabled = 36,
+        
+        /// <summary>
+        /// IRM classification not found
+        /// </summary>
         IrmClassificationNotFound = 37,
+        
+        /// <summary>
+        /// IRM classification with the same name already exists
+        /// </summary>
         DuplicateIrmClassificationName = 38,
+        
+        /// <summary>
+        /// Error accessing customer's Key Management Service
+        /// </summary>
         KmsError = 39,
+        
+        /// <summary>
+        /// Error trying to create new file
+        /// </summary>
         ErrorCreatingNewFile = 40,
+        
+        /// <summary>
+        /// Unsupported filetype for OfficeOnline CreateNewFile
+        /// </summary>
         UnsupportedCreateNewFileType = 41,
+        
+        /// <summary>
+        /// Connectivity failure (timeout, etc)
+        /// </summary>
         TemporaryConnectivityFailure = 42,
+        
+        /// <summary>
+        /// File is inaccessible due to an anti-virus restriction in place on account
+        /// </summary>
         FilesRestrictedByAntiVirus = 43,
+        
+        /// <summary>
+        /// The address on the account is bad. Could not find a corresponding TaxAreaCode
+        /// </summary>
         BadAddress = 44,
+        
+        /// <summary>
+        /// Account is unavailable due to maintenance window
+        /// </summary>
         MaintenanceMode = 45,
+        
+        /// <summary>
+        /// Operation target is invalid
+        /// </summary>
         InvalidTarget = 46,
+        
+        /// <summary>
+        /// Not enough disk space on the zone's storage location
+        /// </summary>
         InsufficientDiskSpace = 47,
-        StorageZoneServerError = 48
+        
+        /// <summary>
+        /// A generic error occurred in the Storage Zone
+        /// </summary>
+        StorageZoneServerError = 48,
+        
+        /// <summary>
+        /// A conflict is detected during FileUpload.
+        /// </summary>
+        FileUploadConflict = 49,
+        
+        /// <summary>
+        /// Unlicensed user and must be forced to upgrade as valid user.
+        /// </summary>
+        UnlicensedUser = 50,
+        
+        /// <summary>
+        /// Method not implemented.
+        /// </summary>
+        MethodNotImplemented = 51,
+        
+        /// <summary>
+        /// A user with default zone which is 'Restricted' is not allowed to perform certain operation
+        /// </summary>
+        UserWithDefaultRestrictedZoneNotAllowed = 52,
+        
+        /// <summary>
+        /// Zone is unavailable
+        /// </summary>
+        ZoneUnavailable = 53
     }
 }

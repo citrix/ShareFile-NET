@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,111 +17,93 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// This class represents options available in a Folder Invite such as whether the recipient can download, upload, view and get notifications etc.
+	/// </summary>
 	public class FolderInvite : ODataObject 
 	{
-
 		/// <summary>
 		/// Title of the folder invite
 		/// </summary>
 		public string Title { get; set; }
-
 		/// <summary>
 		/// Short description for the folder invite
 		/// </summary>
 		public string Description { get; set; }
-
 		/// <summary>
 		/// Date when the folder invititation was created.
 		/// </summary>
 		public DateTime? CreationDate { get; set; }
-
 		/// <summary>
 		/// Expiration date of the folder invite.
 		/// </summary>
 		public DateTime? ExpirationDate { get; set; }
-
 		/// <summary>
 		/// Unique identifier for the Creator of the folder invite.
 		/// </summary>
 		public string CreatorId { get; set; }
-
 		/// <summary>
 		/// Short version of items creator's name. E.g., J. Doe.
 		/// </summary>
 		public string CreatorNameShort { get; set; }
-
 		/// <summary>
 		/// AccountId of the folder invite.
 		/// </summary>
 		public string AccountId { get; set; }
-
 		/// <summary>
 		/// Maxixmum registrations allowed for the folder invite.
 		/// </summary>
 		public int? MaxRegistrations { get; set; }
-
 		/// <summary>
 		/// Total registrations on the the folder invite.
 		/// </summary>
 		public int? TotalRegistrations { get; set; }
-
 		/// <summary>
 		/// Notify the creator when a user registers for the folder.
 		/// </summary>
 		public bool? NotifyCreatorOnRegistration { get; set; }
-
 		/// <summary>
 		/// Unique identifier of the folder whose invite has been created or edited
 		/// </summary>
 		public string FolderId { get; set; }
-
 		/// <summary>
 		/// Indicates whether the recipient of the invite can download files from the folder.
 		/// </summary>
 		public bool? CanDownload { get; set; }
-
 		/// <summary>
 		/// Indicates whether the recipient of the invite can view files of the folder.
 		/// </summary>
 		public bool? CanView { get; set; }
-
 		/// <summary>
 		/// Indicates whether the recipient of the invite can upload files to the folder.
 		/// </summary>
 		public bool? CanUpload { get; set; }
-
 		/// <summary>
 		/// Indicates whether the recipient of the invite can delete files from the folder.
 		/// </summary>
 		public bool? CanDelete { get; set; }
-
 		/// <summary>
 		/// Indicates whether the recipient of the invite can get notified when uploding files to the folder.
 		/// </summary>
 		public bool? NotifyOnUpload { get; set; }
-
 		/// <summary>
 		/// Indicates whether the recipient of the invite can get notified when downloading files from the folder.
 		/// </summary>
 		public bool? NotifyOnDownload { get; set; }
-
 		/// <summary>
 		/// Url that redirects the user to registration page.
 		/// </summary>
 		public string InviteUrl { get; set; }
-
 		/// <summary>
 		/// User exists.
 		/// </summary>
 		public bool? IsExistingUser { get; set; }
-
 		/// <summary>
 		/// User exists and already confirmed.
 		/// </summary>
 		public bool? IsConfirmed { get; set; }
-
 		/// <summary>
 		/// Has exceeded Maximum failed attempts.
 		/// </summary>

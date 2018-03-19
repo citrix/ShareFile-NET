@@ -21,7 +21,7 @@ using ShareFile.Api.Client.Logging;
 using ShareFile.Api.Client.Requests.Executors;
 using ShareFile.Api.Client.Security.Authentication.OAuth2;
 using ShareFile.Api.Client.Security.Cryptography;
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
 
 namespace ShareFile.Api.Client.Requests.Providers
 {
@@ -226,12 +226,12 @@ namespace ShareFile.Api.Client.Requests.Providers
                             return HandleResponse(authenticatedResponse, parseSuccessResponse, request, retryCount, false);
                         }
 
-                        return Response.CreateAction(HandleNonSuccess(authenticatedResponse, retryCount));
+                        return Response.CreateAction(HandleNonSuccess(authenticatedResponse, retryCount, typeof(TResponse)));
                     }
                 }
             }
 
-            return Response.CreateAction(HandleNonSuccess(httpResponseMessage, retryCount));
+            return Response.CreateAction(HandleNonSuccess(httpResponseMessage, retryCount, typeof(TResponse)));
         }
 
         protected HttpResponseMessage ExecuteRequest(HttpRequestMessage requestMessage, HttpCompletionOption httpCompletionOption, int redirectionCount = 0)
@@ -256,6 +256,18 @@ namespace ShareFile.Api.Client.Requests.Providers
 
         protected EventHandlerResponse HandleNonSuccess(HttpResponseMessage responseMessage, int retryCount, Type expectedType = null)
         {
+            if (typeof(Response).IsAssignableFrom(expectedType))
+            {
+                var args = expectedType.GetGenericArguments();
+                if (args != null && args.Length > 0)
+                {
+                    expectedType = args[0];
+                }
+                else
+                {
+                    expectedType = null;
+                }
+            }
             var action = ShareFileClient.OnException(responseMessage, retryCount);
 
             if (action != null && action.Action == EventHandlerResponseAction.Throw)
@@ -301,7 +313,7 @@ namespace ShareFile.Api.Client.Requests.Providers
 
                 Exception exceptionToThrow = null;
 
-                if (expectedType == null || expectedType.IsAssignableFrom(typeof(ODataObject)))
+                if (expectedType == null || expectedType.IsAssignableFrom(typeof(ODataObject)) || expectedType.IsSubclassOf(typeof(ODataObject)) || expectedType.IsAssignableFrom(typeof(Stream)))
                 {
                     ODataRequestException requestException;
                     if (TryDeserialize(rawError, out requestException))
@@ -310,7 +322,8 @@ namespace ShareFile.Api.Client.Requests.Providers
                         {
                             Code = requestException.Code,
                             ODataExceptionMessage = requestException.Message,
-                            ExceptionReason = requestException.ExceptionReason
+                            ExceptionReason = requestException.ExceptionReason,
+                            ErrorLog = requestException.ErrorLog
                         };
                     }
                     else

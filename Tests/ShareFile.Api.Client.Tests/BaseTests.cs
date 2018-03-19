@@ -42,7 +42,7 @@ namespace ShareFile.Api.Client.Core.Tests
         {
             try
             {
-                using (var fileStream = System.IO.File.OpenRead("TestConfig.json"))
+                using (var fileStream = System.IO.File.OpenRead(Path.Combine(TestContext.CurrentContext.TestDirectory, "TestConfig.json")))
                 using (var streamReader = new StreamReader(fileStream))
                 {
                     var info = streamReader.ReadToEnd();

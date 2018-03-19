@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,28 +17,43 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
 #if !ShareFile
+	/// <summary>
+	/// Contact
+	/// </summary>
 	public class Contact : Principal 
 	{
-
 		public User User { get; set; }
-
+		/// <summary>
+		/// FirstName
+		/// </summary>
 		public string FirstName { get; set; }
-
+		/// <summary>
+		/// LastName
+		/// </summary>
 		public string LastName { get; set; }
-
+		/// <summary>
+		/// Company
+		/// </summary>
 		public string Company { get; set; }
-
+		/// <summary>
+		/// First 40 characters of the e-mail address
+		/// </summary>
 		public string EmailMedium { get; set; }
-
+		/// <summary>
+		/// First 20 characters of the e-mail address
+		/// </summary>
 		public string EmailShort { get; set; }
-
 		public bool? IsConfirmed { get; set; }
-
+		/// <summary>
+		/// Number of members in a distribution group. Will only be filled for distribution group.
+		/// </summary>
 		public int? Count { get; set; }
-
+		/// <summary>
+		/// Date this user was created
+		/// </summary>
 		public DateTime? CreatedDate { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

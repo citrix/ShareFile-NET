@@ -9,14 +9,14 @@ namespace ShareFile.Api.Client.Core.Tests.Authentication.OAuth2
     [TestFixture]
     public class OAuth2AuthenticationHelperTests : WebAuthenticationHelperTests
     {
-        [TestCase(true, "code", "state", typeof(OAuthAuthorizationCode), Result = true, TestName = "GetAuthorizationCode_Success")]
-        [TestCase(false, "code", "state", typeof(OAuthAuthorizationCode), Result = false, TestName = "GetAuthorizationCode_Fail")]
-        [TestCase(true, "access_token", "refresh_token", typeof(OAuthToken), Result = true, TestName = "GetOAuthToken_Success")]
-        [TestCase(false, "access_token", "refresh_token", typeof(OAuthToken), Result = false, TestName = "GetOAuthToken_Fail")]
-        [TestCase(true, "error", "error_description", typeof(OAuthError), Result = true, TestName = "GetOAuthError_Success")]
-        [TestCase(false, "error", "error_description", typeof(OAuthError), Result = false, TestName = "GetOAuthError_Fail")]
-        [TestCase(true, "random1", "random2", typeof(OAuthResponseBase), Result = true, TestName = "OAuthResponseBase_Success")]
-        [TestCase(false, "random1", "random2", typeof(OAuthResponseBase), Result = false, TestName = "OAuthResponseBase_Fail")]
+        [TestCase(true, "code", "state", typeof(OAuthAuthorizationCode), ExpectedResult = true, TestName = "GetAuthorizationCode_Success")]
+        [TestCase(false, "code", "state", typeof(OAuthAuthorizationCode), ExpectedResult = false, TestName = "GetAuthorizationCode_Fail")]
+        [TestCase(true, "access_token", "refresh_token", typeof(OAuthToken), ExpectedResult = true, TestName = "GetOAuthToken_Success")]
+        [TestCase(false, "access_token", "refresh_token", typeof(OAuthToken), ExpectedResult = false, TestName = "GetOAuthToken_Fail")]
+        [TestCase(true, "error", "error_description", typeof(OAuthError), ExpectedResult = true, TestName = "GetOAuthError_Success")]
+        [TestCase(false, "error", "error_description", typeof(OAuthError), ExpectedResult = false, TestName = "GetOAuthError_Fail")]
+        [TestCase(true, "random1", "random2", typeof(OAuthResponseBase), ExpectedResult = true, TestName = "OAuthResponseBase_Success")]
+        [TestCase(false, "random1", "random2", typeof(OAuthResponseBase), ExpectedResult = false, TestName = "OAuthResponseBase_Fail")]
         public bool GetOAuthResponse(bool includeCompleteUri, string key1, string key2, Type expectedType)
         {
             //Arrange
@@ -75,6 +75,7 @@ namespace ShareFile.Api.Client.Core.Tests.Authentication.OAuth2
                 }
             }
 
+            found.Should().BeTrue();
             response.GetType().Should().Be(typeof (OAuthResponseBase));
             response.Properties.Should().NotBeNull();
             var oauthResponseBase = response as OAuthResponseBase;

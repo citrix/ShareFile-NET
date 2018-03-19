@@ -5,15 +5,15 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
-using ShareFile.Api.Models;
 using ShareFile.Api.Client;
-using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Models;
+using ShareFile.Api.Client.Requests;
 
 
 namespace ShareFile.Api.Client.Entities
@@ -66,6 +66,8 @@ namespace ShareFile.Api.Client.Entities
         /// If CanDownload is set to true, CanView will automatically be set to true.
         /// If CanDownload is set to false, CanDelete will be set to false.
         /// In order for a user/group to be able to manage permissions, they must be able to upload, download, and delete. Otherwise it will be set to false.
+        /// 
+        /// This endpoint can return an AsyncOperation if the request is to be fulfilled asynchronously
         /// </remarks>
         /// <param name="url"></param>
         /// <param name="accessControl"></param>
@@ -73,7 +75,7 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="message"></param>
         /// <param name="sendDefaultNotification"></param>
         /// <returns>
-        /// the created or modified AccessControl instance
+        /// the created or modified AccessControl instance, or AsyncOperation
         /// </returns>
         IQuery<AccessControl> CreateByItem(Uri url, AccessControl accessControl, bool recursive = false, bool sendDefaultNotification = false, string message = null);
         
@@ -94,12 +96,14 @@ namespace ShareFile.Api.Client.Entities
         /// Updates an existing Access Controls of a given Item. The Principal element cannot be modified, it is provided
         /// in the Body to identity the AccessControl element to be modified. You can provide an ID, Email or URL on the
         /// Principal object.
+        /// 
+        /// This endpoint can return an AsyncOperation if the request is to be fulfilled asynchronously
         /// </remarks>
         /// <param name="url"></param>
         /// <param name="accessControl"></param>
         /// <param name="recursive"></param>
         /// <returns>
-        /// the created or modified AccessControl instance
+        /// the created or modified AccessControl instance, or AsyncOperation
         /// </returns>
         IQuery<AccessControl> UpdateByItem(Uri url, AccessControl accessControl, bool recursive = false);
         
@@ -246,7 +250,7 @@ namespace ShareFile.Api.Client.Entities
         /// Delete multiple access controls
         /// </summary>
         /// <example>
-        /// ["id1","id2",...]
+        /// ["id1","id2"]
         /// </example>
         /// <param name="folderUrl"></param>
         /// <param name="principalIds"></param>
@@ -256,7 +260,7 @@ namespace ShareFile.Api.Client.Entities
         /// Delete multiple access controls for principal
         /// </summary>
         /// <example>
-        /// ["id1","id2",...]
+        /// ["id1","id2"]
         /// </example>
         /// <param name="principalId"></param>
         /// <param name="folderIds"></param>
@@ -266,12 +270,10 @@ namespace ShareFile.Api.Client.Entities
         /// Notify users that they have access to the parent folder
         /// </summary>
         /// <example>
-        /// [
         /// {
         /// UserIds: ["id1", "id2"],
         /// CustomMessage: "Message content goes here"
         /// }
-        /// ]
         /// </example>
         /// <remarks>
         /// All users should have access to the parent folder
@@ -279,6 +281,13 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="folderUrl"></param>
         /// <param name="notifyUsersParams"></param>
         IQuery NotifyUsers(Uri folderUrl, NotifyUsersParams notifyUsersParams);
+        
+        /// <summary>
+        /// Shows preview of the folder user email
+        /// </summary>
+        /// <param name="folderUrl"></param>
+        /// <param name="notifyUsersParams"></param>
+        IQuery<System.IO.Stream> NotifyUsersPreview(Uri folderUrl, NotifyUsersParams notifyUsersParams);
     }
 
     public class AccessControlsEntity : EntityBase, IAccessControlsEntity
@@ -302,7 +311,7 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AccessControl>(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -318,10 +327,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<AccessControl>> GetByItem(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<AccessControl>>(Client);
-		    sfApiQuery.Action("AccessControls");
+            sfApiQuery.Action("AccessControls");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -346,6 +355,8 @@ namespace ShareFile.Api.Client.Entities
         /// If CanDownload is set to true, CanView will automatically be set to true.
         /// If CanDownload is set to false, CanDelete will be set to false.
         /// In order for a user/group to be able to manage permissions, they must be able to upload, download, and delete. Otherwise it will be set to false.
+        /// 
+        /// This endpoint can return an AsyncOperation if the request is to be fulfilled asynchronously
         /// </remarks>
         /// <param name="url"></param>
         /// <param name="accessControl"></param>
@@ -353,19 +364,19 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="message"></param>
         /// <param name="sendDefaultNotification"></param>
         /// <returns>
-        /// the created or modified AccessControl instance
+        /// the created or modified AccessControl instance, or AsyncOperation
         /// </returns>
         public IQuery<AccessControl> CreateByItem(Uri url, AccessControl accessControl, bool recursive = false, bool sendDefaultNotification = false, string message = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AccessControl>(Client);
-		    sfApiQuery.Action("AccessControls");
+            sfApiQuery.Action("AccessControls");
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("recursive", recursive);
             sfApiQuery.QueryString("sendDefaultNotification", sendDefaultNotification);
             accessControl.AddProperty("Message", message);
             sfApiQuery.Body = accessControl;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -385,22 +396,24 @@ namespace ShareFile.Api.Client.Entities
         /// Updates an existing Access Controls of a given Item. The Principal element cannot be modified, it is provided
         /// in the Body to identity the AccessControl element to be modified. You can provide an ID, Email or URL on the
         /// Principal object.
+        /// 
+        /// This endpoint can return an AsyncOperation if the request is to be fulfilled asynchronously
         /// </remarks>
         /// <param name="url"></param>
         /// <param name="accessControl"></param>
         /// <param name="recursive"></param>
         /// <returns>
-        /// the created or modified AccessControl instance
+        /// the created or modified AccessControl instance, or AsyncOperation
         /// </returns>
         public IQuery<AccessControl> UpdateByItem(Uri url, AccessControl accessControl, bool recursive = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AccessControl>(Client);
-		    sfApiQuery.Action("AccessControls");
+            sfApiQuery.Action("AccessControls");
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("recursive", recursive);
             sfApiQuery.Body = accessControl;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -415,7 +428,7 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -476,12 +489,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<AccessControlBulkResult> BulkSet(Uri url, AccessControlsBulkParams bulkParams)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AccessControlBulkResult>(Client);
-		    sfApiQuery.Action("AccessControls");
+            sfApiQuery.Action("AccessControls");
             sfApiQuery.Uri(url);
             sfApiQuery.SubAction("BulkSet");
             sfApiQuery.Body = bulkParams;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -537,12 +550,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<AccessControlBulkResult> BulkSetForPrincipal(AccessControlsBulkParams bulkParams, string principalId)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AccessControlBulkResult>(Client);
-		    sfApiQuery.From("AccessControls");
-		    sfApiQuery.Action("BulkSetForPrincipal");
+            sfApiQuery.From("AccessControls");
+            sfApiQuery.Action("BulkSetForPrincipal");
             sfApiQuery.QueryString("principalId", principalId);
             sfApiQuery.Body = bulkParams;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -567,61 +580,59 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<AccessControlBulkResult> Clone(AccessControlsCloneParams accessControlsCloneParams)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AccessControlBulkResult>(Client);
-		    sfApiQuery.From("AccessControls");
-		    sfApiQuery.Action("Clone");
+            sfApiQuery.From("AccessControls");
+            sfApiQuery.Action("Clone");
             sfApiQuery.Body = accessControlsCloneParams;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
         /// Delete multiple access controls
         /// </summary>
         /// <example>
-        /// ["id1","id2",...]
+        /// ["id1","id2"]
         /// </example>
         /// <param name="folderUrl"></param>
         /// <param name="principalIds"></param>
         public IQuery BulkDelete(Uri folderUrl, IEnumerable<string> principalIds)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("AccessControls");
+            sfApiQuery.Action("AccessControls");
             sfApiQuery.Uri(folderUrl);
             sfApiQuery.SubAction("BulkDelete");
             sfApiQuery.Body = principalIds;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
         /// Delete multiple access controls for principal
         /// </summary>
         /// <example>
-        /// ["id1","id2",...]
+        /// ["id1","id2"]
         /// </example>
         /// <param name="principalId"></param>
         /// <param name="folderIds"></param>
         public IQuery BulkDeleteForPrincipal(IEnumerable<string> folderIds, string principalId)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.From("AccessControls");
-		    sfApiQuery.Action("BulkDeleteForPrincipal");
+            sfApiQuery.From("AccessControls");
+            sfApiQuery.Action("BulkDeleteForPrincipal");
             sfApiQuery.QueryString("principalId", principalId);
             sfApiQuery.Body = folderIds;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
         /// Notify users that they have access to the parent folder
         /// </summary>
         /// <example>
-        /// [
         /// {
         /// UserIds: ["id1", "id2"],
         /// CustomMessage: "Message content goes here"
         /// }
-        /// ]
         /// </example>
         /// <remarks>
         /// All users should have access to the parent folder
@@ -631,12 +642,28 @@ namespace ShareFile.Api.Client.Entities
         public IQuery NotifyUsers(Uri folderUrl, NotifyUsersParams notifyUsersParams)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("AccessControls");
+            sfApiQuery.Action("AccessControls");
             sfApiQuery.Uri(folderUrl);
             sfApiQuery.SubAction("NotifyUsers");
             sfApiQuery.Body = notifyUsersParams;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Shows preview of the folder user email
+        /// </summary>
+        /// <param name="folderUrl"></param>
+        /// <param name="notifyUsersParams"></param>
+        public IQuery<System.IO.Stream> NotifyUsersPreview(Uri folderUrl, NotifyUsersParams notifyUsersParams)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<System.IO.Stream>(Client);
+            sfApiQuery.Action("AccessControls");
+            sfApiQuery.Uri(folderUrl);
+            sfApiQuery.SubAction("NotifyUsersPreview");
+            sfApiQuery.Body = notifyUsersParams;
+            sfApiQuery.HttpMethod = "POST";	
+            return sfApiQuery;
         }
     }
 }

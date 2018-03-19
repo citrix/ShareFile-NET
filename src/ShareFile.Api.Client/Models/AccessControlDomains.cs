@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,16 +17,17 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Represents an access control list of domains that is used to control Login or Folder access for an account.
+	/// </summary>
 	public class AccessControlDomains : ODataObject 
 	{
-
 		/// <summary>
 		/// Specifies that the list is interpreted as a list of allowed or disallowed domains
 		/// </summary>
 		public SafeEnum<AccessControlFilter> AccessControlType { get; set; }
-
 		/// <summary>
 		/// A list of domain names
 		/// </summary>

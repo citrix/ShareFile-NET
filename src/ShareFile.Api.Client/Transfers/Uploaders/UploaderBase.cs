@@ -3,73 +3,54 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text;
-using System.Threading;
-
 using Newtonsoft.Json;
-
 using ShareFile.Api.Client.Enums;
 using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.Extensions;
-using ShareFile.Api.Client.Extensions.Tasks;
-using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Security.Cryptography;
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
 
 namespace ShareFile.Api.Client.Transfers.Uploaders
 {
     public abstract class UploaderBase : TransfererBase
     {
-        protected UploaderBase(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, int? expirationDays)
+        protected UploaderBase(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, Stream stream, FileUploaderConfig config, int? expirationDays)
         {
             Client = client;
             UploadSpecificationRequest = uploadSpecificationRequest;
-            File = file;
+            FileStream = stream;
+            Config = config ?? new FileUploaderConfig();
+            if (uploadSpecificationRequest.FileSize != stream.Length)
+            {
+                throw new UploadException("Specified file size does not equal file stream length", UploadStatusCode.Unknown);
+            }
 
             ExpirationDays = expirationDays;
-            Progress = new TransferProgress(uploadSpecificationRequest.FileSize, null, Guid.NewGuid().ToString());
+            progressReporter = new TransferProgressReporter(uploadSpecificationRequest.FileSize, Guid.NewGuid().ToString(), Config.ProgressReportInterval);
         }
 
+        public FileUploaderConfig Config { get; private set; }
         public abstract long LastConsecutiveByteUploaded { get; }
-
-        public Dictionary<string, object> TransferMetadata { get; set; }
         public UploadSpecification UploadSpecification { get; protected set; }
-        public EventHandler<TransferEventArgs> OnTransferProgress;
 
+        protected readonly TransferProgressReporter progressReporter;
+        public event EventHandler<TransferEventArgs> OnTransferProgress
+        {
+            add { progressReporter.OnTransferProgress += value; }
+            remove { progressReporter.OnTransferProgress -= value; }
+        }
+        
         protected int? ExpirationDays { get; set; }
         protected bool Prepared;
-
         protected readonly UploadSpecificationRequest UploadSpecificationRequest;
-        protected readonly IPlatformFile File;
+        protected readonly Stream FileStream;
 
-        public ShareFileClient Client { get; protected set; }
+        public ShareFileClient Client { get; private set; }
         public IMD5HashProvider HashProvider { get; protected set; }
-        protected TransferProgress Progress { get; set; }
 
-        public const int DefaultBufferLength = 16384;
-        protected internal void OnProgress(long bytesTransferred)
-        {
-            // If there are no changes, don't invoke event handler
-            if (bytesTransferred == 0)
-            {
-                return;
-            }
-
-            NotifyProgress(Progress.UpdateBytesTransferred(bytesTransferred));
-        }
-
-        protected void MarkProgressComplete()
-        {
-            NotifyProgress(Progress.MarkComplete());
-        }
-
-        protected virtual void NotifyProgress(TransferProgress progress)
-        {
-            if (OnTransferProgress != null)
-            {
-                OnTransferProgress.Invoke(this, new TransferEventArgs { Progress = progress });
-            }
-        }
+        [Obsolete]
+        public static int DefaultBufferLength => Configuration.BufferSize;
 
         protected IQuery<UploadSpecification> CreateUploadSpecificationQuery(UploadSpecificationRequest uploadSpecificationRequest)
         {
@@ -77,17 +58,30 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             {
                 return CreateUploadRequestParamsQuery(uploadSpecificationRequest);
             }
-
-            var query = Client.Items.Upload(uploadSpecificationRequest.Parent, uploadSpecificationRequest.Method.GetValueOrDefault(UploadMethod.Threaded),
-                uploadSpecificationRequest.Raw, uploadSpecificationRequest.FileName, uploadSpecificationRequest.FileSize,
-                uploadSpecificationRequest.BatchId,
-                uploadSpecificationRequest.BatchLast, uploadSpecificationRequest.CanResume,
-                uploadSpecificationRequest.StartOver, uploadSpecificationRequest.Unzip, uploadSpecificationRequest.Tool,
-                uploadSpecificationRequest.Overwrite, uploadSpecificationRequest.Title,
-                uploadSpecificationRequest.Details, uploadSpecificationRequest.IsSend,
-                uploadSpecificationRequest.SendGuid, null, uploadSpecificationRequest.ThreadCount,
-                uploadSpecificationRequest.ResponseFormat, uploadSpecificationRequest.Notify,
-                uploadSpecificationRequest.ClientCreatedDateUtc, uploadSpecificationRequest.ClientModifiedDateUtc, ExpirationDays);
+            var query = Client.Items.Upload(uploadSpecificationRequest.Parent,
+                                            uploadSpecificationRequest.Method.GetValueOrDefault(UploadMethod.Threaded),
+                                            uploadSpecificationRequest.Raw,
+                                            uploadSpecificationRequest.FileName,
+                                            uploadSpecificationRequest.FileSize,
+                                            uploadSpecificationRequest.BatchId,
+                                            uploadSpecificationRequest.BatchLast,
+                                            uploadSpecificationRequest.CanResume,
+                                            uploadSpecificationRequest.StartOver,
+                                            uploadSpecificationRequest.Unzip,
+                                            uploadSpecificationRequest.Tool,
+                                            uploadSpecificationRequest.Overwrite,
+                                            uploadSpecificationRequest.Title,
+                                            uploadSpecificationRequest.Details,
+                                            uploadSpecificationRequest.IsSend,
+                                            uploadSpecificationRequest.SendGuid,
+                                            null,
+                                            uploadSpecificationRequest.ThreadCount,
+                                            uploadSpecificationRequest.ResponseFormat,
+                                            uploadSpecificationRequest.Notify,
+                                            uploadSpecificationRequest.ClientCreatedDateUtc,
+                                            uploadSpecificationRequest.ClientModifiedDateUtc,
+                                            ExpirationDays,
+                                            uploadSpecificationRequest.BaseFileId);
 
             return query;
         }
@@ -125,9 +119,33 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             return httpClientHandler;
         }
 
-        protected internal virtual HttpClient GetHttpClient()
+        /// <summary>
+        /// Used by some external tests
+        /// </summary>
+        /// <param name="progress"></param>
+        protected virtual void NotifyProgress(TransferProgress progress)
         {
-            return new HttpClient(GetHttpClientHandler());
+            progressReporter.ImmediatelyReportProgress(progress.BytesTransferred);
+        }
+
+        private HttpClient HttpClient { get; set; }
+        protected virtual HttpClient GetHttpClient()
+        {
+            if (HttpClient == null)
+            {
+                if (Config.HttpClientFactory != null)
+                {
+                    HttpClient = Config.HttpClientFactory(Client.CredentialCache, Client.CookieContainer);
+                }
+                else
+                {
+                    HttpClient = new HttpClient(GetHttpClientHandler())
+                    {
+                        Timeout = new TimeSpan(0, 0, 0, 0, Config.HttpTimeout)
+                    };
+                }
+            }
+            return HttpClient;
         }
 
         /// <summary>
@@ -156,7 +174,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         {
             var finishUri = new StringBuilder(string.Format("{0}&respformat=json", UploadSpecification.FinishUri.AbsoluteUri));
 
-            if (File.Length > 0)
+            if (UploadSpecificationRequest.FileSize > 0)
             {
                 finishUri.AppendFormat("&filehash={0}", HashProvider.GetComputedHashAsString());
             }
@@ -203,6 +221,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             {
                 upload.LocalHash = localHash;
             }
+
             return response;
         }
 
@@ -235,9 +254,9 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     throw new UploadException("StorageCenter error: " + responseContent, UploadStatusCode.Unknown, jEx);
                 }
             }
-            catch(UploadException uploadEx)
+            catch (UploadException uploadEx)
             {
-                if(!responseMessage.IsSuccessStatusCode)
+                if (!responseMessage.IsSuccessStatusCode)
                 {
                     uploadEx.HttpStatusCode = responseMessage.StatusCode;
                 }

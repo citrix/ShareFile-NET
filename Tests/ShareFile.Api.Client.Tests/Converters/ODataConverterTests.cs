@@ -6,8 +6,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using NUnit.Framework;
 using ShareFile.Api.Client.Converters;
-using ShareFile.Api.Models;
-using File = ShareFile.Api.Models.File;
+using ShareFile.Api.Client.Models;
+using File = ShareFile.Api.Client.Models.File;
 
 namespace ShareFile.Api.Client.Core.Tests.Converters
 {

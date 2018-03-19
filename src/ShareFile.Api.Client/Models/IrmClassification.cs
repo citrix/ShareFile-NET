@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,32 +17,30 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Represents Irm Classification. ShareFile Admin can define properties on this Irm Classification.
+	/// </summary>
 	public class IrmClassification : ODataObject 
 	{
-
 		/// <summary>
 		/// Name of the Irm Classification
 		/// </summary>
 		public string Name { get; set; }
-
 		/// <summary>
 		/// Description of the Irm Classification if any
 		/// </summary>
 		public string Description { get; set; }
-
 		/// <summary>
 		/// AccessRight permissions on an IRM Classification
 		/// </summary>
 		public IrmPrimaryAccessRightParams PrimaryAccessRightParams { get; set; }
-
 		/// <summary>
 		/// Use this flag to enable/ disable the Irm Classification.
 		/// If disabled, this Irm Classification won't show up in the List of active IrmClassifications on an account.
 		/// </summary>
 		public bool? IsEnabled { get; set; }
-
 		/// <summary>
 		/// Defines the numner of days after which the user won't be access the documents protected with this classification.
 		/// </summary>

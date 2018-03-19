@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,173 +17,154 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
 #if !ShareFile
+	/// <summary>
+	/// Represents a Tenant Account in ShareFile.com
+	/// </summary>
 	public class Account : ODataObject 
 	{
-
 		public string CompanyName { get; set; }
-
 		public User BillingContact { get; set; }
-
 		public string BillingContactId { get; set; }
-
 		public User TechnicalContact { get; set; }
-
 		public string TechnicalContactId { get; set; }
-
 		public User AccountManager { get; set; }
-
 		public string AccountManagerId { get; set; }
-
 		public string AccountType { get; set; }
-
+		/// <summary>
+		/// Basic, Professional, Enterprise
+		/// </summary>
 		public string PlanName { get; set; }
-
 		public string PlanTrack { get; set; }
-
 		public string PlanTrackEnum { get; set; }
-
+		/// <summary>
+		/// Credit Card, Invoice, Comp
+		/// </summary>
 		public string BillingType { get; set; }
-
+		/// <summary>
+		/// Monthly, Quarterly, Annually
+		/// </summary>
 		public string BillingCycle { get; set; }
-
 		public decimal? BillingRate { get; set; }
-
 		public decimal? BaseBillingRate { get; set; }
-
+		/// <summary>
+		/// Bandwidth included in plan in megabytes
+		/// </summary>
 		public int? BaseBandwidth { get; set; }
-
+		/// <summary>
+		/// Disk space included in megabytes
+		/// </summary>
 		public int? BaseDiskSpace { get; set; }
-
+		/// <summary>
+		/// Users included in plan
+		/// </summary>
 		public int? BaseUsers { get; set; }
-
+		/// <summary>
+		/// Additional bandwidth purchased for account
+		/// </summary>
 		public int? AdditionalBandwidth { get; set; }
-
+		/// <summary>
+		/// Additional disk space purchased for account
+		/// </summary>
 		public int? AdditionalDiskSpace { get; set; }
-
+		/// <summary>
+		/// Additional users purchased for account
+		/// </summary>
 		public int? AdditionalUsers { get; set; }
-
+		/// <summary>
+		/// Additional rate for extra bandwidth. NOTE: This is specified in gigbytes, not megabytes.
+		/// </summary>
 		public decimal? AdditionalBandwidthRate { get; set; }
-
+		/// <summary>
+		/// Additional rate for extra diskspace. NOTE: This is specified in gigbytes, not megabytes.
+		/// </summary>
 		public decimal? AdditionalDiskSpaceRate { get; set; }
-
+		/// <summary>
+		/// Additional rate for extra users
+		/// </summary>
 		public decimal? AdditionalUserRate { get; set; }
-
 		public int? UserMax { get; set; }
-
 		public UserUsage UserUsage { get; set; }
-
+		/// <summary>
+		/// Maximum disk space for the account in megabtyes
+		/// </summary>
 		public int? DiskSpaceMax { get; set; }
-
 		public DiskSpace DiskSpace { get; set; }
-
+		public Bandwidth Bandwidth { get; set; }
+		/// <summary>
+		/// Maximum bandwidth for the account in megabtyes
+		/// </summary>
 		public int? BandwidthMax { get; set; }
-
 		public bool? HasPowerTools { get; set; }
-
 		public bool? HasEncryption { get; set; }
-
+		/// <summary>
+		/// Additional rate for adding PowerTools.
+		/// </summary>
 		public decimal? PowerToolsRate { get; set; }
-
+		/// <summary>
+		/// Additional rate for stored file encryption
+		/// </summary>
 		public decimal? EncryptionRate { get; set; }
-
 		public string Address1 { get; set; }
-
 		public string Address2 { get; set; }
-
 		public string City { get; set; }
-
 		public string State { get; set; }
-
 		public string Zip { get; set; }
-
 		public string Country { get; set; }
-
 		public string TaxAreaId { get; set; }
-
 		public string CreditCardType { get; set; }
-
 		public string CreditCardToken { get; set; }
-
 		public string CreditCardNumber { get; set; }
-
 		public string CreditCardExpirationMonth { get; set; }
-
 		public string CreditCardExpirationYear { get; set; }
-
 		public string CreditCardFirstName { get; set; }
-
 		public string CreditCardLastName { get; set; }
-
 		public string Phone { get; set; }
-
 		public DateTime? LastBillingDate { get; set; }
-
 		public DateTime? NextBillingDate { get; set; }
-
 		public bool? UseAdvancedCustomBranding { get; set; }
-
 		public string AdvancedCustomBrandingFolderName { get; set; }
-
 		public IDictionary<string, string> BrandingStyles { get; set; }
-
 		public BrandingLinks BrandingLinks { get; set; }
-
 		public string LogoURL { get; set; }
-
 		public Item RootItem { get; set; }
-
 		public string RootItemId { get; set; }
-
 		public DateTime? CreationDate { get; set; }
-
 		public bool? IsFreeTrial { get; set; }
-
 		public bool? IsCancelled { get; set; }
-
 		public DateTime? CancellationDate { get; set; }
-
 		public SSOAccountProvider SSO { get; set; }
-
 		public AccountPreferences Preferences { get; set; }
-
 		public ProductDefaults ProductDefaults { get; set; }
-
+		/// <summary>
+		/// Primary (first) subdomain
+		/// </summary>
 		public string Subdomain { get; set; }
-
+		/// <summary>
+		/// All subdomains assigned to account
+		/// </summary>
 		public IEnumerable<string> Subdomains { get; set; }
-
 		public MobileSecuritySettings MobileSecuritySettings { get; set; }
-
 		public AccessControlDomains LoginAccessControlDomains { get; set; }
-
 		public AccessControlDomains FolderAccessControlDomains { get; set; }
-
 		public int? StorageQuotaPerUser { get; set; }
-
 		public string FreeTrialId { get; set; }
-
 		public string Source { get; set; }
-
 		public string AttributedSource { get; set; }
-
 		public string CompanyURL { get; set; }
-
 		public bool? MarketingOptIn { get; set; }
-
 		public string CreditCardSecurityCode { get; set; }
-
 		public IEnumerable<ToolInformation> ToolInformation { get; set; }
-
 		public BillingInfo BillingInformation { get; set; }
-
 		public SafeEnum<AccountSubType> AccountSubType { get; set; }
-
 		public string ConversionType { get; set; }
-
+		/// <summary>
+		/// The add-on services available to the account
+		/// </summary>
 		public ServicesCollection Services { get; set; }
+		public Support SupportInfo { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
@@ -221,6 +202,7 @@ namespace ShareFile.Api.Models
 				UserUsage = typedSource.UserUsage;
 				DiskSpaceMax = typedSource.DiskSpaceMax;
 				DiskSpace = typedSource.DiskSpace;
+				Bandwidth = typedSource.Bandwidth;
 				BandwidthMax = typedSource.BandwidthMax;
 				HasPowerTools = typedSource.HasPowerTools;
 				HasEncryption = typedSource.HasEncryption;
@@ -274,6 +256,7 @@ namespace ShareFile.Api.Models
 				AccountSubType = typedSource.AccountSubType;
 				ConversionType = typedSource.ConversionType;
 				Services = typedSource.Services;
+				SupportInfo = typedSource.SupportInfo;
 			}
 			else
 			{
@@ -389,6 +372,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("DiskSpace", out token) && token.Type != JTokenType.Null)
 				{
 					DiskSpace = (DiskSpace)serializer.Deserialize(token.CreateReader(), typeof(DiskSpace));
+				}
+				if(source.TryGetProperty("Bandwidth", out token) && token.Type != JTokenType.Null)
+				{
+					Bandwidth = (Bandwidth)serializer.Deserialize(token.CreateReader(), typeof(Bandwidth));
 				}
 				if(source.TryGetProperty("BandwidthMax", out token) && token.Type != JTokenType.Null)
 				{
@@ -601,6 +588,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("Services", out token) && token.Type != JTokenType.Null)
 				{
 					Services = (ServicesCollection)serializer.Deserialize(token.CreateReader(), typeof(ServicesCollection));
+				}
+				if(source.TryGetProperty("SupportInfo", out token) && token.Type != JTokenType.Null)
+				{
+					SupportInfo = (Support)serializer.Deserialize(token.CreateReader(), typeof(Support));
 				}
 			}
 		}

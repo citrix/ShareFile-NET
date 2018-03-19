@@ -4,19 +4,21 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using ShareFile.Api.Client.Extensions;
-using ShareFile.Api.Client.FileSystem;
+using System.Threading;
 
 namespace ShareFile.Api.Client.Transfers.Uploaders
 {
-#if ASYNC
     public class AsyncStandardFileUploader : AsyncUploaderBase
     {
-        public AsyncStandardFileUploader(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null) 
-            : base(client, uploadSpecificationRequest, file, config, expirationDays)
-        {
-
-        }
-
+        public AsyncStandardFileUploader(
+            ShareFileClient client,
+            UploadSpecificationRequest uploadSpecificationRequest,
+            Stream stream,
+            FileUploaderConfig config = null,
+            int? expirationDays = null)
+            : base(client, uploadSpecificationRequest, stream, config, expirationDays)
+        { }
+        
         public override long LastConsecutiveByteUploaded
         {
             get
@@ -25,13 +27,13 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             }
         }
 
-        public override async Task PrepareAsync()
+        public override async Task PrepareAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             if (!Prepared)
             {
                 if (UploadSpecification == null)
                 {
-                    UploadSpecification = await CreateUpload().ConfigureAwait(false);
+                    UploadSpecification = await CreateUpload(cancellationToken).ConfigureAwait(false);
                 }
 
                 await CheckResumeAsync().ConfigureAwait(false);
@@ -40,26 +42,24 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             }
         }
 
-        protected override async Task<UploadResponse> InternalUploadAsync()
+        protected override async Task<UploadResponse> InternalUploadAsync(CancellationToken cancellationToken)
         {
             int tryCount = 0;
-            Stream stream = File.OpenRead();
             while (true)
             {
                 try
                 {
-                    await TryPauseAsync(CancellationToken).ConfigureAwait(false);
-                    if (CancellationToken.GetValueOrDefault().IsCancellationRequested)
+                    await TryPauseAsync(cancellationToken).ConfigureAwait(false);
+                    if (cancellationToken.IsCancellationRequested)
                     {
                         throw new TaskCanceledException();
                     }
                     var httpClient = GetHttpClient();
-
                     using (var requestMessage = new HttpRequestMessage(
                             HttpMethod.Post,
                             GetChunkUriForStandardUploads()))
                     {
-                        using (var streamContent = new StreamContentWithProgress(new NoDisposeStream(stream), OnProgress, CancellationToken.GetValueOrDefault()))
+                        using (var streamContent = new StreamContentWithProgress(new NoDisposeStream(FileStream), progressReporter.ReportProgress, cancellationToken))
                         {
                             streamContent.TryPauseAction = TryPauseAsync;
                             requestMessage.AddDefaultHeaders(Client);
@@ -69,36 +69,28 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                             if (!UploadSpecificationRequest.Raw)
                             {
                                 var multiPartContent = new MultipartFormDataContent();
-                                multiPartContent.Add(streamContent, "Filedata", File.Name);
+                                multiPartContent.Add(streamContent, "Filedata", UploadSpecificationRequest.FileName);
                                 requestMessage.Content = multiPartContent;
-                            }                          
+                            }
 
-                            var responseMessage =
-                                await
-                                httpClient.SendAsync(
-                                    requestMessage,
-                                    CancellationToken.GetValueOrDefault(System.Threading.CancellationToken.None)).ConfigureAwait(false);
-
-                            MarkProgressComplete();
-
+                            var responseMessage = await httpClient.SendAsync(requestMessage, cancellationToken).ConfigureAwait(false);                            
                             return await GetUploadResponseAsync(responseMessage).ConfigureAwait(false);
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    if (tryCount >= 3 || !stream.CanSeek || ex is TaskCanceledException)
+                    if (tryCount >= 3 || !FileStream.CanSeek || ex is TaskCanceledException)
                     {
                         throw;
                     }
                     else
                     {
                         tryCount += 1;
-                        stream.Seek(0, SeekOrigin.Begin);
+                        FileStream.Seek(0, SeekOrigin.Begin);
                     }
                 }
             }
         }
     }
-#endif
-                        }
+}

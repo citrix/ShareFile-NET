@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,82 +17,148 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Shares represent the "Send File" and "Request File" actions initiated by ShareFile users. Shares allows users to give temporary access to specific set of files or folders, allowing other
+	/// users to download or upload files even though they would not have permissions otherwise.
+	/// </summary>
 	public class Share : ODataObject 
 	{
-
+		/// <summary>
+		/// When a Share is sent to multiple users, with RequireLogin or RequireUserInfo set, then a different
+		/// Share Alias is created for each user. The email ShareFile sends to these users will contain different
+		/// AliasIDs, allowing ShareFile to track the user activity on the share.
+		/// For anonymous Shares, the AliasID will be the same as the Share ID.
+		/// </summary>
 		public string AliasID { get; set; }
-
+		/// <summary>
+		/// Either "Send" or "Request". Send Shares are used to Send files and folders to the specified users. Request
+		/// shares are used to allow users to upload files to the share owner chosen location.
+		/// </summary>
 		public SafeEnum<ShareType> ShareType { get; set; }
-
+		/// <summary>
+		/// Share title
+		/// </summary>
 		public string Title { get; set; }
-
+		/// <summary>
+		/// Flag to indicate if ShareFile has sent email messages for this Share
+		/// </summary>
 		public bool? HasSentMessage { get; set; }
-
+		/// <summary>
+		/// Subject of Share email message
+		/// </summary>
 		public string SentMessageTitle { get; set; }
-
+		/// <summary>
+		/// If set, only authenticated users can download files from this share.
+		/// </summary>
 		public bool? RequireLogin { get; set; }
-
+		/// <summary>
+		/// If set, users must provide Name, Email and Company information to download files from the share.
+		/// </summary>
 		public bool? RequireUserInfo { get; set; }
-
+		/// <summary>
+		/// Folder location that contain the share files (Send); or the folder were files will be uploaded to
+		/// (Request).
+		/// </summary>
 		public Item Parent { get; set; }
-
+		/// <summary>
+		/// User that created this Share.
+		/// </summary>
 		public User Creator { get; set; }
-
+		/// <summary>
+		/// User given permission to use this share - used for Aliases.
+		/// </summary>
 		public User User { get; set; }
-
+		/// <summary>
+		/// List of shared Items (for Send Shares only)
+		/// </summary>
 		public IEnumerable<Item> Items { get; set; }
-
+		/// <summary>
+		/// Date the share was created
+		/// </summary>
 		public DateTime? CreationDate { get; set; }
-
+		/// <summary>
+		/// Date the share expires
+		/// </summary>
 		public DateTime? ExpirationDate { get; set; }
-
+		/// <summary>
+		/// Maximum number of downloads each user can perform.
+		/// </summary>
 		public int? MaxDownloads { get; set; }
-
+		/// <summary>
+		/// Total number of times a share has been downloaded by a user.
+		/// </summary>
 		public int? TotalDownloads { get; set; }
-
+		/// <summary>
+		/// Used for Virtual Data Room accounts - indicates the files in the share can only be
+		/// downloaded with an applied watermark.
+		/// </summary>
 		public bool? IsViewOnly { get; set; }
-
+		/// <summary>
+		/// User activity on this share will be tracked up to this date.
+		/// </summary>
 		public DateTime? TrackUntilDate { get; set; }
-
 		public int? SendFrequency { get; set; }
-
 		public int? SendInterval { get; set; }
-
 		public DateTime? LastDateSent { get; set; }
-
+		/// <summary>
+		/// Indicates whether or not this Share has been downloaded
+		/// </summary>
 		public bool? IsConsumed { get; set; }
-
+		/// <summary>
+		/// Indicates whether the contents of this share have been viewed by a valid, authenticated recipient
+		/// </summary>
 		public bool? IsRead { get; set; }
-
 		public bool? IsArchived { get; set; }
-
 		public string SendTool { get; set; }
-
 		public string SendMethod { get; set; }
-
+		/// <summary>
+		/// When enabled the items are identified by stream IDs instead of item IDs.
+		/// Applies to Send Shares only.
+		/// </summary>
 		public bool? UsesStreamIDs { get; set; }
-
+		/// <summary>
+		/// Uri to access the share through the Web portal
+		/// </summary>
 		public Uri Uri { get; set; }
-
+		/// <summary>
+		/// List of users that have access to this share.
+		/// </summary>
 		public IEnumerable<ShareAlias> Recipients { get; set; }
-
+		/// <summary>
+		/// The Storage Zone that contains this Share.
+		/// </summary>
 		public Zone Zone { get; set; }
-
+		/// <summary>
+		/// HMAC Signature for the Share data
+		/// </summary>
 		public string Signature { get; set; }
-
+		/// <summary>
+		/// Defines whether the request to retrieve Share Items is to be navigated to a remote endpoint.
+		/// </summary>
 		public bool? HasRemoteChildren { get; set; }
-
+		/// <summary>
+		/// Redirection endpoint for this Share.
+		/// </summary>
 		public Redirection Redirection { get; set; }
-
 		public SafeEnum<ShareSubType> ShareSubType { get; set; }
-
+		/// <summary>
+		/// Shared item history.
+		/// </summary>
 		public IEnumerable<ShareItemHistory> ShareItemHistory { get; set; }
-
+		/// <summary>
+		/// Current Settings for the Share
+		/// </summary>
 		public ShareSettings Settings { get; set; }
-
+		/// <summary>
+		/// Type of the Share
+		/// </summary>
 		public ShareAccessRight ShareAccessRight { get; set; }
+		/// <summary>
+		/// Flag determining whether the share is protected through IRM (Information Rights Management)
+		/// </summary>
+		public bool? IrmProtected { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
@@ -138,6 +204,7 @@ namespace ShareFile.Api.Models
 				ShareItemHistory = typedSource.ShareItemHistory;
 				Settings = typedSource.Settings;
 				ShareAccessRight = typedSource.ShareAccessRight;
+				IrmProtected = typedSource.IrmProtected;
 			}
 			else
 			{
@@ -285,6 +352,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("ShareAccessRight", out token) && token.Type != JTokenType.Null)
 				{
 					ShareAccessRight = (ShareAccessRight)serializer.Deserialize(token.CreateReader(), typeof(ShareAccessRight));
+				}
+				if(source.TryGetProperty("IrmProtected", out token) && token.Type != JTokenType.Null)
+				{
+					IrmProtected = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 			}
 		}

@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,21 +17,21 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Collection of search results from a search query
+	/// </summary>
 	public class SearchResults : ODataObject 
 	{
-
 		/// <summary>
 		/// Are these only partial results?
 		/// </summary>
 		public bool PartialResults { get; set; }
-
 		/// <summary>
 		/// Collection of search result hits
 		/// </summary>
 		public IEnumerable<SearchResult> Results { get; set; }
-
 		/// <summary>
 		/// Did the search query timeout?
 		/// </summary>

@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,63 +17,39 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
 	public class UserPreferences : ODataObject 
 	{
-
 		public bool? EnableFlashUpload { get; set; }
-
 		public bool? EnableJavaUpload { get; set; }
-
 		public bool? EnableJavaDownload { get; set; }
-
 		public bool? RememberCustomMessages { get; set; }
-
 		public bool? RequireLoginByDefault { get; set; }
-
 		public bool? NotifyOnUploadByDefault { get; set; }
-
 		public bool? NotifyOnDownloadByDefault { get; set; }
-
 		public bool? CanResetPassword { get; set; }
-
 		public bool? CanViewMySettings { get; set; }
-
 		public bool? IsSharedUserAccount { get; set; }
-
 		public string TimeZone { get; set; }
-
 		public string DaylightSavingMode { get; set; }
-
 		public int? TimeZoneOffset { get; set; }
-
 		public int? TimeZoneOffsetMins { get; set; }
-
 		public bool? DisplayUserMessage { get; set; }
-
 		public string UserMessageCode { get; set; }
-
 		public int? NotificationInterval { get; set; }
-
 		public SafeEnum<TypeOfTour> ShowTutorial { get; set; }
-
 		public int? EnableToolOverride { get; set; }
-
 		public bool? IsResetSecurityQuestionRequired { get; set; }
-
 		public string TimeFormat { get; set; }
-
 		public string LongTimeFormat { get; set; }
-
 		public string DateFormat { get; set; }
-
 		public bool? EnableShareConnect { get; set; }
-
 		public bool? ReceiveBouncedEmailNotifications { get; set; }
-
 		public bool? EnablePromotions { get; set; }
-
+		/// <summary>
+		/// Email notification locale. Values: Invariant, English, German, Spanish, French, Dutch, Chinese, Russian, Japanese, Korean, or Portuguese
+		/// </summary>
 		public SafeEnum<NotificationLocale> UserNotificationLocale { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

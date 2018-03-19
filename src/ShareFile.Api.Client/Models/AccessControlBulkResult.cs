@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,16 +17,21 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Result of a bulk operation on AccessControls
+	/// </summary>
 	public class AccessControlBulkResult : ODataObject 
 	{
-
 		/// <summary>
 		/// A list of entities processed successfully
 		/// </summary>
 		public IEnumerable<AccessControl> SuccessEntities { get; set; }
-
+		/// <summary>
+		/// A list of AsyncOperations created for processing the bulk operation
+		/// </summary>
+		public IEnumerable<AsyncOperation> AsyncOperations { get; set; }
 		/// <summary>
 		/// A list of entities for which the operation failed
 		/// </summary>
@@ -41,6 +46,7 @@ namespace ShareFile.Api.Models
 			if(typedSource != null)
 			{
 				SuccessEntities = typedSource.SuccessEntities;
+				AsyncOperations = typedSource.AsyncOperations;
 				FailedEntities = typedSource.FailedEntities;
 			}
 			else
@@ -49,6 +55,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("SuccessEntities", out token) && token.Type != JTokenType.Null)
 				{
 					SuccessEntities = (IEnumerable<AccessControl>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<AccessControl>));
+				}
+				if(source.TryGetProperty("AsyncOperations", out token) && token.Type != JTokenType.Null)
+				{
+					AsyncOperations = (IEnumerable<AsyncOperation>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<AsyncOperation>));
 				}
 				if(source.TryGetProperty("FailedEntities", out token) && token.Type != JTokenType.Null)
 				{

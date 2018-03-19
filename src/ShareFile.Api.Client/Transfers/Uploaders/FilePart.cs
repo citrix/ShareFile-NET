@@ -1,17 +1,18 @@
-﻿namespace ShareFile.Api.Client.Transfers.Uploaders
+﻿using ShareFile.Api.Client.Transfers.Uploaders.Buffers;
+
+namespace ShareFile.Api.Client.Transfers.Uploaders
 {
-    public class FilePart
+    internal class FilePart
     {
-        public byte[] Bytes { get; private set; }
-        public int Index { get; private set; }
-        public long Offset { get; private set; }
-        public int Length { get; private set; }
-        public string UploadUrl { get; private set; }
-        public string Hash { get; private set; }
-        public bool IsLastPart { get; private set; }
+        public readonly IBuffer Bytes;
+        public readonly int Index;
+        public readonly long Offset;
+        public readonly int Length;
+        public readonly string Hash;
+        public readonly bool IsLastPart;
 
         public FilePart(
-            byte[] bytes,
+            IBuffer bytes,
             int index,
             long offset,
             int length,
@@ -25,15 +26,10 @@
             this.Hash = hash;
             this.IsLastPart = isLastPart;
         }
-
-        public string GetComposedUploadUrl()
-        {
-            return GetComposedUploadUrl(this.UploadUrl);
-        }
-
+        
         public string GetComposedUploadUrl(string uploadUrl)
         {
-            return string.Format("{0}&index={1}&byteOffset={2}&hash={3}", uploadUrl, Index, Offset, Hash);
+            return $"{uploadUrl}&index={Index}&byteOffset={Offset}&hash={Hash}";
         }
     }
 }

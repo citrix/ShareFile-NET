@@ -5,15 +5,15 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
-using ShareFile.Api.Models;
 using ShareFile.Api.Client;
-using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Models;
+using ShareFile.Api.Client.Requests;
 
 
 namespace ShareFile.Api.Client.Entities
@@ -101,20 +101,20 @@ namespace ShareFile.Api.Client.Entities
         IQuery<Metadata> Update(Uri url, Metadata metadata);
         
         /// <summary>
-        /// Update the item corresponding to the supplied id with the provided key-value Metadata models.
+        /// Update Item Metadata
         /// </summary>
         /// <example>
         /// [{
         /// "Value":"metadata value"
         /// },{
         /// "Value":"metadata value"
-        /// },
-        /// ...]
+        /// }]
         /// </example>
         /// <remarks>
+        /// Update the item corresponding to the supplied id with the provided key-value Metadata models.
         /// If a metadata key is not already associated with the item, the item is updated with the new key-value pair.
         /// </remarks>
-        /// <param name="id"></param>
+        /// <param name="url"></param>
         /// <returns>
         /// The updated Metadata list for the given object ID.
         /// </returns>
@@ -170,7 +170,7 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Metadata>(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -186,10 +186,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Metadata>> GetByItem(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Metadata>>(Client);
-		    sfApiQuery.Action("Metadata");
+            sfApiQuery.Action("Metadata");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -211,11 +211,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Metadata> CreateByItem(Uri url, Metadata metadata)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Metadata>(Client);
-		    sfApiQuery.Action("Metadata");
+            sfApiQuery.Action("Metadata");
             sfApiQuery.Uri(url);
             sfApiQuery.Body = metadata;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -237,12 +237,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Metadata> UpdateByItem(Uri url, string metadataId, Metadata metadata)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Metadata>(Client);
-		    sfApiQuery.Action("Metadata");
+            sfApiQuery.Action("Metadata");
             sfApiQuery.Uri(url);
             sfApiQuery.ActionIds(metadataId);
             sfApiQuery.Body = metadata;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -265,35 +265,35 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.Uri(url);
             sfApiQuery.Body = metadata;
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
-        /// Update the item corresponding to the supplied id with the provided key-value Metadata models.
+        /// Update Item Metadata
         /// </summary>
         /// <example>
         /// [{
         /// "Value":"metadata value"
         /// },{
         /// "Value":"metadata value"
-        /// },
-        /// ...]
+        /// }]
         /// </example>
         /// <remarks>
+        /// Update the item corresponding to the supplied id with the provided key-value Metadata models.
         /// If a metadata key is not already associated with the item, the item is updated with the new key-value pair.
         /// </remarks>
-        /// <param name="id"></param>
+        /// <param name="url"></param>
         /// <returns>
         /// The updated Metadata list for the given object ID.
         /// </returns>
         public IQuery<ODataFeed<Metadata>> UpdateItem(Uri url, IEnumerable<Metadata> metadata)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Metadata>>(Client);
-		    sfApiQuery.Action("Metadata");
+            sfApiQuery.Action("Metadata");
             sfApiQuery.Uri(url);
-            sfApiQuery.QueryString("metadata", metadata);
+            sfApiQuery.Body = metadata;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -310,11 +310,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery DeleteByItem(Uri url, string metadataId)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("Metadata");
+            sfApiQuery.Action("Metadata");
             sfApiQuery.Uri(url);
             sfApiQuery.ActionIds(metadataId);
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -331,7 +331,7 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
     }
 }

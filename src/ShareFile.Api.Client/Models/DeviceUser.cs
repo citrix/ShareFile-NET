@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,45 +17,30 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Device User
+	/// </summary>
 	public class DeviceUser : ODataObject 
 	{
-
 		public Account Account { get; set; }
-
 		public User User { get; set; }
-
 		public Device Device { get; set; }
-
 		public bool? IsOwner { get; set; }
-
 		public string FriendlyName { get; set; }
-
 		public bool? Wipe { get; set; }
-
 		public bool? IsLocked { get; set; }
-
 		public bool? IsDeleted { get; set; }
-
 		public DateTime? Created { get; set; }
-
 		public DateTime? LastLogin { get; set; }
-
 		public DateTime? LastWipe { get; set; }
-
 		public string WipeToken { get; set; }
-
 		public string WipeInitiator { get; set; }
-
 		public SafeEnum<DeviceActionInitiatorRole> WipeInitiatorRole { get; set; }
-
 		public string LockInitiator { get; set; }
-
 		public SafeEnum<DeviceActionInitiatorRole> LockInitiatorRole { get; set; }
-
 		public SafeEnum<SFTool> DeviceType { get; set; }
-
 		public string LastErrorMessage { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,33 +17,21 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
 	public class ESignature : ODataObject 
 	{
-
 		public string ID { get; set; }
-
 		public string ItemID { get; set; }
-
 		public string ReferenceID { get; set; }
-
 		public string AlternateReferenceID { get; set; }
-
 		public string SignedItemID { get; set; }
-
 		public SafeEnum<IntegrationProvider> Provider { get; set; }
-
 		public string UserID { get; set; }
-
 		public SafeEnum<ESignatureDocumentStatus> Status { get; set; }
-
 		public string DocumentStatusDescription { get; set; }
-
 		public DateTime DateCreated { get; set; }
-
 		public DateTime DateLastUpdated { get; set; }
-
 		public string DocumentUrl { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

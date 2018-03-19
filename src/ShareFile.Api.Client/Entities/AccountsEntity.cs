@@ -5,15 +5,15 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
-using ShareFile.Api.Models;
 using ShareFile.Api.Client;
-using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Models;
+using ShareFile.Api.Client.Requests;
 
 
 namespace ShareFile.Api.Client.Entities
@@ -64,10 +64,11 @@ namespace ShareFile.Api.Client.Entities
         /// Retrives the list of Employees in the Account
         /// Employees are named users in the Account.
         /// </remarks>
+        /// <param name="withRightSignature"></param>
         /// <returns>
         /// A Feed containing all Employees Contacts in the account
         /// </returns>
-        IQuery<ODataFeed<Contact>> GetEmployees();
+        IQuery<ODataFeed<Contact>> GetEmployees(bool withRightSignature = false);
         
         /// <summary>
         /// Get List of current Account Clients
@@ -175,10 +176,11 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="employeesonly"></param>
         /// <param name="requirehomefolders"></param>
         /// <param name="singleplane"></param>
+        /// <param name="clientId"></param>
         /// <returns>
         /// The list of Accounts associated with this username/password.
         /// </returns>
-        IQuery<ODataFeed<Account>> GetByUser(ODataObject parameters, string username, bool employeesonly = false, bool requirehomefolders = false, bool singleplane = false);
+        IQuery<ODataFeed<Account>> GetByUser(ODataObject parameters, string username, bool employeesonly = false, bool requirehomefolders = false, bool singleplane = false, string clientId = null);
         
         /// <summary>
         /// Email List of Accounts to User
@@ -220,7 +222,7 @@ namespace ShareFile.Api.Client.Entities
         /// 
         /// {
         /// "AccessControlType" : "AllowedDomains",
-        /// "Domains": ["domainA", "domainB", ...]
+        /// "Domains": ["domainA", "domainB"]
         /// }
         /// </returns>
         IQuery<AccessControlDomains> GetFolderAccessControlDomains();
@@ -231,7 +233,7 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "AccessControlType" : "AllowedDomains",
-        /// "Domains": ["domainA", "domainB", ...]
+        /// "Domains": ["domainA", "domainB"]
         /// }
         /// </example>
         /// <param name="AccessControlType"></param>
@@ -247,7 +249,7 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "AccessControlType" : "AllowedDomains",
-        /// "Domains": ["domainA", "domainB", ...]
+        /// "Domains": ["domainA", "domainB"]
         /// }
         /// </example>
         /// <param name="AccessControlType"></param>
@@ -263,7 +265,7 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "AccessControlType" : "AllowedDomains",
-        /// "Domains": ["domainA", "domainB", ...]
+        /// "Domains": ["domainA", "domainB"]
         /// }
         /// </example>
         /// <remarks>
@@ -282,7 +284,7 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "AccessControlType" : "AllowedDomains",
-        /// "Domains": ["domainA", "domainB", ...]
+        /// "Domains": ["domainA", "domainB"]
         /// }
         /// </example>
         /// <remarks>
@@ -302,7 +304,7 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "AccessControlType" : "AllowedDomains",
-        /// "Domains": ["domainA", "domainB", ...]
+        /// "Domains": ["domainA", "domainB"]
         /// }
         /// </example>
         /// <remarks>
@@ -321,7 +323,7 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "AccessControlType" : "AllowedDomains",
-        /// "Domains": ["domainA", "domainB", ...]
+        /// "Domains": ["domainA", "domainB"]
         /// }
         /// </example>
         /// <remarks>
@@ -439,10 +441,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Account> Get(string id = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Account>(Client);
-		    sfApiQuery.From("Accounts");
+            sfApiQuery.From("Accounts");
             sfApiQuery.QueryString("id", id);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -458,10 +460,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Account> GetBranding()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Account>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("Branding");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("Branding");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -477,11 +479,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Account> UpdateBranding(Account account)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Account>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("Branding");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("Branding");
             sfApiQuery.Body = account;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -491,16 +493,18 @@ namespace ShareFile.Api.Client.Entities
         /// Retrives the list of Employees in the Account
         /// Employees are named users in the Account.
         /// </remarks>
+        /// <param name="withRightSignature"></param>
         /// <returns>
         /// A Feed containing all Employees Contacts in the account
         /// </returns>
-        public IQuery<ODataFeed<Contact>> GetEmployees()
+        public IQuery<ODataFeed<Contact>> GetEmployees(bool withRightSignature = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Contact>>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("Employees");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("Employees");
+            sfApiQuery.QueryString("withRightSignature", withRightSignature);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -517,10 +521,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Contact>> GetClients()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Contact>>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("Clients");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("Clients");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -539,12 +543,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Contact>> GetAddressBook(string type = "personal", string searchTerm = "")
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Contact>>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("AddressBook");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("AddressBook");
             sfApiQuery.QueryString("type", type);
             sfApiQuery.QueryString("searchTerm", searchTerm);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -559,10 +563,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<MobileSecuritySettings> GetMobileSecuritySettings()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<MobileSecuritySettings>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("MobileSecuritySettings");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("MobileSecuritySettings");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -574,10 +578,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ProductDefaults> GetProductDefaults()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ProductDefaults>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("ProductDefaults");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("ProductDefaults");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -589,10 +593,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<AccountPreferences> GetPreferences()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AccountPreferences>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("Preferences");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("Preferences");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -606,12 +610,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<SSOAccountProvider> GetSSO(string provider = "saml", string idpEntityId = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<SSOAccountProvider>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("SSO");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("SSO");
             sfApiQuery.QueryString("provider", provider);
             sfApiQuery.QueryString("idpEntityId", idpEntityId);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -637,12 +641,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<SSOAccountProvider> UpdateSSO(SSOAccountProvider sso, string provider = "saml")
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<SSOAccountProvider>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("SSO");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("SSO");
             sfApiQuery.QueryString("provider", provider);
             sfApiQuery.Body = sso;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -664,21 +668,23 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="employeesonly"></param>
         /// <param name="requirehomefolders"></param>
         /// <param name="singleplane"></param>
+        /// <param name="clientId"></param>
         /// <returns>
         /// The list of Accounts associated with this username/password.
         /// </returns>
-        public IQuery<ODataFeed<Account>> GetByUser(ODataObject parameters, string username, bool employeesonly = false, bool requirehomefolders = false, bool singleplane = false)
+        public IQuery<ODataFeed<Account>> GetByUser(ODataObject parameters, string username, bool employeesonly = false, bool requirehomefolders = false, bool singleplane = false, string clientId = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Account>>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("GetByUser");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("GetByUser");
             parameters.AddProperty("username", username);
             parameters.AddProperty("employeesonly", employeesonly);
             parameters.AddProperty("requirehomefolders", requirehomefolders);
             parameters.AddProperty("singleplane", singleplane);
+            parameters.AddProperty("clientId", clientId);
             sfApiQuery.Body = parameters;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -692,11 +698,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery SendToEmail(string email)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("SendToEmail");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("SendToEmail");
             sfApiQuery.QueryString("email", email);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -714,10 +720,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<AccessControlDomains> GetLoginAccessControlDomains()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AccessControlDomains>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("LoginAccessControlDomains");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("LoginAccessControlDomains");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -736,16 +742,16 @@ namespace ShareFile.Api.Client.Entities
         /// 
         /// {
         /// "AccessControlType" : "AllowedDomains",
-        /// "Domains": ["domainA", "domainB", ...]
+        /// "Domains": ["domainA", "domainB"]
         /// }
         /// </returns>
         public IQuery<AccessControlDomains> GetFolderAccessControlDomains()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AccessControlDomains>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("FolderAccessControlDomains");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("FolderAccessControlDomains");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -754,7 +760,7 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "AccessControlType" : "AllowedDomains",
-        /// "Domains": ["domainA", "domainB", ...]
+        /// "Domains": ["domainA", "domainB"]
         /// }
         /// </example>
         /// <param name="AccessControlType"></param>
@@ -765,11 +771,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<AccessControlDomains> CreateLoginAccessControlDomains(AccessControlDomains accessControlDomains)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AccessControlDomains>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("LoginAccessControlDomains");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("LoginAccessControlDomains");
             sfApiQuery.Body = accessControlDomains;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -778,7 +784,7 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "AccessControlType" : "AllowedDomains",
-        /// "Domains": ["domainA", "domainB", ...]
+        /// "Domains": ["domainA", "domainB"]
         /// }
         /// </example>
         /// <param name="AccessControlType"></param>
@@ -789,11 +795,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<AccessControlDomains> CreateFolderAccessControlDomains(AccessControlDomains accessControlDomains)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AccessControlDomains>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("FolderAccessControlDomains");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("FolderAccessControlDomains");
             sfApiQuery.Body = accessControlDomains;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -802,7 +808,7 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "AccessControlType" : "AllowedDomains",
-        /// "Domains": ["domainA", "domainB", ...]
+        /// "Domains": ["domainA", "domainB"]
         /// }
         /// </example>
         /// <remarks>
@@ -816,11 +822,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<AccessControlDomains> UpdateLoginAccessControlDomains(AccessControlDomains accessControlDomains)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AccessControlDomains>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("LoginAccessControlDomains");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("LoginAccessControlDomains");
             sfApiQuery.Body = accessControlDomains;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -829,7 +835,7 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "AccessControlType" : "AllowedDomains",
-        /// "Domains": ["domainA", "domainB", ...]
+        /// "Domains": ["domainA", "domainB"]
         /// }
         /// </example>
         /// <remarks>
@@ -844,11 +850,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<AccessControlDomains> UpdateFolderAccessControlDomains(AccessControlDomains accessControlDomains)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AccessControlDomains>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("FolderAccessControlDomains");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("FolderAccessControlDomains");
             sfApiQuery.Body = accessControlDomains;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -857,7 +863,7 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "AccessControlType" : "AllowedDomains",
-        /// "Domains": ["domainA", "domainB", ...]
+        /// "Domains": ["domainA", "domainB"]
         /// }
         /// </example>
         /// <remarks>
@@ -871,11 +877,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery DeleteLoginAccessControlDomains(AccessControlDomains accessControlDomains)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("LoginAccessControlDomains");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("LoginAccessControlDomains");
             sfApiQuery.Body = accessControlDomains;
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -884,7 +890,7 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "AccessControlType" : "AllowedDomains",
-        /// "Domains": ["domainA", "domainB", ...]
+        /// "Domains": ["domainA", "domainB"]
         /// }
         /// </example>
         /// <remarks>
@@ -898,11 +904,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery DeleteFolderAccessControlDomains(AccessControlDomains accessControlDomains)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("FolderAccessControlDomains");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("FolderAccessControlDomains");
             sfApiQuery.Body = accessControlDomains;
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -917,13 +923,13 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<RequireWebPopResult> RequireWebPop(string subdomain, string username = null, bool singlePlane = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<RequireWebPopResult>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("RequireWebPop");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("RequireWebPop");
             sfApiQuery.QueryString("subdomain", subdomain);
             sfApiQuery.QueryString("username", username);
             sfApiQuery.QueryString("singlePlane", singlePlane);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -937,12 +943,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<RequireSubdomainResult> RequireSubdomain(string username, bool singlePlane = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<RequireSubdomainResult>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("RequireSubdomain");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("RequireSubdomain");
             sfApiQuery.QueryString("username", username);
             sfApiQuery.QueryString("singlePlane", singlePlane);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -966,12 +972,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<FindSubdomainResult> FindSubdomain(FindSubdomainParams findSubdomainParams, bool singlePlane = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<FindSubdomainResult>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("FindSubdomain");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("FindSubdomain");
             sfApiQuery.QueryString("singlePlane", singlePlane);
             sfApiQuery.Body = findSubdomainParams;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -983,10 +989,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<OutlookInformation> GetOutlookInformation()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<OutlookInformation>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("OutlookInformation");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("OutlookInformation");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -999,11 +1005,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<SSOInfo> GetSSOInfo(string subdomain)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<SSOInfo>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("SSOInfo");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("SSOInfo");
             sfApiQuery.QueryString("subdomain", subdomain);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1015,19 +1021,19 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Account>> GetTenants()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Account>>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("Tenants");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("Tenants");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         public IQuery<Account> GetTenants(string id)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Account>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("Tenants");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("Tenants");
             sfApiQuery.ActionIds(id);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1040,12 +1046,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Zone>> GetZones(string parentid)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Zone>>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("Tenants");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("Tenants");
             sfApiQuery.ActionIds(parentid);
             sfApiQuery.SubAction("Zones");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1057,10 +1063,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Redirection> WebAppAdmin()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Redirection>(Client);
-		    sfApiQuery.From("Accounts");
-		    sfApiQuery.Action("WebAppAdmin");
+            sfApiQuery.From("Accounts");
+            sfApiQuery.Action("WebAppAdmin");
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
     }
 }

@@ -32,45 +32,31 @@ namespace ShareFile.Api.Client.Transfers
                 _state = state;
             }
         }
-
-#if ASYNC
-        protected bool ShouldPause(CancellationToken? cancellationToken)
+        
+        protected bool ShouldPause(CancellationToken cancellationToken)
         {
-            if (cancellationToken == null)
-                return GetState() == TransfererState.Paused;
-            return GetState() == TransfererState.Paused && !cancellationToken.Value.IsCancellationRequested;
+            return GetState() == TransfererState.Paused && !cancellationToken.IsCancellationRequested;
         }
-#endif
-        protected bool ShouldPause()
+
+		protected bool ShouldPause()
         {
             return GetState() == TransfererState.Paused;
         }
+        
+		protected async Task TryPauseAsync(CancellationToken cancellationToken)
+		{
+			while (ShouldPause(cancellationToken))
+			{
+				await Task.Delay(1000).ConfigureAwait(false);
+			}
+		}
 
-#if ASYNC
-        protected async Task TryPauseAsync(CancellationToken? cancellationToken)
-        {
-            while (ShouldPause(cancellationToken))
-            {
-#if Net40
-                Thread.Sleep(1000);
-#else
-                await Task.Delay(1000).ConfigureAwait(false);
-#endif
-            }
-        }        
-#endif
-
+		// Seems like something we should eliminate entirely with no non-async consumers.
         protected void TryPause()
         {
             while (ShouldPause())
             {
-#if ASYNC
-                TryPauseAsync(null).Wait();
-#elif Net40
-                Thread.Sleep(1000);
-#else
-                Task.Delay(1000).Wait();
-#endif
+                TryPauseAsync(default(CancellationToken)).Wait();
             }
         }
     }

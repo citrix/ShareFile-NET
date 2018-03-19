@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,31 +17,20 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
 	public class Redirection : ODataObject 
 	{
-
 		public string Method { get; set; }
-
 		public string Root { get; set; }
-
 		public Zone Zone { get; set; }
-
 		public object Domain { get; set; }
-
 		public Uri Uri { get; set; }
-
 		public Uri FormsUri { get; set; }
-
 		public Uri SessionUri { get; set; }
-
 		public Uri TokenUri { get; set; }
-
 		public bool SessionCheck { get; set; }
-
 		public string Body { get; set; }
-
 		public bool Available { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

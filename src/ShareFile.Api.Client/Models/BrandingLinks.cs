@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,45 +17,45 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Contains account custom branding related links
+	/// </summary>
 	public class BrandingLinks : ODataObject 
 	{
-
 		/// <summary>
 		/// Custom logo url
 		/// </summary>
 		public string LogoUrl { get; set; }
-
 		/// <summary>
 		/// Custom email logo url
 		/// </summary>
 		public string EmailLogoUrl { get; set; }
-
 		/// <summary>
 		/// Custom login logo url
 		/// </summary>
 		public string LoginLogoUrl { get; set; }
-
 		/// <summary>
 		/// Custom browser favorite icon url
 		/// </summary>
 		public string FavoriteIconUrl { get; set; }
-
 		/// <summary>
 		/// Custom background image URL
 		/// </summary>
 		public string BackgroundImageUrl { get; set; }
-
 		/// <summary>
 		/// Background image behind logo in masthead
 		/// </summary>
 		public string MastheadImageUrl { get; set; }
-
 		/// <summary>
 		/// Login page Background image
 		/// </summary>
 		public string LoginPageBackgroundImageUrl { get; set; }
+		/// <summary>
+		/// Custom Terms and Conditions
+		/// </summary>
+		public string TermsAndConditionsUrl { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
@@ -72,6 +72,7 @@ namespace ShareFile.Api.Models
 				BackgroundImageUrl = typedSource.BackgroundImageUrl;
 				MastheadImageUrl = typedSource.MastheadImageUrl;
 				LoginPageBackgroundImageUrl = typedSource.LoginPageBackgroundImageUrl;
+				TermsAndConditionsUrl = typedSource.TermsAndConditionsUrl;
 			}
 			else
 			{
@@ -103,6 +104,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("LoginPageBackgroundImageUrl", out token) && token.Type != JTokenType.Null)
 				{
 					LoginPageBackgroundImageUrl = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("TermsAndConditionsUrl", out token) && token.Type != JTokenType.Null)
+				{
+					TermsAndConditionsUrl = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
 			}
 		}

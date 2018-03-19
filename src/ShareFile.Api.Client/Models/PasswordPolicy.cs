@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,55 +17,49 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// The password policy for the Account, specifying password strength, age, and reuse policies.
+	/// </summary>
 	public class PasswordPolicy : ODataObject 
 	{
-
 		/// <summary>
 		/// Number of days a password is allowed to be used before being required to change it.
 		/// </summary>
 		public int? MaxAgeDays { get; set; }
-
 		/// <summary>
 		/// The number of previously used passwords to disallow when a user updates their password.
 		/// </summary>
 		public int? HistoryCount { get; set; }
-
 		/// <summary>
 		/// The minimum length a password is required to be.
 		/// Must be greater than or equal to 8.
 		/// Cannot be smaller than the combination of required special characters + required numerics + 1 Upper Case character + 1 Lower Case character.
 		/// </summary>
 		public int? MinimumLength { get; set; }
-
 		/// <summary>
 		/// The minimum number of special characters a password must contain.
 		/// Special Characters are defined in the AllowedSpecialCharacters field.
 		/// </summary>
 		public int? MinimumSpecialCharacters { get; set; }
-
 		/// <summary>
 		/// The miminum number of numeric characters a password must contain.
 		/// Must be greater than or equal to 1.
 		/// </summary>
 		public int? MinimumNumeric { get; set; }
-
 		/// <summary>
 		/// Read only field - the special characters allowed in a password.
 		/// </summary>
 		public string AllowedSpecialCharacters { get; set; }
-
 		/// <summary>
 		/// Read only field - The full Regular Expression used to determine if a password meets the strength policy.
 		/// </summary>
 		public string ValidationRegEx { get; set; }
-
 		/// <summary>
 		/// Read only field - Colon separated regular expression rules.
 		/// </summary>
 		public string ValidationRegExFormula { get; set; }
-
 		/// <summary>
 		/// Read only field - A localized description of the password strength policy
 		/// </summary>

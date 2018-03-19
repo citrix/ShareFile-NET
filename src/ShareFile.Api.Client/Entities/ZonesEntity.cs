@@ -5,15 +5,15 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
-using ShareFile.Api.Models;
 using ShareFile.Api.Client;
-using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Models;
+using ShareFile.Api.Client.Requests;
 
 
 namespace ShareFile.Api.Client.Entities
@@ -158,8 +158,7 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// [
         /// {"Name":"metadataName1", "Value":"metadataValue1", "IsPublic":"true"},
-        /// {"Name":"metadataName2", "Value":"metadataValue2", "IsPublic":"false"},
-        /// ...
+        /// {"Name":"metadataName2", "Value":"metadataValue2", "IsPublic":"false"}
         /// ]
         /// </example>
         /// <remarks>
@@ -209,11 +208,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Zone>> Get(ZoneService services = ZoneService.StorageZone, bool includeDisabled = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Zone>>(Client);
-		    sfApiQuery.From("Zones");
+            sfApiQuery.From("Zones");
             sfApiQuery.QueryString("services", services);
             sfApiQuery.QueryString("includeDisabled", includeDisabled);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -235,7 +234,7 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("secret", secret);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -257,10 +256,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Zone> Create(Zone zone)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Zone>(Client);
-		    sfApiQuery.From("Zones");
+            sfApiQuery.From("Zones");
             sfApiQuery.Body = zone;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -287,7 +286,7 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.Uri(url);
             sfApiQuery.Body = zone;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -306,7 +305,7 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.QueryString("force", force);
             sfApiQuery.QueryString("newDefaultZoneId", newDefaultZoneId);
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -325,10 +324,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Zone> ResetSecret(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Zone>(Client);
-		    sfApiQuery.Action("ResetSecret");
+            sfApiQuery.Action("ResetSecret");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -341,10 +340,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Account>> GetTenants(Uri parentUrl)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Account>>(Client);
-		    sfApiQuery.Action("Tenants");
+            sfApiQuery.Action("Tenants");
             sfApiQuery.Uri(parentUrl);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -355,11 +354,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Account> CreateTenants(Uri parentUrl, string accountId)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Account>(Client);
-		    sfApiQuery.Action("Tenants");
+            sfApiQuery.Action("Tenants");
             sfApiQuery.Uri(parentUrl);
             sfApiQuery.QueryString("accountId", accountId);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -372,13 +371,13 @@ namespace ShareFile.Api.Client.Entities
         public IQuery DeleteTenants(Uri parentUrl, string id, string newDefaultZoneId, bool expireItems = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("Tenants");
+            sfApiQuery.Action("Tenants");
             sfApiQuery.Uri(parentUrl);
             sfApiQuery.ActionIds(id);
             sfApiQuery.QueryString("newDefaultZoneId", newDefaultZoneId);
             sfApiQuery.QueryString("expireItems", expireItems);
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -394,10 +393,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Metadata>> GetMetadata(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Metadata>>(Client);
-		    sfApiQuery.Action("Metadata");
+            sfApiQuery.Action("Metadata");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -406,8 +405,7 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// [
         /// {"Name":"metadataName1", "Value":"metadataValue1", "IsPublic":"true"},
-        /// {"Name":"metadataName2", "Value":"metadataValue2", "IsPublic":"false"},
-        /// ...
+        /// {"Name":"metadataName2", "Value":"metadataValue2", "IsPublic":"false"}
         /// ]
         /// </example>
         /// <remarks>
@@ -421,11 +419,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Metadata>> CreateMetadata(Uri url, IEnumerable<Metadata> metadata)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Metadata>>(Client);
-		    sfApiQuery.Action("Metadata");
+            sfApiQuery.Action("Metadata");
             sfApiQuery.Uri(url);
             sfApiQuery.Body = metadata;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -442,11 +440,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery DeleteMetadata(Uri url, string name)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("Metadata");
+            sfApiQuery.Action("Metadata");
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("name", name);
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
     }
 }

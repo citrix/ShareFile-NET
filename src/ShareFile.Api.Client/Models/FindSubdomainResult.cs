@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,31 +17,29 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Represents an account with which a user is associated.
+	/// </summary>
 	public class FindSubdomainResult : ODataObject 
 	{
-
 		/// <summary>
 		/// UserId
 		/// </summary>
 		public string UserID { get; set; }
-
 		/// <summary>
 		/// Email
 		/// </summary>
 		public string Email { get; set; }
-
 		/// <summary>
 		/// AcocuntId
 		/// </summary>
 		public string AccountID { get; set; }
-
 		/// <summary>
 		/// Company name
 		/// </summary>
 		public string CompanyName { get; set; }
-
 		/// <summary>
 		/// Primary subdomain for the account.
 		/// </summary>

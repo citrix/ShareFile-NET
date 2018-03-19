@@ -13,7 +13,6 @@ using ShareFile.Api.Client.Credentials;
 using ShareFile.Api.Client.Entities;
 using ShareFile.Api.Client.Events;
 using ShareFile.Api.Client.Extensions;
-using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Logging;
 using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Requests.Executors;
@@ -24,7 +23,7 @@ using ShareFile.Api.Client.Security.Cryptography;
 using ShareFile.Api.Client.Transfers;
 using ShareFile.Api.Client.Transfers.Downloaders;
 using ShareFile.Api.Client.Transfers.Uploaders;
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
 
 namespace ShareFile.Api.Client
 {
@@ -32,17 +31,17 @@ namespace ShareFile.Api.Client
     {
         Uri BaseUri { get; set; }
         Configuration Configuration { get; set; }
-#if ShareFile
-        CustomAuthentication CustomAuthentication { get; set; }
-#endif
 
-#if ASYNC
-        AsyncUploaderBase GetAsyncFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null);
-
+        AsyncUploaderBase GetAsyncFileUploader(
+            UploadSpecificationRequest uploadSpecificationRequest,
+            Stream stream, 
+            FileUploaderConfig config = null,
+            int? expirationDays = null);
+        
         AsyncUploaderBase GetAsyncFileUploader(
             ActiveUploadState activeUploadState,
             UploadSpecificationRequest uploadSpecificationRequest,
-            IPlatformFile file,
+            Stream stream,
             FileUploaderConfig config = null);
 
         AsyncFileDownloader GetAsyncFileDownloader(Item itemToDownload, DownloaderConfig config = null);
@@ -50,8 +49,18 @@ namespace ShareFile.Api.Client
         AsyncFileDownloader GetAsyncFileDownloader(DownloadSpecification downloadSpecification, DownloaderConfig config = null);
 
         void RegisterAsyncRequestExecutor(IAsyncRequestExecutor asyncRequestExecutor);
-#endif
-        SyncUploaderBase GetFileUploader(UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null);
+
+        SyncUploaderBase GetFileUploader(
+            UploadSpecificationRequest uploadSpecificationRequest,
+            Stream stream,
+            FileUploaderConfig config = null,
+            int? expirationDays = null);
+        
+        SyncUploaderBase GetFileUploader(
+            ActiveUploadState activeUploadState,
+            UploadSpecificationRequest uploadSpecificationRequest,
+            Stream stream,
+            FileUploaderConfig config = null);
 
         FileDownloader GetFileDownloader(Item itemToDownload, DownloaderConfig config = null);
 
@@ -120,15 +129,18 @@ namespace ShareFile.Api.Client
             where TReplace : ODataObject;
 
         T Entities<T>() where T : EntityBase;
-#if ASYNC
-        Task<Stream> ExecuteAsync(IQuery<Stream> stream, CancellationToken? token = null);
-        Task<Stream> ExecuteAsync(IStreamQuery stream, CancellationToken? token = null);
 
-        Task<T> ExecuteAsync<T>(IQuery<T> query, CancellationToken? token = null)
+        [NotNull]
+        Task<Stream> ExecuteAsync(IQuery<Stream> stream, CancellationToken token = default(CancellationToken));
+        [NotNull]
+        Task<Stream> ExecuteAsync(IStreamQuery stream, CancellationToken token = default(CancellationToken));
+
+        [NotNull]
+        Task<T> ExecuteAsync<T>(IQuery<T> query, CancellationToken token = default(CancellationToken))
             where T : class;
 
-        Task ExecuteAsync(IQuery query, CancellationToken? token = null);
-#endif
+        [NotNull]
+        Task ExecuteAsync(IQuery query, CancellationToken token = default(CancellationToken));
 
         Stream Execute(IQuery<Stream> stream);
         Stream Execute(IStreamQuery stream);
@@ -139,6 +151,8 @@ namespace ShareFile.Api.Client
 
         IEnumerable<Capability> GetCachedCapabilities(Uri itemUri);
         void SetCachedCapabilities(Uri itemUri, IEnumerable<Capability> capabilities);
+
+        void SetConfiguration(Configuration configuration);
     }
 
     public partial class ShareFileClient : IShareFileClient
@@ -179,31 +193,6 @@ namespace ShareFile.Api.Client
         protected internal JsonSerializer LoggingSerializer { get; set; }
         internal RequestProviderFactory RequestProviderFactory { get; set; }
 
-#if ShareFile
-
-        [Obsolete("Use CustomAuthentication instead. This will be removed from the next major release.")]
-        CustomAuthentication ZoneAuthentication
-        {
-            get { return CustomAuthentication; }
-            set { CustomAuthentication = value; }
-        }
-
-        private CustomAuthentication _customAuthentication;
-
-        public CustomAuthentication CustomAuthentication
-        {
-            get { return _customAuthentication; }
-            set
-            {
-                if (value.UsesHmacSha256 && !HmacSha256ProviderFactory.HasProvider())
-                {
-                    throw new Exception("An instance of IHmacSha256Provider has not been registered, this is required for CustomAuthentication to sign requests.");
-                }
-                _customAuthentication = value;
-            }
-        }
-#endif
-
         internal void RegisterRequestProviders()
         {
             RequestProviderFactory = new RequestProviderFactory();
@@ -223,6 +212,12 @@ namespace ShareFile.Api.Client
         }
 
         internal void InitializeHttpClient()
+        {
+            HttpClient = Configuration.HttpClientFactory != null 
+                ? Configuration.HttpClientFactory(CredentialCache, CookieContainer) 
+                : CreateHttpClient();
+        }
+        private HttpClientHandler CreateHttpHandler()
         {
             var handler = new HttpClientHandler
             {
@@ -252,7 +247,12 @@ namespace ShareFile.Api.Client
                 handler.UseProxy = true;
             }
 
-            HttpClient = new HttpClient(handler, false)
+            return handler;
+        }
+        private HttpClient CreateHttpClient()
+        {
+            var handler = CreateHttpHandler();
+            return new HttpClient(handler, false)
             {
                 Timeout = new TimeSpan(0, 0, 0, 0, Configuration.HttpTimeout)
             };
@@ -362,7 +362,6 @@ namespace ShareFile.Api.Client
             }
         }
 
-#if ASYNC
         /// <summary>
         /// 
         /// </summary>
@@ -373,7 +372,7 @@ namespace ShareFile.Api.Client
         /// <returns></returns>
         public AsyncUploaderBase GetAsyncFileUploader(
             UploadSpecificationRequest uploadSpecificationRequest,
-            IPlatformFile file,
+            Stream stream,
             FileUploaderConfig config = null,
             int? expirationDays = null)
         {
@@ -382,9 +381,9 @@ namespace ShareFile.Api.Client
             switch (uploadSpecificationRequest.Method)
             {
                 case UploadMethod.Standard:
-                    return new AsyncStandardFileUploader(this, uploadSpecificationRequest, file, config, expirationDays);
+                    return new AsyncStandardFileUploader(this, uploadSpecificationRequest, stream, config, expirationDays);
                 case UploadMethod.Threaded:
-                    return new AsyncScalingFileUploader(this, uploadSpecificationRequest, file, config, expirationDays);
+                    return new AsyncScalingFileUploader(this, uploadSpecificationRequest, stream, config, expirationDays);
             }
 
             throw new NotSupportedException(uploadSpecificationRequest.Method + " is not supported.");
@@ -393,7 +392,7 @@ namespace ShareFile.Api.Client
         public AsyncUploaderBase GetAsyncFileUploader(
             ActiveUploadState activeUploadState,
             UploadSpecificationRequest uploadSpecificationRequest,
-            IPlatformFile file,
+            Stream stream,
             FileUploaderConfig config = null)
         {
             this.PreprocessUploadSpecRequest(uploadSpecificationRequest);
@@ -401,19 +400,19 @@ namespace ShareFile.Api.Client
             switch (uploadSpecificationRequest.Method)
             {
                 case UploadMethod.Standard:
-                    return new AsyncStandardFileUploader(this, uploadSpecificationRequest, file, config);
+                    return new AsyncStandardFileUploader(this, uploadSpecificationRequest, stream, config);
                 case UploadMethod.Threaded:
                     return new AsyncScalingFileUploader(
                         this,
                         activeUploadState,
                         uploadSpecificationRequest,
-                        file,
+                        stream,
                         config);
             }
 
             throw new NotSupportedException(uploadSpecificationRequest.Method + " is not supported.");
         }
-
+        
         public AsyncFileDownloader GetAsyncFileDownloader(Item itemToDownload, DownloaderConfig config = null)
         {
             return new AsyncFileDownloader(itemToDownload, this, config);
@@ -423,7 +422,6 @@ namespace ShareFile.Api.Client
         {
             return new AsyncFileDownloader(downloadSpecification, this, config);
         }
-#endif
 
         /// <summary>
         /// 
@@ -435,7 +433,7 @@ namespace ShareFile.Api.Client
         /// <returns></returns>
         public SyncUploaderBase GetFileUploader(
             UploadSpecificationRequest uploadSpecificationRequest,
-            IPlatformFile file,
+            Stream stream,
             FileUploaderConfig config = null,
             int? expirationDays = null)
         {
@@ -444,14 +442,34 @@ namespace ShareFile.Api.Client
             switch (uploadSpecificationRequest.Method)
             {
                 case UploadMethod.Standard:
-                    return new StandardFileUploader(this, uploadSpecificationRequest, file, config, expirationDays);
+                    return new StandardFileUploader(this, uploadSpecificationRequest, stream, config, expirationDays);
                 case UploadMethod.Threaded:
-                    return new ScalingFileUploader(this, uploadSpecificationRequest, file, config, expirationDays);
+                    return new ScalingFileUploader(this, uploadSpecificationRequest, stream, config, expirationDays);
             }
 
             throw new NotSupportedException(uploadSpecificationRequest.Method + " is not supported.");
         }
 
+        public SyncUploaderBase GetFileUploader(
+            ActiveUploadState activeUploadState,
+            UploadSpecificationRequest uploadSpecificationRequest,
+            Stream stream,
+            FileUploaderConfig config = null)
+        {
+            UploadMethod? method = activeUploadState.UploadSpecification.Method;
+            if (!method.HasValue)
+                throw new ArgumentNullException("UploadSpecification.Method");
+            switch (method.Value)
+            {
+                case UploadMethod.Standard:
+                    return new StandardFileUploader(this, activeUploadState.UploadSpecification, uploadSpecificationRequest, stream, config);
+                case UploadMethod.Threaded:
+                    return new ScalingFileUploader(this, activeUploadState, uploadSpecificationRequest, stream, config);
+                default:
+                    throw new NotSupportedException($"{method} is not supported");
+            }
+        }
+        
         public FileDownloader GetFileDownloader(Item itemToDownload, DownloaderConfig config = null)
         {
             return new FileDownloader(itemToDownload, this, config);
@@ -504,51 +522,55 @@ namespace ShareFile.Api.Client
             ODataFactory.GetInstance().RegisterType<TNew, TReplace>();
         }
 
-        protected List<ChangeDomainCallback> ChangeDomainHandlers { get; set; }
-        protected List<ExceptionCallback> ExceptionHandlers { get; set; }
+        protected readonly List<ChangeDomainCallback> ChangeDomainHandlers = new List<ChangeDomainCallback>(capacity: 0);
+
+        protected readonly List<ExceptionCallback> ExceptionHandlers = new List<ExceptionCallback>(capacity: 0);
 
         public void AddChangeDomainHandler(ChangeDomainCallback handler)
         {
-            if (ChangeDomainHandlers == null)
+            lock (ChangeDomainHandlers)
             {
-                ChangeDomainHandlers = new List<ChangeDomainCallback>();
+                ChangeDomainHandlers.Add(handler);
             }
-
-            ChangeDomainHandlers.Add(handler);
         }
 
         public void AddExceptionHandler(ExceptionCallback handler)
         {
-            if (ExceptionHandlers == null)
+            lock (ExceptionHandlers)
             {
-                ExceptionHandlers = new List<ExceptionCallback>();
+                ExceptionHandlers.Add(handler);
             }
-
-            ExceptionHandlers.Add(handler);
         }
 
         public bool RemoveChangeDomainHandler(ChangeDomainCallback handler)
         {
-            if (ChangeDomainHandlers == null) return false;
-
-            return ChangeDomainHandlers.Remove(handler);
+            lock(ChangeDomainHandlers)
+            {
+                return ChangeDomainHandlers.Remove(handler);
+            }
         }
 
         public bool RemoveExceptionHandler(ExceptionCallback handler)
         {
-            if (ExceptionHandlers == null) return false;
-
-            return ExceptionHandlers.Remove(handler);
+            lock (ExceptionHandlers)
+            {
+                return ExceptionHandlers.Remove(handler);
+            }
         }
 
         public EventHandlerResponse OnException(HttpResponseMessage responseMessage, int retryCount)
         {
-            if (ExceptionHandlers != null)
+            List<ExceptionCallback> handlers;
+            lock(ExceptionHandlers)
             {
-                foreach (var handler in ExceptionHandlers)
+                handlers = new List<ExceptionCallback>(ExceptionHandlers);
+            }
+            foreach (var handler in handlers)
+            {
+                var action = handler(responseMessage, retryCount);
+                if (action.Action != EventHandlerResponseAction.Ignore)
                 {
-                    var action = handler(responseMessage, retryCount);
-                    if (action.Action != EventHandlerResponseAction.Ignore) return action;
+                    return action;
                 }
             }
             return EventHandlerResponse.Throw;
@@ -556,12 +578,17 @@ namespace ShareFile.Api.Client
 
         public EventHandlerResponse OnChangeDomain(HttpRequestMessage requestMessage, Redirection redirection)
         {
-            if (ChangeDomainHandlers != null)
+            List<ChangeDomainCallback> handlers;
+            lock(ChangeDomainHandlers)
             {
-                foreach (var handler in ChangeDomainHandlers)
+                handlers = new List<ChangeDomainCallback>(ChangeDomainHandlers);
+            }
+            foreach (var handler in handlers)
+            {
+                var action = handler(requestMessage, redirection);
+                if (action.Action != EventHandlerResponseAction.Ignore)
                 {
-                    var action = handler(requestMessage, redirection);
-                    if (action.Action != EventHandlerResponseAction.Ignore) return action;
+                    return action;
                 }
             }
             return new EventHandlerResponse() { Action = EventHandlerResponseAction.Redirect, Redirection = redirection };
@@ -586,11 +613,10 @@ namespace ShareFile.Api.Client
         {
             RequestProviderFactory.RegisterAsyncRequestProvider(asyncRequestProvider);
         }
+
         protected internal ISyncRequestExecutor SyncRequestExecutor { get; set; }
 
-#if ASYNC
         protected internal IAsyncRequestExecutor AsyncRequestExecutor { get; set; }
-#endif
 
         /// <summary>
         /// This RequestExecutor will be used for all requests created by this ShareFileClient instance, overriding the global RequestExecutorFactory.
@@ -600,7 +626,7 @@ namespace ShareFile.Api.Client
         {
             SyncRequestExecutor = syncRequestExecutor;
         }
-#if ASYNC
+
         /// <summary>
         /// This RequestExecutor will be used for all requests created by this ShareFileClient instance, overriding the global RequestExecutorFactory. 
         /// </summary>
@@ -609,7 +635,6 @@ namespace ShareFile.Api.Client
         {
             AsyncRequestExecutor = asyncRequestExecutor;
         }
-#endif
 
         public bool HasCredentials(Uri uri, string authenticationType = "")
         {
@@ -725,28 +750,30 @@ namespace ShareFile.Api.Client
 
         #endregion
 
-#if ASYNC
-        public virtual Task<Stream> ExecuteAsync(IStreamQuery stream, CancellationToken? token = null)
+        [NotNull]
+        public virtual Task<Stream> ExecuteAsync(IStreamQuery stream, CancellationToken token = default(CancellationToken))
         {
             return RequestProviderFactory.GetAsyncRequestProvider().ExecuteAsync(stream, token);
         }
 
-        public virtual Task<Stream> ExecuteAsync(IQuery<Stream> stream, CancellationToken? token = null)
+        [NotNull]
+        public virtual Task<Stream> ExecuteAsync(IQuery<Stream> stream, CancellationToken token = default(CancellationToken))
         {
             return RequestProviderFactory.GetAsyncRequestProvider().ExecuteAsync(stream, token);
         }
 
-        public virtual Task<T> ExecuteAsync<T>(IQuery<T> query, CancellationToken? token = null)
+        [NotNull]
+        public virtual Task<T> ExecuteAsync<T>(IQuery<T> query, CancellationToken token = default(CancellationToken))
             where T : class
         {
             return RequestProviderFactory.GetAsyncRequestProvider().ExecuteAsync(query, token);
         }
 
-        public virtual Task ExecuteAsync(IQuery query, CancellationToken? token = null)
+        [NotNull]
+        public virtual Task ExecuteAsync(IQuery query, CancellationToken token = default(CancellationToken))
         {
             return RequestProviderFactory.GetAsyncRequestProvider().ExecuteAsync(query, token);
         }
-#endif
 
         public virtual Stream Execute(IStreamQuery stream)
         {
@@ -775,6 +802,13 @@ namespace ShareFile.Api.Client
             if (path.Length > 0)
                 return path[0];
             return "sf";
+        }
+
+        public void SetConfiguration(Configuration configuration)
+        {
+            Configuration = configuration ?? Configuration.Default();
+            Logging = new LoggingProvider(Configuration.Logger);
+            InitializeHttpClient();
         }
     }
 }

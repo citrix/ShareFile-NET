@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,16 +17,17 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// How results should be sorted
+	/// </summary>
 	public class QuerySorting : ODataObject 
 	{
-
 		/// <summary>
 		/// What property to sort the search results by. Set to "" to not sort them
 		/// </summary>
 		public string SortBy { get; set; }
-
 		/// <summary>
 		/// Whether the sort order should be ascending or not
 		/// </summary>

@@ -57,5 +57,24 @@ namespace ShareFile.Api.Client.Extensions
 
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(val));
         }
+
+        private static string[] FileSizeSuffixes = new[] { "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
+
+        public static string ToFileSizeString(this long size)
+        {
+            string suffix = FileSizeSuffixes[0];
+            long unit = 1;
+            for(int i = 1; i < FileSizeSuffixes.Length; i++)
+            {
+                long nextUnit = unit * 1024;
+                if (size < nextUnit)
+                    break;
+
+                suffix = FileSizeSuffixes[i];
+                unit = nextUnit;
+            }
+            return $"{((double)size / unit).ToString("F")} {suffix}";
+        }
+
     }
 }

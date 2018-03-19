@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using ShareFile.Api.Client.Requests;
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
 using ShareFile.Api.Client.Extensions;
 using System.Linq.Expressions;
 

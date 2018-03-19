@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,16 +17,17 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// OutlookInformationOptionBool
+	/// </summary>
 	public class OutlookInformationOptionBool : ODataObject 
 	{
-
 		/// <summary>
 		/// Setting is locked.
 		/// </summary>
 		public bool Locked { get; set; }
-
 		/// <summary>
 		/// Value
 		/// </summary>

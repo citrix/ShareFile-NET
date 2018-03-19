@@ -1,6 +1,6 @@
 ﻿using System;
 
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
 
 namespace ShareFile.Api.Client.Transfers
 {

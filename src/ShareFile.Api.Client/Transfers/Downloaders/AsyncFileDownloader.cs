@@ -4,89 +4,45 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
 using System.Runtime.ExceptionServices;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Requests;
+using System.Buffers;
 
 namespace ShareFile.Api.Client.Transfers.Downloaders
 {
-#if ASYNC
-    public class AsyncFileDownloader : DownloaderBase
+    public class AsyncFileDownloader : AsyncDownloaderBase
     {
         public AsyncFileDownloader(Item item, IShareFileClient client, DownloaderConfig config = null)
             : base(item, client, config)
-        {
-        }
+        { }
 
         public AsyncFileDownloader(DownloadSpecification downloadSpecification, IShareFileClient client, DownloaderConfig config = null)
             : base(downloadSpecification, client, config)
+        { }
+
+        protected override async Task InternalDownloadAsync(Stream outputStream, RangeRequest rangeRequest, CancellationToken cancellationToken)
         {
-        }
-
-        /// <summary>
-        /// Prepares the downloader instance.
-        /// </summary>
-        public async Task PrepareDownloadAsync(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            DownloadSpecification = await CreateDownloadSpecificationAsync(cancellationToken);
-        }
-
-
-        /// <summary>
-        /// Downloads the file to the provided Stream.
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="transferMetadata"></param>
-        /// <param name="cancellationToken"></param>
-        /// <param name="rangeRequest">
-        ///     Overrides Config.RangeRequest. ShareFile may have some restrictions on the number of times a range request can be issued for a given download session.  
-        ///     There is a chance that providing this can result in failures.
-        /// </param>
-        public async virtual Task DownloadToAsync(
-            Stream stream,
-            CancellationToken? cancellationToken = null,
-            Dictionary<string, object> transferMetadata = null,
-            RangeRequest rangeRequest = null)
-        {
-            if (rangeRequest != null && DownloadSpecification == null)
-            {
-                throw new InvalidOperationException("Downloader instance has not been prepared. In order to supply a RangeRequest, you must first call PrepareDownloadAsync.");
-            }
-
-            if (DownloadSpecification == null)
-            {
-                await PrepareDownloadAsync();
-            }
-            else if (!await SupportsDownloadSpecificationAsync(Item.GetObjectUri()))
-            {
-                throw new NotSupportedException("Provider does not support download with DownloadSpecification)");
-            }
-
             var streamQuery = CreateDownloadStreamQuery(rangeRequest);
-
-            var totalBytesToDownload = rangeRequest != null
-                ? rangeRequest.End.GetValueOrDefault() - rangeRequest.Begin.GetValueOrDefault()
-                : Item.FileSizeBytes.GetValueOrDefault();
-
-            var progress = new TransferProgress(totalBytesToDownload, transferMetadata);
-
-            using (var downloadStream = await streamQuery.ExecuteAsync(cancellationToken))
+            Stream downloadStream = null;
+            try
             {
-                if (downloadStream != null)
-                {
-                    await ReadAllBytesAsync(stream, downloadStream, progress, cancellationToken.GetValueOrDefault()).ConfigureAwait(false);
-                }
+                downloadStream = await streamQuery.ExecuteAsync(cancellationToken).ConfigureAwait(false);
+                downloadStream = ExpectedLengthStream(downloadStream);
+                await ReadAllBytesAsync(outputStream, downloadStream, cancellationToken).ConfigureAwait(false);
             }
-
-            NotifyProgress(progress.MarkComplete());
+            finally
+            {
+                downloadStream?.Dispose();
+            }
         }
 
 
 #if PORTABLE || NETSTANDARD1_3
-        private async Task ReadAllBytesAsync(Stream fileStream, Stream stream, TransferProgress progress, CancellationToken cancellationToken)
+        private async Task ReadAllBytesAsync(Stream fileStream, Stream stream, CancellationToken cancellationToken)
         {
-            var buffer = new byte[Config.BufferSize];
+            var buffer = new byte[Configuration.BufferSize];
 
             using (var timeoutToken = new CancellationTokenSource())
             {
@@ -106,9 +62,7 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
                         if (bytesRead > 0)
                         {
                             fileStream.Write(buffer, 0, bytesRead);
-
-                            NotifyProgress(progress.UpdateBytesTransferred(bytesRead));
-
+                            progressReporter.ReportProgress(bytesRead);
                             await TryPauseAsync(cancellationToken).ConfigureAwait(false);
                         }
 
@@ -118,85 +72,94 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
             }
         }
 #else
-        private async Task ReadAllBytesAsync(Stream fileStream, Stream stream, TransferProgress progress, CancellationToken cancellationToken)
+        private async Task ReadAllBytesAsync(Stream fileStream, Stream stream, CancellationToken cancellationToken)
         {
             if (stream.CanTimeout)
             {
                 stream.ReadTimeout = Client.Configuration.HttpTimeout;
             }
-            
-            using (var linkedToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
+
+            var timeoutTimer = System.Diagnostics.Stopwatch.StartNew();
+            var cancellationTaskSource = new TaskCompletionSource<bool>();
+            var cancellationCallbackRegistration = cancellationToken.Register(CancellationCallback, cancellationTaskSource);
+            var buffer = ArrayPool<byte>.Shared.Rent(Configuration.BufferSize);
+            try
             {
-                try
+                var timeoutTask = TimeoutChecker(timeoutTimer);
+                var cancellationTask = cancellationTaskSource.Task;
+                int bytesRead;
+                do
                 {
-                    var cancellationTask = CancellationChecker(linkedToken.Token);
-                    var buffer = new byte[Config.BufferSize];
-                    int bytesRead;
-                    do
+                    // NetworkStream.ReadAsync does not respect cancellationToken or readTimeout.
+                    var readTask = stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken);
+
+                    // Wait until either the read finishes, the timeout is reached, or the user cancels the download.
+                    var finishedTask = await Task.WhenAny(readTask, timeoutTask, cancellationTask).ConfigureAwait(false);
+                    if(finishedTask != readTask)
                     {
-                        // We have to use stream.Read instead of stream.ReadyAsync due to a .NET bug
-                        var readTask = Task.Factory.StartNew(
-                            () => stream.Read(buffer, 0, buffer.Length),
-                            cancellationToken,
-                            TaskCreationOptions.LongRunning,
-                            TaskScheduler.Default);
-
-                        // Wait until either the read finished, or the user cancelled the operation
-                        var finishedTask = await Task.WhenAny(readTask, cancellationTask).ConfigureAwait(false);
-                        if (finishedTask == readTask)
-                        {
-                            bytesRead = readTask.Result;
-                        }
-                        else
-                        {
-                            throw new TaskCanceledException();
-                        }
-                        if (bytesRead > 0)
-                        {
-                            fileStream.Write(buffer, 0, bytesRead);
-
-                            NotifyProgress(progress.UpdateBytesTransferred(bytesRead));
-
-                            await TryPauseAsync(cancellationToken).ConfigureAwait(false);
-                        }
+                        // Download timed out or cancelled, but the read is still running. If it throws, swallow the exception.
+                        WaitForFinalRead(readTask, buffer);
+                        // The read is still using the buffer. Don't release it until the read finishes.
+                        buffer = null;
+                        throw finishedTask == timeoutTask ? new TimeoutException() : (Exception)new TaskCanceledException();
                     }
-                    while (bytesRead > 0);
+                    // Read finished (but may throw on await).
+                    bytesRead = await readTask.ConfigureAwait(false);
+                    if (bytesRead > 0)
+                    {
+                        await fileStream.WriteAsync(buffer, 0, bytesRead, cancellationToken).ConfigureAwait(false);
+                        progressReporter.ReportProgress(bytesRead);
+                        await TryPauseAsync(cancellationToken).ConfigureAwait(false);
+                    }
+                    timeoutTimer.Restart();
                 }
-                catch (AggregateException ex)
+                while (bytesRead > 0);
+            }
+            finally
+            {
+                if (buffer != null)
                 {
-                    // The read or cancellation task will always be wrapped, so just rethrow the inner exception.
-                    throw ex.InnerException;
+                    ArrayPool<byte>.Shared.Return(buffer);
                 }
-                finally
-                {
-                    // Clean up the timer
-                    linkedToken.Cancel();
-                }
+                cancellationCallbackRegistration.Dispose();
+                timeoutTimer.Stop();
             }
         }
 
-        private Task<bool> CancellationChecker(CancellationToken cancellationToken)
+        private static void CancellationCallback(object cancellationTaskSource)
         {
-            TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
+            ((TaskCompletionSource<bool>)cancellationTaskSource).SetResult(result: true);
+        }
 
-            // Timer will poll the cancellation token ever 1000ms
-            Timer timer = null;
-            timer = new Timer(_ =>
+        private static void WaitForFinalRead(Task readTask, byte[] buffer)
+        {
+            Task.Run(async () =>
             {
-                if (cancellationToken.IsCancellationRequested)
+                try
                 {
-                    tcs.SetCanceled();
-                    timer.Dispose();
+                    await readTask.ConfigureAwait(false);
                 }
-                else
+                catch { }
+                finally
                 {
-                    timer.Change(1000, Timeout.Infinite);
+                    ArrayPool<byte>.Shared.Return(buffer);
                 }
-            }, null, 1000, Timeout.Infinite);
+            }).ConfigureAwait(false);
+        }
 
-            return tcs.Task;
+        private async Task TimeoutChecker(System.Diagnostics.Stopwatch timeoutTimer)
+        {
+            TimeSpan readTimeout = TimeSpan.FromMilliseconds(Client.Configuration.HttpTimeout);
+            while(timeoutTimer.IsRunning)
+            {
+                TimeSpan timeSinceLastRead = timeoutTimer.Elapsed;
+                if(timeSinceLastRead > readTimeout)
+                {
+                    return;
+                }
+                await Task.Delay(readTimeout - timeSinceLastRead);
+            }
         }
 #endif
     }
-#endif
 }

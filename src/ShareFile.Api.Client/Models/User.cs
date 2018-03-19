@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,60 +17,54 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+#if !ShareFile
+	/// <summary>
+	/// User
+	/// </summary>
 	public class User : Principal 
 	{
-
 		public Account Account { get; set; }
-
 		public string Company { get; set; }
-
 		public int? TotalSharedFiles { get; set; }
-
 		public int? Contacted { get; set; }
-
+		/// <summary>
+		/// The first and last name of the user
+		/// </summary>
 		public string FullName { get; set; }
-
 		public string ReferredBy { get; set; }
-
-		public IEnumerable<Notification> Notifications { get; set; }
-
 		public Zone DefaultZone { get; set; }
-
 		public string FirstName { get; set; }
-
 		public string LastName { get; set; }
-
 		public DateTime? DateCreated { get; set; }
-
 		public string FullNameShort { get; set; }
-
 		public IEnumerable<string> Emails { get; set; }
-
+		public IEnumerable<EmailAddress> EmailAddresses { get; set; }
 		public bool? IsConfirmed { get; set; }
-
+		public bool? IsDeleted { get; set; }
 		public string Password { get; set; }
-
 		public UserPreferences Preferences { get; set; }
-
 		public UserSecurity Security { get; set; }
-
+		/// <summary>
+		/// This property would be deprecated in favor of the new property 'Favorites'
+		/// </summary>
 		public IEnumerable<FavoriteFolder> FavoriteFolders { get; set; }
-
 		public Folder HomeFolder { get; set; }
-
 		public IEnumerable<DeviceUser> Devices { get; set; }
-
 		public IEnumerable<SafeEnum<IntegrationProvider>> Integrations { get; set; }
-
 		public Folder VirtualRoot { get; set; }
-
 		public IEnumerable<SafeEnum<UserRole>> Roles { get; set; }
-
 		public UserInfo Info { get; set; }
-
 		public string AffiliatedPartnerUserId { get; set; }
+		/// <summary>
+		/// List of Favorite items associated with the user
+		/// </summary>
+		public IEnumerable<Favorite> Favorites { get; set; }
+		/// <summary>
+		/// List of Groups the user belongs. Only available when authenticated user and user match.
+		/// </summary>
+		public IEnumerable<Group> Groups { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
@@ -86,14 +80,15 @@ namespace ShareFile.Api.Models
 				Contacted = typedSource.Contacted;
 				FullName = typedSource.FullName;
 				ReferredBy = typedSource.ReferredBy;
-				Notifications = typedSource.Notifications;
 				DefaultZone = typedSource.DefaultZone;
 				FirstName = typedSource.FirstName;
 				LastName = typedSource.LastName;
 				DateCreated = typedSource.DateCreated;
 				FullNameShort = typedSource.FullNameShort;
 				Emails = typedSource.Emails;
+				EmailAddresses = typedSource.EmailAddresses;
 				IsConfirmed = typedSource.IsConfirmed;
+				IsDeleted = typedSource.IsDeleted;
 				Password = typedSource.Password;
 				Preferences = typedSource.Preferences;
 				Security = typedSource.Security;
@@ -105,6 +100,8 @@ namespace ShareFile.Api.Models
 				Roles = typedSource.Roles;
 				Info = typedSource.Info;
 				AffiliatedPartnerUserId = typedSource.AffiliatedPartnerUserId;
+				Favorites = typedSource.Favorites;
+				Groups = typedSource.Groups;
 			}
 			else
 			{
@@ -133,10 +130,6 @@ namespace ShareFile.Api.Models
 				{
 					ReferredBy = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
-				if(source.TryGetProperty("Notifications", out token) && token.Type != JTokenType.Null)
-				{
-					Notifications = (IEnumerable<Notification>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<Notification>));
-				}
 				if(source.TryGetProperty("DefaultZone", out token) && token.Type != JTokenType.Null)
 				{
 					DefaultZone = (Zone)serializer.Deserialize(token.CreateReader(), typeof(Zone));
@@ -161,9 +154,17 @@ namespace ShareFile.Api.Models
 				{
 					Emails = (IEnumerable<string>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<string>));
 				}
+				if(source.TryGetProperty("EmailAddresses", out token) && token.Type != JTokenType.Null)
+				{
+					EmailAddresses = (IEnumerable<EmailAddress>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<EmailAddress>));
+				}
 				if(source.TryGetProperty("IsConfirmed", out token) && token.Type != JTokenType.Null)
 				{
 					IsConfirmed = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("IsDeleted", out token) && token.Type != JTokenType.Null)
+				{
+					IsDeleted = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("Password", out token) && token.Type != JTokenType.Null)
 				{
@@ -209,7 +210,16 @@ namespace ShareFile.Api.Models
 				{
 					AffiliatedPartnerUserId = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
+				if(source.TryGetProperty("Favorites", out token) && token.Type != JTokenType.Null)
+				{
+					Favorites = (IEnumerable<Favorite>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<Favorite>));
+				}
+				if(source.TryGetProperty("Groups", out token) && token.Type != JTokenType.Null)
+				{
+					Groups = (IEnumerable<Group>)serializer.Deserialize(token.CreateReader(), typeof(IEnumerable<Group>));
+				}
 			}
 		}
 	}
+#endif
 }

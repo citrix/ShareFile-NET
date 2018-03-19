@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
 using System.Threading;
 using ShareFile.Api.Client.Extensions.Tasks;
 using System;
 using ShareFile.Api.Client.Extensions;
+using System.Threading.Tasks;
 
 namespace ShareFile.Api.Client.Transfers.Downloaders
 {
@@ -20,9 +21,9 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
         {
         }
 
-        public override void DownloadTo(Stream fileStream,
+        public override void DownloadTo(Stream outputStream,
             Dictionary<string, object> transferMetadata = null,
-            CancellationToken? cancellationToken = null,
+            CancellationToken cancellationToken = default(CancellationToken),
             RangeRequest rangeRequest = null)
         {
             if (rangeRequest != null && DownloadSpecification == null)
@@ -32,46 +33,48 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
 
             if (DownloadSpecification == null)
             {
-                PrepareDownload();
+                PrepareDownload(cancellationToken);
             }
-            else if (!SupportsDownloadSpecification(Item.GetObjectUri()))
+            else if (Item != null && !SupportsDownloadSpecification(Item.GetObjectUri()))
             {
                 throw new NotSupportedException("Provider does not support download with DownloadSpecification)");
             }
 
+            rangeRequest = rangeRequest ?? Config.RangeRequest;
+
             var downloadQuery = CreateDownloadStreamQuery(rangeRequest);
-
-            var totalBytesToDownload = rangeRequest != null
-                ? rangeRequest.End.GetValueOrDefault() - rangeRequest.Begin.GetValueOrDefault()
-                : Item.FileSizeBytes.GetValueOrDefault();
-
-            var progress = new TransferProgress(totalBytesToDownload, transferMetadata);
-
-            using (var stream = downloadQuery.Execute())
+            CancellationTokenSource downloadCancellationSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            Stream downloadStream = null;
+            try
             {
-                if (stream != null)
+                progressReporter.StartReporting(transferMetadata, downloadCancellationSource.Token);
+                downloadStream = downloadQuery.Execute();
+                downloadStream = ExpectedLengthStream(downloadStream);
+
+                int bytesRead;
+                var buffer = new byte[Configuration.BufferSize];
+                do
                 {
-                    int bytesRead;
-                    var buffer = new byte[Config.BufferSize];
+                    TryPause();
+                    if (downloadCancellationSource.Token.IsCancellationRequested)
+                        throw new TaskCanceledException();
 
-                    do
+                    bytesRead = downloadStream.Read(buffer, 0, buffer.Length);
+                    if (bytesRead > 0)
                     {
-                        TryPause();
-                        cancellationToken.ThrowIfRequested();
+                        outputStream.Write(buffer, 0, bytesRead);
+                        progressReporter.ReportProgress(bytesRead);
+                    }
 
-                        bytesRead = stream.Read(buffer, 0, buffer.Length);
-                        if (bytesRead > 0)
-                        {
-                            fileStream.Write(buffer, 0, bytesRead);
-
-                            NotifyProgress(progress.UpdateBytesTransferred(bytesRead));
-                        }
-
-                    } while (bytesRead > 0);
-                }
+                } while (bytesRead > 0);
             }
-
-            NotifyProgress(progress.MarkComplete());
+            finally
+            {
+                downloadCancellationSource.Cancel();
+                downloadCancellationSource.Dispose();
+                downloadStream?.Dispose();
+            }
+            progressReporter.ReportCompletion();
         }
     }
 }

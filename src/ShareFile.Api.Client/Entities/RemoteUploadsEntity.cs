@@ -5,15 +5,15 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
-using ShareFile.Api.Models;
 using ShareFile.Api.Client;
-using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Models;
+using ShareFile.Api.Client.Requests;
 
 
 namespace ShareFile.Api.Client.Entities
@@ -40,77 +40,77 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<RemoteUpload>> Get()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<RemoteUpload>>(Client);
-		    sfApiQuery.From("RemoteUploads");
+            sfApiQuery.From("RemoteUploads");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         public IQuery<RemoteUpload> GetPublic()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<RemoteUpload>(Client);
-		    sfApiQuery.From("RemoteUploads");
-		    sfApiQuery.Action("Public");
+            sfApiQuery.From("RemoteUploads");
+            sfApiQuery.Action("Public");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         public IQuery<RemoteUpload> Get(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<RemoteUpload>(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         public IQuery<UploadSpecification> Upload2(Uri url, RemoteUploadRequestParams uploadParams, string userId, int? expirationDays = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<UploadSpecification>(Client);
-		    sfApiQuery.Action("Upload2");
+            sfApiQuery.Action("Upload2");
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("userId", userId);
             sfApiQuery.QueryString("expirationDays", expirationDays);
             sfApiQuery.Body = uploadParams;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         public IQuery<RemoteUpload> Create(RemoteUpload remoteUpload)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<RemoteUpload>(Client);
-		    sfApiQuery.From("RemoteUploads");
+            sfApiQuery.From("RemoteUploads");
             sfApiQuery.Body = remoteUpload;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         public IQuery<RemoteUpload> Update(RemoteUpload remoteUpload)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<RemoteUpload>(Client);
-		    sfApiQuery.From("RemoteUploads");
+            sfApiQuery.From("RemoteUploads");
             sfApiQuery.Body = remoteUpload;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         public IQuery Delete(string id)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.From("RemoteUploads");
+            sfApiQuery.From("RemoteUploads");
             sfApiQuery.QueryString("id", id);
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         public IQuery<ODataFeed<Contact>> GetUsers()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Contact>>(Client);
-		    sfApiQuery.From("RemoteUploads");
-		    sfApiQuery.Action("Users");
+            sfApiQuery.From("RemoteUploads");
+            sfApiQuery.Action("Users");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         public IQuery<User> ValidateRemoteUploadUser(string id, string email)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<User>(Client);
-		    sfApiQuery.From("RemoteUploads");
-		    sfApiQuery.Action("ValidateRemoteUploadUser");
+            sfApiQuery.From("RemoteUploads");
+            sfApiQuery.Action("ValidateRemoteUploadUser");
             sfApiQuery.QueryString("id", id);
             sfApiQuery.QueryString("email", email);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
     }
 }

@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,31 +17,21 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
 	public class AccountUser : User 
 	{
-
 		public bool? IsAdministrator { get; set; }
-
 		public bool? CanCreateFolders { get; set; }
-
 		public bool? CanUseFileBox { get; set; }
-
 		public bool? CanManageUsers { get; set; }
-
 		public bool? IsVirtualClient { get; set; }
-
 		public int? DiskSpace { get; set; }
-
 		public int? Bandwidth { get; set; }
-
+		public int? BandwidthUsageMB { get; set; }
 		public int? StorageQuotaLimitGB { get; set; }
-
 		public int? StorageQuotaPercent { get; set; }
-
 		public bool? EnableHardLimit { get; set; }
-
 		public IEnumerable<UserPolicy> Policies { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
@@ -59,6 +49,7 @@ namespace ShareFile.Api.Models
 				IsVirtualClient = typedSource.IsVirtualClient;
 				DiskSpace = typedSource.DiskSpace;
 				Bandwidth = typedSource.Bandwidth;
+				BandwidthUsageMB = typedSource.BandwidthUsageMB;
 				StorageQuotaLimitGB = typedSource.StorageQuotaLimitGB;
 				StorageQuotaPercent = typedSource.StorageQuotaPercent;
 				EnableHardLimit = typedSource.EnableHardLimit;
@@ -94,6 +85,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("Bandwidth", out token) && token.Type != JTokenType.Null)
 				{
 					Bandwidth = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
+				}
+				if(source.TryGetProperty("BandwidthUsageMB", out token) && token.Type != JTokenType.Null)
+				{
+					BandwidthUsageMB = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
 				}
 				if(source.TryGetProperty("StorageQuotaLimitGB", out token) && token.Type != JTokenType.Null)
 				{

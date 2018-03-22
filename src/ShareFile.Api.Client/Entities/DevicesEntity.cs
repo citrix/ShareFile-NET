@@ -5,15 +5,15 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
-using ShareFile.Api.Models;
 using ShareFile.Api.Client;
-using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Models;
+using ShareFile.Api.Client.Requests;
 
 
 namespace ShareFile.Api.Client.Entities
@@ -104,9 +104,9 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<DeviceUser>> Get()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<DeviceUser>>(Client);
-		    sfApiQuery.From("Devices");
+            sfApiQuery.From("Devices");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -121,7 +121,7 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Device>(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -134,10 +134,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<DeviceUser>> GetByUser(Uri parentUrl)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<DeviceUser>>(Client);
-		    sfApiQuery.Action("Devices");
+            sfApiQuery.Action("Devices");
             sfApiQuery.Uri(parentUrl);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -151,11 +151,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery DeleteByUser(Uri parentUrl, string id)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("Devices");
+            sfApiQuery.Action("Devices");
             sfApiQuery.Uri(parentUrl);
             sfApiQuery.ActionIds(id);
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -169,11 +169,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery Wipe(Uri deviceUrl, string userid = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("Wipe");
+            sfApiQuery.Action("Wipe");
             sfApiQuery.Uri(deviceUrl);
             sfApiQuery.QueryString("userid", userid);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -187,11 +187,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery Lock(Uri deviceUrl, string userid = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("Lock");
+            sfApiQuery.Action("Lock");
             sfApiQuery.Uri(deviceUrl);
             sfApiQuery.QueryString("userid", userid);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -205,11 +205,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery Unlock(Uri deviceUrl, string userid = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("Unlock");
+            sfApiQuery.Action("Unlock");
             sfApiQuery.Uri(deviceUrl);
             sfApiQuery.QueryString("userid", userid);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
     }
 }

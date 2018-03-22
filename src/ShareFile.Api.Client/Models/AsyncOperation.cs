@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,86 +17,75 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Represents an Asynchronous operation - any operation that is started but
+	/// the results will take time to complete.
+	/// </summary>
 	public class AsyncOperation : ODataObject 
 	{
-
 		/// <summary>
 		/// Operation type
 		/// </summary>
 		public SafeEnum<AsyncOperationType> Operation { get; set; }
-
 		/// <summary>
 		/// ShareFile Account
 		/// </summary>
 		public Account Account { get; set; }
-
 		/// <summary>
 		/// Represents the Zone that is driving the asynchronous operation process. It
 		/// may be null if the operation is driven by the control plane.
 		/// </summary>
 		public Zone AuthorityZone { get; set; }
-
 		/// <summary>
 		/// Source Item for the operation.
 		/// </summary>
 		public Item Source { get; set; }
-
 		/// <summary>
 		/// User that initiated the operation
 		/// </summary>
 		public User User { get; set; }
-
 		/// <summary>
 		/// Operation creation date
 		/// </summary>
 		public DateTime? CreationDate { get; set; }
-
 		/// <summary>
 		/// Operation state. States 'Created' and 'Scheduled' indicate the operation is
 		/// in progress; States 'Success' and 'Failure' indicate the operatoin is finalized
 		/// </summary>
 		public SafeEnum<AsyncOperationState> State { get; set; }
-
 		/// <summary>
 		/// Last time the operation state was modified
 		/// </summary>
 		public DateTime? UpdateDate { get; set; }
-
 		/// <summary>
 		/// Target Item for the operation.
 		/// </summary>
 		public Item Target { get; set; }
-
 		/// <summary>
 		/// Batch Identifier for an asynchronous operation that includes multiple Items - for
 		/// example, a recursive Copy will create a single AsyncOp instance per file, all sharing
 		/// the same BatchID
 		/// </summary>
 		public string BatchID { get; set; }
-
 		/// <summary>
 		/// Item ID used as source for the Batch operation
 		/// </summary>
 		public string BatchSourceID { get; set; }
-
 		/// <summary>
 		/// Item ID used as target for the Batch operation
 		/// </summary>
 		public string BatchTargetID { get; set; }
-
 		/// <summary>
 		/// BatchProgress indicates the progress of the Batch operation
 		/// </summary>
 		public double? BatchProgress { get; set; }
-
 		/// <summary>
 		/// Batch Operation state. State 'Scheduled' indicate the operation is
 		/// in progress; States 'Success' and 'Failure' indicate the operation is finalized
 		/// </summary>
 		public SafeEnum<AsyncOperationState> BatchState { get; set; }
-
 		public int? BatchTotal { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

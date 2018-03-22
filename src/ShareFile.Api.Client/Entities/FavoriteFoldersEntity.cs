@@ -5,15 +5,15 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
-using ShareFile.Api.Models;
 using ShareFile.Api.Client;
-using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Models;
+using ShareFile.Api.Client.Requests;
 
 
 namespace ShareFile.Api.Client.Entities
@@ -137,10 +137,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<FavoriteFolder>> GetByUser(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<FavoriteFolder>>(Client);
-		    sfApiQuery.Action("FavoriteFolders");
+            sfApiQuery.Action("FavoriteFolders");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -157,11 +157,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<FavoriteFolder> GetByUser(Uri itemUrl, string userid)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<FavoriteFolder>(Client);
-		    sfApiQuery.Action("FavoriteFolders");
+            sfApiQuery.Action("FavoriteFolders");
             sfApiQuery.Uri(itemUrl);
             sfApiQuery.ActionIds(userid);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -177,10 +177,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<FavoriteFolder> GetFavoriteFolderByItem(Uri parentUrl)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<FavoriteFolder>(Client);
-		    sfApiQuery.Action("FavoriteFolder");
+            sfApiQuery.Action("FavoriteFolder");
             sfApiQuery.Uri(parentUrl);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -197,7 +197,7 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<FavoriteFolder>(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -220,11 +220,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<FavoriteFolder> CreateByUser(Uri url, FavoriteFolder folder)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<FavoriteFolder>(Client);
-		    sfApiQuery.Action("FavoriteFolders");
+            sfApiQuery.Action("FavoriteFolders");
             sfApiQuery.Uri(url);
             sfApiQuery.Body = folder;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -245,11 +245,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery PatchByUser(Uri url, IEnumerable<FavoriteFolder> favoriteFolderList)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("FavoriteFolders");
+            sfApiQuery.Action("FavoriteFolders");
             sfApiQuery.Uri(url);
             sfApiQuery.Body = favoriteFolderList;
             sfApiQuery.HttpMethod = "PUT";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -263,20 +263,20 @@ namespace ShareFile.Api.Client.Entities
         public IQuery Delete(Uri url, string itemid)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("FavoriteFolders");
+            sfApiQuery.Action("FavoriteFolders");
             sfApiQuery.Uri(url);
             sfApiQuery.ActionIds(itemid);
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         public IQuery DeleteByUser(Uri url, string itemId)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("FavoriteFolders");
+            sfApiQuery.Action("FavoriteFolders");
             sfApiQuery.Uri(url);
             sfApiQuery.ActionIds(itemId);
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
     }
 }

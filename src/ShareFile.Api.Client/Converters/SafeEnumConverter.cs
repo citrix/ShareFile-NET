@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using ShareFile.Api.Client.Extensions;
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
 
 namespace ShareFile.Api.Client.Converters
 {

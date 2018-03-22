@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,11 +17,16 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Represents a Storage Category Policy definition for use within ShareFile's Policy Based Administration
+	/// </summary>
 	public class StoragePolicy : Policy 
 	{
-
+		/// <summary>
+		/// The settings managed for this Policy
+		/// </summary>
 		public StorageSettings Settings { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

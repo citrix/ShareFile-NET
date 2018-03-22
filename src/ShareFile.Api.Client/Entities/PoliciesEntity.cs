@@ -5,15 +5,15 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
-using ShareFile.Api.Models;
 using ShareFile.Api.Client;
-using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Models;
+using ShareFile.Api.Client.Requests;
 
 
 namespace ShareFile.Api.Client.Entities
@@ -77,7 +77,7 @@ namespace ShareFile.Api.Client.Entities
         /// </summary>
         /// <example>
         /// {
-        /// "Active": true
+        /// "Active": true,
         /// "Policy": {
         /// "Id": "123"
         /// }
@@ -137,9 +137,9 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Policy>> Get()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Policy>>(Client);
-		    sfApiQuery.From("Policies");
+            sfApiQuery.From("Policies");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -157,7 +157,7 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Policy>(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -189,11 +189,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<UserPolicy>> PatchByUser(Uri url, IEnumerable<UserPolicy> userPolicies)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<UserPolicy>>(Client);
-		    sfApiQuery.Action("Policies");
+            sfApiQuery.Action("Policies");
             sfApiQuery.Uri(url);
             sfApiQuery.Body = userPolicies;
             sfApiQuery.HttpMethod = "PUT";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -201,7 +201,7 @@ namespace ShareFile.Api.Client.Entities
         /// </summary>
         /// <example>
         /// {
-        /// "Active": true
+        /// "Active": true,
         /// "Policy": {
         /// "Id": "123"
         /// }
@@ -218,11 +218,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<UserPolicy> CreateByUser(Uri url, UserPolicy policy)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<UserPolicy>(Client);
-		    sfApiQuery.Action("Policies");
+            sfApiQuery.Action("Policies");
             sfApiQuery.Uri(url);
             sfApiQuery.Body = policy;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -235,19 +235,19 @@ namespace ShareFile.Api.Client.Entities
         public IQuery DeleteByUser(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("Policies");
+            sfApiQuery.Action("Policies");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         public IQuery DeleteByUser(Uri url, string id)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("Policies");
+            sfApiQuery.Action("Policies");
             sfApiQuery.Uri(url);
             sfApiQuery.ActionIds(id);
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -265,12 +265,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<UserPolicy> UpdateByUser(Uri url, string id, UserPolicy updatedPolicy)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<UserPolicy>(Client);
-		    sfApiQuery.Action("Policies");
+            sfApiQuery.Action("Policies");
             sfApiQuery.Uri(url);
             sfApiQuery.ActionIds(id);
             sfApiQuery.Body = updatedPolicy;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
     }
 }

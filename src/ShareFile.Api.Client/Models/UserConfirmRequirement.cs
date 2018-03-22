@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,21 +17,20 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// The parameters we need for user confirm flow
+	/// </summary>
 	public class UserConfirmRequirement : ODataObject 
 	{
-
 		public string AuthenticationId { get; set; }
-
 		public bool IsProbableSAMLOnlyUser { get; set; }
-
 		public bool IsADLinked { get; set; }
-
 		public string ADUserName { get; set; }
-
 		public string TempPassword { get; set; }
-
+		public bool IsUnlicensedUser { get; set; }
+		public ClientUpgradeWeb ClientUpgradeWeb { get; set; }
 		public User User { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
@@ -47,6 +46,8 @@ namespace ShareFile.Api.Models
 				IsADLinked = typedSource.IsADLinked;
 				ADUserName = typedSource.ADUserName;
 				TempPassword = typedSource.TempPassword;
+				IsUnlicensedUser = typedSource.IsUnlicensedUser;
+				ClientUpgradeWeb = typedSource.ClientUpgradeWeb;
 				User = typedSource.User;
 			}
 			else
@@ -71,6 +72,14 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("TempPassword", out token) && token.Type != JTokenType.Null)
 				{
 					TempPassword = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+				}
+				if(source.TryGetProperty("IsUnlicensedUser", out token) && token.Type != JTokenType.Null)
+				{
+					IsUnlicensedUser = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+				}
+				if(source.TryGetProperty("ClientUpgradeWeb", out token) && token.Type != JTokenType.Null)
+				{
+					ClientUpgradeWeb = (ClientUpgradeWeb)serializer.Deserialize(token.CreateReader(), typeof(ClientUpgradeWeb));
 				}
 				if(source.TryGetProperty("User", out token) && token.Type != JTokenType.Null)
 				{

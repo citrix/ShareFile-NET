@@ -1,4 +1,4 @@
-﻿#if !NETFX_CORE
+﻿#if !PORTABLE
 using System.Security.Cryptography;
 
 namespace ShareFile.Api.Client.Security.Cryptography

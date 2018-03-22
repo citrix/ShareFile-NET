@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
 
 namespace ShareFile.Api.Client.Extensions
 {

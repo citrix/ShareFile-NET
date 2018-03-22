@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,32 +17,30 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Clone operation parameters
+	/// </summary>
 	public class AccessControlsCloneParams : ODataObject 
 	{
-
 		/// <summary>
 		/// Defines whether the cloned principals should receieve a notice on the permission grant.
 		/// </summary>
 		public bool? NotifyUser { get; set; }
-
 		/// <summary>
 		/// Custom notification message, if any.
 		/// </summary>
 		public string NotifyMessage { get; set; }
-
 		/// <summary>
 		/// The source principal's permissions for this folder and all subdirectories
 		/// will be copied into the cloned users.
 		/// </summary>
 		public string FolderId { get; set; }
-
 		/// <summary>
 		/// This principal's permissions will be used as the source for all cloned users.
 		/// </summary>
 		public string PrincipalId { get; set; }
-
 		/// <summary>
 		/// List of existing principals that will receive cloned permissions.
 		/// </summary>

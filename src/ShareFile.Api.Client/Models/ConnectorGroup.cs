@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,16 +17,20 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Represents a class of connectors associated with a ShareFile Account. For example, it
+	/// represents the group of Network Shares or Sharepoint Sites linked to this account.
+	/// These elements are returned as children of the alias "connector" in Items
+	/// - i.e., /Items(connectors)/Children
+	/// </summary>
 	public class ConnectorGroup : Folder 
 	{
-
 		/// <summary>
 		/// Zones that contain this Connector type
 		/// </summary>
 		public IEnumerable<ConnectorGroupZone> Zones { get; set; }
-
 		/// <summary>
 		/// Provider identifier for this group. This is the 1st element in a ShareFile URL,
 		/// for example - cifs for Network Shares connectors. Items in Network Share connectors

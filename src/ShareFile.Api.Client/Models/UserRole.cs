@@ -5,13 +5,17 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
-	public enum UserRole
+    
+    /// <summary>
+    /// User Roles
+    /// </summary>
+    public enum UserRole
     {
         Client = 1,
         Employee = 2,
@@ -33,6 +37,9 @@ namespace ShareFile.Api.Models
         CreateDropboxConnectors = 41,
         CreateGoogleDriveConnectors = 42,
         CreateOneDriveBusinessConnectors = 43,
+        CanSendDocumentsForSignature = 44,
+        CanViewSignatureDocuments = 45,
+        CanManageSignatureTemplates = 46,
         AdminAccountPolicies = 50,
         AdminBilling = 51,
         AdminBranding = 52,
@@ -58,6 +65,7 @@ namespace ShareFile.Api.Models
         AdminConnectors = 72,
         AdminEmailArchiver = 73,
         AdminCanAdministerCustomerAccount = 74,
-        AdminPolicyDefinitions = 75
+        AdminPolicyDefinitions = 75,
+        AdminCustomWorkflow = 76
     }
 }

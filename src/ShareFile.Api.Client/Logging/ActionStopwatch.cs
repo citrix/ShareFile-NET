@@ -61,12 +61,13 @@ namespace ShareFile.Api.Client.Logging
         void Stop();
         void Reset();
         void Restart();
+        TimeSpan Elapsed { get; }
         long ElapsedMilliseconds { get; }
         bool IsRunning { get; }
     }
 
     /// <summary>
-    /// Portable implementation of System.Diagnostics.Stopwatch.  If you're platform provides a higher precision implementation, 
+    /// Portable implementation of System.Diagnostics.Stopwatch.  If your platform provides a higher precision implementation, 
     /// most will, just register with the StopwatchFactory.
     /// </summary>
     public class Stopwatch : IStopwatch
@@ -113,6 +114,8 @@ namespace ShareFile.Api.Client.Logging
             Reset();
             Start();
         }
+
+        public TimeSpan Elapsed => TimeSpan.FromMilliseconds(ElapsedMilliseconds);
 
         public long ElapsedMilliseconds
         {

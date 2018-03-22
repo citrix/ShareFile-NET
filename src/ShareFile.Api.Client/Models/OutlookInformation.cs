@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,86 +17,73 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Settings used by the ShareFile Outlook Plugin.
+	/// </summary>
 	public class OutlookInformation : ODataObject 
 	{
-
 		/// <summary>
 		/// DownloadInfo Level
 		/// </summary>
 		public OutlookInformationOptionString DownloadInfoLevel { get; set; }
-
 		/// <summary>
 		/// UploadInfo Level
 		/// </summary>
 		public OutlookInformationOptionString UploadInfoLevel { get; set; }
-
 		/// <summary>
 		/// Notify on download of Share
 		/// </summary>
 		public OutlookInformationOptionBool NotifyOnDownload { get; set; }
-
 		/// <summary>
 		/// Notify on upload of Share
 		/// </summary>
 		public OutlookInformationOptionBool NotifyOnUpload { get; set; }
-
 		/// <summary>
 		/// Max downloads
 		/// </summary>
 		public OutlookInformationOptionInt MaxDownloads { get; set; }
-
 		/// <summary>
 		/// Link expiration
 		/// </summary>
 		public OutlookInformationOptionString LinkExpiration { get; set; }
-
 		/// <summary>
 		/// Default text when requesting files
 		/// </summary>
 		public OutlookInformationOptionString RequestText { get; set; }
-
 		/// <summary>
 		/// Default text when sending files
 		/// </summary>
 		public OutlookInformationOptionString SendText { get; set; }
-
 		/// <summary>
 		/// Banner HTML
 		/// </summary>
 		public OutlookInformationOptionString BannerHTML { get; set; }
-
 		/// <summary>
 		/// Use banner
 		/// </summary>
 		public OutlookInformationOptionBool UseBanner { get; set; }
-
 		/// <summary>
 		/// Auto convert
 		/// </summary>
 		public OutlookInformationOptionBool AutoConvert { get; set; }
-
 		/// <summary>
 		/// Auto convert
 		/// </summary>
 		public OutlookInformationOptionInt ConvertAbove { get; set; }
-
 		/// <summary>
 		/// Attach paperclip
 		/// </summary>
 		public OutlookInformationOptionBool AttachPaperclip { get; set; }
-
 		/// <summary>
 		/// Encrypted Email Recipient Verification
 		/// </summary>
 		public OutlookInformationOptionString EncryptedEmailRecipientVerification { get; set; }
-
 		/// <summary>
 		/// Default Encrypted Email Expiration
 		/// </summary>
 		public OutlookInformationOptionString EncryptedEmailExpiration { get; set; }
-
 		/// <summary>
 		/// Default Encrypted Email Notify on Read
 		/// </summary>

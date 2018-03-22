@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,23 +17,23 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// AccessControl bulk grant operation parameters
+	/// </summary>
 	public class AccessControlsBulkParams : ODataObject 
 	{
-
 		/// <summary>
 		/// Defines whether the principal should receieve a notice on the permission grant.
 		/// If an AccessControlParam doesn't specify the property it is inherited from here.
 		/// </summary>
 		public bool? NotifyUser { get; set; }
-
 		/// <summary>
 		/// Custom notification message, if any
 		/// If an AccessControlParam doesn't specify the property it is inherited from here.
 		/// </summary>
 		public string NotifyMessage { get; set; }
-
 		/// <summary>
 		/// AccessControlParams
 		/// </summary>

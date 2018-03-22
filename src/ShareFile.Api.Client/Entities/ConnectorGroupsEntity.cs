@@ -5,15 +5,15 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
-using ShareFile.Api.Models;
 using ShareFile.Api.Client;
-using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Models;
+using ShareFile.Api.Client.Requests;
 
 
 namespace ShareFile.Api.Client.Entities
@@ -95,16 +95,16 @@ namespace ShareFile.Api.Client.Entities
         /// </summary>
         /// <example>
         /// {
-        /// "Zones":[
+        /// "Zones":[ {
         /// "Zone": {"Id":"ZoneId"},
-        /// "StorageCenter": [ { "Id":"StorageCenterId" }, { ... } ],
+        /// "StorageCenter": [ { "Id":"StorageCenterId001" }, { "Id":"StorageCenterId002" } ],
         /// "ApiVersionMin":"v3",
         /// "ApiVersionMax":"v3",
         /// "IconUrl":"https://domain/icons",
         /// "FormUrl":"https://domain/forms"
-        /// ],
+        /// } ],
         /// "Id":"ServiceId",
-        /// "Name":""Name,
+        /// "Name":"Name",
         /// "Provider":"svc"
         /// }
         /// </example>
@@ -121,12 +121,12 @@ namespace ShareFile.Api.Client.Entities
         IQuery<ConnectorGroup> Create(ConnectorGroup connectorGroup);
         
         /// <summary>
-        /// Associates a Zone to an existing Connecto Group
+        /// Associates a Zone with an existing Connector Group
         /// </summary>
         /// <example>
         /// {
         /// "Zone": {"Id":"ZoneId"},
-        /// "StorageCenter": [ { "Id":"StorageCenterId" }, { ... } ],
+        /// "StorageCenter": [ { "Id":"StorageCenterId001" }, { "Id":"StorageCenterId002" } ],
         /// "ApiVersionMin":"v3",
         /// "ApiVersionMax":"v3",
         /// "IconUrl":"https://domain/icons",
@@ -139,7 +139,7 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="url"></param>
         /// <param name="connectorGroupZone"></param>
         /// <returns>
-        /// the created or modified AccessControl instance
+        /// the created or modified ConnectorGroupZone instance
         /// </returns>
         IQuery<ConnectorGroupZone> CreateZones(Uri url, ConnectorGroupZone connectorGroupZone);
         
@@ -176,7 +176,7 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="zoneId"></param>
         /// <param name="connectorGroupZone"></param>
         /// <returns>
-        /// the created or modified AccessControl instance
+        /// the created or modified ConnectorGroupZone instance
         /// </returns>
         IQuery<ConnectorGroupZone> UpdateZones(Uri url, string zoneId, ConnectorGroupZone connectorGroupZone);
         
@@ -263,9 +263,9 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<ConnectorGroup>> Get()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<ConnectorGroup>>(Client);
-		    sfApiQuery.From("ConnectorGroups");
+            sfApiQuery.From("ConnectorGroups");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -283,7 +283,7 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroup>(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -296,11 +296,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ConnectorGroup> ByProvider(string provider)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroup>(Client);
-		    sfApiQuery.From("ConnectorGroups");
-		    sfApiQuery.Action("ByProvider");
+            sfApiQuery.From("ConnectorGroups");
+            sfApiQuery.Action("ByProvider");
             sfApiQuery.QueryString("provider", provider);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -316,11 +316,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ConnectorGroupZone> GetZones(Uri url, string id)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroupZone>(Client);
-		    sfApiQuery.Action("Zones");
+            sfApiQuery.Action("Zones");
             sfApiQuery.Uri(url);
             sfApiQuery.ActionIds(id);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -337,11 +337,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ConnectorGroupAccessControl> GetAccessControls(Uri parentUrl, string id)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroupAccessControl>(Client);
-		    sfApiQuery.Action("AccessControls");
+            sfApiQuery.Action("AccessControls");
             sfApiQuery.Uri(parentUrl);
             sfApiQuery.ActionIds(id);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -357,11 +357,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<ConnectorGroup>> GetByZone(string zoneid)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<ConnectorGroup>>(Client);
-		    sfApiQuery.From("ConnectorGroups");
-		    sfApiQuery.Action("GetByZone");
+            sfApiQuery.From("ConnectorGroups");
+            sfApiQuery.Action("GetByZone");
             sfApiQuery.ActionIds(zoneid);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -369,16 +369,16 @@ namespace ShareFile.Api.Client.Entities
         /// </summary>
         /// <example>
         /// {
-        /// "Zones":[
+        /// "Zones":[ {
         /// "Zone": {"Id":"ZoneId"},
-        /// "StorageCenter": [ { "Id":"StorageCenterId" }, { ... } ],
+        /// "StorageCenter": [ { "Id":"StorageCenterId001" }, { "Id":"StorageCenterId002" } ],
         /// "ApiVersionMin":"v3",
         /// "ApiVersionMax":"v3",
         /// "IconUrl":"https://domain/icons",
         /// "FormUrl":"https://domain/forms"
-        /// ],
+        /// } ],
         /// "Id":"ServiceId",
-        /// "Name":""Name,
+        /// "Name":"Name",
         /// "Provider":"svc"
         /// }
         /// </example>
@@ -395,19 +395,19 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ConnectorGroup> Create(ConnectorGroup connectorGroup)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroup>(Client);
-		    sfApiQuery.From("ConnectorGroups");
+            sfApiQuery.From("ConnectorGroups");
             sfApiQuery.Body = connectorGroup;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
-        /// Associates a Zone to an existing Connecto Group
+        /// Associates a Zone with an existing Connector Group
         /// </summary>
         /// <example>
         /// {
         /// "Zone": {"Id":"ZoneId"},
-        /// "StorageCenter": [ { "Id":"StorageCenterId" }, { ... } ],
+        /// "StorageCenter": [ { "Id":"StorageCenterId001" }, { "Id":"StorageCenterId002" } ],
         /// "ApiVersionMin":"v3",
         /// "ApiVersionMax":"v3",
         /// "IconUrl":"https://domain/icons",
@@ -420,16 +420,16 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="url"></param>
         /// <param name="connectorGroupZone"></param>
         /// <returns>
-        /// the created or modified AccessControl instance
+        /// the created or modified ConnectorGroupZone instance
         /// </returns>
         public IQuery<ConnectorGroupZone> CreateZones(Uri url, ConnectorGroupZone connectorGroupZone)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroupZone>(Client);
-		    sfApiQuery.Action("Zones");
+            sfApiQuery.Action("Zones");
             sfApiQuery.Uri(url);
             sfApiQuery.Body = connectorGroupZone;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -450,11 +450,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ConnectorGroupAccessControl> CreateAccessControls(Uri url, ConnectorGroupAccessControl connectorGroupAcl)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroupAccessControl>(Client);
-		    sfApiQuery.Action("AccessControls");
+            sfApiQuery.Action("AccessControls");
             sfApiQuery.Uri(url);
             sfApiQuery.Body = connectorGroupAcl;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -473,17 +473,17 @@ namespace ShareFile.Api.Client.Entities
         /// <param name="zoneId"></param>
         /// <param name="connectorGroupZone"></param>
         /// <returns>
-        /// the created or modified AccessControl instance
+        /// the created or modified ConnectorGroupZone instance
         /// </returns>
         public IQuery<ConnectorGroupZone> UpdateZones(Uri url, string zoneId, ConnectorGroupZone connectorGroupZone)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ConnectorGroupZone>(Client);
-		    sfApiQuery.Action("Zones");
+            sfApiQuery.Action("Zones");
             sfApiQuery.Uri(url);
             sfApiQuery.ActionIds(zoneId);
             sfApiQuery.Body = connectorGroupZone;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -498,7 +498,7 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -513,11 +513,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery DeleteZones(Uri serviceUrl, string zoneid)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("Zones");
+            sfApiQuery.Action("Zones");
             sfApiQuery.Uri(serviceUrl);
             sfApiQuery.ActionIds(zoneid);
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -532,11 +532,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery DeleteAccessControls(Uri serviceUrl, string zoneid)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("AccessControls");
+            sfApiQuery.Action("AccessControls");
             sfApiQuery.Uri(serviceUrl);
             sfApiQuery.ActionIds(zoneid);
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -553,12 +553,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<StorageCenter>> GetStorageCenters(Uri url, string zoneid)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<StorageCenter>>(Client);
-		    sfApiQuery.Action("Zones");
+            sfApiQuery.Action("Zones");
             sfApiQuery.Uri(url);
             sfApiQuery.ActionIds(zoneid);
             sfApiQuery.SubAction("StorageCenters");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -581,13 +581,13 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<StorageCenter>> CreateStorageCenters(Uri url, string zoneid, StorageCenter storageCenter)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<StorageCenter>>(Client);
-		    sfApiQuery.Action("Zones");
+            sfApiQuery.Action("Zones");
             sfApiQuery.Uri(url);
             sfApiQuery.ActionIds(zoneid);
             sfApiQuery.SubAction("StorageCenters");
             sfApiQuery.Body = storageCenter;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
     }
 }

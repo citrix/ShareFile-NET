@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
 using System.Threading;
 
 namespace ShareFile.Api.Client.Transfers.Downloaders
@@ -20,7 +20,7 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
         /// <summary>
         /// Prepares the downloader instance.
         /// </summary>
-        public void PrepareDownload()
+        public void PrepareDownload(CancellationToken cancellationToken = default(CancellationToken))
         {
             DownloadSpecification = CreateDownloadSpecification();
         }
@@ -37,7 +37,7 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
         /// </param>
         public abstract void DownloadTo(Stream stream,
             Dictionary<string, object> transferMetadata = null,
-            CancellationToken? cancellationToken = null,
+            CancellationToken cancellationToken = default(CancellationToken),
             RangeRequest rangeRequest = null);
     }
 }

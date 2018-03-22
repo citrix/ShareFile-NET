@@ -5,16 +5,28 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
-	public enum ItemOrderingMode
+    public enum ItemOrderingMode
     {
+        
+        /// <summary>
+        /// Default ordering mode is to sort with the folders first if no $orderby is specified, otherwise obey the $orderby exclusively
+        /// </summary>
         Default = 0,
+        
+        /// <summary>
+        /// Sort folders to the top of result set prior to applying any $orderby
+        /// </summary>
         FoldersFirst = 1,
+        
+        /// <summary>
+        /// Sort folders based on the persisted folder sort options. If the folder options call for "UserPreferences", honor $orderby, otherwise override.
+        /// </summary>
         UseFolderOptions = 2
     }
 }

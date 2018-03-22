@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,55 +17,51 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Represents a rule configuring access of a Principal to an Item.
+	/// </summary>
 	public class AccessControl : ODataObject 
 	{
-
 		/// <summary>
 		/// Item that was given permission through this rule
 		/// </summary>
 		public Item Item { get; set; }
-
+		/// <summary>
+		/// Principal - User or Group - that has been granted permissions through this rule
+		/// </summary>
 		public Principal Principal { get; set; }
-
 		/// <summary>
 		/// Defines whether the principal can add files (upload) into the Item
 		/// </summary>
 		public bool? CanUpload { get; set; }
-
 		/// <summary>
 		/// Defines whether the principal can read file content (download) from this Item
 		/// </summary>
 		public bool? CanDownload { get; set; }
-
 		/// <summary>
 		/// Defines whether the principal can view items (browse) from this Item
 		/// </summary>
 		public bool? CanView { get; set; }
-
 		/// <summary>
 		/// Defines whether the principal can remove items from this Item
 		/// </summary>
 		public bool? CanDelete { get; set; }
-
 		/// <summary>
 		/// Defines whether the principal can configure Access Controls in this Item
 		/// </summary>
 		public bool? CanManagePermissions { get; set; }
-
 		/// <summary>
 		/// Defines the notification preference for upload events. If set, the principal will receive
 		/// notifications when new files are uploaded into this Item
 		/// </summary>
 		public bool? NotifyOnUpload { get; set; }
-
 		/// <summary>
 		/// Defines the notification preference for download events. If set, the principal will receive
 		/// notifiation when items are downloaded from this Item.
 		/// </summary>
 		public bool? NotifyOnDownload { get; set; }
-
 		/// <summary>
 		/// Defines whether the principal is the owner of this Item
 		/// </summary>

@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,21 +17,21 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Represents a custom metadata entry associated with an Item
+	/// </summary>
 	public class Metadata : ODataObject 
 	{
-
 		/// <summary>
 		/// The name of a custom metadata entry
 		/// </summary>
 		public string Name { get; set; }
-
 		/// <summary>
 		/// The value of a custom metadata entry
 		/// </summary>
 		public string Value { get; set; }
-
 		/// <summary>
 		/// Whether the metadata entry is public or private. Used only by the zone or storage center metadata where only zone admins have access to private metadata.
 		/// </summary>

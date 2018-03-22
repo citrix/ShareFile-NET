@@ -7,7 +7,7 @@ using System.Text;
 using ShareFile.Api.Client;
 using ShareFile.Api.Client.Requests;
 using System.Reflection;
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -112,22 +112,20 @@ namespace ShareFile.Api.Client.Extensions
             ODataFeed<Model> result = modifiedQuery.Execute();
             return result.Feed.Select(mapExpr.Compile()).ToList();
         }
-
-#if ASYNC
-        public static async Task<Target> SelectAndExecute<Model, Target>(this IQuery<Model> modelQuery, Expression<Func<Model, Target>> mapExpr, CancellationToken? cancelToken = null) where Model : ODataObject
+		
+        public static async Task<Target> SelectAndExecute<Model, Target>(this IQuery<Model> modelQuery, Expression<Func<Model, Target>> mapExpr, CancellationToken cancelToken = default(CancellationToken)) where Model : ODataObject
         {
             IQuery<Model> modifiedQuery = ApplySelectsAndExpands(modelQuery, mapExpr);
             Model result = await modifiedQuery.ExecuteAsync(cancelToken).ConfigureAwait(false);
             return mapExpr.Compile()(result);
         }
 
-        public static async Task<ICollection<Target>> SelectAndExecute<Model, Target>(this IQuery<ODataFeed<Model>> modelQuery, Expression<Func<Model, Target>> mapExpr, CancellationToken? cancelToken = null) where Model : ODataObject
+        public static async Task<ICollection<Target>> SelectAndExecute<Model, Target>(this IQuery<ODataFeed<Model>> modelQuery, Expression<Func<Model, Target>> mapExpr, CancellationToken cancelToken = default(CancellationToken)) where Model : ODataObject
         {
             IQuery<ODataFeed<Model>> modifiedQuery = ApplySelectsAndExpands(modelQuery, mapExpr);
             ODataFeed<Model> result = await modifiedQuery.ExecuteAsync(cancelToken).ConfigureAwait(false);
             return result.Feed.Select(mapExpr.Compile()).ToList();
         }
-#endif
         #endregion
 
         public static IQuery<T> ApplySelectsAndExpands<T>(IQuery<T> query, LambdaExpression lambda)

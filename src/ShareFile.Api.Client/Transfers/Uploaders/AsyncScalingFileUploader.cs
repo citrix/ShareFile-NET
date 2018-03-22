@@ -1,16 +1,14 @@
 ﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-
 using ShareFile.Api.Client.Enums;
 using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.Extensions;
-using ShareFile.Api.Client.FileSystem;
 
 namespace ShareFile.Api.Client.Transfers.Uploaders
 {
-#if ASYNC
     public class AsyncScalingFileUploader : AsyncUploaderBase
     {
         private readonly ScalingPartUploader partUploader;
@@ -20,18 +18,17 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         public AsyncScalingFileUploader(
             ShareFileClient client,
             UploadSpecificationRequest uploadSpecificationRequest,
-            IPlatformFile file,
+            Stream stream,
             FileUploaderConfig config = null,
             int? expirationDays = null)
-            : base(client, uploadSpecificationRequest, file, config, expirationDays)
+            : base(client, uploadSpecificationRequest, stream, config, expirationDays)
         {
-
             var chunkConfig = config != null ? config.PartConfig : new FilePartConfig();
             partUploader = new ScalingPartUploader(
                 chunkConfig,
                 Config.NumberOfThreads,
                 ExecuteChunkUploadMessage,
-                OnProgress,
+                progressReporter.ReportProgress,
                 client.Logging);
         }
 
@@ -39,14 +36,14 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             ShareFileClient client,
             ActiveUploadState activeUploadState,
             UploadSpecificationRequest uploadSpecificationRequest,
-            IPlatformFile file,
+            Stream stream,
             FileUploaderConfig config = null)
-            : this(client, uploadSpecificationRequest, file, config)
+            : this(client, uploadSpecificationRequest, stream, config)
         {
             this.activeUploadState = activeUploadState;
             UploadSpecification = activeUploadState.UploadSpecification;
         }
-
+        
         internal ScalingPartUploader PartUploader
         {
             get
@@ -65,19 +62,20 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         private bool canRestart = true;
 
-        protected override async Task<UploadResponse> InternalUploadAsync()
+        protected override async Task<UploadResponse> InternalUploadAsync(CancellationToken cancellationToken)
         {
             try
             {
                 var offset = activeUploadState == null ? 0 : activeUploadState.BytesUploaded;
                 await
                     partUploader.Upload(
-                        File,
+                        FileStream,
+                        UploadSpecificationRequest.FileName,
                         HashProvider,
                         UploadSpecification.ChunkUri.AbsoluteUri,
                         UploadSpecificationRequest.Raw,
                         offset,
-                        CancellationToken).ConfigureAwait(false);
+                        cancellationToken).ConfigureAwait(false);
                 return await FinishUploadAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
@@ -91,21 +89,21 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 }
             }
 
-            Progress.ResetBytesTransferred();
+            progressReporter.ResetProgress();
             activeUploadState = null;
             UploadSpecification = null;
             Prepared = false;
             canRestart = false;
-            return await UploadAsync(TransferMetadata, CancellationToken).ConfigureAwait(false);
+            return await UploadAsync(null, cancellationToken).ConfigureAwait(false);
         }
 
-        public override async Task PrepareAsync()
+        public override async Task PrepareAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             if (!Prepared)
             {
                 if (UploadSpecification == null)
                 {
-                    UploadSpecification = await CreateUpload().ConfigureAwait(false);
+                    UploadSpecification = await CreateUpload(cancellationToken).ConfigureAwait(false);
                     if (UploadSpecification == null)
                     {
                         throw new UploadException("UploadSpecification cannot be null", UploadStatusCode.Unknown);
@@ -116,7 +114,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                     // Run any query - this is to set auth headers that ShareFileClient handles by default, but the uploader doesn't.
                     // Let any exception fail the whole upload since if we can't reach parent, then we likely won't be able to upload.
                     var query = Client.Items.Get(UploadSpecificationRequest.Parent).Select("Id");
-                    await query.ExecuteAsync(CancellationToken).ConfigureAwait(false);
+                    await query.ExecuteAsync(cancellationToken).ConfigureAwait(false);
                 }
                 partUploader.NumberOfThreads = Math.Min(
                     partUploader.NumberOfThreads,
@@ -131,8 +129,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         private async Task<UploadResponse> FinishUploadAsync()
         {
-            this.MarkProgressComplete();
-
             var client = GetHttpClient();
             var finishUri = this.GetFinishUriForThreadedUploads();
             var requestMessage = new HttpRequestMessage(HttpMethod.Get, finishUri);
@@ -149,9 +145,9 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             return await GetUploadResponseAsync(response, HashProvider.GetComputedHashAsString()).ConfigureAwait(false);
         }
 
-        private async Task ExecuteChunkUploadMessage(HttpRequestMessage requestMessage)
+        private async Task ExecuteChunkUploadMessage(HttpRequestMessage requestMessage, CancellationToken cancellationToken)
         {
-            await TryPauseAsync(CancellationToken).ConfigureAwait(false);
+            await TryPauseAsync(cancellationToken).ConfigureAwait(false);
 
             requestMessage.AddDefaultHeaders(Client);
 
@@ -163,16 +159,15 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                         client,
                         requestMessage,
                         HttpCompletionOption.ResponseContentRead,
-                        CancellationToken.GetValueOrDefault(System.Threading.CancellationToken.None)).ConfigureAwait(false))
+                        cancellationToken).ConfigureAwait(false))
             {
                 if (Configuration.IsNetCore)
                 {
-                    OnProgress(requestMessage.Content.Headers.ContentLength.GetValueOrDefault());
+                    progressReporter.ReportProgress(requestMessage.Content.Headers.ContentLength.GetValueOrDefault());
                 }
                 string responseContent = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
                 ValidateChunkResponse(responseMessage, responseContent);
             }
         }
     }
-#endif
 }

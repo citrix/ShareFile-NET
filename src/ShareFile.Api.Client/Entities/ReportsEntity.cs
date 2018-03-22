@@ -5,15 +5,15 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
-using ShareFile.Api.Models;
 using ShareFile.Api.Client;
-using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Models;
+using ShareFile.Api.Client.Requests;
 
 
 namespace ShareFile.Api.Client.Entities
@@ -96,22 +96,23 @@ namespace ShareFile.Api.Client.Entities
         /// </summary>
         /// <example>
         /// {
-        /// "Id": "rs24f83e-b147-437e-9f28-e7d03634af42"
         /// "Title": "Usage Report",
         /// "ReportType": "Activity",
+        /// "ActivityTypes": "Login,Upload,Download,View",
         /// "ObjectType": "Account",
-        /// "ObjectId": "a024f83e-b147-437e-9f28-e7d0ef634af42",
+        /// "ObjectId": "accountId",
         /// "DateOption": "Last30Days",
         /// "SaveFormat": "Excel"
         /// }
         /// </example>
         /// <remarks>
-        /// Creates a new Report.
+        /// Creates a new Report. The sample above is for an Account Activity Report. For more options please refer to the Report
+        /// model documentation.
         /// </remarks>
         /// <param name="report"></param>
         /// <param name="runOnCreate"></param>
         /// <returns>
-        /// the created report
+        /// Created Report
         /// </returns>
         IQuery<Report> Create(Report report, bool runOnCreate);
         
@@ -186,13 +187,15 @@ namespace ShareFile.Api.Client.Entities
         /// Get spreadsheet data
         /// </summary>
         /// <remarks>
-        /// Get the spreadsheet data for a report
+        /// Download spreadsheet data for a report. If parameter "getSigndedUrl" is true,
+        /// this endpoint returns a Download Specification object with a "url" parameter, which will point to the file's location
         /// </remarks>
         /// <param name="id"></param>
+        /// <param name="getSignedUrl"></param>
         /// <returns>
-        /// Excel Formatted Report Results
+        /// Excel Formatted Report Results or Download Specification
         /// </returns>
-        IQuery DownloadData(string id);
+        IQuery<DownloadSpecification> DownloadData(string id, bool getSignedUrl = false);
     }
 
     public class ReportsEntity : EntityBase, IReportsEntity
@@ -214,9 +217,9 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Report>> Get()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Report>>(Client);
-		    sfApiQuery.From("Reports");
+            sfApiQuery.From("Reports");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -234,7 +237,7 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Report>(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -250,11 +253,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Report>> GetRecent(int maxReports = 10)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Report>>(Client);
-		    sfApiQuery.From("Reports");
-		    sfApiQuery.Action("Recent");
+            sfApiQuery.From("Reports");
+            sfApiQuery.Action("Recent");
             sfApiQuery.QueryString("maxReports", maxReports);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -269,10 +272,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Report>> GetRecurring()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Report>>(Client);
-		    sfApiQuery.From("Reports");
-		    sfApiQuery.Action("Recurring");
+            sfApiQuery.From("Reports");
+            sfApiQuery.Action("Recurring");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -288,11 +291,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ReportRecord> GetRecord(string id)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ReportRecord>(Client);
-		    sfApiQuery.From("Reports");
-		    sfApiQuery.Action("Record");
+            sfApiQuery.From("Reports");
+            sfApiQuery.Action("Record");
             sfApiQuery.ActionIds(id);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -308,10 +311,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<ReportRecord>> GetRecords(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<ReportRecord>>(Client);
-		    sfApiQuery.Action("Records");
+            sfApiQuery.Action("Records");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -319,31 +322,32 @@ namespace ShareFile.Api.Client.Entities
         /// </summary>
         /// <example>
         /// {
-        /// "Id": "rs24f83e-b147-437e-9f28-e7d03634af42"
         /// "Title": "Usage Report",
         /// "ReportType": "Activity",
+        /// "ActivityTypes": "Login,Upload,Download,View",
         /// "ObjectType": "Account",
-        /// "ObjectId": "a024f83e-b147-437e-9f28-e7d0ef634af42",
+        /// "ObjectId": "accountId",
         /// "DateOption": "Last30Days",
         /// "SaveFormat": "Excel"
         /// }
         /// </example>
         /// <remarks>
-        /// Creates a new Report.
+        /// Creates a new Report. The sample above is for an Account Activity Report. For more options please refer to the Report
+        /// model documentation.
         /// </remarks>
         /// <param name="report"></param>
         /// <param name="runOnCreate"></param>
         /// <returns>
-        /// the created report
+        /// Created Report
         /// </returns>
         public IQuery<Report> Create(Report report, bool runOnCreate)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Report>(Client);
-		    sfApiQuery.From("Reports");
+            sfApiQuery.From("Reports");
             sfApiQuery.QueryString("runOnCreate", runOnCreate);
             sfApiQuery.Body = report;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -369,10 +373,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Report> Update(Report report)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Report>(Client);
-		    sfApiQuery.From("Reports");
+            sfApiQuery.From("Reports");
             sfApiQuery.Body = report;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -387,7 +391,7 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -402,10 +406,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ReportRecord> GetRun(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ReportRecord>(Client);
-		    sfApiQuery.Action("Run");
+            sfApiQuery.Action("Run");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -415,10 +419,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ItemProtocolLink> Preview(Uri reportUrl)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ItemProtocolLink>(Client);
-		    sfApiQuery.Action("Preview");
+            sfApiQuery.Action("Preview");
             sfApiQuery.Uri(reportUrl);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -434,12 +438,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery GetJsonData(string id)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.From("Reports");
-		    sfApiQuery.Action("Records");
+            sfApiQuery.From("Reports");
+            sfApiQuery.Action("Records");
             sfApiQuery.ActionIds(id);
             sfApiQuery.SubAction("JsonData");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -450,32 +454,35 @@ namespace ShareFile.Api.Client.Entities
         public IQuery Move(Uri reportUrl, string folderId)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("Move");
+            sfApiQuery.Action("Move");
             sfApiQuery.Uri(reportUrl);
             sfApiQuery.QueryString("folderId", folderId);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
         /// Get spreadsheet data
         /// </summary>
         /// <remarks>
-        /// Get the spreadsheet data for a report
+        /// Download spreadsheet data for a report. If parameter "getSigndedUrl" is true,
+        /// this endpoint returns a Download Specification object with a "url" parameter, which will point to the file's location
         /// </remarks>
         /// <param name="id"></param>
+        /// <param name="getSignedUrl"></param>
         /// <returns>
-        /// Excel Formatted Report Results
+        /// Excel Formatted Report Results or Download Specification
         /// </returns>
-        public IQuery DownloadData(string id)
+        public IQuery<DownloadSpecification> DownloadData(string id, bool getSignedUrl = false)
         {
-            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.From("Reports");
-		    sfApiQuery.Action("Records");
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<DownloadSpecification>(Client);
+            sfApiQuery.From("Reports");
+            sfApiQuery.Action("Records");
             sfApiQuery.ActionIds(id);
             sfApiQuery.SubAction("DownloadData");
+            sfApiQuery.QueryString("getSignedUrl", getSignedUrl);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
     }
 }

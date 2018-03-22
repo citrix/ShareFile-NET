@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,24 +17,46 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
 #if !ShareFile
+	/// <summary>
+	/// Represents a Policy definition for use within ShareFile's Policy Based Administration
+	/// Policies allows the admin to control specific areas of ShareFile. There are currently three types
+	/// of policy categories: UserAccessPolicy, StoragePolicy, and FileAndFolderPolicy
+	/// UserAccessPolicy allows the admin to define settings for what a user can and cannot do.
+	/// StoragePolicy allows the admin to define the default storage zone for a user.
+	/// FileAndFolderPolicy allows the admin to control settings for files and folders for a user, such as quota.
+	/// </summary>
 	public class Policy : ODataObject 
 	{
-
+		/// <summary>
+		/// Name of Policy
+		/// </summary>
 		public string Name { get; set; }
-
+		/// <summary>
+		/// Indicates this is the default policy for the category specified
+		/// </summary>
 		public bool? IsDefault { get; set; }
-
+		/// <summary>
+		/// Creator of Policy
+		/// </summary>
 		public User CreatedBy { get; set; }
-
+		/// <summary>
+		/// Created Date
+		/// </summary>
 		public DateTime? CreationDate { get; set; }
-
+		/// <summary>
+		/// User who last modified Policy or Policy Settings
+		/// </summary>
 		public User UpdatedBy { get; set; }
-
+		/// <summary>
+		/// Date Policy or Policy Settings were last modified
+		/// </summary>
 		public DateTime? UpdatedDate { get; set; }
-
+		/// <summary>
+		/// Metrics of Users attached to policy
+		/// </summary>
 		public PolicyUsage Usage { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

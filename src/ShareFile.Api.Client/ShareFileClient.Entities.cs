@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using ShareFile.Api.Client.Entities;
@@ -14,10 +14,15 @@ namespace ShareFile.Api.Client
 {
     public partial interface IShareFileClient
     {
+        IAppsEntity Apps { get; }
+        IFavoritesEntity Favorites { get; }
+        IWebhookClientsEntity WebhookClients { get; }
+        IWebhookSubscriptionsEntity WebhookSubscriptions { get; }
+        IWorkflowsEntity Workflows { get; }
         IPoliciesEntity Policies { get; }
         IConnectorGroupsEntity ConnectorGroups { get; }
+        IEncryptedEmailsEntity EncryptedEmails { get; }
         IFileLockEntity FileLock { get; }
-        IIrmClassificationsEntity IrmClassifications { get; }
         IRemoteUploadsEntity RemoteUploads { get; }
         IReportsEntity Reports { get; }
         IFolderTemplatesEntity FolderTemplates { get; }
@@ -25,7 +30,6 @@ namespace ShareFile.Api.Client
         IAccountsEntity Accounts { get; }
         IAsyncOperationsEntity AsyncOperations { get; }
         ICapabilitiesEntity Capabilities { get; }
-        IConfigsEntity Configs { get; }
         IDevicesEntity Devices { get; }
         IFavoriteFoldersEntity FavoriteFolders { get; }
         IGroupsEntity Groups { get; }
@@ -36,16 +40,22 @@ namespace ShareFile.Api.Client
         IStorageCentersEntity StorageCenters { get; }
         IUsersEntity Users { get; }
         IZonesEntity Zones { get; }
+        ISamlMetadataEntity SamlMetadata { get; }
     }
 
     public partial class ShareFileClient
     {
         private ShareFileClient()
         {
+            Apps = new AppsEntity(this);
+            Favorites = new FavoritesEntity(this);
+            WebhookClients = new WebhookClientsEntity(this);
+            WebhookSubscriptions = new WebhookSubscriptionsEntity(this);
+            Workflows = new WorkflowsEntity(this);
             Policies = new PoliciesEntity(this);
             ConnectorGroups = new ConnectorGroupsEntity(this);
+            EncryptedEmails = new EncryptedEmailsEntity(this);
             FileLock = new FileLockEntity(this);
-            IrmClassifications = new IrmClassificationsEntity(this);
             RemoteUploads = new RemoteUploadsEntity(this);
             Reports = new ReportsEntity(this);
             FolderTemplates = new FolderTemplatesEntity(this);
@@ -53,7 +63,6 @@ namespace ShareFile.Api.Client
             Accounts = new AccountsEntity(this);
             AsyncOperations = new AsyncOperationsEntity(this);
             Capabilities = new CapabilitiesEntity(this);
-            Configs = new ConfigsEntity(this);
             Devices = new DevicesEntity(this);
             FavoriteFolders = new FavoriteFoldersEntity(this);
             Groups = new GroupsEntity(this);
@@ -64,12 +73,18 @@ namespace ShareFile.Api.Client
             StorageCenters = new StorageCentersEntity(this);
             Users = new UsersEntity(this);
             Zones = new ZonesEntity(this);
+            SamlMetadata = new SamlMetadataEntity(this);
         }
 
+        public IAppsEntity Apps { get; private set; }
+        public IFavoritesEntity Favorites { get; private set; }
+        public IWebhookClientsEntity WebhookClients { get; private set; }
+        public IWebhookSubscriptionsEntity WebhookSubscriptions { get; private set; }
+        public IWorkflowsEntity Workflows { get; private set; }
         public IPoliciesEntity Policies { get; private set; }
         public IConnectorGroupsEntity ConnectorGroups { get; private set; }
+        public IEncryptedEmailsEntity EncryptedEmails { get; private set; }
         public IFileLockEntity FileLock { get; private set; }
-        public IIrmClassificationsEntity IrmClassifications { get; private set; }
         public IRemoteUploadsEntity RemoteUploads { get; private set; }
         public IReportsEntity Reports { get; private set; }
         public IFolderTemplatesEntity FolderTemplates { get; private set; }
@@ -77,7 +92,6 @@ namespace ShareFile.Api.Client
         public IAccountsEntity Accounts { get; private set; }
         public IAsyncOperationsEntity AsyncOperations { get; private set; }
         public ICapabilitiesEntity Capabilities { get; private set; }
-        public IConfigsEntity Configs { get; private set; }
         public IDevicesEntity Devices { get; private set; }
         public IFavoriteFoldersEntity FavoriteFolders { get; private set; }
         public IGroupsEntity Groups { get; private set; }
@@ -88,5 +102,6 @@ namespace ShareFile.Api.Client
         public IStorageCentersEntity StorageCenters { get; private set; }
         public IUsersEntity Users { get; private set; }
         public IZonesEntity Zones { get; private set; }
+        public ISamlMetadataEntity SamlMetadata { get; private set; }
     }
 }

@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,21 +17,21 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Request model for looking up valid subdomains for a user.
+	/// </summary>
 	public class FindSubdomainParams : ODataObject 
 	{
-
 		/// <summary>
 		/// Short reprepsetnation of the username
 		/// </summary>
 		public string UsernameShort { get; set; }
-
 		/// <summary>
 		/// User password
 		/// </summary>
 		public string Password { get; set; }
-
 		/// <summary>
 		/// Constrains request to accounts on which the user is an employee.
 		/// </summary>

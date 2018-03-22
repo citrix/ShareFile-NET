@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,27 +17,26 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Represents an authenticated authority in ShareFile
+	/// </summary>
 	public class Principal : ODataObject 
 	{
-
 		/// <summary>
 		/// User name
 		/// </summary>
 		public string Name { get; set; }
-
 		/// <summary>
 		/// Email address
 		/// </summary>
 		public string Email { get; set; }
-
 		/// <summary>
 		/// Username for the account - the value used for login. This is the same as Email for ShareFile accounts, but
 		/// may be different on Connectors
 		/// </summary>
 		public string Username { get; set; }
-
 		/// <summary>
 		/// Account domain
 		/// </summary>

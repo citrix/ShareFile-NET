@@ -34,7 +34,12 @@ namespace ShareFile.Api.Client.Extensions
                     }
                     if (!redirectTo.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
                     {
-                        throw new HttpsExpectedException();
+                        if (string.Equals(redirectTo.Host, "maintenance.sharefile.com", StringComparison.OrdinalIgnoreCase))
+                        {
+                            throw new ApiDownException();
+                        }
+
+                        throw new HttpsExpectedException { RedirectUri = redirectTo };
                     }
                     return redirectTo;
             }

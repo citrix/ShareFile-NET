@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,71 +17,65 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// User Confirmation Settings
+	/// </summary>
 	public class UserConfirmationSettings : ODataObject 
 	{
-
 		/// <summary>
 		/// First Name
 		/// </summary>
 		public string FirstName { get; set; }
-
 		/// <summary>
 		/// Last Name
 		/// </summary>
 		public string LastName { get; set; }
-
 		/// <summary>
 		/// Company
 		/// </summary>
 		public string Company { get; set; }
-
 		/// <summary>
 		/// Password
 		/// </summary>
 		public string Password { get; set; }
-
 		/// <summary>
 		/// Security Question
 		/// </summary>
 		public string SecurityQuestion { get; set; }
-
 		/// <summary>
 		/// Answer for Security Question
 		/// </summary>
 		public string SecurityQuestionAnswer { get; set; }
-
 		/// <summary>
 		/// DayLightName
 		/// </summary>
 		public string DayLightName { get; set; }
-
 		/// <summary>
 		/// UTC Offset
 		/// </summary>
 		public string UTCOffset { get; set; }
-
 		/// <summary>
 		/// Preferred Date Format
 		/// </summary>
 		public string DateFormat { get; set; }
-
 		/// <summary>
 		/// Preferred Time Format
 		/// </summary>
 		public string TimeFormat { get; set; }
-
 		/// <summary>
 		/// Email notification interval for activities
 		/// </summary>
 		public int? EmailInterval { get; set; }
-
 		/// <summary>
 		/// Email notification locale. Values: Invariant, English, German, Spanish, French, Dutch, Chinese, Russian, Japanese, Korean, or Portuguese
 		/// </summary>
 		public SafeEnum<NotificationLocale> UserNotificationLocale { get; set; }
-
+		/// <summary>
+		/// Webpop ClientId
+		/// </summary>
+		public string OAuthClientId { get; set; }
 		/// <summary>
 		/// Email address of the user
 		/// </summary>
@@ -107,6 +101,7 @@ namespace ShareFile.Api.Models
 				TimeFormat = typedSource.TimeFormat;
 				EmailInterval = typedSource.EmailInterval;
 				UserNotificationLocale = typedSource.UserNotificationLocale;
+				OAuthClientId = typedSource.OAuthClientId;
 				Email = typedSource.Email;
 			}
 			else
@@ -159,6 +154,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("UserNotificationLocale", out token) && token.Type != JTokenType.Null)
 				{
 					UserNotificationLocale = (SafeEnum<NotificationLocale>)serializer.Deserialize(token.CreateReader(), typeof(SafeEnum<NotificationLocale>));
+				}
+				if(source.TryGetProperty("OAuthClientId", out token) && token.Type != JTokenType.Null)
+				{
+					OAuthClientId = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
 				if(source.TryGetProperty("Email", out token) && token.Type != JTokenType.Null)
 				{

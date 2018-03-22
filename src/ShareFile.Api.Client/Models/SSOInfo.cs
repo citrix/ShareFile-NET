@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,15 +17,24 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// SSO Info
+	/// </summary>
 	public class SSOInfo : ODataObject 
 	{
-
+		/// <summary>
+		/// Collection of entries
+		/// </summary>
 		public IEnumerable<SSOInfoEntry> Info { get; set; }
-
+		/// <summary>
+		/// Top level domain for ShareFile application
+		/// </summary>
 		public string AppControlPlane { get; set; }
-
+		/// <summary>
+		/// Top level domain for ShareFile API
+		/// </summary>
 		public string ApiControlPlane { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

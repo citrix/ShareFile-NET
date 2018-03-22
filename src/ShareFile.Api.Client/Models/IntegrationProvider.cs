@@ -5,18 +5,19 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
-	public enum IntegrationProvider
+    public enum IntegrationProvider
     {
         RightSignature = 0,
         RightSignature4 = 1,
         DocumentApprovalWorkflow = 2,
         Image32 = 3,
-        ContentViewer = 4
+        ContentViewer = 4,
+        ThirdPartyCloudSyncService = 5
     }
 }

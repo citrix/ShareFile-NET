@@ -5,15 +5,15 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
-using ShareFile.Api.Models;
 using ShareFile.Api.Client;
-using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Models;
+using ShareFile.Api.Client.Requests;
 
 
 namespace ShareFile.Api.Client.Entities
@@ -142,6 +142,18 @@ namespace ShareFile.Api.Client.Entities
         /// The updated list of contacts for this group
         /// </returns>
         IQuery<ODataFeed<Contact>> DeleteContacts(Uri url, IEnumerable<Contact> contacts);
+        
+        /// <summary>
+        /// Retrieve Groups associated with a User
+        /// </summary>
+        /// <remarks>
+        /// Returns all groups the user is associated. This is currently limited to the authenticated user.
+        /// </remarks>
+        /// <param name="url"></param>
+        /// <returns>
+        /// Feed of Groups
+        /// </returns>
+        IQuery<ODataFeed<Group>> GetByUser(Uri url);
     }
 
     public class GroupsEntity : EntityBase, IGroupsEntity
@@ -163,9 +175,9 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Group>> Get()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Group>>(Client);
-		    sfApiQuery.From("Groups");
+            sfApiQuery.From("Groups");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -183,7 +195,7 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Group>(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -198,7 +210,7 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -221,10 +233,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Group> Create(Group group)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Group>(Client);
-		    sfApiQuery.From("Groups");
+            sfApiQuery.From("Groups");
             sfApiQuery.Body = group;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -252,7 +264,7 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.Uri(url);
             sfApiQuery.Body = group;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -268,10 +280,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Contact>> GetContacts(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Contact>>(Client);
-		    sfApiQuery.Action("Contacts");
+            sfApiQuery.Action("Contacts");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -292,11 +304,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Contact>> CreateContacts(Uri url, IEnumerable<Contact> contacts)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Contact>>(Client);
-		    sfApiQuery.Action("Contacts");
+            sfApiQuery.Action("Contacts");
             sfApiQuery.Uri(url);
             sfApiQuery.Body = contacts;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -321,11 +333,30 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Contact>> DeleteContacts(Uri url, IEnumerable<Contact> contacts)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Contact>>(Client);
-		    sfApiQuery.Action("Contacts");
+            sfApiQuery.Action("Contacts");
             sfApiQuery.Uri(url);
             sfApiQuery.Body = contacts;
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Retrieve Groups associated with a User
+        /// </summary>
+        /// <remarks>
+        /// Returns all groups the user is associated. This is currently limited to the authenticated user.
+        /// </remarks>
+        /// <param name="url"></param>
+        /// <returns>
+        /// Feed of Groups
+        /// </returns>
+        public IQuery<ODataFeed<Group>> GetByUser(Uri url)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Group>>(Client);
+            sfApiQuery.Action("Groups");
+            sfApiQuery.Uri(url);
+            sfApiQuery.HttpMethod = "GET";	
+            return sfApiQuery;
         }
     }
 }

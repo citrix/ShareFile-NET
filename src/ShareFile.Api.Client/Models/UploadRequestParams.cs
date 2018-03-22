@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,50 +17,36 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
 	public class UploadRequestParams : ODataObject 
 	{
-
 		public SafeEnum<UploadMethod> Method { get; set; }
-
 		public bool? Raw { get; set; }
-
 		public string FileName { get; set; }
-
 		public long? FileSize { get; set; }
-
 		public string BatchId { get; set; }
-
 		public bool? BatchLast { get; set; }
-
 		public bool? CanResume { get; set; }
-
 		public bool? StartOver { get; set; }
-
 		public bool? Unzip { get; set; }
-
 		public bool? Overwrite { get; set; }
-
 		public string Opid { get; set; }
-
 		public string Title { get; set; }
-
 		public string Tool { get; set; }
-
 		public string Details { get; set; }
-
 		public bool? IsSend { get; set; }
-
 		public string SendGuid { get; set; }
-
 		public bool? Notify { get; set; }
-
 		public int? ThreadCount { get; set; }
-
 		public DateTime? ClientCreatedDate { get; set; }
-
 		public DateTime? ClientModifiedDate { get; set; }
+		/// <summary>
+		/// BaseFileId is a used to check conflict in file during File Upload.
+		/// BaseFileId is passed by client and contains value of their local copy itemId.
+		/// API will check if the version passed is still current or someone else has updated file since clients last read.
+		/// </summary>
+		public string BaseFileId { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
@@ -90,6 +76,7 @@ namespace ShareFile.Api.Models
 				ThreadCount = typedSource.ThreadCount;
 				ClientCreatedDate = typedSource.ClientCreatedDate;
 				ClientModifiedDate = typedSource.ClientModifiedDate;
+				BaseFileId = typedSource.BaseFileId;
 			}
 			else
 			{
@@ -173,6 +160,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("ClientModifiedDate", out token) && token.Type != JTokenType.Null)
 				{
 					ClientModifiedDate = (DateTime?)serializer.Deserialize(token.CreateReader(), typeof(DateTime?));
+				}
+				if(source.TryGetProperty("BaseFileId", out token) && token.Type != JTokenType.Null)
+				{
+					BaseFileId = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
 			}
 		}

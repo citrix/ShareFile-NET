@@ -5,15 +5,15 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
-using ShareFile.Api.Models;
 using ShareFile.Api.Client;
-using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Models;
+using ShareFile.Api.Client.Requests;
 
 
 namespace ShareFile.Api.Client.Entities
@@ -26,6 +26,10 @@ namespace ShareFile.Api.Client.Entities
         /// </summary>
         /// <remarks>
         /// Retrieve a single user, by ID or email, or the currently authenticated user.
+        /// A user can retrieve another user when
+        /// * (1) The current user has AdminManageEmployees role
+        /// * OR
+        /// * (2) The current user has CanManageUsers role and the other user is a client
         /// </remarks>
         /// <param name="id"></param>
         /// <param name="emailAddress"></param>
@@ -69,7 +73,7 @@ namespace ShareFile.Api.Client.Entities
         /// <returns>
         /// The new user
         /// </returns>
-        IQuery<User> Create(User user, bool pushCreatorDefaultSettings = false, bool addshared = false, bool notify = false, bool ifNecessary = false, bool addPersonal = false);
+        IQuery<User> Create(User user, bool pushCreatorDefaultSettings = false, bool addshared = true, bool notify = false, bool ifNecessary = false, bool addPersonal = true);
         
         /// <summary>
         /// Create Employee
@@ -97,7 +101,7 @@ namespace ShareFile.Api.Client.Entities
         /// "CanManageUsers": false,
         /// "Roles": [
         /// "CanChangePassword", "CanManageMySettings",
-        /// "CanUseFileBox, "CanManageUsers, "CanCreateFolders, "CanUseDropBox, "CanSelectFolderZone,
+        /// "CanUseFileBox", "CanManageUsers", "CanCreateFolders", "CanUseDropBox", "CanSelectFolderZone",
         /// "AdminAccountPolicies", "AdminBilling", "AdminBranding", "AdminChangePlan", "AdminFileBoxAccess",
         /// "AdminManageEmployees", "AdminRemoteUploadForms", "AdminReporting", "AdminSharedDistGroups",
         /// "AdminSharedAddressBook", "AdminViewReceipts", "AdminDelegate", "AdminManageFolderTemplates",
@@ -121,7 +125,7 @@ namespace ShareFile.Api.Client.Entities
         /// <returns>
         /// The new employee user
         /// </returns>
-        IQuery<User> CreateAccountUser(AccountUser user, bool pushCreatorDefaultSettings = false, bool addshared = false, bool notify = false, bool ifNecessary = false, bool addPersonal = false);
+        IQuery<User> CreateAccountUser(AccountUser user, bool pushCreatorDefaultSettings = false, bool addshared = true, bool notify = false, bool ifNecessary = false, bool addPersonal = true);
         
         /// <summary>
         /// Update User
@@ -135,7 +139,7 @@ namespace ShareFile.Api.Client.Entities
         /// "Security":
         /// {
         /// "IsDisabled":false
-        /// }
+        /// },
         /// "DefaultZone":
         /// {
         /// "Id":"newzoneid"
@@ -212,9 +216,8 @@ namespace ShareFile.Api.Client.Entities
         /// Remove Roles
         /// </summary>
         /// <example>
-        /// {
+        /// 
         /// [ "CanManageUsers", "CanSelectFolderZone" ]
-        /// }
         /// </example>
         /// <remarks>
         /// Removes the roles for user.
@@ -241,10 +244,11 @@ namespace ShareFile.Api.Client.Entities
         /// "Company":"Company",
         /// "Email":"user@domain.com",
         /// "StorageQuotaLimitGB":100,
+        /// "Bandwidth": 50,
         /// "Security":
         /// {
         /// "IsDisabled":false
-        /// }
+        /// },
         /// "DefaultZone":
         /// {
         /// "Id":"newzoneid"
@@ -254,8 +258,8 @@ namespace ShareFile.Api.Client.Entities
         /// <remarks>
         /// Modifies an existing user object
         /// The following parameters can be modified through this call: FirstName, LastName, Company,
-        /// Email, IsEmployee, IsDisabled, DefaultZone Id, StorageQuotaLimitGB.During a promotion (the user id points to Customer), the following parameters can be
-        /// modified: CanCreateFolders, CanUseFileBox, CanManageUsers. StorageQuotaLimitGB equal to -1 sets the user quota to the account default storage quota value.
+        /// Email, IsEmployee, IsDisabled, DefaultZone Id, StorageQuotaLimitGB, Bandwidth.During a promotion (the user id points to Customer), the following parameters can be
+        /// modified: CanCreateFolders, CanUseFileBox, CanManageUsers. StorageQuotaLimitGB equal to -1 sets the user quota to the account default storage quota value.Bandwidth equal to -1 sets the user bandwidth to unlimited.
         /// </remarks>
         /// <param name="id"></param>
         /// <param name="user"></param>
@@ -322,10 +326,8 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "EnableFlashUpload":"true",
-        /// "EnableJavaUpload":"true"
-        /// .
-        /// .
-        /// .
+        /// "EnableJavaUpload":"true",
+        /// "...":"..."
         /// }
         /// </example>
         /// <param name="parentUrl"></param>
@@ -398,21 +400,58 @@ namespace ShareFile.Api.Client.Entities
         /// </remarks>
         /// <param name="url"></param>
         /// <param name="completely"></param>
-        IQuery Delete(Uri url, bool completely = false);
+        /// <param name="itemsReassignTo"></param>
+        /// <param name="groupsReassignTo"></param>
+        IQuery Delete(Uri url, bool completely = false, string itemsReassignTo = null, string groupsReassignTo = null);
         
         /// <summary>
         /// Delete multiple client users
         /// </summary>
         /// <example>
-        /// {
-        /// ["id1","id2",...]
-        /// }
+        /// 
+        /// ["id1","id2"]
         /// </example>
         /// <remarks>
         /// Removes a list of client users. The list should not exceed 100 client user ids.
         /// </remarks>
         /// <param name="clientIds"></param>
         IQuery DeleteClients(IEnumerable<string> clientIds);
+        
+        /// <summary>
+        /// Delete multiple client users
+        /// </summary>
+        /// <example>
+        /// {
+        /// UserIds: ["id1", "id2"]
+        /// }
+        /// </example>
+        /// <remarks>
+        /// Removes a list of client users. The list should not exceed 100 client user ids.
+        /// </remarks>
+        /// <param name="deleteRequest"></param>
+        /// <returns>
+        /// 204 if successful
+        /// </returns>
+        IQuery BulkDeleteClients(UserBulkOperationRequest deleteRequest);
+        
+        /// <summary>
+        /// Downgrade multiple employee users to clients
+        /// </summary>
+        /// <example>
+        /// {
+        /// UserIds: ["id1", "id2"],
+        /// ReassignItemsToId: "id3",
+        /// ReassignGroupsToId: "id3"
+        /// }
+        /// </example>
+        /// <remarks>
+        /// Downgrades a list of employee users to clients. The list should not exceed 100 employee user ids.
+        /// </remarks>
+        /// <param name="downgradeRequest"></param>
+        /// <returns>
+        /// 204 if successful
+        /// </returns>
+        IQuery DowngradeEmployees(UserBulkDowngradeRequest downgradeRequest);
         
         /// <summary>
         /// Get List of User Shared Folders
@@ -599,6 +638,10 @@ namespace ShareFile.Api.Client.Entities
         /// </summary>
         /// <remarks>
         /// Retrieve a single user, by ID or email, or the currently authenticated user.
+        /// A user can retrieve another user when
+        /// * (1) The current user has AdminManageEmployees role
+        /// * OR
+        /// * (2) The current user has CanManageUsers role and the other user is a client
         /// </remarks>
         /// <param name="id"></param>
         /// <param name="emailAddress"></param>
@@ -608,11 +651,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<User> Get(string id = null, string emailAddress = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<User>(Client);
-		    sfApiQuery.From("Users");
+            sfApiQuery.From("Users");
             sfApiQuery.QueryString("id", id);
             sfApiQuery.QueryString("emailAddress", emailAddress);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -650,10 +693,10 @@ namespace ShareFile.Api.Client.Entities
         /// <returns>
         /// The new user
         /// </returns>
-        public IQuery<User> Create(User user, bool pushCreatorDefaultSettings = false, bool addshared = false, bool notify = false, bool ifNecessary = false, bool addPersonal = false)
+        public IQuery<User> Create(User user, bool pushCreatorDefaultSettings = false, bool addshared = true, bool notify = false, bool ifNecessary = false, bool addPersonal = true)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<User>(Client);
-		    sfApiQuery.From("Users");
+            sfApiQuery.From("Users");
             sfApiQuery.QueryString("pushCreatorDefaultSettings", pushCreatorDefaultSettings);
             sfApiQuery.QueryString("addshared", addshared);
             sfApiQuery.QueryString("notify", notify);
@@ -661,7 +704,7 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.QueryString("addPersonal", addPersonal);
             sfApiQuery.Body = user;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -690,7 +733,7 @@ namespace ShareFile.Api.Client.Entities
         /// "CanManageUsers": false,
         /// "Roles": [
         /// "CanChangePassword", "CanManageMySettings",
-        /// "CanUseFileBox, "CanManageUsers, "CanCreateFolders, "CanUseDropBox, "CanSelectFolderZone,
+        /// "CanUseFileBox", "CanManageUsers", "CanCreateFolders", "CanUseDropBox", "CanSelectFolderZone",
         /// "AdminAccountPolicies", "AdminBilling", "AdminBranding", "AdminChangePlan", "AdminFileBoxAccess",
         /// "AdminManageEmployees", "AdminRemoteUploadForms", "AdminReporting", "AdminSharedDistGroups",
         /// "AdminSharedAddressBook", "AdminViewReceipts", "AdminDelegate", "AdminManageFolderTemplates",
@@ -714,11 +757,11 @@ namespace ShareFile.Api.Client.Entities
         /// <returns>
         /// The new employee user
         /// </returns>
-        public IQuery<User> CreateAccountUser(AccountUser user, bool pushCreatorDefaultSettings = false, bool addshared = false, bool notify = false, bool ifNecessary = false, bool addPersonal = false)
+        public IQuery<User> CreateAccountUser(AccountUser user, bool pushCreatorDefaultSettings = false, bool addshared = true, bool notify = false, bool ifNecessary = false, bool addPersonal = true)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<User>(Client);
-		    sfApiQuery.From("Users");
-		    sfApiQuery.Action("AccountUser");
+            sfApiQuery.From("Users");
+            sfApiQuery.Action("AccountUser");
             sfApiQuery.QueryString("pushCreatorDefaultSettings", pushCreatorDefaultSettings);
             sfApiQuery.QueryString("addshared", addshared);
             sfApiQuery.QueryString("notify", notify);
@@ -726,7 +769,7 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.QueryString("addPersonal", addPersonal);
             sfApiQuery.Body = user;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -741,7 +784,7 @@ namespace ShareFile.Api.Client.Entities
         /// "Security":
         /// {
         /// "IsDisabled":false
-        /// }
+        /// },
         /// "DefaultZone":
         /// {
         /// "Id":"newzoneid"
@@ -764,7 +807,7 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.Uri(url);
             sfApiQuery.Body = user;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -795,11 +838,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<User> UpdateRoles(Uri parentUrl, User user)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<User>(Client);
-		    sfApiQuery.Action("Roles");
+            sfApiQuery.Action("Roles");
             sfApiQuery.Uri(parentUrl);
             sfApiQuery.Body = user;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -830,20 +873,19 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<User> PatchRoles(Uri parentUrl, User user)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<User>(Client);
-		    sfApiQuery.Action("Roles");
+            sfApiQuery.Action("Roles");
             sfApiQuery.Uri(parentUrl);
             sfApiQuery.Body = user;
             sfApiQuery.HttpMethod = "PUT";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
         /// Remove Roles
         /// </summary>
         /// <example>
-        /// {
+        /// 
         /// [ "CanManageUsers", "CanSelectFolderZone" ]
-        /// }
         /// </example>
         /// <remarks>
         /// Removes the roles for user.
@@ -861,11 +903,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery RemoveRoles(Uri userUrl, IEnumerable<SafeEnum<UserRole>> userRoles)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("RemoveRoles");
+            sfApiQuery.Action("RemoveRoles");
             sfApiQuery.Uri(userUrl);
             sfApiQuery.Body = userRoles;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -878,10 +920,11 @@ namespace ShareFile.Api.Client.Entities
         /// "Company":"Company",
         /// "Email":"user@domain.com",
         /// "StorageQuotaLimitGB":100,
+        /// "Bandwidth": 50,
         /// "Security":
         /// {
         /// "IsDisabled":false
-        /// }
+        /// },
         /// "DefaultZone":
         /// {
         /// "Id":"newzoneid"
@@ -891,8 +934,8 @@ namespace ShareFile.Api.Client.Entities
         /// <remarks>
         /// Modifies an existing user object
         /// The following parameters can be modified through this call: FirstName, LastName, Company,
-        /// Email, IsEmployee, IsDisabled, DefaultZone Id, StorageQuotaLimitGB.During a promotion (the user id points to Customer), the following parameters can be
-        /// modified: CanCreateFolders, CanUseFileBox, CanManageUsers. StorageQuotaLimitGB equal to -1 sets the user quota to the account default storage quota value.
+        /// Email, IsEmployee, IsDisabled, DefaultZone Id, StorageQuotaLimitGB, Bandwidth.During a promotion (the user id points to Customer), the following parameters can be
+        /// modified: CanCreateFolders, CanUseFileBox, CanManageUsers. StorageQuotaLimitGB equal to -1 sets the user quota to the account default storage quota value.Bandwidth equal to -1 sets the user bandwidth to unlimited.
         /// </remarks>
         /// <param name="id"></param>
         /// <param name="user"></param>
@@ -902,12 +945,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<User> UpdateAccountUser(string id, AccountUser user)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<User>(Client);
-		    sfApiQuery.From("Users");
-		    sfApiQuery.Action("AccountUser");
+            sfApiQuery.From("Users");
+            sfApiQuery.Action("AccountUser");
             sfApiQuery.ActionIds(id);
             sfApiQuery.Body = user;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -923,10 +966,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Item> GetHomeFolder(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
-		    sfApiQuery.Action("HomeFolder");
+            sfApiQuery.Action("HomeFolder");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -939,10 +982,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Item>> GetTopFolders(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
-		    sfApiQuery.Action("TopFolders");
+            sfApiQuery.Action("TopFolders");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -955,10 +998,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Item>> Box(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
-		    sfApiQuery.Action("Box");
+            sfApiQuery.Action("Box");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -971,10 +1014,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Item> FileBox(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Item>(Client);
-		    sfApiQuery.Action("FileBox");
+            sfApiQuery.Action("FileBox");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -991,10 +1034,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<UserPreferences> GetPreferences(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<UserPreferences>(Client);
-		    sfApiQuery.Action("Preferences");
+            sfApiQuery.Action("Preferences");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1003,10 +1046,8 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "EnableFlashUpload":"true",
-        /// "EnableJavaUpload":"true"
-        /// .
-        /// .
-        /// .
+        /// "EnableJavaUpload":"true",
+        /// "...":"..."
         /// }
         /// </example>
         /// <param name="parentUrl"></param>
@@ -1014,11 +1055,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<UserPreferences> UpdatePreferences(Uri parentUrl, UserPreferences preferences)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<UserPreferences>(Client);
-		    sfApiQuery.Action("Preferences");
+            sfApiQuery.Action("Preferences");
             sfApiQuery.Uri(parentUrl);
             sfApiQuery.Body = preferences;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1035,10 +1076,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<UserSecurity> GetSecurity(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<UserSecurity>(Client);
-		    sfApiQuery.Action("Security");
+            sfApiQuery.Action("Security");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1067,12 +1108,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<User> ResetPassword(Uri url, ODataObject properties, bool notify = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<User>(Client);
-		    sfApiQuery.Action("ResetPassword");
+            sfApiQuery.Action("ResetPassword");
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("notify", notify);
             sfApiQuery.Body = properties;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1086,12 +1127,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery ForgotPassword(string email, bool resetOnMobile = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.From("Users");
-		    sfApiQuery.Action("ForgotPassword");
+            sfApiQuery.From("Users");
+            sfApiQuery.Action("ForgotPassword");
             sfApiQuery.QueryString("email", email);
             sfApiQuery.QueryString("resetOnMobile", resetOnMobile);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1105,11 +1146,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery ResendWelcome(Uri url, string customMessage = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("ResendWelcome");
+            sfApiQuery.Action("ResendWelcome");
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("customMessage", customMessage);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1120,22 +1161,25 @@ namespace ShareFile.Api.Client.Entities
         /// </remarks>
         /// <param name="url"></param>
         /// <param name="completely"></param>
-        public IQuery Delete(Uri url, bool completely = false)
+        /// <param name="itemsReassignTo"></param>
+        /// <param name="groupsReassignTo"></param>
+        public IQuery Delete(Uri url, bool completely = false, string itemsReassignTo = null, string groupsReassignTo = null)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("completely", completely);
+            sfApiQuery.QueryString("itemsReassignTo", itemsReassignTo);
+            sfApiQuery.QueryString("groupsReassignTo", groupsReassignTo);
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
         /// Delete multiple client users
         /// </summary>
         /// <example>
-        /// {
-        /// ["id1","id2",...]
-        /// }
+        /// 
+        /// ["id1","id2"]
         /// </example>
         /// <remarks>
         /// Removes a list of client users. The list should not exceed 100 client user ids.
@@ -1144,11 +1188,65 @@ namespace ShareFile.Api.Client.Entities
         public IQuery DeleteClients(IEnumerable<string> clientIds)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.From("Users");
-		    sfApiQuery.Action("Clients");
+            sfApiQuery.From("Users");
+            sfApiQuery.Action("Clients");
             sfApiQuery.Body = clientIds;
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Delete multiple client users
+        /// </summary>
+        /// <example>
+        /// {
+        /// UserIds: ["id1", "id2"]
+        /// }
+        /// </example>
+        /// <remarks>
+        /// Removes a list of client users. The list should not exceed 100 client user ids.
+        /// </remarks>
+        /// <param name="deleteRequest"></param>
+        /// <returns>
+        /// 204 if successful
+        /// </returns>
+        public IQuery BulkDeleteClients(UserBulkOperationRequest deleteRequest)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+            sfApiQuery.From("Users");
+            sfApiQuery.Action("Clients");
+            sfApiQuery.SubAction("BulkDelete");
+            sfApiQuery.Body = deleteRequest;
+            sfApiQuery.HttpMethod = "POST";	
+            return sfApiQuery;
+        }
+        
+        /// <summary>
+        /// Downgrade multiple employee users to clients
+        /// </summary>
+        /// <example>
+        /// {
+        /// UserIds: ["id1", "id2"],
+        /// ReassignItemsToId: "id3",
+        /// ReassignGroupsToId: "id3"
+        /// }
+        /// </example>
+        /// <remarks>
+        /// Downgrades a list of employee users to clients. The list should not exceed 100 employee user ids.
+        /// </remarks>
+        /// <param name="downgradeRequest"></param>
+        /// <returns>
+        /// 204 if successful
+        /// </returns>
+        public IQuery DowngradeEmployees(UserBulkDowngradeRequest downgradeRequest)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
+            sfApiQuery.From("Users");
+            sfApiQuery.Action("Employees");
+            sfApiQuery.SubAction("Downgrade");
+            sfApiQuery.Body = downgradeRequest;
+            sfApiQuery.HttpMethod = "POST";	
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1163,10 +1261,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Item>> GetAllSharedFolders()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
-		    sfApiQuery.From("Users");
-		    sfApiQuery.Action("AllSharedFolders");
+            sfApiQuery.From("Users");
+            sfApiQuery.Action("AllSharedFolders");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1183,10 +1281,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Item>> GetTopFolders()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
-		    sfApiQuery.From("Users");
-		    sfApiQuery.Action("TopFolders");
+            sfApiQuery.From("Users");
+            sfApiQuery.Action("TopFolders");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1201,10 +1299,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Item>> NetworkShareConnectors()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
-		    sfApiQuery.From("Users");
-		    sfApiQuery.Action("NetworkShareConnectors");
+            sfApiQuery.From("Users");
+            sfApiQuery.Action("NetworkShareConnectors");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1219,10 +1317,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Item>> SharepointConnectors()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
-		    sfApiQuery.From("Users");
-		    sfApiQuery.Action("SharepointConnectors");
+            sfApiQuery.From("Users");
+            sfApiQuery.Action("SharepointConnectors");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1251,11 +1349,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery Confirm(UserConfirmationSettings settings)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.From("Users");
-		    sfApiQuery.Action("Confirm");
+            sfApiQuery.From("Users");
+            sfApiQuery.Action("Confirm");
             sfApiQuery.Body = settings;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1267,10 +1365,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<UserInfo> GetInfo()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<UserInfo>(Client);
-		    sfApiQuery.From("Users");
-		    sfApiQuery.Action("Info");
+            sfApiQuery.From("Users");
+            sfApiQuery.Action("Info");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1283,11 +1381,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<User> DeleteEmailAddress(string email)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<User>(Client);
-		    sfApiQuery.From("Users");
-		    sfApiQuery.Action("DeleteEmailAddress");
+            sfApiQuery.From("Users");
+            sfApiQuery.Action("DeleteEmailAddress");
             sfApiQuery.QueryString("email", email);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1300,11 +1398,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<User> MakePrimary(string email)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<User>(Client);
-		    sfApiQuery.From("Users");
-		    sfApiQuery.Action("MakePrimary");
+            sfApiQuery.From("Users");
+            sfApiQuery.Action("MakePrimary");
             sfApiQuery.QueryString("email", email);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1317,11 +1415,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery SendConfirmationEmail(string email)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.From("Users");
-		    sfApiQuery.Action("SendConfirmationEmail");
+            sfApiQuery.From("Users");
+            sfApiQuery.Action("SendConfirmationEmail");
             sfApiQuery.QueryString("email", email);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1333,10 +1431,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Redirection> WebAppLink()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Redirection>(Client);
-		    sfApiQuery.From("Users");
-		    sfApiQuery.Action("WebAppLink");
+            sfApiQuery.From("Users");
+            sfApiQuery.Action("WebAppLink");
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1351,10 +1449,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<InboxMetadata> InboxMetadata(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<InboxMetadata>(Client);
-		    sfApiQuery.Action("InboxMetadata");
+            sfApiQuery.Action("InboxMetadata");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1369,12 +1467,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Share>> GetInbox(Uri url, ShareType type = ShareType.Both, bool archived = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Share>>(Client);
-		    sfApiQuery.Action("Inbox");
+            sfApiQuery.Action("Inbox");
             sfApiQuery.Uri(url);
             sfApiQuery.QueryString("type", type);
             sfApiQuery.QueryString("archived", archived);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1389,10 +1487,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<Share>> SentMessages(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Share>>(Client);
-		    sfApiQuery.Action("SentMessages");
+            sfApiQuery.Action("SentMessages");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1405,10 +1503,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Redirection> WebAppManageUser(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Redirection>(Client);
-		    sfApiQuery.Action("WebAppManageUser");
+            sfApiQuery.Action("WebAppManageUser");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1420,10 +1518,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Redirection> WebAppManageUsers()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Redirection>(Client);
-		    sfApiQuery.From("Users");
-		    sfApiQuery.Action("WebAppManageUsers");
+            sfApiQuery.From("Users");
+            sfApiQuery.Action("WebAppManageUsers");
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -1435,10 +1533,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<Redirection> WebAppAddEmployee()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<Redirection>(Client);
-		    sfApiQuery.From("Users");
-		    sfApiQuery.Action("WebAppAddEmployee");
+            sfApiQuery.From("Users");
+            sfApiQuery.Action("WebAppAddEmployee");
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
     }
 }

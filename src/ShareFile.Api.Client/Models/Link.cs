@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,11 +17,17 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Represents an URL object that can be added to a ShareFile Folder and shared with
+	/// other users.
+	/// 
+	/// Some Storage Zones providers do not support Link objects - for example CIFS providers. The
+	/// ItemLink Capability indicates whether Links are supported in a provider
+	/// </summary>
 	public class Link : Item 
 	{
-
 		/// <summary>
 		/// Universal Reference Identifier for this Link object
 		/// </summary>

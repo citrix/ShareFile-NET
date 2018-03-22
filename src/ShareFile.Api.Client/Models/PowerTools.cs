@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,16 +17,61 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
 	public class PowerTools : ODataObject 
 	{
-
-		public bool EnableDesktopToolsPage { get; set; }
-
-		public bool EnableMobileApps { get; set; }
-
-		public bool ShowMobileTools { get; set; }
+		public bool? EnableDesktopToolsPage { get; set; }
+		public bool? ShowMobileTools { get; set; }
+		/// <summary>
+		/// This gives the ability to access Apps page in web app.
+		/// </summary>
+		public bool? ShowApps { get; set; }
+		/// <summary>
+		/// Access your computer files and apps on your tablet.
+		/// </summary>
+		public bool? EnableShareConnect { get; set; }
+		/// <summary>
+		/// SFCLI is a command-line interface to ShareFile. It can be used with a task scheduler to make regular backups or scheduled uploads to ShareFile.
+		/// </summary>
+		public bool? EnableCLI { get; set; }
+		/// <summary>
+		/// The ShareFile Outlook Plug-in integrates with Outlook 2007, 2010, 2013 and 2016 to provide an easy interface to ShareFile, allowing you to quickly send and request files through e-mail.
+		/// </summary>
+		public bool? EnableOutlook { get; set; }
+		/// <summary>
+		/// Using Right Signature, you can send documents for signature online.
+		/// </summary>
+		public bool? EnableRightSignature { get; set; }
+		/// <summary>
+		/// FTP Access allows you to connect to your ShareFile account and upload and download using a typical FTP client, useful if you have clients already familiar with FTP, or business processes scheduled to run over FTP.
+		/// </summary>
+		public bool? EnableFTP { get; set; }
+		/// <summary>
+		/// FTPS Access allows you to use FTP with SSL/TLS encryption, for an extra layer of security. If FTPS is enabled but regular FTP Access is disabled, you can ensure that transfers over FTP will always be encrypted.
+		/// Note: Connections using should be made using 'Implicit SSL/TLS' mode over Port 990.
+		/// </summary>
+		public bool? EnableSFTP { get; set; }
+		/// <summary>
+		/// Enables sync access.
+		/// </summary>
+		public bool? EnableSync { get; set; }
+		/// <summary>
+		/// Enables sync auto update.
+		/// </summary>
+		public bool? EnableSyncAutoUpdate { get; set; }
+		/// <summary>
+		/// ShareFile Drive Mapper allows Employee users to connect their account as a mapped drive on the Windows file system, without performing a full sync of account content.
+		/// </summary>
+		public bool? EnableDriveMapping { get; set; }
+		/// <summary>
+		/// WebDAV access allows you to connect to your ShareFile account through a WebDAV client on your computer or mobile device. Depending on the client, these files can then be edited, and directly saved back into ShareFile.
+		/// </summary>
+		public bool? EnableWebDAV { get; set; }
+		/// <summary>
+		/// Provide or generate key to override Sync access control.
+		/// </summary>
+		public string SyncOverrideKey { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
@@ -37,23 +82,78 @@ namespace ShareFile.Api.Models
 			if(typedSource != null)
 			{
 				EnableDesktopToolsPage = typedSource.EnableDesktopToolsPage;
-				EnableMobileApps = typedSource.EnableMobileApps;
 				ShowMobileTools = typedSource.ShowMobileTools;
+				ShowApps = typedSource.ShowApps;
+				EnableShareConnect = typedSource.EnableShareConnect;
+				EnableCLI = typedSource.EnableCLI;
+				EnableOutlook = typedSource.EnableOutlook;
+				EnableRightSignature = typedSource.EnableRightSignature;
+				EnableFTP = typedSource.EnableFTP;
+				EnableSFTP = typedSource.EnableSFTP;
+				EnableSync = typedSource.EnableSync;
+				EnableSyncAutoUpdate = typedSource.EnableSyncAutoUpdate;
+				EnableDriveMapping = typedSource.EnableDriveMapping;
+				EnableWebDAV = typedSource.EnableWebDAV;
+				SyncOverrideKey = typedSource.SyncOverrideKey;
 			}
 			else
 			{
 				JToken token;
 				if(source.TryGetProperty("EnableDesktopToolsPage", out token) && token.Type != JTokenType.Null)
 				{
-					EnableDesktopToolsPage = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
-				}
-				if(source.TryGetProperty("EnableMobileApps", out token) && token.Type != JTokenType.Null)
-				{
-					EnableMobileApps = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+					EnableDesktopToolsPage = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("ShowMobileTools", out token) && token.Type != JTokenType.Null)
 				{
-					ShowMobileTools = (bool)serializer.Deserialize(token.CreateReader(), typeof(bool));
+					ShowMobileTools = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("ShowApps", out token) && token.Type != JTokenType.Null)
+				{
+					ShowApps = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableShareConnect", out token) && token.Type != JTokenType.Null)
+				{
+					EnableShareConnect = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableCLI", out token) && token.Type != JTokenType.Null)
+				{
+					EnableCLI = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableOutlook", out token) && token.Type != JTokenType.Null)
+				{
+					EnableOutlook = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableRightSignature", out token) && token.Type != JTokenType.Null)
+				{
+					EnableRightSignature = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableFTP", out token) && token.Type != JTokenType.Null)
+				{
+					EnableFTP = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableSFTP", out token) && token.Type != JTokenType.Null)
+				{
+					EnableSFTP = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableSync", out token) && token.Type != JTokenType.Null)
+				{
+					EnableSync = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableSyncAutoUpdate", out token) && token.Type != JTokenType.Null)
+				{
+					EnableSyncAutoUpdate = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableDriveMapping", out token) && token.Type != JTokenType.Null)
+				{
+					EnableDriveMapping = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("EnableWebDAV", out token) && token.Type != JTokenType.Null)
+				{
+					EnableWebDAV = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("SyncOverrideKey", out token) && token.Type != JTokenType.Null)
+				{
+					SyncOverrideKey = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
 				}
 			}
 		}

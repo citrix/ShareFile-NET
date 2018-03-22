@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,29 +17,56 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// File represent a ShareFile File object. File is a subclass of Item. It is
+	/// not a container - it cannot contain other files.
+	/// </summary>
 	public class File : Item 
 	{
-
+		/// <summary>
+		/// Represents the Object Storage Identifier for this File. This field is
+		/// used in Object Storage providers - including sharefile.com and Storage Zones. Other
+		/// providers like CIFS and SharePoint do not need external references for object
+		/// blobs and do not populate this field.
+		/// </summary>
 		public string FilePath { get; set; }
-
+		/// <summary>
+		/// MD5 Hash of the File contents.
+		/// </summary>
 		public string Hash { get; set; }
-
+		/// <summary>
+		/// Indicates that the File has an image Preview.
+		/// </summary>
 		public bool? HasPreview { get; set; }
-
+		/// <summary>
+		/// Current Anti-Virus scanning status for this file
+		/// </summary>
 		public SafeEnum<FileVirusStatus> VirusStatus { get; set; }
-
+		/// <summary>
+		/// Data Loss Prevention information for this file.
+		/// </summary>
 		public ItemDlpInfo DlpInfo { get; set; }
-
+		/// <summary>
+		/// Effective Access Control permissions for this file
+		/// </summary>
 		public ItemInfo Info { get; set; }
-
+		/// <summary>
+		/// Indicates the user that has locked the file
+		/// </summary>
 		public User LockedBy { get; set; }
-
+		/// <summary>
+		/// File lock info
+		/// </summary>
 		public FileLock FileLockInfo { get; set; }
-
+		/// <summary>
+		/// File version.
+		/// </summary>
 		public float? Version { get; set; }
-
+		/// <summary>
+		/// Electronic signature object associated with this item
+		/// </summary>
 		public ESignature ESignatureDocument { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

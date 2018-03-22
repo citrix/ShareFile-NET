@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,17 +17,32 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Distribution Group
+	/// </summary>
 	public class Group : Principal 
 	{
-
+		/// <summary>
+		/// The group's owner
+		/// </summary>
 		public User Owner { get; set; }
-
+		/// <summary>
+		/// Account
+		/// </summary>
 		public Account Account { get; set; }
-
+		/// <summary>
+		/// Whether this group is public
+		/// </summary>
 		public bool? IsShared { get; set; }
-
+		/// <summary>
+		/// Number of group contacts
+		/// </summary>
+		public int? NumberOfContacts { get; set; }
+		/// <summary>
+		/// List of group contacts
+		/// </summary>
 		public IEnumerable<Contact> Contacts { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
@@ -41,6 +56,7 @@ namespace ShareFile.Api.Models
 				Owner = typedSource.Owner;
 				Account = typedSource.Account;
 				IsShared = typedSource.IsShared;
+				NumberOfContacts = typedSource.NumberOfContacts;
 				Contacts = typedSource.Contacts;
 			}
 			else
@@ -57,6 +73,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("IsShared", out token) && token.Type != JTokenType.Null)
 				{
 					IsShared = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("NumberOfContacts", out token) && token.Type != JTokenType.Null)
+				{
+					NumberOfContacts = (int?)serializer.Deserialize(token.CreateReader(), typeof(int?));
 				}
 				if(source.TryGetProperty("Contacts", out token) && token.Type != JTokenType.Null)
 				{

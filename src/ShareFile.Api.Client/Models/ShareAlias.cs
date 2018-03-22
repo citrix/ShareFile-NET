@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,46 +17,41 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Share Alias
+	/// </summary>
 	public class ShareAlias : ODataObject 
 	{
-
 		/// <summary>
 		/// User to whom the share is associated.
 		/// </summary>
 		public User User { get; set; }
-
 		/// <summary>
 		/// Share
 		/// </summary>
 		public Share Share { get; set; }
-
 		/// <summary>
 		/// Email
 		/// </summary>
 		public string Email { get; set; }
-
 		/// <summary>
 		/// Number of downloads
 		/// </summary>
 		public int? Downloads { get; set; }
-
 		/// <summary>
 		/// IsConsumed
 		/// </summary>
 		public bool? IsConsumed { get; set; }
-
 		/// <summary>
 		/// IsArchived
 		/// </summary>
 		public bool? IsArchived { get; set; }
-
 		/// <summary>
 		/// IsRead
 		/// </summary>
 		public bool? IsRead { get; set; }
-
 		/// <summary>
 		/// Uri to access the share through the Web portal
 		/// </summary>

@@ -1,18 +1,10 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using ShareFile.Api.Client.Credentials;
 using ShareFile.Api.Client.Events;
 using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.Extensions;
@@ -20,17 +12,17 @@ using ShareFile.Api.Client.Extensions.Tasks;
 using ShareFile.Api.Client.Logging;
 using ShareFile.Api.Client.Requests.Executors;
 using ShareFile.Api.Client.Security.Authentication.OAuth2;
+using ShareFile.Api.Client.Models;
 using ShareFile.Api.Client.Security.Cryptography;
-using ShareFile.Api.Models;
 
 namespace ShareFile.Api.Client.Requests.Providers
 {
-#if ASYNC
-    internal class AsyncRequestProvider : BaseRequestProvider, IAsyncRequestProvider
+	internal class AsyncRequestProvider : BaseRequestProvider, IAsyncRequestProvider
     {
         public AsyncRequestProvider(ShareFileClient client) : base(client) { }
 
-        public async Task ExecuteAsync(IQuery query, CancellationToken? token = null)
+        [NotNull]
+        public async Task ExecuteAsync(IQuery query, CancellationToken token = default(CancellationToken))
         {
             EventHandlerResponse action = null;
             int retryCount = 0;
@@ -68,13 +60,14 @@ namespace ShareFile.Api.Client.Requests.Providers
             } while (action != null && (action.Action == EventHandlerResponseAction.Retry || action.Action == EventHandlerResponseAction.Redirect));
         }
 
-        public async Task<T> ExecuteAsync<T>(IQuery<T> query, CancellationToken? token = null)
+        [NotNull]
+        public async Task<T> ExecuteAsync<T>(IQuery<T> query, CancellationToken token = default(CancellationToken))
             where T : class
         {
             var streamQuery = query as IQuery<Stream>;
             if (streamQuery != null)
             {
-                return await this.ExecuteAsync(streamQuery, token).ConfigureAwait(false) as T;
+                return (T)(object)(await ExecuteAsync(streamQuery, token).ConfigureAwait(false));
             }
             
             EventHandlerResponse action = null;
@@ -136,7 +129,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                             }
                             else
                             {
-                                return response.Value as T;
+                                return (T)(object)response.Value;
                             }
                         }
                         else action = response.Action;
@@ -158,7 +151,8 @@ namespace ShareFile.Api.Client.Requests.Providers
 
             } while (action != null && (action.Action == EventHandlerResponseAction.Retry || action.Action == EventHandlerResponseAction.Redirect));
 
-            return default(T);
+            ShareFileClient.Logging.Error($"App should throw or return before getting to this point. Query: {query}");
+            throw new InvalidOperationException("We should throw or return before getting here.");
         }
 
         private EventHandlerResponse GetRedirectionAction(
@@ -187,15 +181,17 @@ namespace ShareFile.Api.Client.Requests.Providers
             return action;
         }
 
-        public async Task<T> ExecuteAsync<T>(IFormQuery<T> query, CancellationToken? token = null)
+        [NotNull]
+        public async Task<T> ExecuteAsync<T>(IFormQuery<T> query, CancellationToken token = default(CancellationToken))
             where T : class
         {
             return await ExecuteAsync(query as IQuery<T>, token).ConfigureAwait(false);
         }
 
+        [NotNull]
         public async Task<Stream> ExecuteAsync(
             IQuery<Stream> query,
-            CancellationToken? token = null)
+            CancellationToken token = default(CancellationToken))
         {
             EventHandlerResponse action = null;
             int retryCount = 0;
@@ -228,13 +224,15 @@ namespace ShareFile.Api.Client.Requests.Providers
                 {
                     ShareFileClient.Logging.Trace(requestRoundtripWatch);
                 }
+            }
+            while (action != null && (action.Action == EventHandlerResponseAction.Retry || action.Action == EventHandlerResponseAction.Redirect));
 
-            } while (action != null && (action.Action == EventHandlerResponseAction.Retry || action.Action == EventHandlerResponseAction.Redirect));
-
-            return default(Stream);
+            ShareFileClient.Logging.Error($"App should throw or return before getting to this point. Query: {query}");
+            throw new InvalidOperationException("We should throw or return before getting here.");
         }
 
-        public Task<Stream> ExecuteAsync(IStreamQuery query, CancellationToken? token = null)
+        [NotNull]
+        public Task<Stream> ExecuteAsync(IStreamQuery query, CancellationToken token = default(CancellationToken))
         {
             return this.ExecuteAsync((IQuery<Stream>)query, token);
         }
@@ -485,7 +483,8 @@ namespace ShareFile.Api.Client.Requests.Providers
                         {
                             Code = requestException.Code,
                             ODataExceptionMessage = requestException.Message,
-                            ExceptionReason = requestException.ExceptionReason
+                            ExceptionReason = requestException.ExceptionReason,
+                            ErrorLog = requestException.ErrorLog
                         };
                     }
                     else
@@ -537,7 +536,7 @@ namespace ShareFile.Api.Client.Requests.Providers
             HttpRequestMessage requestMessage,
             HttpCompletionOption httpCompletionOption,
             int redirectionCount = 0,
-            CancellationToken? token = null)
+            CancellationToken token = default(CancellationToken))
         {
             if (redirectionCount >= MaxAutomaticRedirections)
             {
@@ -545,7 +544,7 @@ namespace ShareFile.Api.Client.Requests.Providers
             }
             var requestExecutor = ShareFileClient.AsyncRequestExecutor ?? RequestExecutorFactory.GetAsyncRequestExecutor();
 
-            var responseMessage = await requestExecutor.SendAsync(HttpClient, requestMessage, httpCompletionOption, token ?? CancellationToken.None).ConfigureAwait(false);
+            var responseMessage = await requestExecutor.SendAsync(HttpClient, requestMessage, httpCompletionOption, token).ConfigureAwait(false);
             var redirect = responseMessage.GetSecureRedirect();
             if (redirect != null)
             {
@@ -557,5 +556,4 @@ namespace ShareFile.Api.Client.Requests.Providers
             return responseMessage;
         }
     }
-#endif
 }

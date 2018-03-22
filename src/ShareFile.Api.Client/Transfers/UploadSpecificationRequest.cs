@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using ShareFile.Api.Client.Extensions;
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
 
 namespace ShareFile.Api.Client.Transfers
 {
@@ -15,8 +15,10 @@ namespace ShareFile.Api.Client.Transfers
         /// Set is no longer supported; value will be overwritten during uploader constructor
         /// </summary>
         public bool Raw { get; set; }
-        
+
         public string FileName { get; set; }
+
+        public string BaseFileId { get; set; }
         public long FileSize { get; set; }
         public string BatchId { get; set; }
         public bool BatchLast { get; set; }
@@ -35,14 +37,13 @@ namespace ShareFile.Api.Client.Transfers
         public DateTime? ClientCreatedDateUtc { get; set; }
         public DateTime? ClientModifiedDateUtc { get; set; }
         public IEnumerable<Capability> ProviderCapabilities { get; set; }
-		
 
-		/// <summary>
-		/// Will make a best effort to ensure a file is uploaded by modifying 
-		/// FileName if it encounters a collision.  This is NOT supported on all
-		/// providers.
-		/// </summary>
-		public bool ForceUnique { get; set; }
+        /// <summary>
+        /// Will make a best effort to ensure a file is uploaded by modifying 
+        /// FileName if it encounters a collision.  This is NOT supported on all
+        /// providers.
+        /// </summary>
+        public bool ForceUnique { get; set; }
 
         public UploadSpecificationRequest()
         {
@@ -89,8 +90,9 @@ namespace ShareFile.Api.Client.Transfers
                     {"responseFormat", ResponseFormat},
                     {"notify", Notify.ToLowerString()},
                     {"clientCreatedDateUTC", ClientCreatedDateUtc.HasValue ? ClientCreatedDateUtc.Value.ToString("u"): ""},
-                    {"clientModifiedDateUTC", ClientModifiedDateUtc.HasValue ? ClientModifiedDateUtc.Value.ToString("u"): ""}
-                };
+                    {"clientModifiedDateUTC", ClientModifiedDateUtc.HasValue ? ClientModifiedDateUtc.Value.ToString("u"): ""},
+                    {"baseFileId", BaseFileId}
+            };
         }
 
         /// <summary>
@@ -100,27 +102,28 @@ namespace ShareFile.Api.Client.Transfers
         public UploadRequestParams ToRequestParams()
         {
             return new UploadRequestParams
-                       {
-                           Method = this.Method.GetValueOrDefault(),
-                           Raw = this.Raw,
-                           FileName = this.FileName,
-                           FileSize = this.FileSize,
-                           BatchId = this.BatchId,
-                           BatchLast = this.BatchLast,
-                           CanResume = this.CanResume,
-                           StartOver = this.StartOver,
-                           Unzip = this.Unzip,
-                           Title = this.Title,
-                           Details = this.Details,
-                           SendGuid = this.SendGuid,
-                           ThreadCount = this.ThreadCount,
-                           IsSend = this.IsSend,
-                           Notify = this.Notify,
-                           ClientCreatedDate = this.ClientCreatedDateUtc,
-                           ClientModifiedDate = this.ClientModifiedDateUtc,
-                           Tool = this.Tool,
-                           Overwrite = Overwrite
-                       };
+            {
+                Method = this.Method.GetValueOrDefault(),
+                Raw = this.Raw,
+                FileName = this.FileName,
+                FileSize = this.FileSize,
+                BatchId = this.BatchId,
+                BatchLast = this.BatchLast,
+                CanResume = this.CanResume,
+                StartOver = this.StartOver,
+                Unzip = this.Unzip,
+                Title = this.Title,
+                Details = this.Details,
+                SendGuid = this.SendGuid,
+                ThreadCount = this.ThreadCount,
+                IsSend = this.IsSend,
+                Notify = this.Notify,
+                ClientCreatedDate = this.ClientCreatedDateUtc,
+                ClientModifiedDate = this.ClientModifiedDateUtc,
+                Tool = this.Tool,
+                Overwrite = Overwrite,
+                BaseFileId = BaseFileId
+            };
         }
     }
 }

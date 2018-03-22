@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,36 +17,35 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Relationship class between Connector Groups and Zones. Groups are considered
+	/// global, but to create Symbolic Links, or retrieve URLs, the client has to
+	/// select a specific Zone
+	/// </summary>
 	public class ConnectorGroupZone : ODataObject 
 	{
-
 		/// <summary>
 		/// Zone that contains this connector class
 		/// </summary>
 		public Zone Zone { get; set; }
-
 		/// <summary>
 		/// List of Storage Centers in this Zone that contain this Connector
 		/// </summary>
 		public IEnumerable<StorageCenter> StorageCenters { get; set; }
-
 		/// <summary>
 		/// Minimum API version supported by this connector group
 		/// </summary>
 		public string ApiVersionMin { get; set; }
-
 		/// <summary>
 		/// Maximum API version supported by this connector group
 		/// </summary>
 		public string ApiVersionMax { get; set; }
-
 		/// <summary>
 		/// URL for the Connector Group Icon.
 		/// </summary>
 		public string IconUrl { get; set; }
-
 		/// <summary>
 		/// URL for the Form that creates or updates connectors
 		/// </summary>

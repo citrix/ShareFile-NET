@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,77 +17,66 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// SendShareParams
+	/// </summary>
 	public class ShareSendParams : ODataObject 
 	{
-
 		/// <summary>
 		/// List of Item Ids to be sent
 		/// </summary>
 		public IEnumerable<string> Items { get; set; }
-
 		/// <summary>
 		/// List of emails to whom this Share should be sent
 		/// </summary>
 		public IEnumerable<string> Emails { get; set; }
-
 		/// <summary>
 		/// The subject of the Share email
 		/// </summary>
 		public string Subject { get; set; }
-
 		/// <summary>
 		/// A message to be included in the Share email body
 		/// </summary>
 		public string Body { get; set; }
-
 		/// <summary>
 		/// If true, the Share sender will be cc'd in the Share email
 		/// </summary>
 		public bool CcSender { get; set; }
-
 		/// <summary>
 		/// If true, recipients will need to login to access the Share
 		/// </summary>
 		public bool RequireLogin { get; set; }
-
 		/// <summary>
 		/// If true, anyone with the link can access the Share. Cannot be true if RequireLogin is true
 		/// </summary>
 		public bool SendAnon { get; set; }
-
 		/// <summary>
 		/// If true, a recipient will need to provide their full name and email to access the Share. Cannot be true if RequireLogin is true
 		/// </summary>
 		public bool RequireUserInfo { get; set; }
-
 		/// <summary>
 		/// Number of days until access to this Share expires
 		/// </summary>
 		public int ExpirationDays { get; set; }
-
 		/// <summary>
 		/// If true, the sender will receive an email notification when the Share items are downloaded
 		/// </summary>
 		public bool NotifyOnDownload { get; set; }
-
 		/// <summary>
 		/// If true, the Share items can only be viewed but not downloaded. Requires account preference EnableViewOnly to work
 		/// </summary>
 		public bool IsViewOnly { get; set; }
-
 		/// <summary>
 		/// Maximum number of times each recipient can download the Share items
 		/// </summary>
 		public int MaxDownloads { get; set; }
-
 		/// <summary>
 		/// When enabled the items are identified by stream IDs instead of item IDs.
 		/// Applies to Send Shares only. (FINRA enabled accounts cannot use this)
 		/// </summary>
 		public bool? UsesStreamIDs { get; set; }
-
 		/// <summary>
 		/// Used to define the share type and share action types
 		/// </summary>

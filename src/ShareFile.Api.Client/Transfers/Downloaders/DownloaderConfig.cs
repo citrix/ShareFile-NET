@@ -1,14 +1,20 @@
-﻿namespace ShareFile.Api.Client.Transfers.Downloaders
+﻿using System;
+
+namespace ShareFile.Api.Client.Transfers.Downloaders
 {
     public class DownloaderConfig
     {
         public RangeRequest RangeRequest { get; set; }
-        public int BufferSize { get; set; }
+        [Obsolete]
+        public int BufferSize { get => Configuration.BufferSize; set { return; } }
+        public TimeSpan ProgressReportInterval { get; set; }
+        public bool AllowRangeRequestOffByOne { get; set; }
 
         public DownloaderConfig()
         {
             RangeRequest = null;
-            BufferSize = 4096;
+            ProgressReportInterval = TimeSpan.FromMilliseconds(100);
+            AllowRangeRequestOffByOne = true;
         }
 
         public static DownloaderConfig Default

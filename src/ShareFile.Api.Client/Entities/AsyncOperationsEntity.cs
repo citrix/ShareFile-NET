@@ -5,15 +5,15 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
-using ShareFile.Api.Models;
 using ShareFile.Api.Client;
-using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Models;
+using ShareFile.Api.Client.Requests;
 
 
 namespace ShareFile.Api.Client.Entities
@@ -144,7 +144,7 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AsyncOperation>(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -160,11 +160,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<AsyncOperation>> GetByBatch(string id)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<AsyncOperation>>(Client);
-		    sfApiQuery.From("AsyncOperations");
-		    sfApiQuery.Action("GetByBatch");
+            sfApiQuery.From("AsyncOperations");
+            sfApiQuery.Action("GetByBatch");
             sfApiQuery.ActionIds(id);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -180,11 +180,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<AsyncOperation> GetBatch(string id)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AsyncOperation>(Client);
-		    sfApiQuery.From("AsyncOperations");
-		    sfApiQuery.Action("GetBatch");
+            sfApiQuery.From("AsyncOperations");
+            sfApiQuery.Action("GetBatch");
             sfApiQuery.ActionIds(id);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -201,19 +201,19 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<AsyncOperation>> GetByFolder(string id)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<AsyncOperation>>(Client);
-		    sfApiQuery.From("AsyncOperations");
-		    sfApiQuery.Action("GetByFolder");
+            sfApiQuery.From("AsyncOperations");
+            sfApiQuery.Action("GetByFolder");
             sfApiQuery.ActionIds(id);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         public IQuery<AsyncOperation> Create(AsyncOperation asyncOp)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AsyncOperation>(Client);
-		    sfApiQuery.From("AsyncOperations");
+            sfApiQuery.From("AsyncOperations");
             sfApiQuery.Body = asyncOp;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -229,10 +229,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<AsyncOperation> Cancel(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AsyncOperation>(Client);
-		    sfApiQuery.Action("Cancel");
+            sfApiQuery.Action("Cancel");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -247,7 +247,7 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -264,11 +264,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<AsyncOperation>> CancelBatch(string id)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<AsyncOperation>>(Client);
-		    sfApiQuery.From("AsyncOperations");
-		    sfApiQuery.Action("CancelBatch");
+            sfApiQuery.From("AsyncOperations");
+            sfApiQuery.Action("CancelBatch");
             sfApiQuery.ActionIds(id);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -291,7 +291,7 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.Uri(url);
             sfApiQuery.Body = newAsyncOp;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
     }
 }

@@ -6,9 +6,13 @@ namespace ShareFile.Api.Client.Requests.Providers
 {
     public interface IAsyncRequestProvider : IRequestProvider
     {
-        Task ExecuteAsync(IQuery query, CancellationToken? token = null);
-        Task<T> ExecuteAsync<T>(IQuery<T> query, CancellationToken? token = null) where T : class;
-        Task<T> ExecuteAsync<T>(IFormQuery<T> query, CancellationToken? token = null) where T : class;
-        Task<Stream> ExecuteAsync(IStreamQuery query, CancellationToken? token = null);
+        [NotNull]
+        Task ExecuteAsync(IQuery query, CancellationToken token = default(CancellationToken));
+        [NotNull]
+        Task<T> ExecuteAsync<T>(IQuery<T> query, CancellationToken token = default(CancellationToken)) where T : class;
+        [NotNull]
+        Task<T> ExecuteAsync<T>(IFormQuery<T> query, CancellationToken token = default(CancellationToken)) where T : class;
+        [NotNull]
+        Task<Stream> ExecuteAsync(IStreamQuery query, CancellationToken token = default(CancellationToken));
     }
 }

@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Net;
+using System.Net.Http;
+using ShareFile.Api.Client.Credentials;
+using ShareFile.Api.Client.Transfers.Uploaders.Buffers;
 
 namespace ShareFile.Api.Client.Transfers.Uploaders
 {
@@ -8,15 +12,18 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         public const int DefaultNumberOfThreads = 1;
         public const int DefaultHttpTimeout = 60000;
         public const int DefaultThreadStartPauseInMS = 100;
+        private const int DefaultProgressReportIntervalMilliseconds = 100;
 
         public int NumberOfThreads { get; set; }
         public int PartSize { get; set; }
         public int HttpTimeout { get; set; }
+        public Func<ICredentialCache, CookieContainer, HttpClient> HttpClientFactory { get; set; }
         public int ThreadStartPauseInMS { get; set; }
         public bool UseRequestStreamBuffering { get; set; }
         public bool RequireChunksCompleteInOrder { get; set; }
         public int? WriteTimeout { get; set; }
         public int? ReadTimeout { get; set; }
+        public TimeSpan ProgressReportInterval { get; set; }
 
         public FilePartConfig PartConfig { get; set; }
 
@@ -29,6 +36,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             UseRequestStreamBuffering = true;
             RequireChunksCompleteInOrder = false;
             PartConfig = new FilePartConfig();
+            ProgressReportInterval = TimeSpan.FromMilliseconds(DefaultProgressReportIntervalMilliseconds);
         }
     }
 
@@ -48,6 +56,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         /// </para>
         /// </summary>
         public int MinFileSizeForMultithreaded { get; set; }
+        public IBufferAllocator BufferAllocator { get; set; }
 
         public FilePartConfig()
         {
@@ -59,6 +68,7 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             MaxPartSizeIncreaseFactor = 8;
             MaxPartSizeDecreaseFactor = 2;
             PartRetryCount = 1;
+            BufferAllocator = new PooledBufferAllocator();
         }
     }
 }

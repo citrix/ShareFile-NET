@@ -1,9 +1,10 @@
 ﻿using System;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Requests;
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
 using System.Threading.Tasks;
 using System.Threading;
+using io = System.IO;
 
 namespace ShareFile.Api.Client.Transfers.Downloaders
 {
@@ -14,46 +15,66 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
         public DownloaderConfig Config { get; set; }
         protected DownloadSpecification DownloadSpecification { get; set; }
 
-        public EventHandler<TransferEventArgs> OnTransferProgress;
+        protected TransferProgressReporter progressReporter;
+        public event EventHandler<TransferEventArgs> OnTransferProgress
+        {
+            add { progressReporter.OnTransferProgress += value; }
+            remove { progressReporter.OnTransferProgress -= value; }
+        }        
 
         protected DownloaderBase(Item item, IShareFileClient client, DownloaderConfig config = null)
         {
-            if (item == null)
-            {
-                throw new ArgumentNullException(nameof(item));
-            }
-
             Client = client;
-            Item = item;
+            Item = item ?? throw new ArgumentNullException(nameof(item));
             Config = config ?? new DownloaderConfig();
+            progressReporter = new TransferProgressReporter(
+                fileSize: BytesToDownload() ?? 0,
+                transferId: "",
+                reportInterval: Config.ProgressReportInterval);
         }
 
         protected DownloaderBase(DownloadSpecification downloadSpecification, IShareFileClient client, DownloaderConfig config = null)
         {
-            if (downloadSpecification == null)
-            {
-                throw new ArgumentNullException(nameof(downloadSpecification));
-            }
-
             Client = client;
             Config = config ?? new DownloaderConfig();
-            DownloadSpecification = downloadSpecification;
+            DownloadSpecification = downloadSpecification ?? throw new ArgumentNullException(nameof(downloadSpecification));
+            progressReporter = new TransferProgressReporter(
+                fileSize: BytesToDownload() ?? 0,
+                transferId: "",
+                reportInterval: Config.ProgressReportInterval);
         }
 
-        protected void NotifyProgress(TransferProgress progress)
+        protected long? BytesToDownload()
         {
-            if (OnTransferProgress != null)
+            // math operators on nullables return null if an arg is null, comparison operators return false
+            long begin = Config.RangeRequest?.Begin ?? 0;
+            long? end = Config.RangeRequest?.End ?? (Item?.FileSizeBytes - 1);
+            long? length = end - begin + 1; // inclusive range
+            if(length < 0)
             {
-                OnTransferProgress.Invoke(this, new TransferEventArgs { Progress = progress });
+                throw new ArgumentException($"Cannot download negative-length byte range {begin} : {end}");
             }
+            return length;
+        }
+
+        protected bool IsRangeRequest => Config.RangeRequest != null && (Config.RangeRequest.Begin.HasValue || Config.RangeRequest.End.HasValue);
+
+        protected io.Stream ExpectedLengthStream(io.Stream downloadStream)
+        {
+            long? expectedBytes = BytesToDownload();
+            if (!expectedBytes.HasValue)
+            {
+                return downloadStream;
+            }
+            bool allowRangeReqOffByOne = IsRangeRequest && Config.AllowRangeRequestOffByOne;
+            return new ExpectedLengthStream(downloadStream, expectedBytes.Value, allowRangeReqOffByOne, Client.Configuration.Logger);
         }
 
         protected StreamQuery CreateDownloadQuery(RangeRequest rangeRequest)
         {
             return CreateDownloadStreamQuery(Config.RangeRequest);
         }
-
-#if ASYNC
+		
         protected async Task<DownloadSpecification> CreateDownloadSpecificationAsync(CancellationToken token = default(CancellationToken))
         {
             if (Item == null)
@@ -79,7 +100,6 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
 
             return capabilities.SupportsDownloadWithSpecificaton();
         }
-#endif
 
         protected DownloadSpecification CreateDownloadSpecification()
         {

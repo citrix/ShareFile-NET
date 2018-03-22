@@ -5,15 +5,15 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
-using ShareFile.Api.Models;
 using ShareFile.Api.Client;
-using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Models;
+using ShareFile.Api.Client.Requests;
 
 
 namespace ShareFile.Api.Client.Entities
@@ -39,7 +39,7 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "Name": "Client Folder",
-        /// "Description": "For all client folders created in 2014 or after"
+        /// "Description": "For all client folders created in 2014 or after",
         /// "Items": [
         /// {
         /// "Name": "Folder 1",
@@ -53,6 +53,7 @@ namespace ShareFile.Api.Client.Entities
         /// "Name": "Folder 2"
         /// }
         /// ]
+        /// }
         /// </example>
         /// <remarks>
         /// Creates a new folder template.
@@ -89,10 +90,12 @@ namespace ShareFile.Api.Client.Entities
         /// <remarks>
         /// Updates an existing folder template
         /// </remarks>
+        /// <param name="template"></param>
+        /// <param name="overwrite"></param>
         /// <returns>
         /// The updated folder template
         /// </returns>
-        IQuery<FolderTemplate> Update(FolderTemplate template);
+        IQuery<FolderTemplate> Update(FolderTemplate template, bool overwrite = false);
         
         /// <summary>
         /// Delete Folder Template
@@ -137,16 +140,16 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<ODataFeed<FolderTemplate>> Get()
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<FolderTemplate>>(Client);
-		    sfApiQuery.From("FolderTemplates");
+            sfApiQuery.From("FolderTemplates");
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         public IQuery<FolderTemplate> Get(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<FolderTemplate>(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -155,7 +158,7 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "Name": "Client Folder",
-        /// "Description": "For all client folders created in 2014 or after"
+        /// "Description": "For all client folders created in 2014 or after",
         /// "Items": [
         /// {
         /// "Name": "Folder 1",
@@ -169,6 +172,7 @@ namespace ShareFile.Api.Client.Entities
         /// "Name": "Folder 2"
         /// }
         /// ]
+        /// }
         /// </example>
         /// <remarks>
         /// Creates a new folder template.
@@ -179,10 +183,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<FolderTemplate> Create(FolderTemplate template)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<FolderTemplate>(Client);
-		    sfApiQuery.From("FolderTemplates");
+            sfApiQuery.From("FolderTemplates");
             sfApiQuery.Body = template;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -212,16 +216,19 @@ namespace ShareFile.Api.Client.Entities
         /// <remarks>
         /// Updates an existing folder template
         /// </remarks>
+        /// <param name="template"></param>
+        /// <param name="overwrite"></param>
         /// <returns>
         /// The updated folder template
         /// </returns>
-        public IQuery<FolderTemplate> Update(FolderTemplate template)
+        public IQuery<FolderTemplate> Update(FolderTemplate template, bool overwrite = false)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<FolderTemplate>(Client);
-		    sfApiQuery.From("FolderTemplates");
+            sfApiQuery.From("FolderTemplates");
+            sfApiQuery.QueryString("overwrite", overwrite);
             sfApiQuery.Body = template;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -236,7 +243,7 @@ namespace ShareFile.Api.Client.Entities
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -254,12 +261,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<AsyncOperation> BulkApply(Uri templateUrl, string folderId, int batchSize = -1)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<AsyncOperation>(Client);
-		    sfApiQuery.Action("BulkApply");
+            sfApiQuery.Action("BulkApply");
             sfApiQuery.Uri(templateUrl);
             sfApiQuery.QueryString("folderId", folderId);
             sfApiQuery.QueryString("batchSize", batchSize);
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
     }
 }

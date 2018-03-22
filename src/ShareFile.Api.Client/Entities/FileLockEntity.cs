@@ -5,15 +5,15 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
-using ShareFile.Api.Models;
 using ShareFile.Api.Client;
-using ShareFile.Api.Client.Requests;
 using ShareFile.Api.Client.Extensions;
+using ShareFile.Api.Client.Models;
+using ShareFile.Api.Client.Requests;
 
 
 namespace ShareFile.Api.Client.Entities
@@ -39,7 +39,7 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "Owner":{Id:"ownerid"},
-        /// "ExpirationTimeInMinutes":180;
+        /// "ExpirationTimeInMinutes":180
         /// }
         /// </example>
         /// <remarks>
@@ -115,10 +115,10 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<FileLock> GetByItem(Uri url)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<FileLock>(Client);
-		    sfApiQuery.Action("FileLock");
+            sfApiQuery.Action("FileLock");
             sfApiQuery.Uri(url);
             sfApiQuery.HttpMethod = "GET";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -127,7 +127,7 @@ namespace ShareFile.Api.Client.Entities
         /// <example>
         /// {
         /// "Owner":{Id:"ownerid"},
-        /// "ExpirationTimeInMinutes":180;
+        /// "ExpirationTimeInMinutes":180
         /// }
         /// </example>
         /// <remarks>
@@ -142,11 +142,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<FileLock> CreateByItem(Uri url, FileLock fileLock)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<FileLock>(Client);
-		    sfApiQuery.Action("FileLock");
+            sfApiQuery.Action("FileLock");
             sfApiQuery.Uri(url);
             sfApiQuery.Body = fileLock;
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -171,11 +171,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery<FileLock> UpdateByItem(Uri url, FileLock fileLock)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query<FileLock>(Client);
-		    sfApiQuery.Action("FileLock");
+            sfApiQuery.Action("FileLock");
             sfApiQuery.Uri(url);
             sfApiQuery.Body = fileLock;
             sfApiQuery.HttpMethod = "PATCH";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -189,11 +189,11 @@ namespace ShareFile.Api.Client.Entities
         public IQuery DeleteByItem(Uri url, string lockid)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("FileLock");
+            sfApiQuery.Action("FileLock");
             sfApiQuery.Uri(url);
             sfApiQuery.ActionIds(lockid);
             sfApiQuery.HttpMethod = "DELETE";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
         
         /// <summary>
@@ -207,12 +207,12 @@ namespace ShareFile.Api.Client.Entities
         public IQuery Discard(Uri url, string lockid)
         {
             var sfApiQuery = new ShareFile.Api.Client.Requests.Query(Client);
-		    sfApiQuery.Action("FileLock");
+            sfApiQuery.Action("FileLock");
             sfApiQuery.Uri(url);
             sfApiQuery.ActionIds(lockid);
             sfApiQuery.SubAction("Discard");
             sfApiQuery.HttpMethod = "POST";	
-		    return sfApiQuery;
+            return sfApiQuery;
         }
     }
 }

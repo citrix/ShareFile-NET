@@ -5,14 +5,24 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
-	public enum ClientCapability
+    public enum ClientCapability
     {
-        HardLock = 0
+        HardLock = 0,
+        
+        /// <summary>
+        /// If supplied, then calls to Items(favorites) will return all favorites (not just folders)
+        /// </summary>
+        ItemFavorites = 1,
+        
+        /// <summary>
+        /// If supplied, then Personal Cloud and Office 365 connectors will be grouped under the c-pcc and c-o365 folders.
+        /// </summary>
+        CloudConnectorGroups = 2
     }
 }

@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,56 +17,50 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Upload Specifications contain the necessary information for uploading new files to
+	/// a ShareFile provider.
+	/// </summary>
 	public class UploadSpecification : ODataObject 
 	{
-
 		/// <summary>
 		/// The Upload method that must be used for this upload
 		/// </summary>
 		public SafeEnum<UploadMethod> Method { get; set; }
-
 		/// <summary>
 		/// If provided, clients must issue a request to this Uri before uploading any data.
 		/// </summary>
 		public Uri PrepareUri { get; set; }
-
 		/// <summary>
 		/// Specifies the URI the client must send the file data to
 		/// </summary>
 		public Uri ChunkUri { get; set; }
-
 		/// <summary>
 		/// If provided, specifies the final call the client must perform to finish the upload process
 		/// </summary>
 		public Uri FinishUri { get; set; }
-
 		/// <summary>
 		/// Allows the client to check progress of standard uploads
 		/// </summary>
 		public string ProgressData { get; set; }
-
 		/// <summary>
 		/// Specifies a Resumable upload is supproted.
 		/// </summary>
 		public bool IsResume { get; set; }
-
 		/// <summary>
 		/// Specifies the initial index for resuming, if IsResume is true.
 		/// </summary>
 		public long ResumeIndex { get; set; }
-
 		/// <summary>
 		/// Specifies the initial file offset by bytes, if IsResume is true
 		/// </summary>
 		public long ResumeOffset { get; set; }
-
 		/// <summary>
 		/// Specifies the MD5 hash of the first ResumeOffset bytes of the partial file found at the server
 		/// </summary>
 		public string ResumeFileHash { get; set; }
-
 		/// <summary>
 		/// Specifies the max number of chunks that can be sent simultaneously for threaded uploads
 		/// </summary>

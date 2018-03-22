@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using ShareFile.Api.Client.Extensions;
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
 using Group = System.Text.RegularExpressions.Group;
 
 namespace ShareFile.Api.Client.Converters
@@ -26,6 +26,8 @@ namespace ShareFile.Api.Client.Converters
 
         private static ODataFactory _instance = null;
         private static readonly Type ODataObjectType = typeof(ODataObject);
+        internal const string PlaftormODataObjectNamespace = "ShareFile.Api.Models.";
+        internal const string ClientODataObjectNamespace = "ShareFile.Api.Client.Models.";
         private static readonly Type ODataFeedType = typeof(ODataFeed<>);
 
         private ODataFactory()
@@ -146,50 +148,48 @@ namespace ShareFile.Api.Client.Converters
             var type = FindModelType(null, cast);
             return InvokeConstructor(type, null, null);
         }
-                
-        private static readonly Type UserType = typeof(User);
-        private static readonly Type PrincipalType = typeof(Principal);
-        
-        private static readonly Type ItemType = typeof(Item);
-        private static readonly Dictionary<Type, Func<string, bool>> ItemSubTypes = new Dictionary<Type, Func<string, bool>>
-        {
-            { typeof(File), id => id.StartsWith("fi") },
-            { typeof(SymbolicLink), id => id.StartsWith("for") },
-            { typeof(Folder), id => id.StartsWith("fo") || id.StartsWith("a") },
-            { typeof(Note), id => id.StartsWith("n") },
-            { typeof(Link), id => id.StartsWith("l") },
-            { typeof(Group), id => id.StartsWith("g") }
-        };
 
         public Type FindModelType(Type knownType, string cast)
         {
             Type type = knownType;
             // Normalize cast, remove namespaces
-            if (cast != null)
+            cast = FindAndTrimNamespace(cast);
+
+            Type castType;
+            if (cast != null && _entityTypeMap.TryGetValue(cast, out castType))
             {
-                string namesp = ODataObjectType.Namespace;
-                if (cast.StartsWith(namesp)) cast = cast.Substring(namesp.Length + 1);
+                type = castType;
             }
-            // If knownType is unknown, type to infer from the Cast string
-            if ((type == null || type == typeof(ODataObject)) && cast != null)
+            else if (type == null)
             {
-                type = _entityTypeMap.ContainsKey(cast) ? _entityTypeMap[cast] : null;
+                type = ODataObjectType;
             }
-            if (type != null && type != typeof(ODataObject))
-            {
-                // Try the Cast string
-                if (cast != null && (type == ItemType || type == PrincipalType))
-                {
-                    type = _entityTypeMap.ContainsKey(cast) ? _entityTypeMap[cast] : type;
-                }
-            }
-            else type = ODataObjectType;
 
             if (_typeMap.ContainsKey(type))
             {
                 type = _typeMap[type];
             }
             return type;
+        }
+
+        private string FindAndTrimNamespace(string cast)
+        {
+            if (cast == null)
+            {
+                return null;
+            }
+            
+            if (cast.StartsWith(PlaftormODataObjectNamespace))
+            {
+                return cast.Substring(PlaftormODataObjectNamespace.Length);
+            }
+
+            if (cast.StartsWith(ClientODataObjectNamespace))
+            {
+                return cast.Substring(ClientODataObjectNamespace.Length);
+            }
+
+            return cast;
         }
 
         /// <summary>
@@ -255,7 +255,7 @@ namespace ShareFile.Api.Client.Converters
         internal class JsonLightMetadataParser
         {
             internal static char[] SplitChars = {'/'};
-            internal static string Namespace = ODataObjectType.Namespace + ".";
+            internal static string Namespace = PlaftormODataObjectNamespace;
 
             internal JsonLightMetadataParserResult Parse(string metadataUri)
             {
@@ -378,9 +378,9 @@ namespace ShareFile.Api.Client.Converters
                 throw new ArgumentNullException("type");
             }
 
-            if (type.StartsWith(ODataObjectType.Namespace, StringComparison.OrdinalIgnoreCase))
+            if (type.StartsWith(PlaftormODataObjectNamespace, StringComparison.OrdinalIgnoreCase))
             {
-                var typeWithoutNamespace = type.Substring(ODataObjectType.Namespace.Length + 1);
+                var typeWithoutNamespace = type.Substring(PlaftormODataObjectNamespace.Length);
                 if (_entityTypeMap.ContainsKey(typeWithoutNamespace))
                 {
                     return Create(knownType, typeWithoutNamespace, odataObject, serializer);

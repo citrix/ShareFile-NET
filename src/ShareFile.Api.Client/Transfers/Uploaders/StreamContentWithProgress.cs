@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -10,7 +11,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
     internal class StreamContentWithProgress : StreamContent
     {
         private readonly Stream content;
-        private readonly int bufferSize;
         private readonly Action<long> progressCallback;
         private readonly CancellationToken cancellationToken;
 
@@ -18,75 +18,47 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             : base(content)
         {
             this.content = content;
-            this.bufferSize = UploaderBase.DefaultBufferLength;
             this.progressCallback = progressCallback;
             this.cancellationToken = cancellationToken;
         }
+		
+        public Func<CancellationToken, Task> TryPauseAction { get; set; }
 
-        public StreamContentWithProgress(Stream content, Action<long> progressCallback, int bufferSize, CancellationToken cancellationToken = default(CancellationToken))
-            : base(content, bufferSize)
+        protected override async Task SerializeToStreamAsync(Stream stream, TransportContext context)
         {
-            this.content = content;
-            this.bufferSize = bufferSize;
-            this.progressCallback = progressCallback;
-            this.cancellationToken = cancellationToken;
-        }
-
-#if ASYNC
-        public Func<CancellationToken?, Task> TryPauseAction { get; set; }
-#else
-        public Action TryPauseAction { get; set; }
-#endif
-
-        protected override 
-#if ASYNC
-            async 
-#endif
-            Task SerializeToStreamAsync(Stream stream, TransportContext context)
-        {
-            var buffer = new byte[this.bufferSize];
-            for (var i = 0; i < this.content.Length; i += this.bufferSize)
+            var buffer = ArrayPool<byte>.Shared.Rent(Configuration.BufferSize);
+            try
             {
-                var totalBytesRead = 0;
-                var bytesRead = content.Read(buffer, 0, buffer.Length);
-                while (bytesRead > 0)
+                for (var i = 0; i < content.Length; i += buffer.Length)
                 {
-#if ASYNC
-                    await stream.WriteAsync(buffer, 0, bytesRead).ConfigureAwait(false);
-                    if (TryPauseAction != null)
+                    var totalBytesRead = 0;
+                    var bytesRead = await content.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
+                    while (bytesRead > 0)
                     {
-                        await TryPauseAction(cancellationToken).ConfigureAwait(false);
-                    }
-#else
-                    stream.Write(buffer, 0, bytesRead);
-                    if (TryPauseAction != null)
-                    {
-                        TryPauseAction();
-                    }
-#endif
+                        await stream.WriteAsync(buffer, 0, bytesRead).ConfigureAwait(false);
+                        if (TryPauseAction != null)
+                        {
+                            await TryPauseAction(cancellationToken).ConfigureAwait(false);
+                        }
 
-                    if (this.progressCallback != null)
-                    {
-                        this.progressCallback(bytesRead);
-                    }
+                        progressCallback?.Invoke(bytesRead);
 
-                    totalBytesRead += bytesRead;
-                    if (bytesRead == buffer.Length)
-                    {
-                        bytesRead = content.Read(buffer, 0, buffer.Length);
-                    }
-                    else
-                    {
-                        break;
+                        totalBytesRead += bytesRead;
+                        if (bytesRead == buffer.Length)
+                        {
+                            bytesRead = await content.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
                 }
             }
-
-#if !ASYNC
-            var tcs = new TaskCompletionSource<object>();
-            tcs.SetResult(0);
-            return tcs.Task;
-#endif
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(buffer);
+            }
         }
 
         protected override bool TryComputeLength(out long length)

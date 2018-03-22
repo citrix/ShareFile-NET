@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,19 +17,14 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
 	public class EnsSubscriptionToken : ODataObject 
 	{
-
 		public string SubscriptionId { get; set; }
-
 		public string EntityId { get; set; }
-
 		public SafeEnum<EnsEventType> EventTypes { get; set; }
-
 		public bool IncludeProgeny { get; set; }
-
 		public long LastEventCount { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

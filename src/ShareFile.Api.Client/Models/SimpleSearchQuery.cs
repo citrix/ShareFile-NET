@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,26 +17,25 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Simplified advanced search query object. Same as the SearchQuery object, but uses the simplified SimpleQuery child object
+	/// </summary>
 	public class SimpleSearchQuery : ODataObject 
 	{
-
 		/// <summary>
 		/// Information about the query to run
 		/// </summary>
 		public SimpleQuery Query { get; set; }
-
 		/// <summary>
 		/// Paging info about the search results
 		/// </summary>
 		public QueryPaging Paging { get; set; }
-
 		/// <summary>
 		/// How the search results should be sorted
 		/// </summary>
 		public QuerySorting Sort { get; set; }
-
 		/// <summary>
 		/// Timeout for the search request in seconds
 		/// </summary>

@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
-using Newtonsoft.Json;
-
-using ShareFile.Api.Client.Enums;
-using ShareFile.Api.Models;
-using ShareFile.Api.Client.Exceptions;
+using ShareFile.Api.Client.Models;
 using ShareFile.Api.Client.Extensions.Tasks;
-using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Security.Cryptography;
 using System.Threading;
 
@@ -18,17 +12,18 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 {
     public abstract class SyncUploaderBase : UploaderBase
     {
-        public abstract UploadResponse Upload(Dictionary<string, object> transferMetadata = null, CancellationToken? cancellationToken = null);
         public abstract void Prepare();
 
-        protected SyncUploaderBase(ShareFileClient client, UploadSpecificationRequest uploadSpecificationRequest, IPlatformFile file, FileUploaderConfig config = null, int? expirationDays = null)
-            : base(client, uploadSpecificationRequest, file, expirationDays)
+        protected SyncUploaderBase(
+            ShareFileClient client,
+            UploadSpecificationRequest uploadSpecificationRequest, 
+            Stream stream,
+            FileUploaderConfig config = null,
+            int? expirationDays = null)
+            : base(client, uploadSpecificationRequest, stream, config, expirationDays)
         {
-            Config = config ?? new FileUploaderConfig();
             HashProvider = MD5HashProviderFactory.GetHashProvider().CreateHash();
         }
-
-        public FileUploaderConfig Config { get; private set; }
 
         protected internal ISyncRequestExecutor RequestExecutor
         {
@@ -36,6 +31,26 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
             {
                 return Client.SyncRequestExecutor ?? RequestExecutorFactory.GetSyncRequestExecutor();
             }
+        }
+
+        protected abstract UploadResponse InternalUpload(CancellationToken cancellationToken);
+
+        public UploadResponse Upload(Dictionary<string, object> transferMetadata = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            CancellationTokenSource uploadCancellationSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            UploadResponse response;
+            try
+            {
+                progressReporter.StartReporting(transferMetadata, uploadCancellationSource.Token);
+                response = InternalUpload(uploadCancellationSource.Token);
+            }
+            finally
+            {
+                uploadCancellationSource.Cancel();
+                uploadCancellationSource.Dispose();
+            }
+            progressReporter.ReportCompletion();
+            return response;
         }
 
         protected void CheckResume()
@@ -58,29 +73,27 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
 
         protected string CalculateHash(long count)
         {
-            using (var fileStream = File.OpenRead())
+            do
             {
-                do
+                var buffer = new byte[Configuration.BufferSize];
+
+                if (count < buffer.Length)
                 {
-                    var buffer = new byte[65536];
+                    buffer = new byte[count];
+                }
 
-                    if (count < buffer.Length)
-                    {
-                        buffer = new byte[count];
-                    }
+                var bytesRead = FileStream.Read(buffer, 0, buffer.Length);
 
-                    var bytesRead = fileStream.Read(buffer, 0, buffer.Length);
+                if (bytesRead > 0)
+                {
+                    HashProvider.Append(buffer, 0, buffer.Length);
+                }
 
-                    if (bytesRead > 0)
-                    {
-                        HashProvider.Append(buffer, 0, buffer.Length);
-                    }
+                count -= bytesRead;
 
-                    count -= bytesRead;
+            } while (count > 0);
 
-                } while (count > 0);
-            }
-
+            FileStream.Seek(0, SeekOrigin.Begin);
             return HashProvider.GetComputedHashAsString();
         }
 
@@ -106,20 +119,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
         {
             string responseContent = responseMessage.Content.ReadAsStringAsync().WaitForTask();
             return ValidateUploadResponse(responseMessage, responseContent, localHash);
-        }
-
-        private HttpClient httpClient;
-
-        protected internal override HttpClient GetHttpClient()
-        {
-            if (httpClient == null)
-            {
-                httpClient = new HttpClient(GetHttpClientHandler())
-                {
-                    Timeout = new TimeSpan(0, 0, 0, 0, Config.HttpTimeout)
-                };
-            }
-            return httpClient;
         }
     }
 }

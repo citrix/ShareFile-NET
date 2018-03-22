@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,91 +17,61 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
 	public class ItemInfo : ODataObject 
 	{
-
 		public AccessControl CurrentAccessControl { get; set; }
-
 		public bool? HasVroot { get; set; }
-
 		public bool? IsSystemRoot { get; set; }
-
 		public bool? IsAccountRoot { get; set; }
-
 		public bool? IsVRoot { get; set; }
-
 		public bool? IsMyFolders { get; set; }
-
 		public bool? IsAHomeFolder { get; set; }
-
 		public bool? IsMyHomeFolder { get; set; }
-
 		public bool? IsAStartFolder { get; set; }
-
 		public bool? IsSharedFolder { get; set; }
-
 		public bool? IsPassthrough { get; set; }
-
 		public bool? IsVersioned { get; set; }
-
 		public bool? CanAddFolder { get; set; }
-
 		public bool? CanAddNode { get; set; }
-
 		public bool? CanView { get; set; }
-
 		public bool? CanDownload { get; set; }
-
 		public bool? CanWatermarkDownload { get; set; }
-
 		public bool? CanDocViewerPrint { get; set; }
-
 		public bool? CanUpload { get; set; }
-
 		public bool? CanSend { get; set; }
-
 		public bool? CanDeleteCurrentItem { get; set; }
-
 		public bool? CanDeleteChildItems { get; set; }
-
 		public bool? CanManagePermissions { get; set; }
-
 		public bool? CanEditFolderOpts { get; set; }
-
+		/// <summary>
+		/// Indicates whether the current user has permission to change folder retention policies (ExpirationDays)
+		/// </summary>
 		public bool? CanEditRetentionPolicy { get; set; }
-
+		public bool? CanEditFolderExpirationDays { get; set; }
+		public bool? CanEditFolderExpirationDate { get; set; }
+		public bool? CanEditFolderMaxVersions { get; set; }
+		public bool? CanEditFolderVersioning { get; set; }
+		public bool? CanCreateOfficeDocuments { get; set; }
 		public string FolderPayID { get; set; }
-
 		public bool? ShowFolderPayBuyButton { get; set; }
-
 		public SafeEnum<TreeMode> TreeMode { get; set; }
-
 		public SafeEnum<Versioning> Versioning { get; set; }
-
 		public bool? TreeModeOperationAllowed { get; set; }
-
 		public string TreeModeSourceId { get; set; }
-
 		public SafeEnum<SortField> ForcedSortField { get; set; }
-
 		public SafeEnum<SortDirection> ForcedSortOrder { get; set; }
-
 		public int? MaxVersions { get; set; }
-
 		public SafeEnum<DocumentViewerPrinting> DocumentViewerPrinting { get; set; }
-
 		public SafeEnum<WatermarkedDownloads> WatermarkedDownloads { get; set; }
-
 		public IEnumerable<SafeEnum<FolderOption>> OptionPropagation { get; set; }
-
 		public string ViewOnlyWatermarkText { get; set; }
-
 		public SafeEnum<SortField> SortField { get; set; }
-
 		public SafeEnum<SortDirection> SortDirection { get; set; }
-
+		/// <summary>
+		/// Info on a folder to create a request list bundle
+		/// </summary>
 		public bool? CanCreateRequestList { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
@@ -137,6 +107,11 @@ namespace ShareFile.Api.Models
 				CanManagePermissions = typedSource.CanManagePermissions;
 				CanEditFolderOpts = typedSource.CanEditFolderOpts;
 				CanEditRetentionPolicy = typedSource.CanEditRetentionPolicy;
+				CanEditFolderExpirationDays = typedSource.CanEditFolderExpirationDays;
+				CanEditFolderExpirationDate = typedSource.CanEditFolderExpirationDate;
+				CanEditFolderMaxVersions = typedSource.CanEditFolderMaxVersions;
+				CanEditFolderVersioning = typedSource.CanEditFolderVersioning;
+				CanCreateOfficeDocuments = typedSource.CanCreateOfficeDocuments;
 				FolderPayID = typedSource.FolderPayID;
 				ShowFolderPayBuyButton = typedSource.ShowFolderPayBuyButton;
 				TreeMode = typedSource.TreeMode;
@@ -256,6 +231,26 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("CanEditRetentionPolicy", out token) && token.Type != JTokenType.Null)
 				{
 					CanEditRetentionPolicy = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanEditFolderExpirationDays", out token) && token.Type != JTokenType.Null)
+				{
+					CanEditFolderExpirationDays = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanEditFolderExpirationDate", out token) && token.Type != JTokenType.Null)
+				{
+					CanEditFolderExpirationDate = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanEditFolderMaxVersions", out token) && token.Type != JTokenType.Null)
+				{
+					CanEditFolderMaxVersions = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanEditFolderVersioning", out token) && token.Type != JTokenType.Null)
+				{
+					CanEditFolderVersioning = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
+				}
+				if(source.TryGetProperty("CanCreateOfficeDocuments", out token) && token.Type != JTokenType.Null)
+				{
+					CanCreateOfficeDocuments = (bool?)serializer.Deserialize(token.CreateReader(), typeof(bool?));
 				}
 				if(source.TryGetProperty("FolderPayID", out token) && token.Type != JTokenType.Null)
 				{

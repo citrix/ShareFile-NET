@@ -1,4 +1,5 @@
-﻿using ShareFile.Api.Models;
+﻿using ShareFile.Api.Client.Converters;
+using ShareFile.Api.Client.Models;
 
 namespace ShareFile.Api.Client.Requests.Filters
 {
@@ -22,7 +23,12 @@ namespace ShareFile.Api.Client.Requests.Filters
     {
         public override string ToString()
         {
-            return string.Format("isof('{0}')", typeof(T).FullName);
+            string fullName = typeof(T).FullName;
+            if(fullName.Contains(ODataFactory.ClientODataObjectNamespace))
+            {
+                fullName = fullName.Replace(ODataFactory.ClientODataObjectNamespace, ODataFactory.PlaftormODataObjectNamespace);
+            }
+            return $"isof('{fullName}')";
         }
     }
 }

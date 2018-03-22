@@ -13,7 +13,7 @@ using ShareFile.Api.Client.Credentials;
 using ShareFile.Api.Client.Exceptions;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Logging;
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
 
 namespace ShareFile.Api.Client.Requests.Providers
 {
@@ -32,7 +32,7 @@ namespace ShareFile.Api.Client.Requests.Providers
         /// <summary>
         /// Set this flag True if running as a Portable Class Library
         /// </summary>
-#if PORTABLE
+#if PORTABLE || NETSTANDARD1_3
         public static bool RuntimeRequiresCustomCookieHandling = true;
 #else
         public static bool RuntimeRequiresCustomCookieHandling = false;
@@ -60,13 +60,6 @@ namespace ShareFile.Api.Client.Requests.Providers
             HttpRequestMessage requestMessage;
             var watch = new ActionStopwatch("BuildRequest", ShareFileClient.Logging, RequestId);
             var uri = request.GetComposedUri();
-
-#if ShareFile
-            if (ShareFileClient.CustomAuthentication != null)
-            {
-                uri = ShareFileClient.CustomAuthentication.SignUri(uri);
-            }
-#endif
 
             if (ShareFileClient.Configuration.UseHttpMethodOverride)
             {
@@ -100,6 +93,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 try
                 {
                     WriteRequestBody(requestMessage, request.Body, new MediaTypeHeaderValue("application/json"));
+                    LogRequest(request, requestMessage.Headers.ToString());
                 }
                 catch (Exception)
                 {
@@ -114,13 +108,6 @@ namespace ShareFile.Api.Client.Requests.Providers
                     requestMessage.Content = new StringContent("");
                 }
             }
-
-#if ShareFile
-            if (ShareFileClient.CustomAuthentication != null)
-            {
-                requestMessage = ShareFileClient.CustomAuthentication.SignBody(request.Body, requestMessage);
-            }
-#endif
 
             ShareFileClient.Logging.Trace(watch);
 
@@ -202,8 +189,7 @@ namespace ShareFile.Api.Client.Requests.Providers
                 }
             }
         }
-
-#if ASYNC
+		
         protected Task<T> DeserializeResponseStreamAsync<T>(Stream responseStream, HttpResponseMessage httpResponseMessage)
         {
             return Task.Factory.StartNew(() => DeserializeResponseStream<T>(responseStream, httpResponseMessage));
@@ -275,7 +261,6 @@ namespace ShareFile.Api.Client.Requests.Providers
                 ShareFileClient.Logging.Trace("[{0}] Response Code: {1}", new object[] { RequestId, statusCode });
             }
         }
-#endif
 
         protected void LogRequest(ApiRequest request, string headers)
         {
@@ -389,11 +374,6 @@ namespace ShareFile.Api.Client.Requests.Providers
                 {
                     stringWriter.Write(body as string);
 
-                    if (ShareFileClient.Logging.IsDebugEnabled)
-                    {
-                        ShareFileClient.Logging.Debug(stringWriter.ToString(), null);
-                    }
-
                     httpRequestMessage.Content = new StringContent(stringWriter.ToString());
 
                     if (httpRequestMessage.Content.Headers.ContentLength > 0)
@@ -409,8 +389,6 @@ namespace ShareFile.Api.Client.Requests.Providers
                     try
                     {
                         var contentAsString = formContent.ReadAsStringAsync();
-
-                        ShareFileClient.Logging.Debug("[{0}] {1}", new [] { RequestId, contentAsString.Result }, null);
                     }
                     catch (Exception)
                     {
@@ -429,11 +407,6 @@ namespace ShareFile.Api.Client.Requests.Providers
                     var serializationWatch = new ActionStopwatch("SerializeRequest", ShareFileClient.Logging, RequestId);
                     ShareFileClient.Serializer.Serialize(textWriter, body);
                     ShareFileClient.Logging.Trace(serializationWatch);
-
-                    if (ShareFileClient.Logging.IsDebugEnabled)
-                    {
-                        ShareFileClient.Logging.Debug(stringWriter.ToString(), null);
-                    }
 
                     httpRequestMessage.Content = new StringContent(stringWriter.ToString());
 

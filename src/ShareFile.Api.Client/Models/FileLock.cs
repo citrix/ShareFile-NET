@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,27 +17,26 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
 #if !ShareFile
+	/// <summary>
+	/// FileLock
+	/// </summary>
 	public class FileLock : ODataObject 
 	{
-
 		/// <summary>
 		/// Lock Id
 		/// </summary>
 		public string LockId { get; set; }
-
 		/// <summary>
 		/// User who owns the Lock
 		/// </summary>
 		public Principal Owner { get; set; }
-
 		/// <summary>
 		/// Expiration time in minutes.
 		/// </summary>
 		public int? ExpirationTimeInMinutes { get; set; }
-
 		/// <summary>
 		/// Expiration date. Takes precedence over ExpirationTimeInMinutes if both are provided
 		/// </summary>

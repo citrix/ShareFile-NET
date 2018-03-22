@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 
 using ShareFile.Api.Client.Requests.Providers;
-using ShareFile.Api.Models;
+using ShareFile.Api.Client.Models;
 
 namespace ShareFile.Api.Client.Extensions
 {
@@ -31,9 +31,19 @@ namespace ShareFile.Api.Client.Extensions
                 }
             }
 
-            if (client.Configuration.UserAgent != null)
+            if (!string.IsNullOrEmpty(client.Configuration.UserAgent))
             {
                 requestMessage.Headers.Add("User-Agent", client.Configuration.UserAgent);
+            }
+
+            if (!string.IsNullOrEmpty(client.Configuration.ToolName))
+            {
+                requestMessage.Headers.Add("X-SFAPI-Tool", client.Configuration.ToolName);
+            }
+
+            if(!string.IsNullOrEmpty(client.Configuration.ToolVersion))
+            {
+                requestMessage.Headers.Add("X-SFAPI-ToolVersion", client.Configuration.ToolVersion);
             }
 
             requestMessage.TryAddCookies(client);
@@ -71,12 +81,6 @@ namespace ShareFile.Api.Client.Extensions
                 {
                     requestMessage.Headers.Authorization = authorizationHeader;
                 }
-            }
-
-            if (isLoginRequest)
-            {
-                requestMessage.Headers.Add("X-SFAPI-Tool", client.Configuration.ToolName);
-                requestMessage.Headers.Add("X-SFAPI-ToolVersion", client.Configuration.ToolVersion);
             }
         }
 

@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,25 +17,29 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Encapsulates the add-on services available on a given account
+	/// </summary>
 	public class ServicesCollection : ODataObject 
 	{
-
 		/// <summary>
 		/// RightSignature account service
 		/// </summary>
 		public Service RightSignature { get; set; }
-
 		/// <summary>
 		/// ShareConnect account service
 		/// </summary>
 		public Service ShareConnect { get; set; }
-
 		/// <summary>
 		/// ShareFile Legal account service
 		/// </summary>
 		public Service ShareFileLegal { get; set; }
+		/// <summary>
+		/// Podio account service
+		/// </summary>
+		public Service Podio { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)
 		{
@@ -48,6 +52,7 @@ namespace ShareFile.Api.Models
 				RightSignature = typedSource.RightSignature;
 				ShareConnect = typedSource.ShareConnect;
 				ShareFileLegal = typedSource.ShareFileLegal;
+				Podio = typedSource.Podio;
 			}
 			else
 			{
@@ -63,6 +68,10 @@ namespace ShareFile.Api.Models
 				if(source.TryGetProperty("ShareFileLegal", out token) && token.Type != JTokenType.Null)
 				{
 					ShareFileLegal = (Service)serializer.Deserialize(token.CreateReader(), typeof(Service));
+				}
+				if(source.TryGetProperty("Podio", out token) && token.Type != JTokenType.Null)
+				{
+					Podio = (Service)serializer.Deserialize(token.CreateReader(), typeof(Service));
 				}
 			}
 		}

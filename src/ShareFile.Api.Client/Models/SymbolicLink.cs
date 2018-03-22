@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,13 +17,19 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Symbolic Links represent a remote folder in a ShareFile file system structure. A
+	/// Symbolic Link uses the URL field to point to another provider. Client must query
+	/// the url location to retrieve Item information. In some cases, the Symbolic Link
+	/// fields may be populated in the remote provider - for example, Storage Zone Connectors
+	/// populate the "Name" field in the ShareFile provider. In this case, clients can use
+	/// the available fields without the remote call to the provider.
+	/// </summary>
 	public class SymbolicLink : Folder 
 	{
-
 		public Uri Link { get; set; }
-
 		public ConnectorGroup ConnectorGroup { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

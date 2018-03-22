@@ -1,7 +1,7 @@
 ﻿using System;
 
 // ReSharper disable once CheckNamespace
-namespace ShareFile.Api.Models
+namespace ShareFile.Api.Client.Models
 {
     public interface ISafeEnum 
     {
@@ -12,19 +12,7 @@ namespace ShareFile.Api.Models
     public struct SafeEnum<TEnumSource> : ISafeEnum, IEquatable<SafeEnum<TEnumSource>>
         where TEnumSource : struct
     {
-        private TEnumSource? _enum;
-        public TEnumSource? Enum
-        {
-            get { return _enum; }
-            set
-            {
-                _enum = value;
-                if (null != value)
-                {
-                    _value = value.Value.ToString();
-                }
-            }
-        }
+        public TEnumSource? Enum { get; set; }
 
         public object Object
         {
@@ -41,7 +29,7 @@ namespace ShareFile.Api.Models
         public static SafeEnum<TSource> Create<TSource>(TSource enumSourceValue)
             where TSource : struct
         {
-            var instance = Activator.CreateInstance<SafeEnum<TSource>>();
+            var instance = default(SafeEnum<TSource>);
             instance.Enum = enumSourceValue;
 
             return instance;
@@ -54,9 +42,9 @@ namespace ShareFile.Api.Models
 
         public override int GetHashCode()
         {
-            if (_enum.HasValue)
+            if (Enum.HasValue)
             {
-                return _enum.GetValueOrDefault().GetHashCode();
+                return Enum.GetValueOrDefault().GetHashCode();
             }
             else
             {
@@ -66,16 +54,31 @@ namespace ShareFile.Api.Models
         
         public bool Equals(SafeEnum<TEnumSource> other)
         {
-            if (Enum.HasValue && other.Enum.HasValue)
+            if(Enum.HasValue)
             {
-                return Enum.Value.Equals(other.Enum.Value);
+                if(other.Enum.HasValue)
+                {
+                    return Enum.Value.Equals(other.Enum.Value);
+                }
+                else if(other._value != null)
+                {
+                    return string.Equals(Enum.Value.ToString(), other._value, StringComparison.OrdinalIgnoreCase);
+                }
+                return false;
             }
-            if (Value != null && other.Value != null)
+            else if(_value != null)
             {
-                return String.Equals(Value, other.Value, StringComparison.OrdinalIgnoreCase);
+                if(other.Enum.HasValue)
+                {
+                    return string.Equals(_value, other.Enum.Value.ToString(), StringComparison.OrdinalIgnoreCase);
+                }
+                else if(other._value != null)
+                {
+                    return string.Equals(_value, other._value, StringComparison.OrdinalIgnoreCase);
+                }
+                return false;
             }
-
-            return true;
+            return other.Enum == null && other._value == null;
         }
 
         public override bool Equals(object obj)

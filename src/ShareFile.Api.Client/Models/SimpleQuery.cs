@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,41 +17,38 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Describes a simplified advanced search query. Some constraints have been changed to take only a single id
+	/// instead of a list of ids
+	/// </summary>
 	public class SimpleQuery : ODataObject 
 	{
-
 		/// <summary>
 		/// Item type to search for (ex "File", "Folder", etc.)
 		/// </summary>
 		public string ItemType { get; set; }
-
 		/// <summary>
 		/// Parent id constraint on search results
 		/// </summary>
 		public string ParentID { get; set; }
-
 		/// <summary>
 		/// Creator id constraint on search results
 		/// </summary>
 		public string CreatorID { get; set; }
-
 		/// <summary>
 		/// Search term to search for
 		/// </summary>
 		public string SearchQuery { get; set; }
-
 		/// <summary>
 		/// Item creation date range constraint start date in UTC
 		/// </summary>
 		public string CreateStartDate { get; set; }
-
 		/// <summary>
 		/// Item creation date range constraint end date in UTC
 		/// </summary>
 		public string CreateEndDate { get; set; }
-
 		/// <summary>
 		/// Whether item content should be included in the search or not.
 		/// </summary>

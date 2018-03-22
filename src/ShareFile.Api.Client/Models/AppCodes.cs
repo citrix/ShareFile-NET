@@ -5,13 +5,13 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
-	public enum AppCodes
+    public enum AppCodes
     {
         _None = 0,
         AirWidget = 1,
@@ -74,6 +74,23 @@ namespace ShareFile.Api.Models
         TranscodingService = 58,
         SAP = 59,
         Podio = 60,
-        SFMacDesktop = 61
+        SFMacDesktop = 61,
+        CustomWorkflows = 62,
+        CustomWorkflowsAndroid = 63,
+        CustomWorkflowsiOS = 64,
+        SFOutlook = 65,
+        SFGmail = 66,
+        RightSignatureiOS = 67,
+        JiraServiceDesk = 68,
+        RightSignature4 = 69,
+        ThirdPartyCloudSyncService = 70,
+        SFIdentity = 71,
+        SFWindows = 72,
+        RightSignatureAndroid = 73,
+        Salesforce = 74,
+        SFResourceProvider = 75,
+        EventPipeline = 76,
+        Webhooks = 77,
+        CasActionsAdapter = 78
     }
 }

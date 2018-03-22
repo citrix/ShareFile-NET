@@ -40,6 +40,9 @@ namespace ShareFile.Api.Client.Converters
             _piiBlacklist.Add("CreatorLastName");
             _piiBlacklist.Add("CreatorNameShort");
             _piiBlacklist.Add("Company");
+            _piiBlacklist.Add("Emails");
+            _piiBlacklist.Add("Body");
+            _piiBlacklist.Add("Message");
         }
 
         public override bool CanConvert(Type objectType)

@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,43 +17,29 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
 	public class UserSecurity : ODataObject 
 	{
-
 		public bool? IsDisabled { get; set; }
-
 		public bool? IsLocked { get; set; }
-
 		public DateTime? LockExpires { get; set; }
-
 		public DateTime? LastWebAppLogin { get; set; }
-
 		public DateTime? LastAnyLogin { get; set; }
-
 		public DateTime? FirstAnyLogin { get; set; }
-
 		public string UserIPRestrictions { get; set; }
-
 		public DateTime? DisableLoginBefore { get; set; }
-
 		public DateTime? DisableLoginAfter { get; set; }
-
 		public bool? ForcePasswordChange { get; set; }
-
 		public bool? PasswordNeverExpires { get; set; }
-
 		public DateTime? LastPasswordChange { get; set; }
-
 		public string UsernameShort { get; set; }
-
 		public DateTime? LastFailedLogin { get; set; }
-
 		public string LastFailedLoginIP { get; set; }
-
 		public int? FailedLoginCount { get; set; }
-
+		/// <summary>
+		/// Calculated value for how the user should authenticate
+		/// </summary>
 		public SafeEnum<UserAuthenticationType> UserAuthenticationType { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

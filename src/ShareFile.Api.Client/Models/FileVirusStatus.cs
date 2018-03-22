@@ -5,16 +5,32 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
-	public enum FileVirusStatus
+    
+    /// <summary>
+    /// Enumeration for Virus Scan status of an Item.
+    /// </summary>
+    public enum FileVirusStatus
     {
+        
+        /// <summary>
+        /// File was scanned and an A/V warning was received
+        /// </summary>
         VirusWarning = -1,
+        
+        /// <summary>
+        /// File has not been scanned yet
+        /// </summary>
         NotScanned = 0,
+        
+        /// <summary>
+        /// File was scanned and no viruses were found
+        /// </summary>
         Clean = 1
     }
 }

@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,25 +17,24 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
+	/// <summary>
+	/// Base class for v2 Model classes that implement ODATA metadata and deferred links
+	/// </summary>
 	public class ODataObject : object 
 	{
-
 		/// <summary>
 		/// ODATA Metadata information about the model instance
 		/// </summary>
 		[JsonProperty(PropertyName = "odata.metadata")] 
 		public string MetadataUrl { get; set; }
-
 		[JsonProperty(PropertyName = "odata.type")] 
 		public string __type { get; set; }
-
 		/// <summary>
 		/// Object Identifier
 		/// </summary>
 		public string Id { get; set; }
-
 		public Uri url { get; set; }
 
 		[JsonExtensionData]

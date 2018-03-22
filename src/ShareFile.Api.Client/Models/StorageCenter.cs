@@ -5,7 +5,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 //     
-//	   Copyright (c) 2016 Citrix ShareFile. All rights reserved.
+//	   Copyright (c) 2018 Citrix ShareFile. All rights reserved.
 // </auto-generated>
 // ------------------------------------------------------------------------------
 using System;
@@ -17,37 +17,26 @@ using Newtonsoft.Json.Linq;
 using ShareFile.Api.Client.Extensions;
 using ShareFile.Api.Client.Exceptions;
 
-namespace ShareFile.Api.Models 
+namespace ShareFile.Api.Client.Models 
 {
 	public class StorageCenter : ODataObject 
 	{
-
 		public Zone Zone { get; set; }
-
 		public string Address { get; set; }
-
 		public string LocalAddress { get; set; }
-
 		public string ExternalAddress { get; set; }
-
 		public string DefaultExternalUrl { get; set; }
-
 		public string HostName { get; set; }
-
 		public SafeEnum<ZoneService> Services { get; set; }
-
 		public string Version { get; set; }
-
 		public bool? Enabled { get; set; }
-
 		public DateTime? LastHeartBeat { get; set; }
-
 		public string ExternalUrl { get; set; }
-
 		public string MetadataProxyAddress { get; set; }
-
 		public DateTime? LastPingBack { get; set; }
-
+		/// <summary>
+		/// List of metadata objects associated with this zone
+		/// </summary>
 		public IEnumerable<Metadata> Metadata { get; set; }
 
 		public override void Copy(ODataObject source, JsonSerializer serializer)

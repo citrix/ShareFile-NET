@@ -5,11 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using ShareFile.Api.Client;
 using ShareFile.Api.Client.Extensions;
-using ShareFile.Api.Client.FileSystem;
 using ShareFile.Api.Client.Logging;
+using ShareFile.Api.Client.Models;
 using ShareFile.Api.Client.Security.Authentication.OAuth2;
 using ShareFile.Api.Client.Transfers;
-using ShareFile.Api.Models;
 
 namespace ShareFile.Sample
 {
@@ -132,8 +131,7 @@ namespace ShareFile.Sample
                 Parent = destinationFolder.url
             };
 
-            var uploader = sfClient.GetAsyncFileUploader(uploadRequest,
-                new PlatformFileStream(file, file.Length, "SampleFileUpload.txt"));
+            var uploader = sfClient.GetAsyncFileUploader(uploadRequest, file);
 
             var uploadResponse = await uploader.UploadAsync();
 

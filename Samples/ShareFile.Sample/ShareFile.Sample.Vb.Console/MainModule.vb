@@ -1,11 +1,10 @@
 ﻿Imports System.IO
 Imports ShareFile.Api.Client
 Imports ShareFile.Api.Client.Extensions
-Imports ShareFile.Api.Client.FileSystem
 Imports ShareFile.Api.Client.Logging
+Imports ShareFile.Api.Client.Models
 Imports ShareFile.Api.Client.Security.Authentication.OAuth2
 Imports ShareFile.Api.Client.Transfers
-Imports ShareFile.Api.Models
 
 Module MainModule
 
@@ -114,7 +113,7 @@ Module MainModule
             .Parent = destinationFolder.url
         }
 
-        Dim uploader = sfClient.GetAsyncFileUploader(uploadRequest, New PlatformFileStream(file, file.Length, "SampleFileUpload.txt"))
+        Dim uploader = sfClient.GetAsyncFileUploader(uploadRequest, file)
 
         Dim uploadResponse = Await uploader.UploadAsync()
 

@@ -16,7 +16,7 @@ namespace ShareFile.Api.Client
     public class Configuration
     {
         /// <summary>
-        /// Ensure all API requests are executed as POST reqeusts with an override header specified
+        /// Ensure all API requests are executed as POST requests with an override header specified
         /// </summary>
         public bool UseHttpMethodOverride { get; set; }
 

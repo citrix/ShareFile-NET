@@ -219,8 +219,7 @@ the SDK can help you find them.  These aliases are exposed on an enum `ItemAlias
           Parent = parentFolder.url
         };
 
-		var uploader = client.GetAsyncFileUploader(uploadRequest,
-		  new PlatformFileStream(file, file.Length, file.Name));
+		var uploader = sfClient.GetAsyncFileUploader(uploadRequest, file);
 
 		var uploadResponse = await uploader.UploadAsync();
 	  }
@@ -240,8 +239,7 @@ to it via the SDK.
           Parent = shareUri
         };
 
-        var uploader = client.GetAsyncFileUploader(uploadRequest,
-          new PlatformFileStream(file, file.Length, file.Name));
+        var uploader = sfClient.GetAsyncFileUploader(uploadRequest, file);
 
 		var uploadResponse = await uploader.UploadAsync();
 	  }

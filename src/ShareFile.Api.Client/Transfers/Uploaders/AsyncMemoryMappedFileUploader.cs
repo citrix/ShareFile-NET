@@ -75,7 +75,6 @@ namespace ShareFile.Api.Client.Transfers.Uploaders
                 mapName: Guid.NewGuid().ToString(), // no collisions with other files
                 capacity: 0, // disk file size
                 access: MemoryMappedFileAccess.Read,
-                memoryMappedFileSecurity: null, // docs say ok 
                 inheritability: HandleInheritability.None, // single process
                 leaveOpen: true); // caller disposes filestream
         }

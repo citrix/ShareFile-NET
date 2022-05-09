@@ -2,9 +2,6 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-#if !PORTABLE && !NETSTANDARD1_3
-using System.Runtime.Remoting;
-#endif
 
 namespace ShareFile.Api.Client.Transfers
 {
@@ -45,7 +42,7 @@ namespace ShareFile.Api.Client.Transfers
         public override IAsyncResult BeginWrite(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
             => stream.BeginWrite(buffer, offset, count, callback, state);
         public override void Close() => stream.Close();
-        public override ObjRef CreateObjRef(Type requestedType) => stream.CreateObjRef(requestedType);
+        //public System.Runtime.Remoting.ObjRef CreateObjRef(Type requestedType) => stream.CreateObjRef(requestedType);
         public override int EndRead(IAsyncResult asyncResult) => stream.EndRead(asyncResult);
         public override void EndWrite(IAsyncResult asyncResult) => stream.EndWrite(asyncResult);
         public override object InitializeLifetimeService() => stream.InitializeLifetimeService();

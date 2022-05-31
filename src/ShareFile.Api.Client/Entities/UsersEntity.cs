@@ -1266,6 +1266,24 @@ namespace ShareFile.Api.Client.Entities
             sfApiQuery.HttpMethod = "GET";	
             return sfApiQuery;
         }
+
+        /// <summary>
+        /// Get List of User Shared Folders
+        /// </summary>
+        /// <remarks>
+        /// Retrieve the list of shared folders the specified user has access to
+        /// </remarks>
+        /// <returns>
+        /// A list of Folder objects, representing shared folders of an user
+        /// </returns>
+        public IQuery<ODataFeed<Item>> GetAllSharedFoldersForSpecificUser(Uri url)
+        {
+            var sfApiQuery = new ShareFile.Api.Client.Requests.Query<ODataFeed<Item>>(Client);
+            sfApiQuery.Action("AllSharedFolders");
+            sfApiQuery.Uri(url);
+            sfApiQuery.HttpMethod = "GET";	
+            return sfApiQuery;
+        }
         
         /// <summary>
         /// Get List of User Shared Folders

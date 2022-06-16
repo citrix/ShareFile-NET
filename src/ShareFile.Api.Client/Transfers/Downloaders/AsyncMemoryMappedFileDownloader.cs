@@ -38,7 +38,6 @@ namespace ShareFile.Api.Client.Transfers.Downloaders
                 mapName: null,
                 capacity: fileSize,
                 access: MemoryMappedFileAccess.ReadWrite,
-                memoryMappedFileSecurity: null,
                 inheritability: HandleInheritability.None,
                 leaveOpen: false);
         }

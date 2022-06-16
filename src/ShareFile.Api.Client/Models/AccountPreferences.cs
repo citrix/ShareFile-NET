@@ -653,27 +653,27 @@ namespace ShareFile.Api.Client.Models
 				}
 				if(source.TryGetProperty("PasswordMaxAgeDays", out token) && token.Type != JTokenType.Null)
 				{
-					PasswordMaxAgeDays = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
+					PasswordMaxAgeDays = PasswordPolicy.MaxAgeDays.GetValueOrDefault();
 				}
 				if(source.TryGetProperty("PasswordHistoryCount", out token) && token.Type != JTokenType.Null)
 				{
-					PasswordHistoryCount = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
+					PasswordHistoryCount = PasswordPolicy.HistoryCount.GetValueOrDefault();
 				}
 				if(source.TryGetProperty("MinimumLength", out token) && token.Type != JTokenType.Null)
 				{
-					MinimumLength = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
+					MinimumLength = PasswordPolicy.MinimumLength.GetValueOrDefault();
 				}
 				if(source.TryGetProperty("MinimumSpecialCharacters", out token) && token.Type != JTokenType.Null)
 				{
-					MinimumSpecialCharacters = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
+					MinimumSpecialCharacters = PasswordPolicy.MinimumSpecialCharacters.GetValueOrDefault();
 				}
 				if(source.TryGetProperty("MinimumNumeric", out token) && token.Type != JTokenType.Null)
 				{
-					MinimumNumeric = (int)serializer.Deserialize(token.CreateReader(), typeof(int));
+					MinimumNumeric = PasswordPolicy.MinimumNumeric.GetValueOrDefault();
 				}
 				if(source.TryGetProperty("AllowedSpecialCharacters", out token) && token.Type != JTokenType.Null)
 				{
-					AllowedSpecialCharacters = (string)serializer.Deserialize(token.CreateReader(), typeof(string));
+					AllowedSpecialCharacters = PasswordPolicy.AllowedSpecialCharacters;
 				}
 				if(source.TryGetProperty("PasswordPolicy", out token) && token.Type != JTokenType.Null)
 				{
